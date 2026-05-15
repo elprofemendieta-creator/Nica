@@ -1,6 +1,6 @@
 // ===================== CONFIGURACIÓN SUPABASE =====================
-const SUPABASE_URL = 'https://tusubdominio.supabase.co';   // <-- REEMPLAZAR
-const SUPABASE_ANON_KEY = 'tu_clave_anon';                // <-- REEMPLAZAR
+const SUPABASE_URL = 'https://damdotasxzmqcpdqqnsv.supabase.co/rest/v1/';   // <-- REEMPLAZAR
+const SUPABASE_ANON_KEY = 'sb_publishable_dXGQDR4pFbnMAzYL6nvE9A_dPJj3nUy';                // <-- REEMPLAZAR
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // Variables globales
