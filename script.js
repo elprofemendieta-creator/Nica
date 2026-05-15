@@ -389,5 +389,71 @@ async function cargarLugares() {
     console.error('Error al cargar lugares:', error);
     return [];
   }
-  return data;
+    async function guardarLugar({ nombre, lat, lng, url, imagen, categoria }) {
+  const { data, error } = await supabase
+    .from('lugares')
+    .insert([{ nombre, lat, lng, url, imagen, categoria }])
+    .select();  // .select() devuelve el registro recién creado
+
+  if (error) {
+    console.error('Error al guardar lugar:', error.message);
+    alert('No se pudo guardar: ' + error.message);
+    return null;
+  }
+  return data[0]; // el nuevo lugar con su id generado
+}
+
+async function actualizarLugar(id, cambios) {
+  const { data, error } = await supabase
+    .from('lugares')
+    .update(cambios)
+    .eq('id', id)
+    .select();
+
+  if (error) {
+    console.error('Error al actualizar:', error);
+    return null;
+  }
+  return data[0];
+}
+    async function eliminarLugar(id) {
+  const { error } = await supabase
+    .from('lugares')
+    .delete()
+    .eq('id', id);
+
+  if (error) {
+    console.error('Error al eliminar:', error);
+    return false;
+  }
+  return true;
+}
+    function suscribirseACambios() {
+  const canal = supabase
+    .channel('lugares-canal')
+    .on(
+      'postgres_changes',
+      { event: '*', schema: 'public', table: 'lugares' },
+      (payload) => {
+        console.log('Cambio recibido:', payload);
+        manejarCambioEnMapa(payload.eventType, payload.new, payload.old);
+      }
+    )
+    .subscribe();
+}
+
+function manejarCambioEnMapa(evento, nuevo, viejo) {
+  switch (evento) {
+    case 'INSERT':
+      agregarMarcadorAlMapa(nuevo);
+      agregarALista(nuevo);
+      break;
+    case 'UPDATE':
+      actualizarMarcadorYLista(nuevo);
+      break;
+    case 'DELETE':
+      eliminarMarcadorYLista(viejo.id);
+      break;
+  }
+}return data;
 }
