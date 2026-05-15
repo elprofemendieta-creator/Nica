@@ -16,7 +16,7 @@ body {
     flex-direction: column;
 }
 
-/* Header (sin cambios) */
+/* Header */
 .app-header {
     background: white;
     padding: 12px 25px;
@@ -75,6 +75,11 @@ body {
     font-size: 14px;
 }
 
+.admin-login-btn:hover {
+    background: #1B5E20;
+    color: white;
+}
+
 .admin-panel-header {
     display: flex;
     align-items: center;
@@ -85,11 +90,20 @@ body {
     color: #F57C00;
 }
 
+.admin-panel-header span {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.admin-panel-header .icon-btn {
+    color: #d32f2f;
+}
+
 .hidden {
     display: none !important;
 }
 
-/* Layout principal */
+/* Main layout */
 .main-content {
     display: flex;
     flex-wrap: wrap;
@@ -109,37 +123,342 @@ body {
     flex: 1;
     position: relative;
     height: calc(100vh - 70px);
-    min-height: 400px;
+    min-height: 400px; /* Fuerza altura mínima */
 }
 
 #map {
     width: 100%;
     height: 100%;
-    background: #e0e0e0; /* mientras carga, se ve gris */
+    background: #ccc; /* Fondo mientras carga */
 }
 
-/* RESPONSIVE PARA MÓVIL */
+/* Ajustes para móvil */
 @media (max-width: 768px) {
     .sidebar {
         width: 100%;
         height: auto;
-        max-height: 40vh;
+        max-height: 300px;
         order: 2;
     }
     .map-container {
-        height: 60vh;   /* usar altura relativa */
+        height: 60vh; /* Altura relativa en móvil */
         min-height: 300px;
         order: 1;
-    }
-    /* Forzar altura explícita en el mapa para Leaflet */
-    #map {
-        height: 100% !important;
-        width: 100% !important;
     }
     .main-content {
         flex-direction: column;
     }
 }
 
-/* Resto de estilos (categorías, place-card, modales, dark mode, etc.) */
-/* ... mantener igual que antes ... */
+/* Búsqueda y filtros */
+.search-box {
+    display: flex;
+    align-items: center;
+    background: #f5f5f5;
+    border-radius: 30px;
+    padding: 8px 15px;
+    margin-bottom: 20px;
+}
+
+.search-box i {
+    color: #F57C00;
+    margin-right: 10px;
+}
+
+.search-box input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    outline: none;
+    font-size: 14px;
+}
+
+.filter-group label {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.categorias-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.categoria-filtro {
+    background: #f0f0f0;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.categoria-filtro:hover, .categoria-filtro.active {
+    background: #F57C00;
+    color: white;
+}
+
+/* Lista de lugares */
+.places-list-container h3 {
+    font-size: 16px;
+    margin-bottom: 15px;
+    color: #2E7D32;
+}
+
+.places-list {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.place-card {
+    background: #f9f9f9;
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.place-card:hover {
+    transform: translateX(-3px);
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+.place-card-header {
+    display: flex;
+    gap: 12px;
+}
+
+.place-card-header img {
+    width: 60px;
+    height: 60px;
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+.place-info {
+    flex: 1;
+}
+
+.place-info h4 {
+    font-size: 14px;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.place-categoria {
+    font-size: 11px;
+    color: #F57C00;
+    background: #FFF3E0;
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 12px;
+}
+
+.admin-actions {
+    margin-top: 8px;
+    display: flex;
+    gap: 5px;
+}
+
+.admin-actions button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 12px;
+    padding: 3px 6px;
+    border-radius: 5px;
+}
+
+.edit-btn { color: #2E7D32; }
+.delete-btn { color: #d32f2f; }
+
+.admin-add-btn {
+    margin-top: 20px;
+    text-align: center;
+}
+
+#addPlaceBtn {
+    background: #F57C00;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 30px;
+    cursor: pointer;
+    width: 100%;
+    font-weight: 600;
+}
+
+/* Layer control */
+.layer-control {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+    background: white;
+    border-radius: 50px;
+    padding: 5px;
+    display: flex;
+    gap: 5px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+.layer-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    background: white;
+    cursor: pointer;
+    font-size: 18px;
+    transition: all 0.2s;
+}
+
+.layer-btn:hover, .layer-btn.active {
+    background: #F57C00;
+    color: white;
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal-header {
+    padding: 15px 20px;
+    background: #2E7D32;
+    color: white;
+    border-radius: 20px 20px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header .close-modal {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 28px;
+    cursor: pointer;
+}
+
+.form-group {
+    padding: 15px 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 13px;
+    color: #666;
+}
+
+.form-group input, .form-group select, .form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+}
+
+.form-row {
+    display: flex;
+    gap: 15px;
+    padding: 0 20px;
+}
+
+.form-row .form-group {
+    padding: 0;
+    flex: 1;
+    margin-bottom: 15px;
+}
+
+.submit-btn {
+    width: calc(100% - 40px);
+    margin: 0 20px 20px;
+    padding: 12px;
+    background: linear-gradient(135deg, #F57C00, #E65100);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+/* Toast */
+.toast-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 3000;
+}
+
+.toast {
+    background: white;
+    padding: 12px 20px;
+    border-radius: 10px;
+    margin-top: 10px;
+    box-shadow: 0 3px 15px rgba(0,0,0,0.2);
+    animation: slideIn 0.3s ease;
+    border-left: 4px solid #F57C00;
+}
+
+@keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+/* Dark Mode */
+body.dark-mode {
+    background: #1a1a2e;
+}
+
+body.dark-mode .app-header,
+body.dark-mode .sidebar,
+body.dark-mode .modal-content,
+body.dark-mode .place-card,
+body.dark-mode .toast {
+    background: #2d2d44;
+    color: #eee;
+}
+
+body.dark-mode .place-info h4 {
+    color: #fff;
+}
+
+body.dark-mode .search-box,
+body.dark-mode .admin-panel-header {
+    background: #3d3d5c;
+}
+
+body.dark-mode .search-box input {
+    color: white;
+}
+
+body.dark-mode .categoria-filtro {
+    background: #3d3d5c;
+    color: #ddd;
+}
