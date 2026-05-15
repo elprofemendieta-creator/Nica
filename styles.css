@@ -459,6 +459,17 @@ body.dark-mode .search-box input {
 }
 
 body.dark-mode .categoria-filtro {
-    background: #3d3d5c;
     color: #ddd;
+}
+/* Fuerza altura del mapa en móvil */
+@media (max-width: 768px) {
+    .map-container {
+        height: 60vh !important;
+        min-height: 400px !important;
+    }
+    #map {
+        height: 100% !important;
+        width: 100% !important;
+        min-height: 400px !important;
+    }
 }
