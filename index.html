@@ -18,14 +18,9 @@
     
     <!-- Estilos propios -->
     <link rel="stylesheet" href="/styles.css">
-    
-    <!-- Supabase JS -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <!-- SheetJS para exportar Excel -->
-    <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
 </head>
 <body>
-    <!-- Pantalla de Login/Registro (similar a antes, con modificaciones) -->
+    <!-- Pantalla de Login/Registro -->
     <div id="authScreen" class="auth-screen">
         <div class="auth-card">
             <div class="auth-header">
@@ -42,8 +37,8 @@
             <!-- Login Form -->
             <form id="loginForm" class="auth-form active">
                 <div class="input-group">
-                    <i class="fas fa-user"></i>
-                    <input type="text" placeholder="Nick o Email" id="loginEmail" required>
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" placeholder="Correo electrónico" id="loginEmail" required>
                 </div>
                 <div class="input-group">
                     <i class="fas fa-lock"></i>
@@ -63,7 +58,7 @@
                 </div>
                 <div class="input-group">
                     <i class="fas fa-tag"></i>
-                    <input type="text" placeholder="Nick (único)" id="regNick" required>
+                    <input type="text" placeholder="Nick (único, para mostrar)" id="regNick" required>
                 </div>
                 <div class="input-group">
                     <i class="fas fa-envelope"></i>
@@ -95,23 +90,28 @@
     
     <!-- Pantalla Principal (App) -->
     <div id="appScreen" class="app-screen hidden">
-        <!-- Header igual que antes -->
+        <!-- Header -->
         <header class="app-header">
             <div class="logo">
                 <i class="fas fa-map-marked-alt"></i>
                 <h2>Nicaragua Turismo</h2>
             </div>
+            
             <div class="header-controls">
-                <button id="darkModeToggle" class="icon-btn"><i class="fas fa-moon"></i></button>
+                <button id="darkModeToggle" class="icon-btn">
+                    <i class="fas fa-moon"></i>
+                </button>
                 <div class="user-info">
                     <i class="fas fa-user-circle"></i>
                     <span id="userNick"></span>
-                    <button id="logoutBtn" class="logout-btn"><i class="fas fa-sign-out-alt"></i></button>
+                    <button id="logoutBtn" class="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
                 </div>
             </div>
         </header>
         
-        <!-- Panel de Notificaciones (usando Supabase Realtime) -->
+        <!-- Panel de Notificaciones -->
         <div id="notificationPanel" class="notification-panel">
             <div class="notification-header">
                 <i class="fas fa-bell"></i>
@@ -123,6 +123,7 @@
         
         <!-- Main Content -->
         <div class="main-container">
+            <!-- Sidebar -->
             <aside class="sidebar">
                 <div class="search-section">
                     <div class="search-box">
@@ -151,31 +152,133 @@
                 </div>
             </aside>
             
+            <!-- Mapa -->
             <div class="map-container">
                 <div id="map"></div>
+                <!-- Botón de capas flotante -->
                 <div id="layerControl" class="layer-control">
-                    <button class="layer-btn active" data-layer="calles"><i class="fas fa-road"></i></button>
-                    <button class="layer-btn" data-layer="satelite"><i class="fas fa-satellite"></i></button>
-                    <button class="layer-btn" data-layer="relieve"><i class="fas fa-mountain"></i></button>
-                    <button id="geolocationBtn" class="layer-btn"><i class="fas fa-location-dot"></i></button>
+                    <button class="layer-btn active" data-layer="calles">
+                        <i class="fas fa-road"></i>
+                    </button>
+                    <button class="layer-btn" data-layer="satelite">
+                        <i class="fas fa-satellite"></i>
+                    </button>
+                    <button class="layer-btn" data-layer="relieve">
+                        <i class="fas fa-mountain"></i>
+                    </button>
+                    <button id="geolocationBtn" class="layer-btn">
+                        <i class="fas fa-location-dot"></i>
+                    </button>
                 </div>
             </div>
         </div>
     </div>
     
-    <!-- Modales (igual que antes, pero adaptados) -->
-    <div id="lugarModal" class="modal"><div class="modal-content"><div class="modal-header"><h3 id="modalTitle">Añadir Lugar</h3><button class="close-modal">&times;</button></div><form id="lugarForm"><input type="hidden" id="lugarId"><div class="form-group"><label>Nombre</label><input type="text" id="lugarNombre" required></div><div class="form-row"><div class="form-group half"><label>Latitud</label><input type="number" step="any" id="lugarLat" required></div><div class="form-group half"><label>Longitud</label><input type="number" step="any" id="lugarLng" required></div></div><div class="form-group"><label>URL del HTML (ej: lugar.html)</label><input type="text" id="lugarUrl" placeholder="lugares_html/mi_lugar.html"></div><div class="form-group"><label>URL Imagen</label><input type="text" id="lugarImagen" placeholder="https://..."></div><div class="form-group"><label>Etiquetas (separadas por coma)</label><input type="text" id="lugarEtiquetas" placeholder="playa, naturaleza"></div><button type="submit" class="submit-btn">Guardar</button></form></div></div>
+    <!-- Modal Añadir/Editar Lugar -->
+    <div id="lugarModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Añadir Lugar</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="lugarForm">
+                <input type="hidden" id="lugarId">
+                <div class="form-group">
+                    <label>Nombre del lugar</label>
+                    <input type="text" id="lugarNombre" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group half">
+                        <label>Latitud</label>
+                        <input type="number" step="any" id="lugarLat" required>
+                    </div>
+                    <div class="form-group half">
+                        <label>Longitud</label>
+                        <input type="number" step="any" id="lugarLng" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>URL del HTML (ej: lugar.html)</label>
+                    <input type="text" id="lugarUrl" placeholder="lugares_html/mi_lugar.html">
+                </div>
+                <div class="form-group">
+                    <label>URL Imagen miniatura</label>
+                    <input type="text" id="lugarImagen" placeholder="https://...">
+                </div>
+                <div class="form-group">
+                    <label>Etiquetas (separadas por coma)</label>
+                    <input type="text" id="lugarEtiquetas" placeholder="playa, naturaleza, aventura">
+                </div>
+                <button type="submit" class="submit-btn">Guardar</button>
+            </form>
+        </div>
+    </div>
     
-    <div id="rankingModal" class="modal"><div class="modal-content large"><div class="modal-header"><h3>Ranking</h3><button class="close-modal">&times;</button></div><div class="ranking-tabs"><button class="rank-tab active" data-rank="visitas">Más Visitados</button><button class="rank-tab" data-rank="puntuacion">Mejor Puntuados</button></div><div id="rankingContent" class="ranking-content"></div><button id="exportRankingBtn" class="export-excel-btn">Exportar a Excel</button></div></div>
+    <!-- Modal Ranking -->
+    <div id="rankingModal" class="modal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h3><i class="fas fa-chart-simple"></i> Ranking de Lugares</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="ranking-tabs">
+                <button class="rank-tab active" data-rank="visitas">Más Visitados</button>
+                <button class="rank-tab" data-rank="puntuacion">Mejor Puntuados</button>
+            </div>
+            <div id="rankingContent" class="ranking-content"></div>
+            <button id="exportRankingBtn" class="export-excel-btn"><i class="fas fa-file-excel"></i> Exportar a Excel</button>
+        </div>
+    </div>
     
-    <div id="notifModal" class="modal"><div class="modal-content"><div class="modal-header"><h3>Enviar Notificación</h3><button class="close-modal">&times;</button></div><form id="notifForm"><div class="form-group"><label>Tipo</label><select id="notifTipo"><option value="promocion">Promoción</option><option value="sistema">Información</option></select></div><div class="form-group"><label>Mensaje</label><textarea id="notifMensaje" rows="3" required></textarea></div><button type="submit" class="submit-btn">Enviar</button></form></div></div>
+    <!-- Modal Notificación (Admin) -->
+    <div id="notifModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Enviar Notificación</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="notifForm">
+                <div class="form-group">
+                    <label>Tipo</label>
+                    <select id="notifTipo">
+                        <option value="promocion">🎉 Promoción</option>
+                        <option value="sistema">ℹ️ Información</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Mensaje</label>
+                    <textarea id="notifMensaje" rows="3" placeholder="Escribe el mensaje para todos los usuarios..." required></textarea>
+                </div>
+                <button type="submit" class="submit-btn">Enviar Notificación</button>
+            </form>
+        </div>
+    </div>
     
-    <div id="resetPasswordModal" class="modal"><div class="modal-content"><div class="modal-header"><h3>Recuperar Contraseña</h3><button class="close-modal">&times;</button></div><form id="resetPasswordForm"><div class="form-group"><label>Correo electrónico</label><input type="email" id="resetEmail" required></div><button type="submit" class="submit-btn">Enviar enlace</button></form></div></div>
+    <!-- Modal Recuperar Contraseña -->
+    <div id="resetPasswordModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Recuperar Contraseña</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="resetPasswordForm">
+                <div class="form-group">
+                    <label>Ingresa tu correo electrónico</label>
+                    <input type="email" id="resetEmail" placeholder="tu@email.com" required>
+                </div>
+                <div class="info-message" id="resetMessage"></div>
+                <button type="submit" class="submit-btn">Solicitar Restablecimiento</button>
+            </form>
+        </div>
+    </div>
     
+    <!-- Toast Notifications -->
     <div id="toastContainer" class="toast-container"></div>
     
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="/script.js"></script>
 </body>
 </html>
