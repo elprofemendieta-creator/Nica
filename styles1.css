@@ -140,17 +140,6 @@ body {
         flex-direction: column;
     }
 }
-/* Fuerza altura del mapa en móvil */
-@media (max-width: 768px) {
-    .map-container {
-        height: 60vh !important;
-        min-height: 400px !important;
-    }
-    #map {
-        height: 100% !important;
-        width: 100% !important;
-        min-height: 400px !important;
-    }
-}
-/
+
+/* Resto de estilos (categorías, place-card, modales, dark mode, etc.) */
 /* ... mantener igual que antes ... */
