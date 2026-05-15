@@ -1,6 +1,6 @@
 // ========== SUPABASE CONFIG ==========
-const SUPABASE_URL = 'TU_URL_SUPABASE';   // Ej: 'https://xyz.supabase.co'
-const SUPABASE_ANON_KEY = 'TU_ANON_KEY';
+const SUPABASE_URL = 'https://damdotasxzmqcpdqqnsv.supabase.co/rest/v1/';   // Ej: 'https://xyz.supabase.co'
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRhbWRvdGFzeHptcWNwZHFxbnN2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3OTI2OTAsImV4cCI6MjA5NDM2ODY5MH0.Q6ptAAvdIz-84VT9TvWJJdLxRVSWHZ3dMx87cBuQGO4';
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // ========== VARIABLES GLOBALES ==========
