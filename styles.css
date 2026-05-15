@@ -1,223 +1,70 @@
-/* =============================================
-   RESET BÁSICO Y ESTRUCTURA DE ALTURA COMPLETA
-   ============================================= */
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+  backdrop-filter: blur(10px);
+  border-radius: 25px;
+  padding: 40px 25px;
+  transition: 0.4s;
 }
 
-html, body {
-  height: 100%;
-  font-family: 'Segoe UI', sans-serif;
+.menu-card:hover {
+  transform: translateY(-10px);
+  background: rgba(255,255,255,0.25);
 }
 
-body {
-  display: flex;
-  overflow: hidden; /* evita doble scroll */
+.menu-card span {
+  font-size: 4rem;
 }
 
-/* =============================================
-   PANEL LATERAL (SIDEBAR)
-   ============================================= */
-#sidebar {
-  width: 320px;
-  max-width: 100%;
-  height: 100%;
-  background: #f8f9fa;
-  border-right: 1px solid #ddd;
-  display: flex;
-  flex-direction: column;
-  padding: 15px;
-  overflow-y: auto;
-  z-index: 1000;
-}
-
-#sidebar h2 {
-  font-size: 1.2rem;
-  margin-bottom: 10px;
-}
-
-#busqueda, #filtro-categoria {
-  width: 100%;
-  padding: 8px;
-  margin-bottom: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 0.9rem;
-}
-
-#lista-lugares {
-  flex: 1;
-  overflow-y: auto;
-  margin-bottom: 10px;
-}
-
-.lugar-item {
-  padding: 8px;
-  border-bottom: 1px solid #eee;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.lugar-item:hover {
-  background: #e9ecef;
-}
-
-.lugar-item .url-link {
-  font-size: 1.1rem;
-  margin-left: 5px;
-  text-decoration: none;
-}
-
-.btn-editar-lista, .btn-eliminar-lista {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 1rem;
-  margin-left: 4px;
-}
-
-#controles {
-  display: flex;
-  gap: 8px;
-  margin-top: auto;
-}
-
-#btn-admin, #modo-oscuro {
-  flex: 1;
-  padding: 8px;
-  border: 1px solid #aaa;
-  border-radius: 5px;
-  background: white;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-/* =============================================
-   MAPA
-   ============================================= */
-#mapa {
-  flex: 1;
-  height: 100%;
-  /* Asegura que Leaflet herede altura si flex no funciona en algún navegador */
-  min-height: 100%;
-}
-
-/* =============================================
-   MODO OSCURO
-   ============================================= */
-body.oscuro {
-  background: #1e1e1e;
-  color: #eee;
-}
-
-body.oscuro #sidebar {
-  background: #2a2a2a;
-  border-right-color: #444;
-}
-
-body.oscuro #busqueda,
-body.oscuro #filtro-categoria,
-body.oscuro #btn-admin,
-body.oscuro #modo-oscuro {
-  background: #333;
-  color: #eee;
-  border-color: #555;
-}
-
-body.oscuro .lugar-item:hover {
-  background: #3a3a3a;
-}
-
-/* =============================================
-   MODAL DE FORMULARIO (admin)
-   ============================================= */
-.modal-formulario {
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 2000;
-}
-
-.modal-contenido {
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  width: 90%;
-  max-width: 400px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-}
-
-body.oscuro .modal-contenido {
-  background: #2a2a2a;
-  color: #eee;
-}
-
-.modal-contenido h3 {
-  margin-bottom: 15px;
-}
-
-.modal-contenido label {
-  display: block;
-  margin-top: 10px;
-  font-weight: bold;
-  font-size: 0.9rem;
-}
-
-.modal-contenido input,
-.modal-contenido select {
-  width: 100%;
-  padding: 6px;
-  margin-top: 4px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.modal-botones {
-  display: flex;
-  gap: 10px;
+.menu-card h3 {
   margin-top: 20px;
-  justify-content: flex-end;
+  font-size: 1.5rem;
 }
 
-.modal-botones button {
-  padding: 8px 15px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+.menu-card p {
+  margin-top: 10px;
 }
 
-#btn-cancelar, #btn-cancelar-editar {
-  background: #ccc;
+.hidden {
+  display: none;
 }
 
-#btn-guardar, #btn-actualizar {
-  background: #007bff;
-  color: white;
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-15px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
 }
 
-/* =============================================
-   RESPONSIVE: MÓVIL (panel arriba, mapa abajo)
-   ============================================= */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @media (max-width: 768px) {
-  body {
-    flex-direction: column;
+
+  h1 {
+    font-size: 2.5rem;
   }
 
-  #sidebar {
-    width: 100%;
-    height: auto;
-    max-height: 40vh;
-    border-right: none;
-    border-bottom: 2px solid #ccc;
+  .mascota img {
+    width: 160px;
   }
 
-  #mapa {
-    height: 60vh;
-    flex: none;
+  .subtitle {
+    font-size: 1rem;
   }
+
 }
