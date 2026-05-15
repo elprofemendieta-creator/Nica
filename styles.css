@@ -16,7 +16,6 @@ body {
     flex-direction: column;
 }
 
-/* Header */
 .app-header {
     background: white;
     padding: 12px 25px;
@@ -103,7 +102,6 @@ body {
     display: none !important;
 }
 
-/* Main layout */
 .main-content {
     display: flex;
     flex-wrap: wrap;
@@ -123,16 +121,16 @@ body {
     flex: 1;
     position: relative;
     height: calc(100vh - 70px);
-    min-height: 400px; /* Fuerza altura mínima */
+    min-height: 400px;
 }
 
 #map {
     width: 100%;
     height: 100%;
-    background: #ccc; /* Fondo mientras carga */
+    background: #ccc;
 }
 
-/* Ajustes para móvil */
+/* Móvil */
 @media (max-width: 768px) {
     .sidebar {
         width: 100%;
@@ -141,16 +139,18 @@ body {
         order: 2;
     }
     .map-container {
-        height: 60vh; /* Altura relativa en móvil */
-        min-height: 300px;
+        height: 60vh !important;
+        min-height: 300px !important;
         order: 1;
+    }
+    #map {
+        height: 100% !important;
     }
     .main-content {
         flex-direction: column;
     }
 }
 
-/* Búsqueda y filtros */
 .search-box {
     display: flex;
     align-items: center;
@@ -201,7 +201,6 @@ body {
     color: white;
 }
 
-/* Lista de lugares */
 .places-list-container h3 {
     font-size: 16px;
     margin-bottom: 15px;
@@ -292,7 +291,6 @@ body {
     font-weight: 600;
 }
 
-/* Layer control */
 .layer-control {
     position: absolute;
     bottom: 20px;
@@ -322,7 +320,6 @@ body {
     color: white;
 }
 
-/* Modal */
 .modal {
     display: none;
     position: fixed;
@@ -408,7 +405,6 @@ body {
     font-weight: 600;
 }
 
-/* Toast */
 .toast-container {
     position: fixed;
     bottom: 20px;
@@ -431,7 +427,6 @@ body {
     to { transform: translateX(0); opacity: 1; }
 }
 
-/* Dark Mode */
 body.dark-mode {
     background: #1a1a2e;
 }
@@ -459,17 +454,6 @@ body.dark-mode .search-box input {
 }
 
 body.dark-mode .categoria-filtro {
+    background: #3d3d5c;
     color: #ddd;
-}
-/* Fuerza altura del mapa en móvil */
-@media (max-width: 768px) {
-    .map-container {
-        height: 60vh !important;
-        min-height: 400px !important;
-    }
-    #map {
-        height: 100% !important;
-        width: 100% !important;
-        min-height: 400px !important;
-    }
 }
