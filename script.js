@@ -82,15 +82,37 @@ function obtenerFiltroActual() {
 
 // ========== MAPA ==========
 function initMap() {
+    // Asegurarse de que el contenedor tenga altura antes de crear el mapa
+    const mapContainer = document.getElementById('map');
+    if (!mapContainer) return;
+    
+    // Si el mapa ya existe, destruirlo (útil para redimensiones)
+    if (map) {
+        map.remove();
+    }
+    
     map = L.map('map').setView([12.8654, -85.2072], 8);
+    
+    // Capas
     currentLayers.calles = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { attribution: '&copy; OpenStreetMap' }).addTo(map);
     currentLayers.satelite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { attribution: 'Esri' });
     currentLayers.relieve = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', { attribution: 'OpenTopoMap' });
     
+    // Cluster
     markerCluster = L.markerClusterGroup();
     map.addLayer(markerCluster);
     
-    // Capas flotantes
+    // Forzar redimensionamiento correcto en móvil después de un breve retardo
+    setTimeout(() => {
+        map.invalidateSize(true);
+    }, 200);
+    
+    // También al cambiar orientación
+    window.addEventListener('resize', () => {
+        if (map) map.invalidateSize(true);
+    });
+    
+    // Controles de capas
     document.querySelectorAll('.layer-btn[data-layer]').forEach(btn => {
         btn.addEventListener('click', () => {
             const layer = btn.dataset.layer;
@@ -112,6 +134,7 @@ function initMap() {
 }
 
 function actualizarMarcadores() {
+    if (!markerCluster) return;
     markerCluster.clearLayers();
     const filtroCat = obtenerFiltroActual();
     const busqueda = searchInput.value.toLowerCase();
@@ -163,7 +186,9 @@ function actualizarListaLugares() {
     `).join('');
 }
 
-window.centrarMapa = (lat, lng) => map.setView([lat, lng], 14);
+window.centrarMapa = (lat, lng) => {
+    if (map) map.setView([lat, lng], 14);
+};
 
 // ========== ADMIN ==========
 function entrarModoAdmin() {
@@ -258,13 +283,11 @@ lugarForm.addEventListener('submit', (e) => {
     }
     
     if (id) {
-        // Editar
         const index = allPlaces.findIndex(p => p.id == id);
         if (index !== -1) {
             allPlaces[index] = { ...allPlaces[index], nombre, lat, lng, url, imagen, categoria };
         }
     } else {
-        // Nuevo
         const nuevoId = Date.now();
         allPlaces.push({ id: nuevoId, nombre, lat, lng, url, imagen, categoria });
     }
@@ -277,8 +300,12 @@ lugarForm.addEventListener('submit', (e) => {
 });
 
 addPlaceBtn.addEventListener('click', () => {
-    const center = map.getCenter();
-    abrirFormularioNuevo(center.lat, center.lng);
+    if (map) {
+        const center = map.getCenter();
+        abrirFormularioNuevo(center.lat, center.lng);
+    } else {
+        abrirFormularioNuevo(12.8654, -85.2072);
+    }
 });
 
 // ========== BÚSQUEDA Y OTROS ==========
@@ -291,7 +318,7 @@ searchInput.addEventListener('input', () => {
 geolocationBtn.addEventListener('click', () => {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(pos => {
-            map.setView([pos.coords.latitude, pos.coords.longitude], 13);
+            if (map) map.setView([pos.coords.latitude, pos.coords.longitude], 13);
         }, () => mostrarToast("No se pudo obtener ubicación", "error"));
     } else {
         mostrarToast("Geolocalización no soportada", "error");
@@ -318,11 +345,19 @@ document.querySelectorAll('.close-modal').forEach(btn => {
     });
 });
 
-// Inicialización
+// Inicialización con espera para móvil
 function init() {
     initDarkMode();
-    initMap();
-    cargarDatos();
+    // Esperar un poco a que el DOM esté completamente listo y el contenedor tenga tamaño
+    setTimeout(() => {
+        initMap();
+        cargarDatos();
+    }, 100);
 }
+
+// Asegurar que el mapa se redibuje cuando la página termina de cargar
+window.addEventListener('load', () => {
+    if (map) map.invalidateSize(true);
+});
 
 init();
