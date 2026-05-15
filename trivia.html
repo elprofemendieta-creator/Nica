@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trivia Cultural de Nicaragua</title>
+  <link rel="stylesheet" href="trivia.css">
+</head>
+<body>
+  <main class="app">
+    <section class="trivia-panel" aria-labelledby="app-title">
+      <div class="topbar">
+        <div>
+          <p class="eyebrow">Nicaragua cultural</p>
+          <h1 id="app-title">Trivia viajera</h1>
+        </div>
+        <div class="score-box" aria-live="polite">
+          <span>Puntos</span>
+          <strong id="score">0</strong>
+        </div>
+      </div>
+
+      <div class="progress-wrap" aria-label="Progreso de la trivia">
+        <div class="progress-info">
+          <span id="question-count">Pregunta 1 de 8</span>
+          <span id="category">Cultura</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-bar" id="progress-bar"></div>
+        </div>
+      </div>
+
+      <article class="question-card">
+        <h2 id="question">Cargando pregunta...</h2>
+        <div class="answers" id="answers"></div>
+      </article>
+
+      <div class="feedback" id="feedback" aria-live="polite"></div>
+
+      <div class="actions">
+        <button class="secondary" id="restart-btn" type="button">Reiniciar</button>
+        <button class="primary" id="next-btn" type="button" disabled>Siguiente</button>
+      </div>
+    </section>
+
+    <section class="result-panel hidden" id="result-panel" aria-live="polite">
+      <p class="eyebrow">Resultado final</p>
+      <h2 id="result-title">¡Buen viaje cultural!</h2>
+      <p id="result-message"></p>
+      <button class="primary" id="play-again-btn" type="button">Jugar otra vez</button>
+    </section>
+  </main>
+
+  <script src="trivia.js"></script>
+</body>
+</html>
