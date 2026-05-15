@@ -1,365 +1,464 @@
-// ========== CONFIGURACIÓN INICIAL ==========
-let map;
-let markerCluster;
-let currentLayers = {};
-let allPlaces = [];
-let isAdmin = false;
-let editingId = null;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-// Clave de administrador
-const ADMIN_PASSWORD = "Diriamba2026";
+body {
+    font-family: 'Poppins', sans-serif;
+    background: #F5F5F0;
+    overflow-x: hidden;
+}
 
-// Elementos DOM
-const darkModeBtn = document.getElementById('darkModeBtn');
-const adminLoginBtn = document.getElementById('adminLoginBtn');
-const adminPanelHeader = document.getElementById('adminPanelHeader');
-const logoutAdminBtn = document.getElementById('logoutAdminBtn');
-const adminModal = document.getElementById('adminModal');
-const lugarModal = document.getElementById('lugarModal');
-const searchInput = document.getElementById('searchInput');
-const categoriasFiltro = document.getElementById('categoriasFiltro');
-const placesList = document.getElementById('placesList');
-const adminAddBtn = document.getElementById('adminAddBtn');
-const addPlaceBtn = document.getElementById('addPlaceBtn');
-const lugarForm = document.getElementById('lugarForm');
-const modalTitle = document.getElementById('modalTitle');
-const geolocationBtn = document.getElementById('geolocationBtn');
+.app-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
 
-// ========== LOCALSTORAGE ==========
-function cargarDatos() {
-    const data = localStorage.getItem('turismo_puntos');
-    if (data) {
-        allPlaces = JSON.parse(data);
-    } else {
-        // Datos iniciales de ejemplo (Nicaragua)
-        allPlaces = [
-            { id: Date.now() + 1, nombre: "Granada", lat: 11.9294, lng: -85.9536, url: "https://es.wikipedia.org/wiki/Granada_(Nicaragua)", imagen: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Granada%2C_Nicaragua.jpg/300px-Granada%2C_Nicaragua.jpg", categoria: "ciudad" },
-            { id: Date.now() + 2, nombre: "León", lat: 12.4358, lng: -86.8781, url: "https://es.wikipedia.org/wiki/León_(Nicaragua)", imagen: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Leon_Nicaragua.jpg/300px-Leon_Nicaragua.jpg", categoria: "ciudad" },
-            { id: Date.now() + 3, nombre: "Corn Island", lat: 12.1758, lng: -83.0615, url: "https://es.wikipedia.org/wiki/Islas_del_Maíz", imagen: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Corn_Island.jpg/300px-Corn_Island.jpg", categoria: "playa" },
-            { id: Date.now() + 4, nombre: "Volcán Masaya", lat: 11.9844, lng: -86.1611, url: "https://es.wikipedia.org/wiki/Volcán_Masaya", imagen: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Masaya_Volcano.jpg/300px-Masaya_Volcano.jpg", categoria: "volcán" },
-            { id: Date.now() + 5, nombre: "San Juan del Sur", lat: 11.2528, lng: -85.8683, url: "https://es.wikipedia.org/wiki/San_Juan_del_Sur", imagen: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/San_Juan_del_Sur.jpg/300px-San_Juan_del_Sur.jpg", categoria: "playa" }
-        ];
-        guardarDatos();
+/* Header */
+.app-header {
+    background: white;
+    padding: 12px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    z-index: 100;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo i {
+    font-size: 28px;
+    color: #F57C00;
+}
+
+.logo h2 {
+    color: #2E7D32;
+    font-size: 20px;
+}
+
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.icon-btn, .admin-login-btn {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    transition: all 0.3s;
+    color: #666;
+}
+
+.icon-btn:hover, .admin-login-btn:hover {
+    background: #f0f0f0;
+    color: #F57C00;
+}
+
+.admin-login-btn {
+    background: #2E7D32;
+    color: white;
+    border-radius: 30px;
+    padding: 6px 15px;
+    font-size: 14px;
+}
+
+.admin-login-btn:hover {
+    background: #1B5E20;
+    color: white;
+}
+
+.admin-panel-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #FFF3E0;
+    padding: 5px 15px;
+    border-radius: 30px;
+    color: #F57C00;
+}
+
+.admin-panel-header span {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.admin-panel-header .icon-btn {
+    color: #d32f2f;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Main layout */
+.main-content {
+    display: flex;
+    flex-wrap: wrap;
+    flex: 1;
+}
+
+.sidebar {
+    width: 320px;
+    background: white;
+    padding: 20px;
+    overflow-y: auto;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+    height: calc(100vh - 70px);
+}
+
+.map-container {
+    flex: 1;
+    position: relative;
+    height: calc(100vh - 70px);
+    min-height: 400px; /* Fuerza altura mínima */
+}
+
+#map {
+    width: 100%;
+    height: 100%;
+    background: #ccc; /* Fondo mientras carga */
+}
+
+/* Ajustes para móvil */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100%;
+        height: auto;
+        max-height: 300px;
+        order: 2;
     }
-    actualizarCategoriasUnicas();
-    actualizarMarcadores();
-    actualizarListaLugares();
-}
-
-function guardarDatos() {
-    localStorage.setItem('turismo_puntos', JSON.stringify(allPlaces));
-}
-
-// ========== FUNCIONES AUXILIARES ==========
-function mostrarToast(mensaje, tipo = 'info') {
-    const container = document.getElementById('toastContainer');
-    const toast = document.createElement('div');
-    toast.className = 'toast';
-    toast.innerHTML = `<i class="fas ${tipo === 'error' ? 'fa-exclamation-circle' : 'fa-check-circle'}"></i> ${mensaje}`;
-    container.appendChild(toast);
-    setTimeout(() => toast.remove(), 3000);
-}
-
-function actualizarCategoriasUnicas() {
-    const categorias = [...new Set(allPlaces.map(p => p.categoria).filter(c => c))];
-    categoriasFiltro.innerHTML = '<div class="categoria-filtro active" data-cat="todos">Todos</div>' +
-        categorias.map(cat => `<div class="categoria-filtro" data-cat="${cat}">${cat}</div>`).join('');
-    
-    document.querySelectorAll('.categoria-filtro').forEach(el => {
-        el.addEventListener('click', () => {
-            document.querySelectorAll('.categoria-filtro').forEach(c => c.classList.remove('active'));
-            el.classList.add('active');
-            actualizarMarcadores();
-            actualizarListaLugares();
-        });
-    });
-}
-
-function obtenerFiltroActual() {
-    const active = document.querySelector('.categoria-filtro.active');
-    return active ? active.dataset.cat : 'todos';
-}
-
-// ========== MAPA ==========
-function initMap() {
-    // Asegurarse de que el contenedor tenga altura antes de crear el mapa
-    const mapContainer = document.getElementById('map');
-    if (!mapContainer) return;
-    
-    // Si el mapa ya existe, destruirlo (útil para redimensiones)
-    if (map) {
-        map.remove();
+    .map-container {
+        height: 60vh; /* Altura relativa en móvil */
+        min-height: 300px;
+        order: 1;
     }
-    
-    map = L.map('map').setView([12.8654, -85.2072], 8);
-    
-    // Capas
-    currentLayers.calles = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { attribution: '&copy; OpenStreetMap' }).addTo(map);
-    currentLayers.satelite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { attribution: 'Esri' });
-    currentLayers.relieve = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', { attribution: 'OpenTopoMap' });
-    
-    // Cluster
-    markerCluster = L.markerClusterGroup();
-    map.addLayer(markerCluster);
-    
-    // Forzar redimensionamiento correcto en móvil después de un breve retardo
-    setTimeout(() => {
-        map.invalidateSize(true);
-    }, 200);
-    
-    // También al cambiar orientación
-    window.addEventListener('resize', () => {
-        if (map) map.invalidateSize(true);
-    });
-    
-    // Controles de capas
-    document.querySelectorAll('.layer-btn[data-layer]').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const layer = btn.dataset.layer;
-            Object.keys(currentLayers).forEach(l => { if (map.hasLayer(currentLayers[l])) map.removeLayer(currentLayers[l]); });
-            map.addLayer(currentLayers[layer]);
-            document.querySelectorAll('.layer-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-        });
-    });
-    
-    // Clic en mapa para añadir (solo admin)
-    map.on('click', (e) => {
-        if (isAdmin) {
-            abrirFormularioNuevo(e.latlng.lat, e.latlng.lng);
-        } else {
-            mostrarToast("Inicia sesión como admin para añadir lugares", "error");
-        }
-    });
-}
-
-function actualizarMarcadores() {
-    if (!markerCluster) return;
-    markerCluster.clearLayers();
-    const filtroCat = obtenerFiltroActual();
-    const busqueda = searchInput.value.toLowerCase();
-    
-    let filtered = allPlaces.filter(p => {
-        const matchCat = filtroCat === 'todos' || p.categoria === filtroCat;
-        const matchSearch = p.nombre.toLowerCase().includes(busqueda);
-        return matchCat && matchSearch;
-    });
-    
-    filtered.forEach(place => {
-        const popupContent = `
-            <b>${place.nombre}</b><br>
-            ${place.imagen ? `<img src="${place.imagen}" style="width:100%; border-radius:8px; margin:5px 0; max-width:200px;">` : ''}
-            <a href="${place.url || '#'}" target="_blank" style="display:inline-block; margin-top:5px; background:#F57C00; color:white; padding:5px 10px; border-radius:5px; text-decoration:none;">🔗 Visitar</a>
-            ${isAdmin ? `<br><button onclick="editarLugar(${place.id})" style="margin-top:5px; background:#2E7D32; color:white; border:none; padding:3px 8px; border-radius:5px; cursor:pointer;">✏️ Editar</button>
-            <button onclick="eliminarLugar(${place.id})" style="background:#d32f2f; color:white; border:none; padding:3px 8px; border-radius:5px; cursor:pointer;">🗑️ Eliminar</button>` : ''}
-        `;
-        const marker = L.marker([place.lat, place.lng]).bindPopup(popupContent);
-        markerCluster.addLayer(marker);
-    });
-}
-
-function actualizarListaLugares() {
-    const filtroCat = obtenerFiltroActual();
-    const busqueda = searchInput.value.toLowerCase();
-    let filtered = allPlaces.filter(p => {
-        const matchCat = filtroCat === 'todos' || p.categoria === filtroCat;
-        const matchSearch = p.nombre.toLowerCase().includes(busqueda);
-        return matchCat && matchSearch;
-    });
-    
-    if (filtered.length === 0) {
-        placesList.innerHTML = '<div style="text-align:center; padding:20px; color:#999;">No hay lugares</div>';
-        return;
+    .main-content {
+        flex-direction: column;
     }
-    
-    placesList.innerHTML = filtered.map(place => `
-        <div class="place-card" onclick="centrarMapa(${place.lat}, ${place.lng})">
-            <div class="place-card-header">
-                ${place.imagen ? `<img src="${place.imagen}" alt="${place.nombre}">` : '<div style="width:60px; height:60px; background:#e0e0e0; border-radius:10px; display:flex; align-items:center; justify-content:center;"><i class="fas fa-map-marker-alt"></i></div>'}
-                <div class="place-info">
-                    <h4>${place.nombre}</h4>
-                    <div class="place-categoria">${place.categoria || 'sin categoría'}</div>
-                    ${isAdmin ? `<div class="admin-actions"><button class="edit-btn" onclick="event.stopPropagation(); editarLugar(${place.id})"><i class="fas fa-edit"></i> Editar</button><button class="delete-btn" onclick="event.stopPropagation(); eliminarLugar(${place.id})"><i class="fas fa-trash"></i> Eliminar</button></div>` : ''}
-                </div>
-            </div>
-        </div>
-    `).join('');
 }
 
-window.centrarMapa = (lat, lng) => {
-    if (map) map.setView([lat, lng], 14);
-};
-
-// ========== ADMIN ==========
-function entrarModoAdmin() {
-    isAdmin = true;
-    adminLoginBtn.classList.add('hidden');
-    adminPanelHeader.classList.remove('hidden');
-    adminAddBtn.classList.remove('hidden');
-    mostrarToast("Modo administrador activado", "success");
-    actualizarMarcadores();
-    actualizarListaLugares();
+/* Búsqueda y filtros */
+.search-box {
+    display: flex;
+    align-items: center;
+    background: #f5f5f5;
+    border-radius: 30px;
+    padding: 8px 15px;
+    margin-bottom: 20px;
 }
 
-function salirModoAdmin() {
-    isAdmin = false;
-    adminLoginBtn.classList.remove('hidden');
-    adminPanelHeader.classList.add('hidden');
-    adminAddBtn.classList.add('hidden');
-    mostrarToast("Modo administrador desactivado", "info");
-    actualizarMarcadores();
-    actualizarListaLugares();
+.search-box i {
+    color: #F57C00;
+    margin-right: 10px;
 }
 
-adminLoginBtn.addEventListener('click', () => {
-    adminModal.style.display = 'flex';
-});
-
-document.getElementById('adminLoginForm').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const pass = document.getElementById('adminPassword').value;
-    if (pass === ADMIN_PASSWORD) {
-        adminModal.style.display = 'none';
-        entrarModoAdmin();
-    } else {
-        mostrarToast("Contraseña incorrecta", "error");
-    }
-    document.getElementById('adminPassword').value = '';
-});
-
-logoutAdminBtn.addEventListener('click', salirModoAdmin);
-
-// ========== CRUD LUGARES ==========
-function abrirFormularioNuevo(lat, lng) {
-    modalTitle.innerText = 'Añadir Lugar';
-    document.getElementById('lugarId').value = '';
-    document.getElementById('lugarNombre').value = '';
-    document.getElementById('lugarLat').value = lat.toFixed(6);
-    document.getElementById('lugarLng').value = lng.toFixed(6);
-    document.getElementById('lugarUrl').value = '';
-    document.getElementById('lugarImagen').value = '';
-    document.getElementById('lugarCategoria').value = '';
-    lugarModal.style.display = 'flex';
+.search-box input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    outline: none;
+    font-size: 14px;
 }
 
-window.editarLugar = (id) => {
-    const place = allPlaces.find(p => p.id === id);
-    if (!place) return;
-    modalTitle.innerText = 'Editar Lugar';
-    document.getElementById('lugarId').value = place.id;
-    document.getElementById('lugarNombre').value = place.nombre;
-    document.getElementById('lugarLat').value = place.lat;
-    document.getElementById('lugarLng').value = place.lng;
-    document.getElementById('lugarUrl').value = place.url || '';
-    document.getElementById('lugarImagen').value = place.imagen || '';
-    document.getElementById('lugarCategoria').value = place.categoria || '';
-    lugarModal.style.display = 'flex';
-};
-
-window.eliminarLugar = (id) => {
-    if (confirm('¿Eliminar este lugar permanentemente?')) {
-        allPlaces = allPlaces.filter(p => p.id !== id);
-        guardarDatos();
-        actualizarCategoriasUnicas();
-        actualizarMarcadores();
-        actualizarListaLugares();
-        mostrarToast("Lugar eliminado", "info");
-    }
-};
-
-lugarForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const id = document.getElementById('lugarId').value;
-    const nombre = document.getElementById('lugarNombre').value.trim();
-    const lat = parseFloat(document.getElementById('lugarLat').value);
-    const lng = parseFloat(document.getElementById('lugarLng').value);
-    const url = document.getElementById('lugarUrl').value.trim();
-    const imagen = document.getElementById('lugarImagen').value.trim();
-    const categoria = document.getElementById('lugarCategoria').value.trim();
-    
-    if (!nombre || isNaN(lat) || isNaN(lng)) {
-        mostrarToast("Nombre, latitud y longitud son obligatorios", "error");
-        return;
-    }
-    
-    if (id) {
-        const index = allPlaces.findIndex(p => p.id == id);
-        if (index !== -1) {
-            allPlaces[index] = { ...allPlaces[index], nombre, lat, lng, url, imagen, categoria };
-        }
-    } else {
-        const nuevoId = Date.now();
-        allPlaces.push({ id: nuevoId, nombre, lat, lng, url, imagen, categoria });
-    }
-    guardarDatos();
-    lugarModal.style.display = 'none';
-    actualizarCategoriasUnicas();
-    actualizarMarcadores();
-    actualizarListaLugares();
-    mostrarToast(id ? "Lugar actualizado" : "Lugar añadido", "success");
-});
-
-addPlaceBtn.addEventListener('click', () => {
-    if (map) {
-        const center = map.getCenter();
-        abrirFormularioNuevo(center.lat, center.lng);
-    } else {
-        abrirFormularioNuevo(12.8654, -85.2072);
-    }
-});
-
-// ========== BÚSQUEDA Y OTROS ==========
-searchInput.addEventListener('input', () => {
-    actualizarMarcadores();
-    actualizarListaLugares();
-});
-
-// Geolocalización
-geolocationBtn.addEventListener('click', () => {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(pos => {
-            if (map) map.setView([pos.coords.latitude, pos.coords.longitude], 13);
-        }, () => mostrarToast("No se pudo obtener ubicación", "error"));
-    } else {
-        mostrarToast("Geolocalización no soportada", "error");
-    }
-});
-
-// Modo oscuro
-function initDarkMode() {
-    const isDark = localStorage.getItem('darkMode') === 'true';
-    if (isDark) document.body.classList.add('dark-mode');
-    darkModeBtn.innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
-    darkModeBtn.addEventListener('click', () => {
-        document.body.classList.toggle('dark-mode');
-        const dark = document.body.classList.contains('dark-mode');
-        localStorage.setItem('darkMode', dark);
-        darkModeBtn.innerHTML = dark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
-    });
+.filter-group label {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 8px;
+    display: block;
 }
 
-// Cerrar modales
-document.querySelectorAll('.close-modal').forEach(btn => {
-    btn.addEventListener('click', function() {
-        this.closest('.modal').style.display = 'none';
-    });
-});
-
-// Inicialización con espera para móvil
-function init() {
-    initDarkMode();
-    // Esperar un poco a que el DOM esté completamente listo y el contenedor tenga tamaño
-    setTimeout(() => {
-        initMap();
-        cargarDatos();
-    }, 100);
+.categorias-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
 }
 
-// Asegurar que el mapa se redibuje cuando la página termina de cargar
-window.addEventListener('load', () => {
-    if (map) map.invalidateSize(true);
-});
+.categoria-filtro {
+    background: #f0f0f0;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
 
-init();
-/* Resto de estilos (categorías, place-card, modales, dark mode, etc.) */
-/* ... mantener igual que antes ... */
+.categoria-filtro:hover, .categoria-filtro.active {
+    background: #F57C00;
+    color: white;
+}
+
+/* Lista de lugares */
+.places-list-container h3 {
+    font-size: 16px;
+    margin-bottom: 15px;
+    color: #2E7D32;
+}
+
+.places-list {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.place-card {
+    background: #f9f9f9;
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.place-card:hover {
+    transform: translateX(-3px);
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+.place-card-header {
+    display: flex;
+    gap: 12px;
+}
+
+.place-card-header img {
+    width: 60px;
+    height: 60px;
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+.place-info {
+    flex: 1;
+}
+
+.place-info h4 {
+    font-size: 14px;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.place-categoria {
+    font-size: 11px;
+    color: #F57C00;
+    background: #FFF3E0;
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 12px;
+}
+
+.admin-actions {
+    margin-top: 8px;
+    display: flex;
+    gap: 5px;
+}
+
+.admin-actions button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 12px;
+    padding: 3px 6px;
+    border-radius: 5px;
+}
+
+.edit-btn { color: #2E7D32; }
+.delete-btn { color: #d32f2f; }
+
+.admin-add-btn {
+    margin-top: 20px;
+    text-align: center;
+}
+
+#addPlaceBtn {
+    background: #F57C00;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 30px;
+    cursor: pointer;
+    width: 100%;
+    font-weight: 600;
+}
+
+/* Layer control */
+.layer-control {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+    background: white;
+    border-radius: 50px;
+    padding: 5px;
+    display: flex;
+    gap: 5px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+.layer-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    background: white;
+    cursor: pointer;
+    font-size: 18px;
+    transition: all 0.2s;
+}
+
+.layer-btn:hover, .layer-btn.active {
+    background: #F57C00;
+    color: white;
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal-header {
+    padding: 15px 20px;
+    background: #2E7D32;
+    color: white;
+    border-radius: 20px 20px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header .close-modal {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 28px;
+    cursor: pointer;
+}
+
+.form-group {
+    padding: 15px 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 13px;
+    color: #666;
+}
+
+.form-group input, .form-group select, .form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+}
+
+.form-row {
+    display: flex;
+    gap: 15px;
+    padding: 0 20px;
+}
+
+.form-row .form-group {
+    padding: 0;
+    flex: 1;
+    margin-bottom: 15px;
+}
+
+.submit-btn {
+    width: calc(100% - 40px);
+    margin: 0 20px 20px;
+    padding: 12px;
+    background: linear-gradient(135deg, #F57C00, #E65100);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+/* Toast */
+.toast-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 3000;
+}
+
+.toast {
+    background: white;
+    padding: 12px 20px;
+    border-radius: 10px;
+    margin-top: 10px;
+    box-shadow: 0 3px 15px rgba(0,0,0,0.2);
+    animation: slideIn 0.3s ease;
+    border-left: 4px solid #F57C00;
+}
+
+@keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+/* Dark Mode */
+body.dark-mode {
+    background: #1a1a2e;
+}
+
+body.dark-mode .app-header,
+body.dark-mode .sidebar,
+body.dark-mode .modal-content,
+body.dark-mode .place-card,
+body.dark-mode .toast {
+    background: #2d2d44;
+    color: #eee;
+}
+
+body.dark-mode .place-info h4 {
+    color: #fff;
+}
+
+body.dark-mode .search-box,
+body.dark-mode .admin-panel-header {
+    background: #3d3d5c;
+}
+
+body.dark-mode .search-box input {
+    color: white;
+}
+
+body.dark-mode .categoria-filtro {
+    background: #3d3d5c;
+    color: #ddd;
+}
