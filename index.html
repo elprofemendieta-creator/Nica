@@ -8,7 +8,32 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+<!-- Copia y pega esto donde quieras que aparezca tu mascota -->
+<iframe 
+  src="https://github.io" 
+  width="300px" 
+  height="400px" 
+  style="border: none; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);"
+  title="Mascota Virtual IA">
+</iframe>
+  <div id="pet-container" style="text-align: center; font-family: sans-serif; border: 2px solid #333; padding: 20px; width: 200px; border-radius: 15px;">
+  <div id="pet-avatar" style="font-size: 50px;">😺</div>
+  <p id="pet-status">Estado: Feliz</p>
+  <button onclick="changeState('🍖', 'Alimentado')">Alimentar</button>
+  <button onclick="changeState('😴', 'Durmiendo')">Dormir</button>
+</div>
 
+<script>
+  function changeState(emoji, text) {
+    document.getElementById('pet-avatar').innerText = emoji;
+    document.getElementById('pet-status').innerText = 'Estado: ' + text;
+    // Volver al estado normal en 3 segundos
+    setTimeout(() => {
+      document.getElementById('pet-avatar').innerText = '😺';
+      document.getElementById('pet-status').innerText = 'Estado: Esperando...';
+    }, 3000);
+  }
+</script>
   <div class="background"></div>
 
   <main class="container">
@@ -40,13 +65,11 @@
         <a href="juegos.html" class="menu-card">
           <span>🎮</span>
           <h3>Juegos Turísticos</h3>
-          <p>Trivia, memoria, ruleta y más.</p>
         </a>
 
         <a href="mapa.html" class="menu-card">
           <span>🗺️</span>
           <h3>Mapa Interactivo</h3>
-          <p>Descubre lugares y destinos.</p>
         </a>
 
       </div>
