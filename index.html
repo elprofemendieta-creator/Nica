@@ -1,60 +1,61 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Mapa Turístico de Nicaragua</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nica Explorer</title>
 
-  <!-- Leaflet CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <!-- Leaflet MarkerCluster (opcional, si lo usas en tu JS) -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
-
-  <!-- Tus estilos personalizados -->
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <!-- Panel lateral -->
-  <div id="sidebar">
-    <h2>🌋 Lugares de Nicaragua</h2>
 
-    <!-- Búsqueda -->
-    <input type="text" id="busqueda" placeholder="Buscar por nombre...">
+  <div class="background"></div>
 
-    <!-- Filtro por categoría -->
-    <select id="filtro-categoria">
-      <option value="">Todas las categorías</option>
-      <option value="playa">Playa</option>
-      <option value="volcan">Volcán</option>
-      <option value="ciudad">Ciudad</option>
-      <option value="naturaleza">Naturaleza</option>
-      <option value="cultural">Cultural</option>
-      <option value="otro">Otro</option>
-    </select>
+  <main class="container">
 
-    <!-- Lista de lugares -->
-    <div id="lista-lugares"></div>
+    <section class="hero">
 
-    <!-- Controles de administrador y modo oscuro -->
-    <div id="controles">
-      <button id="btn-admin">🔐 Admin</button>
-      <button id="modo-oscuro">🌓 Modo oscuro</button>
-    </div>
-  </div>
+      <div class="mascota">
+        <img src="https://cdn-icons-png.flaticon.com/512/4712/4712109.png" alt="Mascota" />
+      </div>
 
-  <!-- Contenedor del mapa -->
-  <div id="mapa"></div>
+      <h1>Nica Explorer</h1>
 
-  <!-- Leaflet JS -->
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <!-- Leaflet MarkerCluster JS (opcional) -->
-  <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+      <p class="subtitle">
+        Explora Nicaragua jugando y descubriendo lugares increíbles 🌋🌊
+      </p>
 
-  <!-- Supabase JS -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+      <button id="startBtn" class="start-btn">
+        Iniciar Aventura
+      </button>
 
-  <!-- Tu lógica -->
-  <script src="script.js"></script>
+    </section>
+
+    <section class="menu hidden" id="menuSection">
+
+      <h2>¿Qué deseas explorar?</h2>
+
+      <div class="menu-buttons">
+
+        <a href="juegos.html" class="menu-card">
+          <span>🎮</span>
+          <h3>Juegos Turísticos</h3>
+          <p>Trivia, memoria, ruleta y más.</p>
+        </a>
+
+        <a href="mapa.html" class="menu-card">
+          <span>🗺️</span>
+          <h3>Mapa Interactivo</h3>
+          <p>Descubre lugares y destinos.</p>
+        </a>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <script src="app.js"></script>
+
 </body>
 </html>
