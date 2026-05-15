@@ -1,0 +1,56 @@
+* {
+}
+
+.action-btn {
+  margin-top: 15px;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 10px;
+  background: white;
+  color: #0077b6;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 80px);
+  gap: 10px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.memory-card {
+  width: 80px;
+  height: 80px;
+  background: white;
+  color: #0077b6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+
+  .topbar {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .topbar h1 {
+    font-size: 1.5rem;
+  }
+
+  .card-grid {
+    grid-template-columns: repeat(4, 65px);
+  }
+
+  .memory-card {
+    width: 65px;
+    height: 65px;
+  }
+
+}
