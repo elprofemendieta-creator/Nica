@@ -24,6 +24,8 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+
+    <!-- Pantalla principal (siempre visible) -->
     <div class="app-container">
         <header class="app-header">
             <div class="logo">
@@ -39,7 +41,9 @@
                 </div>
             </div>
         </header>
+
         <div class="main-content">
+            <!-- Barra lateral -->
             <aside class="sidebar">
                 <div class="search-box">
                     <i class="fas fa-search"></i>
@@ -53,10 +57,13 @@
                     <h3><i class="fas fa-map-pin"></i> Lugares</h3>
                     <div id="placesList" class="places-list"></div>
                 </div>
+                <!-- Botón añadir lugar (visible solo en modo admin) -->
                 <div id="adminAddBtn" class="admin-add-btn hidden">
                     <button id="addPlaceBtn"><i class="fas fa-plus-circle"></i> Añadir lugar</button>
                 </div>
             </aside>
+
+            <!-- Mapa -->
             <div class="map-container">
                 <div id="map"></div>
                 <div id="layerControl" class="layer-control">
@@ -69,9 +76,64 @@
         </div>
     </div>
 
-    <!-- Modales omitidos por brevedad, pero igual que antes -->
-    <div id="adminModal" class="modal">...</div>
-    <div id="lugarModal" class="modal">...</div>
+    <!-- Modal Login Admin -->
+    <div id="adminModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Acceso Administrador</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="adminLoginForm">
+                <div class="form-group">
+                    <label>Contraseña</label>
+                    <input type="password" id="adminPassword" placeholder="Contraseña" required>
+                </div>
+                <button type="submit" class="submit-btn">Entrar</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Añadir/Editar Lugar -->
+    <div id="lugarModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Añadir Lugar</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="lugarForm">
+                <input type="hidden" id="lugarId">
+                <div class="form-group">
+                    <label>Nombre del lugar *</label>
+                    <input type="text" id="lugarNombre" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group half">
+                        <label>Latitud *</label>
+                        <input type="number" step="any" id="lugarLat" required>
+                    </div>
+                    <div class="form-group half">
+                        <label>Longitud *</label>
+                        <input type="number" step="any" id="lugarLng" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>URL del enlace (HTML)</label>
+                    <input type="text" id="lugarUrl" placeholder="ej: lugar.html">
+                </div>
+                <div class="form-group">
+                    <label>URL Imagen (opcional)</label>
+                    <input type="text" id="lugarImagen" placeholder="https://...">
+                </div>
+                <div class="form-group">
+                    <label>Categoría (etiqueta)</label>
+                    <input type="text" id="lugarCategoria" placeholder="ej: playa, volcán, ciudad">
+                </div>
+                <button type="submit" class="submit-btn">Guardar</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast -->
     <div id="toastContainer" class="toast-container"></div>
 
     <script src="script.js"></script>
