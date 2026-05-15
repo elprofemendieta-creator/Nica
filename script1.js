@@ -42,79 +42,70 @@ function obtenerFiltroActual() { /* igual */ }
 // ========== INICIALIZACIÓN DEL MAPA ROBUSTA ==========
 function initMap() {
     const mapContainer = document.getElementById('map');
-    if (!mapContainer) return;
-    
-    // Si ya existe mapa, destrúyelo
+    if (!mapContainer) {
+        console.error("No se encontró el elemento #map");
+        return;
+    }
+    // Si ya existe un mapa, destrúyelo para recrearlo limpio
     if (map) {
         map.remove();
         map = null;
     }
     
-    // Forzar altura visible (importante en móvil)
-    const container = document.querySelector('.map-container');
-    if (container) {
-        const height = window.innerHeight * 0.6;
-        container.style.height = height + 'px';
-        mapContainer.style.height = '100%';
+    // Verificar que el contenedor tiene dimensiones visibles
+    const rect = mapContainer.getBoundingClientRect();
+    if (rect.width === 0 || rect.height === 0) {
+        console.warn("El contenedor del mapa aún no tiene tamaño, reintentando...");
+        setTimeout(initMap, 100);
+        return;
     }
     
     // Crear mapa
     map = L.map('map').setView([12.8654, -85.2072], 8);
     
     // Capas
-    currentLayers.calles = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-        attribution: '&copy; OpenStreetMap'
-    }).addTo(map);
+    currentLayers.calles = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { attribution: '&copy; OpenStreetMap' }).addTo(map);
+    currentLayers.satelite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { attribution: 'Esri' });
+    currentLayers.relieve = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', { attribution: 'OpenTopoMap' });
     
-    currentLayers.satelite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-        attribution: 'Esri'
-    });
-    
-    currentLayers.relieve = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
-        attribution: 'OpenTopoMap'
-    });
-    
-    // Cluster
     markerCluster = L.markerClusterGroup();
     map.addLayer(markerCluster);
     
-    // Forzar redimensionamiento varias veces
+    // Forzar redimensionamiento después de que el DOM esté completamente estable
     setTimeout(() => {
         if (map) map.invalidateSize(true);
-    }, 100);
-    setTimeout(() => {
-        if (map) map.invalidateSize(true);
-    }, 500);
+    }, 200);
     
-    window.addEventListener('resize', () => {
-        if (map) map.invalidateSize(true);
-    });
+    // Escuchar cambios de orientación y redimensiones
+    window.addEventListener('resize', () => { if (map) map.invalidateSize(true); });
+    
+    // También cuando el sidebar se abre/cierra (en móvil al desplegar la lista)
+    // No es necesario, pero por si acaso
+    const sidebar = document.querySelector('.sidebar');
+    if (sidebar) {
+        const observer = new ResizeObserver(() => { if (map) map.invalidateSize(true); });
+        observer.observe(sidebar);
+    }
     
     // Controles de capas
     document.querySelectorAll('.layer-btn[data-layer]').forEach(btn => {
-        btn.removeEventListener('click', layerHandler);
-        btn.addEventListener('click', layerHandler);
+        btn.addEventListener('click', () => {
+            const layer = btn.dataset.layer;
+            Object.keys(currentLayers).forEach(l => { if (map.hasLayer(currentLayers[l])) map.removeLayer(currentLayers[l]); });
+            map.addLayer(currentLayers[layer]);
+            document.querySelectorAll('.layer-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        });
     });
     
-    function layerHandler(e) {
-        const layer = e.currentTarget.dataset.layer;
-        Object.keys(currentLayers).forEach(l => {
-            if (map.hasLayer(currentLayers[l])) map.removeLayer(currentLayers[l]);
-        });
-        map.addLayer(currentLayers[layer]);
-        document.querySelectorAll('.layer-btn').forEach(b => b.classList.remove('active'));
-        e.currentTarget.classList.add('active');
-    }
-    
-    // Clic en mapa para añadir (solo admin)
+    // Clic en mapa (solo admin)
     map.on('click', (e) => {
-        if (isAdmin) {
-            abrirFormularioNuevo(e.latlng.lat, e.latlng.lng);
-        } else {
-            mostrarToast("Inicia sesión como admin para añadir lugares", "error");
-        }
+        if (isAdmin) abrirFormularioNuevo(e.latlng.lat, e.latlng.lng);
+        else mostrarToast("Inicia sesión como admin para añadir lugares", "error");
     });
 }
+
+// El resto de funciones (actualizarMarcadores, actualizarListaLugares, admin, CRUD, etc.)
 // se mantienen exactamente igual que en la versión anterior, solo hay que asegurar
 // que dentro de ellas se verifique que map y markerCluster existen.
 
@@ -129,20 +120,11 @@ function actualizarMarcadores() {
 // Inicialización principal
 function init() {
     initDarkMode();
-    // Esperar a que el DOM y los estilos estén listos
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', () => {
-            setTimeout(() => {
-                initMap();
-                cargarDatos();
-            }, 50);
-        });
-    } else {
-        setTimeout(() => {
-            initMap();
-            cargarDatos();
-        }, 50);
-    }
+    // Pequeño retardo para garantizar que el DOM esté listo y el contenedor visible
+    setTimeout(() => {
+        initMap();
+        cargarDatos();
+    }, 50);
 }
 
 // Asegurar que el mapa se redibuja cuando la página termina de cargar completamente
