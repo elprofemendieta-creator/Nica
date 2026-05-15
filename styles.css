@@ -1,467 +1,223 @@
+/* =============================================
+   RESET BÁSICO Y ESTRUCTURA DE ALTURA COMPLETA
+   ============================================= */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-html, body {
-  height: 100%;
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
-#mapa {
+
+html, body {
   height: 100%;
-  width: 100%;
+  font-family: 'Segoe UI', sans-serif;
 }
+
 body {
-    font-family: 'Poppins', sans-serif;
-    background: #F5F5F0;
-    overflow-x: hidden;
+  display: flex;
+  overflow: hidden; /* evita doble scroll */
 }
 
-.app-container {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
+/* =============================================
+   PANEL LATERAL (SIDEBAR)
+   ============================================= */
+#sidebar {
+  width: 320px;
+  max-width: 100%;
+  height: 100%;
+  background: #f8f9fa;
+  border-right: 1px solid #ddd;
+  display: flex;
+  flex-direction: column;
+  padding: 15px;
+  overflow-y: auto;
+  z-index: 1000;
 }
 
-.app-header {
-    background: white;
-    padding: 12px 25px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 15px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    z-index: 100;
+#sidebar h2 {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
 }
 
-.logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+#busqueda, #filtro-categoria {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 0.9rem;
 }
 
-.logo i {
-    font-size: 28px;
-    color: #F57C00;
+#lista-lugares {
+  flex: 1;
+  overflow-y: auto;
+  margin-bottom: 10px;
 }
 
-.logo h2 {
-    color: #2E7D32;
-    font-size: 20px;
+.lugar-item {
+  padding: 8px;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+  transition: background 0.2s;
 }
 
-.header-controls {
-    display: flex;
-    align-items: center;
-    gap: 15px;
+.lugar-item:hover {
+  background: #e9ecef;
 }
 
-.icon-btn, .admin-login-btn {
-    background: none;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
-    padding: 8px;
-    border-radius: 50%;
-    transition: all 0.3s;
-    color: #666;
+.lugar-item .url-link {
+  font-size: 1.1rem;
+  margin-left: 5px;
+  text-decoration: none;
 }
 
-.icon-btn:hover, .admin-login-btn:hover {
-    background: #f0f0f0;
-    color: #F57C00;
+.btn-editar-lista, .btn-eliminar-lista {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  margin-left: 4px;
 }
 
-.admin-login-btn {
-    background: #2E7D32;
-    color: white;
-    border-radius: 30px;
-    padding: 6px 15px;
-    font-size: 14px;
+#controles {
+  display: flex;
+  gap: 8px;
+  margin-top: auto;
 }
 
-.admin-login-btn:hover {
-    background: #1B5E20;
-    color: white;
+#btn-admin, #modo-oscuro {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #aaa;
+  border-radius: 5px;
+  background: white;
+  cursor: pointer;
+  font-weight: bold;
 }
 
-.admin-panel-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background: #FFF3E0;
-    padding: 5px 15px;
-    border-radius: 30px;
-    color: #F57C00;
+/* =============================================
+   MAPA
+   ============================================= */
+#mapa {
+  flex: 1;
+  height: 100%;
+  /* Asegura que Leaflet herede altura si flex no funciona en algún navegador */
+  min-height: 100%;
 }
 
-.admin-panel-header span {
-    font-size: 14px;
-    font-weight: 500;
+/* =============================================
+   MODO OSCURO
+   ============================================= */
+body.oscuro {
+  background: #1e1e1e;
+  color: #eee;
 }
 
-.admin-panel-header .icon-btn {
-    color: #d32f2f;
+body.oscuro #sidebar {
+  background: #2a2a2a;
+  border-right-color: #444;
 }
 
-.hidden {
-    display: none !important;
+body.oscuro #busqueda,
+body.oscuro #filtro-categoria,
+body.oscuro #btn-admin,
+body.oscuro #modo-oscuro {
+  background: #333;
+  color: #eee;
+  border-color: #555;
 }
 
-.main-content {
-    display: flex;
-    flex-wrap: wrap;
-    flex: 1;
+body.oscuro .lugar-item:hover {
+  background: #3a3a3a;
 }
 
-.sidebar {
-    width: 320px;
-    background: white;
-    padding: 20px;
-    overflow-y: auto;
-    box-shadow: 2px 0 10px rgba(0,0,0,0.05);
-    height: calc(100vh - 70px);
+/* =============================================
+   MODAL DE FORMULARIO (admin)
+   ============================================= */
+.modal-formulario {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
 }
 
-.map-container {
-    flex: 1;
-    position: relative;
-    height: calc(100vh - 70px);
-    min-height: 400px;
+.modal-contenido {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
 }
 
-#map {
-    width: 100%;
-    height: 100%;
-    background: #ccc;
+body.oscuro .modal-contenido {
+  background: #2a2a2a;
+  color: #eee;
 }
 
-/* Móvil */
+.modal-contenido h3 {
+  margin-bottom: 15px;
+}
+
+.modal-contenido label {
+  display: block;
+  margin-top: 10px;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.modal-contenido input,
+.modal-contenido select {
+  width: 100%;
+  padding: 6px;
+  margin-top: 4px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.modal-botones {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  justify-content: flex-end;
+}
+
+.modal-botones button {
+  padding: 8px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#btn-cancelar, #btn-cancelar-editar {
+  background: #ccc;
+}
+
+#btn-guardar, #btn-actualizar {
+  background: #007bff;
+  color: white;
+}
+
+/* =============================================
+   RESPONSIVE: MÓVIL (panel arriba, mapa abajo)
+   ============================================= */
 @media (max-width: 768px) {
-    .sidebar {
-        width: 100%;
-        height: auto;
-        max-height: 300px;
-        order: 2;
-    }
-    .map-container {
-        height: 60vh !important;
-        min-height: 300px !important;
-        order: 1;
-    }
-    #map {
-        height: 100% !important;
-    }
-    .main-content {
-        flex-direction: column;
-    }
-}
+  body {
+    flex-direction: column;
+  }
 
-.search-box {
-    display: flex;
-    align-items: center;
-    background: #f5f5f5;
-    border-radius: 30px;
-    padding: 8px 15px;
-    margin-bottom: 20px;
-}
-
-.search-box i {
-    color: #F57C00;
-    margin-right: 10px;
-}
-
-.search-box input {
-    flex: 1;
-    border: none;
-    background: transparent;
-    outline: none;
-    font-size: 14px;
-}
-
-.filter-group label {
-    font-size: 13px;
-    color: #666;
-    margin-bottom: 8px;
-    display: block;
-}
-
-.categorias-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 20px;
-}
-
-.categoria-filtro {
-    background: #f0f0f0;
-    padding: 5px 12px;
-    border-radius: 20px;
-    font-size: 12px;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.categoria-filtro:hover, .categoria-filtro.active {
-    background: #F57C00;
-    color: white;
-}
-
-.places-list-container h3 {
-    font-size: 16px;
-    margin-bottom: 15px;
-    color: #2E7D32;
-}
-
-.places-list {
-    max-height: 400px;
-    overflow-y: auto;
-}
-
-.place-card {
-    background: #f9f9f9;
-    border-radius: 12px;
-    padding: 12px;
-    margin-bottom: 12px;
-    cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.place-card:hover {
-    transform: translateX(-3px);
-    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-}
-
-.place-card-header {
-    display: flex;
-    gap: 12px;
-}
-
-.place-card-header img {
-    width: 60px;
-    height: 60px;
-    border-radius: 10px;
-    object-fit: cover;
-}
-
-.place-info {
-    flex: 1;
-}
-
-.place-info h4 {
-    font-size: 14px;
-    margin-bottom: 5px;
-    color: #333;
-}
-
-.place-categoria {
-    font-size: 11px;
-    color: #F57C00;
-    background: #FFF3E0;
-    display: inline-block;
-    padding: 2px 8px;
-    border-radius: 12px;
-}
-
-.admin-actions {
-    margin-top: 8px;
-    display: flex;
-    gap: 5px;
-}
-
-.admin-actions button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 12px;
-    padding: 3px 6px;
-    border-radius: 5px;
-}
-
-.edit-btn { color: #2E7D32; }
-.delete-btn { color: #d32f2f; }
-
-.admin-add-btn {
-    margin-top: 20px;
-    text-align: center;
-}
-
-#addPlaceBtn {
-    background: #F57C00;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 30px;
-    cursor: pointer;
+  #sidebar {
     width: 100%;
-    font-weight: 600;
-}
+    height: auto;
+    max-height: 40vh;
+    border-right: none;
+    border-bottom: 2px solid #ccc;
+  }
 
-.layer-control {
-    position: absolute;
-    bottom: 20px;
-    right: 20px;
-    z-index: 1000;
-    background: white;
-    border-radius: 50px;
-    padding: 5px;
-    display: flex;
-    gap: 5px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-}
-
-.layer-btn {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    border: none;
-    background: white;
-    cursor: pointer;
-    font-size: 18px;
-    transition: all 0.2s;
-}
-
-.layer-btn:hover, .layer-btn.active {
-    background: #F57C00;
-    color: white;
-}
-
-.modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.5);
-    justify-content: center;
-    align-items: center;
-    z-index: 2000;
-}
-
-.modal-content {
-    background: white;
-    border-radius: 20px;
-    width: 90%;
-    max-width: 500px;
-    max-height: 90vh;
-    overflow-y: auto;
-}
-
-.modal-header {
-    padding: 15px 20px;
-    background: #2E7D32;
-    color: white;
-    border-radius: 20px 20px 0 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.modal-header .close-modal {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 28px;
-    cursor: pointer;
-}
-
-.form-group {
-    padding: 15px 20px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 5px;
-    font-size: 13px;
-    color: #666;
-}
-
-.form-group input, .form-group select, .form-group textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    font-size: 14px;
-    outline: none;
-}
-
-.form-row {
-    display: flex;
-    gap: 15px;
-    padding: 0 20px;
-}
-
-.form-row .form-group {
-    padding: 0;
-    flex: 1;
-    margin-bottom: 15px;
-}
-
-.submit-btn {
-    width: calc(100% - 40px);
-    margin: 0 20px 20px;
-    padding: 12px;
-    background: linear-gradient(135deg, #F57C00, #E65100);
-    color: white;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: 600;
-}
-
-.toast-container {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    z-index: 3000;
-}
-
-.toast {
-    background: white;
-    padding: 12px 20px;
-    border-radius: 10px;
-    margin-top: 10px;
-    box-shadow: 0 3px 15px rgba(0,0,0,0.2);
-    animation: slideIn 0.3s ease;
-    border-left: 4px solid #F57C00;
-}
-
-@keyframes slideIn {
-    from { transform: translateX(100%); opacity: 0; }
-    to { transform: translateX(0); opacity: 1; }
-}
-
-body.dark-mode {
-    background: #1a1a2e;
-}
-
-body.dark-mode .app-header,
-body.dark-mode .sidebar,
-body.dark-mode .modal-content,
-body.dark-mode .place-card,
-body.dark-mode .toast {
-    background: #2d2d44;
-    color: #eee;
-}
-
-body.dark-mode .place-info h4 {
-    color: #fff;
-}
-
-body.dark-mode .search-box,
-body.dark-mode .admin-panel-header {
-    background: #3d3d5c;
-}
-
-body.dark-mode .search-box input {
-    color: white;
-}
-
-body.dark-mode .categoria-filtro {
-    background: #3d3d5c;
-    color: #ddd;
+  #mapa {
+    height: 60vh;
+    flex: none;
+  }
 }
