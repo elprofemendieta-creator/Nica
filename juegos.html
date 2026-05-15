@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+
+  <link rel="stylesheet" href="juegos.css">
+</head>
+<body>
+
+  <header class="topbar">
+    <h1>🎮 Juegos Turísticos</h1>
+
+    <a href="index.html" class="volver">
+      ⬅ Inicio
+    </a>
+  </header>
+
+  <main class="games-container">
+
+    <section class="game-card">
+      <div class="emoji">🧠</div>
+      <h2>Trivia Cultural</h2>
+      <p>Responde preguntas sobre cultura y gastronomía.</p>
+      <button onclick="abrirJuego('Trivia Cultural')">Jugar</button>
+    </section>
+
+    <section class="game-card">
+      <div class="emoji">🎡</div>
+      <h2>Ruleta de Destinos</h2>
+      <p>Descubre qué lugar visitar.</p>
+      <button onclick="abrirJuego('Ruleta de Destinos')">Jugar</button>
+    </section>
+
+    <section class="game-card">
+      <div class="emoji">🃏</div>
+      <h2>Memoria de Cartas</h2>
+      <p>Encuentra las parejas correctas.</p>
+      <button onclick="abrirJuego('Memoria de Cartas')">Jugar</button>
+    </section>
+
+    <section class="game-card">
+      <div class="emoji">🔤</div>
+      <h2>Ordena la Palabra</h2>
+      <p>Ordena palabras relacionadas con Nicaragua.</p>
+      <button onclick="abrirJuego('Ordena la Palabra')">Jugar</button>
+    </section>
+
+    <section class="game-card">
+      <div class="emoji">🌋</div>
+      <h2>Laberinto</h2>
+      <p>Encuentra la salida del destino turístico.</p>
+      <button onclick="abrirJuego('Laberinto')">Jugar</button>
+    </section>
+
+  </main>
+
+  <section class="play-area">
+
+    <h2 id="gameTitle">Selecciona un juego</h2>
+
+    <div id="gameContent">
+      <p>Elige un juego para comenzar 😄</p>
+    </div>
+
+  </section>
+
+  <script src="juegos.js"></script>
+
+</body>
+</html>
