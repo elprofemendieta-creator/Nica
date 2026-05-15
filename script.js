@@ -380,3 +380,14 @@ if (document.readyState === 'loading') {
 } else {
     start();
 }
+async function cargarLugares() {
+  const { data, error } = await supabase
+    .from('lugares')
+    .select('*');
+
+  if (error) {
+    console.error('Error al cargar lugares:', error);
+    return [];
+  }
+  return data;
+}
