@@ -1,5 +1,12 @@
-// ========== CONFIGURACIÓN ==========
-let map, markerCluster, currentLayers = {}, allPlaces = [], isAdmin = false;
+// ========== CONFIGURACIÓN INICIAL ==========
+let map;
+let markerCluster;
+let currentLayers = {};
+let allPlaces = [];
+let isAdmin = false;
+let editingId = null;
+
+// Clave de administrador
 const ADMIN_PASSWORD = "Diriamba2026";
 
 // Elementos DOM
@@ -24,7 +31,14 @@ function cargarDatos() {
     if (data) {
         allPlaces = JSON.parse(data);
     } else {
-        allPlaces = [ /* datos iniciales igual que antes */ ];
+        // Datos iniciales de ejemplo (Nicaragua)
+        allPlaces = [
+            { id: Date.now() + 1, nombre: "Granada", lat: 11.9294, lng: -85.9536, url: "https://es.wikipedia.org/wiki/Granada_(Nicaragua)", imagen: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Granada%2C_Nicaragua.jpg/300px-Granada%2C_Nicaragua.jpg", categoria: "ciudad" },
+            { id: Date.now() + 2, nombre: "León", lat: 12.4358, lng: -86.8781, url: "https://es.wikipedia.org/wiki/León_(Nicaragua)", imagen: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Leon_Nicaragua.jpg/300px-Leon_Nicaragua.jpg", categoria: "ciudad" },
+            { id: Date.now() + 3, nombre: "Corn Island", lat: 12.1758, lng: -83.0615, url: "https://es.wikipedia.org/wiki/Islas_del_Maíz", imagen: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Corn_Island.jpg/300px-Corn_Island.jpg", categoria: "playa" },
+            { id: Date.now() + 4, nombre: "Volcán Masaya", lat: 11.9844, lng: -86.1611, url: "https://es.wikipedia.org/wiki/Volcán_Masaya", imagen: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Masaya_Volcano.jpg/300px-Masaya_Volcano.jpg", categoria: "volcán" },
+            { id: Date.now() + 5, nombre: "San Juan del Sur", lat: 11.2528, lng: -85.8683, url: "https://es.wikipedia.org/wiki/San_Juan_del_Sur", imagen: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/San_Juan_del_Sur.jpg/300px-San_Juan_del_Sur.jpg", categoria: "playa" }
+        ];
         guardarDatos();
     }
     actualizarCategoriasUnicas();
@@ -32,35 +46,51 @@ function cargarDatos() {
     actualizarListaLugares();
 }
 
-function guardarDatos() { localStorage.setItem('turismo_puntos', JSON.stringify(allPlaces)); }
+function guardarDatos() {
+    localStorage.setItem('turismo_puntos', JSON.stringify(allPlaces));
+}
 
-function mostrarToast(mensaje, tipo) { /* igual */ }
+// ========== FUNCIONES AUXILIARES ==========
+function mostrarToast(mensaje, tipo = 'info') {
+    const container = document.getElementById('toastContainer');
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.innerHTML = `<i class="fas ${tipo === 'error' ? 'fa-exclamation-circle' : 'fa-check-circle'}"></i> ${mensaje}`;
+    container.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
+}
 
-function actualizarCategoriasUnicas() { /* igual */ }
-function obtenerFiltroActual() { /* igual */ }
+function actualizarCategoriasUnicas() {
+    const categorias = [...new Set(allPlaces.map(p => p.categoria).filter(c => c))];
+    categoriasFiltro.innerHTML = '<div class="categoria-filtro active" data-cat="todos">Todos</div>' +
+        categorias.map(cat => `<div class="categoria-filtro" data-cat="${cat}">${cat}</div>`).join('');
+    
+    document.querySelectorAll('.categoria-filtro').forEach(el => {
+        el.addEventListener('click', () => {
+            document.querySelectorAll('.categoria-filtro').forEach(c => c.classList.remove('active'));
+            el.classList.add('active');
+            actualizarMarcadores();
+            actualizarListaLugares();
+        });
+    });
+}
 
-// ========== INICIALIZACIÓN DEL MAPA ROBUSTA ==========
+function obtenerFiltroActual() {
+    const active = document.querySelector('.categoria-filtro.active');
+    return active ? active.dataset.cat : 'todos';
+}
+
+// ========== MAPA ==========
 function initMap() {
+    // Asegurarse de que el contenedor tenga altura antes de crear el mapa
     const mapContainer = document.getElementById('map');
-    if (!mapContainer) {
-        console.error("No se encontró el elemento #map");
-        return;
-    }
-    // Si ya existe un mapa, destrúyelo para recrearlo limpio
+    if (!mapContainer) return;
+    
+    // Si el mapa ya existe, destruirlo (útil para redimensiones)
     if (map) {
         map.remove();
-        map = null;
     }
     
-    // Verificar que el contenedor tiene dimensiones visibles
-    const rect = mapContainer.getBoundingClientRect();
-    if (rect.width === 0 || rect.height === 0) {
-        console.warn("El contenedor del mapa aún no tiene tamaño, reintentando...");
-        setTimeout(initMap, 100);
-        return;
-    }
-    
-    // Crear mapa
     map = L.map('map').setView([12.8654, -85.2072], 8);
     
     // Capas
@@ -68,24 +98,19 @@ function initMap() {
     currentLayers.satelite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { attribution: 'Esri' });
     currentLayers.relieve = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', { attribution: 'OpenTopoMap' });
     
+    // Cluster
     markerCluster = L.markerClusterGroup();
     map.addLayer(markerCluster);
     
-    // Forzar redimensionamiento después de que el DOM esté completamente estable
+    // Forzar redimensionamiento correcto en móvil después de un breve retardo
     setTimeout(() => {
-        if (map) map.invalidateSize(true);
+        map.invalidateSize(true);
     }, 200);
     
-    // Escuchar cambios de orientación y redimensiones
-    window.addEventListener('resize', () => { if (map) map.invalidateSize(true); });
-    
-    // También cuando el sidebar se abre/cierra (en móvil al desplegar la lista)
-    // No es necesario, pero por si acaso
-    const sidebar = document.querySelector('.sidebar');
-    if (sidebar) {
-        const observer = new ResizeObserver(() => { if (map) map.invalidateSize(true); });
-        observer.observe(sidebar);
-    }
+    // También al cambiar orientación
+    window.addEventListener('resize', () => {
+        if (map) map.invalidateSize(true);
+    });
     
     // Controles de capas
     document.querySelectorAll('.layer-btn[data-layer]').forEach(btn => {
@@ -98,36 +123,239 @@ function initMap() {
         });
     });
     
-    // Clic en mapa (solo admin)
+    // Clic en mapa para añadir (solo admin)
     map.on('click', (e) => {
-        if (isAdmin) abrirFormularioNuevo(e.latlng.lat, e.latlng.lng);
-        else mostrarToast("Inicia sesión como admin para añadir lugares", "error");
+        if (isAdmin) {
+            abrirFormularioNuevo(e.latlng.lat, e.latlng.lng);
+        } else {
+            mostrarToast("Inicia sesión como admin para añadir lugares", "error");
+        }
     });
 }
-
-// El resto de funciones (actualizarMarcadores, actualizarListaLugares, admin, CRUD, etc.)
-// se mantienen exactamente igual que en la versión anterior, solo hay que asegurar
-// que dentro de ellas se verifique que map y markerCluster existen.
 
 function actualizarMarcadores() {
     if (!markerCluster) return;
     markerCluster.clearLayers();
-    // ... resto igual
+    const filtroCat = obtenerFiltroActual();
+    const busqueda = searchInput.value.toLowerCase();
+    
+    let filtered = allPlaces.filter(p => {
+        const matchCat = filtroCat === 'todos' || p.categoria === filtroCat;
+        const matchSearch = p.nombre.toLowerCase().includes(busqueda);
+        return matchCat && matchSearch;
+    });
+    
+    filtered.forEach(place => {
+        const popupContent = `
+            <b>${place.nombre}</b><br>
+            ${place.imagen ? `<img src="${place.imagen}" style="width:100%; border-radius:8px; margin:5px 0; max-width:200px;">` : ''}
+            <a href="${place.url || '#'}" target="_blank" style="display:inline-block; margin-top:5px; background:#F57C00; color:white; padding:5px 10px; border-radius:5px; text-decoration:none;">🔗 Visitar</a>
+            ${isAdmin ? `<br><button onclick="editarLugar(${place.id})" style="margin-top:5px; background:#2E7D32; color:white; border:none; padding:3px 8px; border-radius:5px; cursor:pointer;">✏️ Editar</button>
+            <button onclick="eliminarLugar(${place.id})" style="background:#d32f2f; color:white; border:none; padding:3px 8px; border-radius:5px; cursor:pointer;">🗑️ Eliminar</button>` : ''}
+        `;
+        const marker = L.marker([place.lat, place.lng]).bindPopup(popupContent);
+        markerCluster.addLayer(marker);
+    });
 }
 
-// ... (todas las demás funciones idénticas)
+function actualizarListaLugares() {
+    const filtroCat = obtenerFiltroActual();
+    const busqueda = searchInput.value.toLowerCase();
+    let filtered = allPlaces.filter(p => {
+        const matchCat = filtroCat === 'todos' || p.categoria === filtroCat;
+        const matchSearch = p.nombre.toLowerCase().includes(busqueda);
+        return matchCat && matchSearch;
+    });
+    
+    if (filtered.length === 0) {
+        placesList.innerHTML = '<div style="text-align:center; padding:20px; color:#999;">No hay lugares</div>';
+        return;
+    }
+    
+    placesList.innerHTML = filtered.map(place => `
+        <div class="place-card" onclick="centrarMapa(${place.lat}, ${place.lng})">
+            <div class="place-card-header">
+                ${place.imagen ? `<img src="${place.imagen}" alt="${place.nombre}">` : '<div style="width:60px; height:60px; background:#e0e0e0; border-radius:10px; display:flex; align-items:center; justify-content:center;"><i class="fas fa-map-marker-alt"></i></div>'}
+                <div class="place-info">
+                    <h4>${place.nombre}</h4>
+                    <div class="place-categoria">${place.categoria || 'sin categoría'}</div>
+                    ${isAdmin ? `<div class="admin-actions"><button class="edit-btn" onclick="event.stopPropagation(); editarLugar(${place.id})"><i class="fas fa-edit"></i> Editar</button><button class="delete-btn" onclick="event.stopPropagation(); eliminarLugar(${place.id})"><i class="fas fa-trash"></i> Eliminar</button></div>` : ''}
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
 
-// Inicialización principal
+window.centrarMapa = (lat, lng) => {
+    if (map) map.setView([lat, lng], 14);
+};
+
+// ========== ADMIN ==========
+function entrarModoAdmin() {
+    isAdmin = true;
+    adminLoginBtn.classList.add('hidden');
+    adminPanelHeader.classList.remove('hidden');
+    adminAddBtn.classList.remove('hidden');
+    mostrarToast("Modo administrador activado", "success");
+    actualizarMarcadores();
+    actualizarListaLugares();
+}
+
+function salirModoAdmin() {
+    isAdmin = false;
+    adminLoginBtn.classList.remove('hidden');
+    adminPanelHeader.classList.add('hidden');
+    adminAddBtn.classList.add('hidden');
+    mostrarToast("Modo administrador desactivado", "info");
+    actualizarMarcadores();
+    actualizarListaLugares();
+}
+
+adminLoginBtn.addEventListener('click', () => {
+    adminModal.style.display = 'flex';
+});
+
+document.getElementById('adminLoginForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const pass = document.getElementById('adminPassword').value;
+    if (pass === ADMIN_PASSWORD) {
+        adminModal.style.display = 'none';
+        entrarModoAdmin();
+    } else {
+        mostrarToast("Contraseña incorrecta", "error");
+    }
+    document.getElementById('adminPassword').value = '';
+});
+
+logoutAdminBtn.addEventListener('click', salirModoAdmin);
+
+// ========== CRUD LUGARES ==========
+function abrirFormularioNuevo(lat, lng) {
+    modalTitle.innerText = 'Añadir Lugar';
+    document.getElementById('lugarId').value = '';
+    document.getElementById('lugarNombre').value = '';
+    document.getElementById('lugarLat').value = lat.toFixed(6);
+    document.getElementById('lugarLng').value = lng.toFixed(6);
+    document.getElementById('lugarUrl').value = '';
+    document.getElementById('lugarImagen').value = '';
+    document.getElementById('lugarCategoria').value = '';
+    lugarModal.style.display = 'flex';
+}
+
+window.editarLugar = (id) => {
+    const place = allPlaces.find(p => p.id === id);
+    if (!place) return;
+    modalTitle.innerText = 'Editar Lugar';
+    document.getElementById('lugarId').value = place.id;
+    document.getElementById('lugarNombre').value = place.nombre;
+    document.getElementById('lugarLat').value = place.lat;
+    document.getElementById('lugarLng').value = place.lng;
+    document.getElementById('lugarUrl').value = place.url || '';
+    document.getElementById('lugarImagen').value = place.imagen || '';
+    document.getElementById('lugarCategoria').value = place.categoria || '';
+    lugarModal.style.display = 'flex';
+};
+
+window.eliminarLugar = (id) => {
+    if (confirm('¿Eliminar este lugar permanentemente?')) {
+        allPlaces = allPlaces.filter(p => p.id !== id);
+        guardarDatos();
+        actualizarCategoriasUnicas();
+        actualizarMarcadores();
+        actualizarListaLugares();
+        mostrarToast("Lugar eliminado", "info");
+    }
+};
+
+lugarForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const id = document.getElementById('lugarId').value;
+    const nombre = document.getElementById('lugarNombre').value.trim();
+    const lat = parseFloat(document.getElementById('lugarLat').value);
+    const lng = parseFloat(document.getElementById('lugarLng').value);
+    const url = document.getElementById('lugarUrl').value.trim();
+    const imagen = document.getElementById('lugarImagen').value.trim();
+    const categoria = document.getElementById('lugarCategoria').value.trim();
+    
+    if (!nombre || isNaN(lat) || isNaN(lng)) {
+        mostrarToast("Nombre, latitud y longitud son obligatorios", "error");
+        return;
+    }
+    
+    if (id) {
+        const index = allPlaces.findIndex(p => p.id == id);
+        if (index !== -1) {
+            allPlaces[index] = { ...allPlaces[index], nombre, lat, lng, url, imagen, categoria };
+        }
+    } else {
+        const nuevoId = Date.now();
+        allPlaces.push({ id: nuevoId, nombre, lat, lng, url, imagen, categoria });
+    }
+    guardarDatos();
+    lugarModal.style.display = 'none';
+    actualizarCategoriasUnicas();
+    actualizarMarcadores();
+    actualizarListaLugares();
+    mostrarToast(id ? "Lugar actualizado" : "Lugar añadido", "success");
+});
+
+addPlaceBtn.addEventListener('click', () => {
+    if (map) {
+        const center = map.getCenter();
+        abrirFormularioNuevo(center.lat, center.lng);
+    } else {
+        abrirFormularioNuevo(12.8654, -85.2072);
+    }
+});
+
+// ========== BÚSQUEDA Y OTROS ==========
+searchInput.addEventListener('input', () => {
+    actualizarMarcadores();
+    actualizarListaLugares();
+});
+
+// Geolocalización
+geolocationBtn.addEventListener('click', () => {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(pos => {
+            if (map) map.setView([pos.coords.latitude, pos.coords.longitude], 13);
+        }, () => mostrarToast("No se pudo obtener ubicación", "error"));
+    } else {
+        mostrarToast("Geolocalización no soportada", "error");
+    }
+});
+
+// Modo oscuro
+function initDarkMode() {
+    const isDark = localStorage.getItem('darkMode') === 'true';
+    if (isDark) document.body.classList.add('dark-mode');
+    darkModeBtn.innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+    darkModeBtn.addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+        const dark = document.body.classList.contains('dark-mode');
+        localStorage.setItem('darkMode', dark);
+        darkModeBtn.innerHTML = dark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+    });
+}
+
+// Cerrar modales
+document.querySelectorAll('.close-modal').forEach(btn => {
+    btn.addEventListener('click', function() {
+        this.closest('.modal').style.display = 'none';
+    });
+});
+
+// Inicialización con espera para móvil
 function init() {
     initDarkMode();
-    // Pequeño retardo para garantizar que el DOM esté listo y el contenedor visible
+    // Esperar un poco a que el DOM esté completamente listo y el contenedor tenga tamaño
     setTimeout(() => {
         initMap();
         cargarDatos();
-    }, 50);
+    }, 100);
 }
 
-// Asegurar que el mapa se redibuja cuando la página termina de cargar completamente
+// Asegurar que el mapa se redibuje cuando la página termina de cargar
 window.addEventListener('load', () => {
     if (map) map.invalidateSize(true);
 });
