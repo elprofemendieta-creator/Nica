@@ -123,11 +123,31 @@ body {
     flex: 1;
     position: relative;
     height: calc(100vh - 70px);
+    min-height: 400px; /* Fuerza altura mínima */
 }
 
 #map {
     width: 100%;
     height: 100%;
+    background: #ccc; /* Fondo mientras carga */
+}
+
+/* Ajustes para móvil */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100%;
+        height: auto;
+        max-height: 300px;
+        order: 2;
+    }
+    .map-container {
+        height: 60vh; /* Altura relativa en móvil */
+        min-height: 300px;
+        order: 1;
+    }
+    .main-content {
+        flex-direction: column;
+    }
 }
 
 /* Búsqueda y filtros */
@@ -441,21 +461,4 @@ body.dark-mode .search-box input {
 body.dark-mode .categoria-filtro {
     background: #3d3d5c;
     color: #ddd;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .sidebar {
-        width: 100%;
-        height: auto;
-        max-height: 300px;
-        order: 2;
-    }
-    .map-container {
-        height: 400px;
-        order: 1;
-    }
-    .main-content {
-        flex-direction: column;
-    }
 }
