@@ -1,61 +1,249 @@
+/* ==========================================================================
+   1. VARIABLES Y CONFIGURACIÓN GENERAL
+   ========================================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Poppins:wght@400;600;700&display=swap');
+
+:root {
+  --primary-color: #00a896;       /* Verde turquesa tropical */
+  --secondary-color: #028090;     /* Azul lagos */
+  --accent-color: #f26419;        /* Naranja volcánico para llamados a la acción */
+  --bg-dark: #05668d;             /* Azul profundo para contrastes */
+  --text-color: #2f3e46;          /* Gris oscuro para textos legibles */
+  --white: #ffffff;
+  --card-bg: rgba(255, 255, 255, 0.9);
+  
+  /* Fuentes */
+  --font-title: 'Fredoka', sans-serif; /* Fuente lúdica y amigable */
+  --font-body: 'Poppins', sans-serif;
+}
+
 * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--text-color);
+  min-height: 100vh;
+  overflow-x: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+/* ==========================================================================
+   2. FONDO DECORATIVO INTERACTIVO
+   ========================================================================== */
+.background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  /* Degradado que evoca el cielo y el agua tropical */
+  background: linear-gradient(135deg, #f0fdfa 0%, #e0f2fe 50%, #bae6fd 100%);
+}
+
+/* Decoraciones de fondo simulan ondas o nubes */
+.background::before, .background::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(0, 168, 150, 0.05);
+  animation: float-bg 12s infinite alternate ease-in-out;
+}
+
+.background::before {
+  width: 400px;
+  height: 400px;
+  top: -100px;
+  right: -100px;
+}
+
+.background::after {
+  width: 500px;
+  height: 500px;
+  bottom: -150px;
+  left: -150px;
+  animation-delay: 2s;
+}
+
+@keyframes float-bg {
+  0% { transform: translateY(0) scale(1); }
+  100% { transform: translateY(30px) scale(1.05); }
+}
+
+/* ==========================================================================
+   3. CONTENEDOR PRINCIPAL
+   ========================================================================== */
+.container {
+  width: 90%;
+  max-width: 550px;
+  background: var(--white);
+  padding: 2.5rem 2rem;
+  border-radius: 30px;
+  text-align: center;
+  box-shadow: 0 20px 40px rgba(2, 128, 144, 0.15);
+  border: 4px solid #f0fdfa;
+  backdrop-filter: blur(10px);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Clase de utilidad para ocultar secciones con transiciones */
+.hidden {
+  display: none !important;
+}
+
+/* ==========================================================================
+   4. SECCIÓN HERO (BIENVENIDA)
+   ========================================================================== */
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Animación de la mascota */
+.mascota {
+  width: 120px;
+  height: 120px;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(135deg, #ccfbf1, #fef08a);
+  border-radius: 50%;
+  padding: 15px;
+  box-shadow: 0 10px 20px rgba(0, 168, 150, 0.2);
+  animation: bounce 3s infinite ease-in-out;
+}
+
+.mascota img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+
+h1 {
+  font-family: var(--font-title);
+  font-size: 2.8rem;
+  color: var(--secondary-color);
+  margin-bottom: 0.5rem;
+  text-shadow: 2px 2px 0px #e0f2fe;
+  letter-spacing: 1px;
+}
+
+.subtitle {
+  font-size: 1.1rem;
+  color: #5c677d;
+  line-height: 1.6;
+  margin-bottom: 2.5rem;
+}
+
+/* Botón de Iniciar aventura estilo Gamer */
+.start-btn {
+  font-family: var(--font-title);
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--white);
+  background: var(--accent-color);
+  border: none;
+  padding: 1rem 2.5rem;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: 0 8px 0px #b94206, 0 15px 25px rgba(242, 100, 25, 0.4);
+  transition: all 0.1s ease;
+  outline: none;
+}
+
+.start-btn:hover {
+  background: #fa7935;
+  transform: translateY(2px);
+  box-shadow: 0 6px 0px #b94206, 0 10px 20px rgba(242, 100, 25, 0.3);
+}
+
+.start-btn:active {
+  transform: translateY(8px);
+  box-shadow: 0 0px 0px #b94206, 0 5px 10px rgba(242, 100, 25, 0.2);
+}
+
+/* ==========================================================================
+   5. SECCIÓN MENÚ DE EXPLORACIÓN
+   ========================================================================== */
+.menu h2 {
+  font-family: var(--font-title);
+  font-size: 1.8rem;
+  color: var(--bg-dark);
+  margin-bottom: 2rem;
+}
+
+.menu-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* Tarjetas de menú interactivo */
+.menu-card {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  background: var(--white);
+  padding: 1.25rem 1.5rem;
+  border-radius: 20px;
+  border: 3px solid #e2e8f0;
+  box-shadow: 0 6px 0px #e2e8f0, 0 10px 15px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease-in-out;
 }
 
 .menu-card span {
-  font-size: 4rem;
+  font-size: 2.5rem;
+  margin-right: 1.25rem;
+  transition: transform 0.3s ease;
 }
 
 .menu-card h3 {
-  margin-top: 20px;
-  font-size: 1.5rem;
+  font-family: var(--font-title);
+  font-size: 1.3rem;
+  color: var(--secondary-color);
 }
 
-.menu-card p {
-  margin-top: 10px;
+/* Efectos Hover personalizados para el menú */
+.menu-card:hover {
+  border-color: var(--primary-color);
+  box-shadow: 0 6px 0px #008f80, 0 12px 20px rgba(0, 168, 150, 0.15);
+  transform: translateY(-2px);
+  background: #f0fdfa;
 }
 
-.hidden {
-  display: none;
+.menu-card:hover span {
+  transform: scale(1.2) rotate(5deg);
 }
 
-@keyframes float {
-  0% {
-    transform: translateY(0px);
-  }
-
-  50% {
-    transform: translateY(-15px);
-  }
-
-  100% {
-    transform: translateY(0px);
-  }
+.menu-card:active {
+  transform: translateY(4px);
+  box-shadow: 0 2px 0px #008f80, 0 5px 10px rgba(0, 168, 150, 0.1);
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
+/* Responsive */
+@media (max-width: 480px) {
+  .container {
+    width: 95%;
+    padding: 2rem 1.25rem;
   }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@media (max-width: 768px) {
-
+  
   h1 {
-    font-size: 2.5rem;
+    font-size: 2.3rem;
   }
-
-  .mascota img {
-    width: 160px;
+  
+  .start-btn {
+    font-size: 1.2rem;
+    padding: 0.8rem 2rem;
   }
-
-  .subtitle {
-    font-size: 1rem;
-  }
-
 }
