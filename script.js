@@ -1,5 +1,5 @@
-// ========== SUPABASE CONFIG ==========
-const SUPABASE_URL = 'https://damdotasxzmqcpdqqnsv.supabase.co/rest/v1/';   // Ej: 'https://xyz.supabase.co'
+// ========== SUPABASE CONFIG (CORREGIDO) ==========
+const SUPABASE_URL = 'https://damdotasxzmqcpdqqnsv.supabase.co';  // <-- SIN /rest/v1/
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRhbWRvdGFzeHptcWNwZHFxbnN2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3OTI2OTAsImV4cCI6MjA5NDM2ODY5MH0.Q6ptAAvdIz-84VT9TvWJJdLxRVSWHZ3dMx87cBuQGO4';
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -38,14 +38,55 @@ function mostrarToast(mensaje, tipo = 'info') {
     setTimeout(() => toast.remove(), 3000);
 }
 
+// Crear la tabla si no existe (ejecuta SQL mediante la API de Supabase)
+async function crearTablaSiNoExiste() {
+    // Verificar si la tabla 'lugares' existe
+    const { error: checkError } = await supabase.from('lugares').select('id').limit(1);
+    if (checkError && checkError.message.includes('relation "lugares" does not exist')) {
+        mostrarToast('Creando tabla "lugares" en Supabase...', 'info');
+        // Necesitas ejecutar SQL desde el frontend con permisos de service_role (no recomendado)
+        // Pero como alternativa, te doy el SQL para que lo ejecutes manualmente en el editor SQL de Supabase.
+        console.error('La tabla "lugares" no existe. Ejecuta este SQL en el editor de Supabase:');
+        console.log(`
+            CREATE TABLE lugares (
+                id SERIAL PRIMARY KEY,
+                nombre TEXT NOT NULL,
+                lat DOUBLE PRECISION NOT NULL,
+                lng DOUBLE PRECISION NOT NULL,
+                url TEXT,
+                imagen TEXT,
+                categoria TEXT
+            );
+        `);
+        mostrarToast('⚠️ La tabla "lugares" no existe. Cópiala desde consola (F12)', 'error');
+        return false;
+    }
+    return true;
+}
+
 async function cargarLugaresDesdeSupabase() {
     const { data, error } = await supabase.from('lugares').select('*').order('id');
     if (error) {
         console.error(error);
-        mostrarToast('Error al cargar lugares', 'error');
+        mostrarToast('Error al cargar lugares: ' + error.message, 'error');
         return;
     }
-    allPlaces = data;
+    allPlaces = data || [];
+    if (allPlaces.length === 0) {
+        // Insertar algunos datos de ejemplo si está vacío
+        const ejemplos = [
+            { nombre: "Granada", lat: 11.9294, lng: -85.9536, url: "https://es.wikipedia.org/wiki/Granada_(Nicaragua)", imagen: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Granada%2C_Nicaragua.jpg/300px-Granada%2C_Nicaragua.jpg", categoria: "ciudad" },
+            { nombre: "León", lat: 12.4358, lng: -86.8781, url: "https://es.wikipedia.org/wiki/León_(Nicaragua)", imagen: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Leon_Nicaragua.jpg/300px-Leon_Nicaragua.jpg", categoria: "ciudad" },
+            { nombre: "Corn Island", lat: 12.1758, lng: -83.0615, url: "https://es.wikipedia.org/wiki/Islas_del_Maíz", imagen: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Corn_Island.jpg/300px-Corn_Island.jpg", categoria: "playa" },
+            { nombre: "Volcán Masaya", lat: 11.9844, lng: -86.1611, url: "https://es.wikipedia.org/wiki/Volcán_Masaya", imagen: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Masaya_Volcano.jpg/300px-Masaya_Volcano.jpg", categoria: "volcán" },
+            { nombre: "San Juan del Sur", lat: 11.2528, lng: -85.8683, url: "https://es.wikipedia.org/wiki/San_Juan_del_Sur", imagen: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/San_Juan_del_Sur.jpg/300px-San_Juan_del_Sur.jpg", categoria: "playa" }
+        ];
+        for (const ej of ejemplos) {
+            await supabase.from('lugares').insert([ej]);
+        }
+        await cargarLugaresDesdeSupabase(); // recargar
+        return;
+    }
     actualizarCategoriasUnicas();
     actualizarMarcadores();
     actualizarListaLugares();
@@ -53,7 +94,6 @@ async function cargarLugaresDesdeSupabase() {
 
 async function guardarLugar(lugar) {
     if (lugar.id) {
-        // Actualizar
         const { error } = await supabase.from('lugares').update({
             nombre: lugar.nombre,
             lat: lugar.lat,
@@ -64,7 +104,6 @@ async function guardarLugar(lugar) {
         }).eq('id', lugar.id);
         if (error) throw error;
     } else {
-        // Insertar
         const { error } = await supabase.from('lugares').insert([{
             nombre: lugar.nombre,
             lat: lugar.lat,
@@ -272,7 +311,7 @@ addPlaceBtn.addEventListener('click', () => {
     }
 });
 
-// ========== MAPA ==========
+// ========== MAPA CON FIX MÓVIL ==========
 function initMap() {
     const mapContainer = document.getElementById('map');
     if (!mapContainer) return;
@@ -282,11 +321,10 @@ function initMap() {
         map = null;
     }
     
-    // Ajuste móvil: forzar altura
-    const container = document.querySelector('.map-container');
-    if (container && window.innerWidth <= 768) {
-        container.style.height = '60vh';
-        mapContainer.style.height = '100%';
+    // Forzar altura en móvil
+    if (window.innerWidth <= 768) {
+        const container = document.querySelector('.map-container');
+        if (container) container.style.height = '60vh';
     }
     
     map = L.map('map').setView([12.8654, -85.2072], 8);
@@ -304,7 +342,9 @@ function initMap() {
     markerCluster = L.markerClusterGroup();
     map.addLayer(markerCluster);
     
+    // Forzar redimensionamiento repetido para móvil
     setTimeout(() => { if (map) map.invalidateSize(true); }, 200);
+    setTimeout(() => { if (map) map.invalidateSize(true); }, 500);
     window.addEventListener('resize', () => { if (map) map.invalidateSize(true); });
     
     // Control capas
@@ -362,7 +402,13 @@ document.querySelectorAll('.close-modal').forEach(btn => {
 async function init() {
     initDarkMode();
     initMap();
-    await cargarLugaresDesdeSupabase();
+    const tablaOk = await crearTablaSiNoExiste();
+    if (tablaOk) await cargarLugaresDesdeSupabase();
 }
 
-init();
+// Esperar a que el DOM esté listo
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+} else {
+    init();
+}
