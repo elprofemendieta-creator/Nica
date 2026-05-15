@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
     <title>Turismo Nicaragua - Mapa Interactivo</title>
     
-    <!-- Leaflet CSS y JS -->
+    <!-- Leaflet -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     
@@ -20,12 +20,14 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
+    <!-- Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
     <!-- Estilos propios -->
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-    <!-- Pantalla principal (siempre visible) -->
     <div class="app-container">
         <header class="app-header">
             <div class="logo">
@@ -43,7 +45,6 @@
         </header>
 
         <div class="main-content">
-            <!-- Barra lateral -->
             <aside class="sidebar">
                 <div class="search-box">
                     <i class="fas fa-search"></i>
@@ -57,13 +58,11 @@
                     <h3><i class="fas fa-map-pin"></i> Lugares</h3>
                     <div id="placesList" class="places-list"></div>
                 </div>
-                <!-- Botón añadir lugar (visible solo en modo admin) -->
                 <div id="adminAddBtn" class="admin-add-btn hidden">
                     <button id="addPlaceBtn"><i class="fas fa-plus-circle"></i> Añadir lugar</button>
                 </div>
             </aside>
 
-            <!-- Mapa -->
             <div class="map-container">
                 <div id="map"></div>
                 <div id="layerControl" class="layer-control">
@@ -133,7 +132,6 @@
         </div>
     </div>
 
-    <!-- Toast -->
     <div id="toastContainer" class="toast-container"></div>
 
     <script src="script.js"></script>
