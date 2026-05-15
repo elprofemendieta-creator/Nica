@@ -1,12 +1,15 @@
-// ========== CONFIGURACIÓN INICIAL ==========
+// ========== SUPABASE CONFIG ==========
+const SUPABASE_URL = 'TU_URL_SUPABASE';   // Ej: 'https://xyz.supabase.co'
+const SUPABASE_ANON_KEY = 'TU_ANON_KEY';
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// ========== VARIABLES GLOBALES ==========
 let map;
 let markerCluster;
 let currentLayers = {};
 let allPlaces = [];
 let isAdmin = false;
-let editingId = null;
 
-// Clave de administrador
 const ADMIN_PASSWORD = "Diriamba2026";
 
 // Elementos DOM
@@ -25,32 +28,7 @@ const lugarForm = document.getElementById('lugarForm');
 const modalTitle = document.getElementById('modalTitle');
 const geolocationBtn = document.getElementById('geolocationBtn');
 
-// ========== LOCALSTORAGE ==========
-function cargarDatos() {
-    const data = localStorage.getItem('turismo_puntos');
-    if (data) {
-        allPlaces = JSON.parse(data);
-    } else {
-        // Datos iniciales de ejemplo (Nicaragua)
-        allPlaces = [
-            { id: Date.now() + 1, nombre: "Granada", lat: 11.9294, lng: -85.9536, url: "https://es.wikipedia.org/wiki/Granada_(Nicaragua)", imagen: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Granada%2C_Nicaragua.jpg/300px-Granada%2C_Nicaragua.jpg", categoria: "ciudad" },
-            { id: Date.now() + 2, nombre: "León", lat: 12.4358, lng: -86.8781, url: "https://es.wikipedia.org/wiki/León_(Nicaragua)", imagen: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Leon_Nicaragua.jpg/300px-Leon_Nicaragua.jpg", categoria: "ciudad" },
-            { id: Date.now() + 3, nombre: "Corn Island", lat: 12.1758, lng: -83.0615, url: "https://es.wikipedia.org/wiki/Islas_del_Maíz", imagen: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Corn_Island.jpg/300px-Corn_Island.jpg", categoria: "playa" },
-            { id: Date.now() + 4, nombre: "Volcán Masaya", lat: 11.9844, lng: -86.1611, url: "https://es.wikipedia.org/wiki/Volcán_Masaya", imagen: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Masaya_Volcano.jpg/300px-Masaya_Volcano.jpg", categoria: "volcán" },
-            { id: Date.now() + 5, nombre: "San Juan del Sur", lat: 11.2528, lng: -85.8683, url: "https://es.wikipedia.org/wiki/San_Juan_del_Sur", imagen: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/San_Juan_del_Sur.jpg/300px-San_Juan_del_Sur.jpg", categoria: "playa" }
-        ];
-        guardarDatos();
-    }
-    actualizarCategoriasUnicas();
-    actualizarMarcadores();
-    actualizarListaLugares();
-}
-
-function guardarDatos() {
-    localStorage.setItem('turismo_puntos', JSON.stringify(allPlaces));
-}
-
-// ========== FUNCIONES AUXILIARES ==========
+// ========== FUNCIONES ==========
 function mostrarToast(mensaje, tipo = 'info') {
     const container = document.getElementById('toastContainer');
     const toast = document.createElement('div');
@@ -58,6 +36,52 @@ function mostrarToast(mensaje, tipo = 'info') {
     toast.innerHTML = `<i class="fas ${tipo === 'error' ? 'fa-exclamation-circle' : 'fa-check-circle'}"></i> ${mensaje}`;
     container.appendChild(toast);
     setTimeout(() => toast.remove(), 3000);
+}
+
+async function cargarLugaresDesdeSupabase() {
+    const { data, error } = await supabase.from('lugares').select('*').order('id');
+    if (error) {
+        console.error(error);
+        mostrarToast('Error al cargar lugares', 'error');
+        return;
+    }
+    allPlaces = data;
+    actualizarCategoriasUnicas();
+    actualizarMarcadores();
+    actualizarListaLugares();
+}
+
+async function guardarLugar(lugar) {
+    if (lugar.id) {
+        // Actualizar
+        const { error } = await supabase.from('lugares').update({
+            nombre: lugar.nombre,
+            lat: lugar.lat,
+            lng: lugar.lng,
+            url: lugar.url,
+            imagen: lugar.imagen,
+            categoria: lugar.categoria
+        }).eq('id', lugar.id);
+        if (error) throw error;
+    } else {
+        // Insertar
+        const { error } = await supabase.from('lugares').insert([{
+            nombre: lugar.nombre,
+            lat: lugar.lat,
+            lng: lugar.lng,
+            url: lugar.url,
+            imagen: lugar.imagen,
+            categoria: lugar.categoria
+        }]);
+        if (error) throw error;
+    }
+    await cargarLugaresDesdeSupabase();
+}
+
+async function eliminarLugarSupabase(id) {
+    const { error } = await supabase.from('lugares').delete().eq('id', id);
+    if (error) throw error;
+    await cargarLugaresDesdeSupabase();
 }
 
 function actualizarCategoriasUnicas() {
@@ -80,82 +104,6 @@ function obtenerFiltroActual() {
     return active ? active.dataset.cat : 'todos';
 }
 
-// ========== MAPA ==========
-function initMap() {
-    const mapContainer = document.getElementById('map');
-    if (!mapContainer) return;
-    
-    // Si ya existe mapa, destrúyelo
-    if (map) {
-        map.remove();
-        map = null;
-    }
-    
-    // Forzar altura visible (importante en móvil)
-    const container = document.querySelector('.map-container');
-    if (container) {
-        const height = window.innerHeight * 0.6;
-        container.style.height = height + 'px';
-        mapContainer.style.height = '100%';
-    }
-    
-    // Crear mapa
-    map = L.map('map').setView([12.8654, -85.2072], 8);
-    
-    // Capas
-    currentLayers.calles = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-        attribution: '&copy; OpenStreetMap'
-    }).addTo(map);
-    
-    currentLayers.satelite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-        attribution: 'Esri'
-    });
-    
-    currentLayers.relieve = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
-        attribution: 'OpenTopoMap'
-    });
-    
-    // Cluster
-    markerCluster = L.markerClusterGroup();
-    map.addLayer(markerCluster);
-    
-    // Forzar redimensionamiento varias veces
-    setTimeout(() => {
-        if (map) map.invalidateSize(true);
-    }, 100);
-    setTimeout(() => {
-        if (map) map.invalidateSize(true);
-    }, 500);
-    
-    window.addEventListener('resize', () => {
-        if (map) map.invalidateSize(true);
-    });
-    
-    // Controles de capas
-    document.querySelectorAll('.layer-btn[data-layer]').forEach(btn => {
-        btn.removeEventListener('click', layerHandler);
-        btn.addEventListener('click', layerHandler);
-    });
-    
-    function layerHandler(e) {
-        const layer = e.currentTarget.dataset.layer;
-        Object.keys(currentLayers).forEach(l => {
-            if (map.hasLayer(currentLayers[l])) map.removeLayer(currentLayers[l]);
-        });
-        map.addLayer(currentLayers[layer]);
-        document.querySelectorAll('.layer-btn').forEach(b => b.classList.remove('active'));
-        e.currentTarget.classList.add('active');
-    }
-    
-    // Clic en mapa para añadir (solo admin)
-    map.on('click', (e) => {
-        if (isAdmin) {
-            abrirFormularioNuevo(e.latlng.lat, e.latlng.lng);
-        } else {
-            mostrarToast("Inicia sesión como admin para añadir lugares", "error");
-        }
-    });
-}
 function actualizarMarcadores() {
     if (!markerCluster) return;
     markerCluster.clearLayers();
@@ -252,7 +200,7 @@ document.getElementById('adminLoginForm').addEventListener('submit', (e) => {
 
 logoutAdminBtn.addEventListener('click', salirModoAdmin);
 
-// ========== CRUD LUGARES ==========
+// ========== CRUD ==========
 function abrirFormularioNuevo(lat, lng) {
     modalTitle.innerText = 'Añadir Lugar';
     document.getElementById('lugarId').value = '';
@@ -279,18 +227,18 @@ window.editarLugar = (id) => {
     lugarModal.style.display = 'flex';
 };
 
-window.eliminarLugar = (id) => {
+window.eliminarLugar = async (id) => {
     if (confirm('¿Eliminar este lugar permanentemente?')) {
-        allPlaces = allPlaces.filter(p => p.id !== id);
-        guardarDatos();
-        actualizarCategoriasUnicas();
-        actualizarMarcadores();
-        actualizarListaLugares();
-        mostrarToast("Lugar eliminado", "info");
+        try {
+            await eliminarLugarSupabase(id);
+            mostrarToast("Lugar eliminado", "info");
+        } catch (error) {
+            mostrarToast("Error al eliminar", "error");
+        }
     }
 };
 
-lugarForm.addEventListener('submit', (e) => {
+lugarForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const id = document.getElementById('lugarId').value;
     const nombre = document.getElementById('lugarNombre').value.trim();
@@ -305,21 +253,14 @@ lugarForm.addEventListener('submit', (e) => {
         return;
     }
     
-    if (id) {
-        const index = allPlaces.findIndex(p => p.id == id);
-        if (index !== -1) {
-            allPlaces[index] = { ...allPlaces[index], nombre, lat, lng, url, imagen, categoria };
-        }
-    } else {
-        const nuevoId = Date.now();
-        allPlaces.push({ id: nuevoId, nombre, lat, lng, url, imagen, categoria });
+    const lugar = { id: id || null, nombre, lat, lng, url, imagen, categoria };
+    try {
+        await guardarLugar(lugar);
+        lugarModal.style.display = 'none';
+        mostrarToast(id ? "Lugar actualizado" : "Lugar añadido", "success");
+    } catch (error) {
+        mostrarToast("Error al guardar", "error");
     }
-    guardarDatos();
-    lugarModal.style.display = 'none';
-    actualizarCategoriasUnicas();
-    actualizarMarcadores();
-    actualizarListaLugares();
-    mostrarToast(id ? "Lugar actualizado" : "Lugar añadido", "success");
 });
 
 addPlaceBtn.addEventListener('click', () => {
@@ -331,11 +272,60 @@ addPlaceBtn.addEventListener('click', () => {
     }
 });
 
-// ========== BÚSQUEDA Y OTROS ==========
-searchInput.addEventListener('input', () => {
-    actualizarMarcadores();
-    actualizarListaLugares();
-});
+// ========== MAPA ==========
+function initMap() {
+    const mapContainer = document.getElementById('map');
+    if (!mapContainer) return;
+    
+    if (map) {
+        map.remove();
+        map = null;
+    }
+    
+    // Ajuste móvil: forzar altura
+    const container = document.querySelector('.map-container');
+    if (container && window.innerWidth <= 768) {
+        container.style.height = '60vh';
+        mapContainer.style.height = '100%';
+    }
+    
+    map = L.map('map').setView([12.8654, -85.2072], 8);
+    
+    currentLayers.calles = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; OpenStreetMap'
+    }).addTo(map);
+    currentLayers.satelite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        attribution: 'Esri'
+    });
+    currentLayers.relieve = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+        attribution: 'OpenTopoMap'
+    });
+    
+    markerCluster = L.markerClusterGroup();
+    map.addLayer(markerCluster);
+    
+    setTimeout(() => { if (map) map.invalidateSize(true); }, 200);
+    window.addEventListener('resize', () => { if (map) map.invalidateSize(true); });
+    
+    // Control capas
+    document.querySelectorAll('.layer-btn[data-layer]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const layer = btn.dataset.layer;
+            Object.keys(currentLayers).forEach(l => { if (map.hasLayer(currentLayers[l])) map.removeLayer(currentLayers[l]); });
+            map.addLayer(currentLayers[layer]);
+            document.querySelectorAll('.layer-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        });
+    });
+    
+    map.on('click', (e) => {
+        if (isAdmin) {
+            abrirFormularioNuevo(e.latlng.lat, e.latlng.lng);
+        } else {
+            mostrarToast("Inicia sesión como admin para añadir lugares", "error");
+        }
+    });
+}
 
 // Geolocalización
 geolocationBtn.addEventListener('click', () => {
@@ -368,28 +358,11 @@ document.querySelectorAll('.close-modal').forEach(btn => {
     });
 });
 
-// Inicialización con espera para móvil
-function init() {
+// Inicialización
+async function init() {
     initDarkMode();
-    // Esperar a que el DOM y los estilos estén listos
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', () => {
-            setTimeout(() => {
-                initMap();
-                cargarDatos();
-            }, 50);
-        });
-    } else {
-        setTimeout(() => {
-            initMap();
-            cargarDatos();
-        }, 50);
-    }
+    initMap();
+    await cargarLugaresDesdeSupabase();
 }
-
-// Asegurar que el mapa se redibuje cuando la página termina de cargar
-window.addEventListener('load', () => {
-    if (map) map.invalidateSize(true);
-});
 
 init();
