@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>Turismo Nicaragua - Mapa Interactivo</title>
+    
+    <!-- Leaflet CSS y JS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <!-- MarkerCluster -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+    <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Estilos propios -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- Pantalla principal (siempre visible) -->
+    <div class="app-container">
+        <header class="app-header">
+            <div class="logo">
+                <i class="fas fa-map-marked-alt"></i>
+                <h2>Nicaragua Turismo</h2>
+            </div>
+            <div class="header-controls">
+                <button id="darkModeBtn" class="icon-btn"><i class="fas fa-moon"></i></button>
+                <button id="adminLoginBtn" class="admin-login-btn"><i class="fas fa-user-shield"></i> Admin</button>
+                <div id="adminPanelHeader" class="admin-panel-header hidden">
+                    <span><i class="fas fa-crown"></i> Modo Admin</span>
+                    <button id="logoutAdminBtn" class="icon-btn"><i class="fas fa-sign-out-alt"></i></button>
+                </div>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <!-- Barra lateral -->
+            <aside class="sidebar">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Buscar lugar...">
+                </div>
+                <div class="filter-group">
+                    <label><i class="fas fa-tags"></i> Categorías:</label>
+                    <div id="categoriasFiltro" class="categorias-container"></div>
+                </div>
+                <div class="places-list-container">
+                    <h3><i class="fas fa-map-pin"></i> Lugares</h3>
+                    <div id="placesList" class="places-list"></div>
+                </div>
+                <!-- Botón añadir lugar (visible solo en modo admin) -->
+                <div id="adminAddBtn" class="admin-add-btn hidden">
+                    <button id="addPlaceBtn"><i class="fas fa-plus-circle"></i> Añadir lugar</button>
+                </div>
+            </aside>
+
+            <!-- Mapa -->
+            <div class="map-container">
+                <div id="map"></div>
+                <div id="layerControl" class="layer-control">
+                    <button class="layer-btn active" data-layer="calles"><i class="fas fa-road"></i></button>
+                    <button class="layer-btn" data-layer="satelite"><i class="fas fa-satellite"></i></button>
+                    <button class="layer-btn" data-layer="relieve"><i class="fas fa-mountain"></i></button>
+                    <button id="geolocationBtn" class="layer-btn"><i class="fas fa-location-dot"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Login Admin -->
+    <div id="adminModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Acceso Administrador</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="adminLoginForm">
+                <div class="form-group">
+                    <label>Contraseña</label>
+                    <input type="password" id="adminPassword" placeholder="Contraseña" required>
+                </div>
+                <button type="submit" class="submit-btn">Entrar</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Añadir/Editar Lugar -->
+    <div id="lugarModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Añadir Lugar</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="lugarForm">
+                <input type="hidden" id="lugarId">
+                <div class="form-group">
+                    <label>Nombre del lugar *</label>
+                    <input type="text" id="lugarNombre" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group half">
+                        <label>Latitud *</label>
+                        <input type="number" step="any" id="lugarLat" required>
+                    </div>
+                    <div class="form-group half">
+                        <label>Longitud *</label>
+                        <input type="number" step="any" id="lugarLng" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>URL del enlace (HTML)</label>
+                    <input type="text" id="lugarUrl" placeholder="ej: lugar.html">
+                </div>
+                <div class="form-group">
+                    <label>URL Imagen (opcional)</label>
+                    <input type="text" id="lugarImagen" placeholder="https://...">
+                </div>
+                <div class="form-group">
+                    <label>Categoría (etiqueta)</label>
+                    <input type="text" id="lugarCategoria" placeholder="ej: playa, volcán, ciudad">
+                </div>
+                <button type="submit" class="submit-btn">Guardar</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
