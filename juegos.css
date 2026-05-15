@@ -181,3 +181,46 @@ body {
   .games-container { grid-template-columns: 1fr; }
   .play-area { padding: 1.5rem; }
 }
+/* ==========================================================================
+   5. RESPONSIVE (Ajustes específicos para celulares)
+   ========================================================================== */
+@media (max-width: 600px) {
+  .topbar {
+    padding: 0.8rem 4%;
+  }
+
+  .topbar h1 { 
+    font-size: 1.3rem; 
+  }
+
+  .volver {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem;
+  }
+
+  .games-container { 
+    grid-template-columns: 1fr; /* Fuerza una sola columna en pantallas muy chicas */
+    width: 95%; /* Aprovecha mejor el espacio lateral */
+    gap: 15px;
+  }
+
+  .game-card {
+    padding: 1.25rem;
+    /* Reduce la sombra inferior para que no se vea tosca en pantallas pequeñas */
+    box-shadow: 0 5px 0px #e2e8f0; 
+  }
+
+  .game-card .emoji {
+    font-size: 2.8rem; /* Emoji un poco más pequeño para equilibrar */
+  }
+
+  .play-area { 
+    width: 95%;
+    padding: 1.5rem; 
+    margin-bottom: 2rem;
+  }
+
+  #gameTitle {
+    font-size: 1.8rem;
+  }
+}
