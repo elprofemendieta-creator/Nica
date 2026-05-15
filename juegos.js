@@ -35,17 +35,7 @@ const gameTitle = document.getElementById("gameTitle");
 
 }
 
-function respuestaTrivia(respuesta) {
 
-  if(respuesta === "Vigorón") {
-    alert("✅ Correcto");
-  }
-
-  else {
-    alert("❌ Incorrecto");
-  }
-
-}
 
 function girarRuleta() {
 
