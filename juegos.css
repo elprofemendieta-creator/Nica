@@ -1,56 +1,182 @@
-* {
+/* ==========================================================================
+   1. CONFIGURACIÓN Y VARIABLES (Coherencia con Index)
+   ========================================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Poppins:wght@400;600;700&display=swap');
+
+:root {
+  --primary-color: #00a896;
+  --secondary-color: #028090;
+  --accent-color: #f26419;
+  --bg-light: #f0fdfa;
+  --white: #ffffff;
+  --font-title: 'Fredoka', sans-serif;
+  --font-body: 'Poppins', sans-serif;
+  
+  /* Colores para tipos de juegos */
+  --color-trivia: #ff9f1c;
+  --color-ruleta: #2ec4b6;
+  --color-memoria: #e71d36;
+  --color-palabra: #011627;
+  --color-laberinto: #7209b7;
 }
 
-.action-btn {
-  margin-top: 15px;
-  border: none;
-  padding: 12px 20px;
-  border-radius: 10px;
-  background: white;
-  color: #0077b6;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.card-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 80px);
-  gap: 10px;
-  justify-content: center;
-  margin-top: 20px;
-}
-
-.memory-card {
-  width: 80px;
-  height: 80px;
-  background: white;
-  color: #0077b6;
+body {
+  font-family: var(--font-body);
+  background-color: var(--bg-light);
+  background-image: radial-gradient(#bae6fd 0.5px, transparent 0.5px); /* Patrón de puntos sutil */
+  background-size: 24px 24px;
+  color: #334155;
+  margin: 0;
+  padding: 0;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  border-radius: 10px;
-  font-size: 2rem;
-  cursor: pointer;
 }
 
-@media (max-width: 768px) {
+/* ==========================================================================
+   2. BARRA SUPERIOR (TOPBAR)
+   ========================================================================== */
+.topbar {
+  width: 100%;
+  background: var(--white);
+  padding: 1rem 5%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 15px rgba(2, 128, 144, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
 
-  .topbar {
-    flex-direction: column;
-    gap: 15px;
-  }
+.topbar h1 {
+  font-family: var(--font-title);
+  font-size: 1.8rem;
+  color: var(--secondary-color);
+  margin: 0;
+}
 
-  .topbar h1 {
-    font-size: 1.5rem;
-  }
+.volver {
+  text-decoration: none;
+  font-family: var(--font-title);
+  color: var(--primary-color);
+  font-weight: 600;
+  padding: 0.5rem 1.2rem;
+  border-radius: 12px;
+  background: #e0f2fe;
+  transition: all 0.3s ease;
+}
 
-  .card-grid {
-    grid-template-columns: repeat(4, 65px);
-  }
+.volver:hover {
+  background: var(--primary-color);
+  color: white;
+  transform: translateX(-5px);
+}
 
-  .memory-card {
-    width: 65px;
-    height: 65px;
-  }
+/* ==========================================================================
+   3. CONTENEDOR DE JUEGOS (GRID)
+   ========================================================================== */
+.games-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  width: 90%;
+  max-width: 1100px;
+  padding: 2rem 0;
+}
 
+.game-card {
+  background: var(--white);
+  padding: 1.5rem;
+  border-radius: 24px;
+  text-align: center;
+  border: 3px solid #e2e8f0;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 8px 0px #e2e8f0;
+}
+
+.game-card:hover {
+  transform: translateY(-8px);
+  border-color: var(--primary-color);
+  box-shadow: 0 12px 0px #008f80;
+}
+
+.game-card .emoji {
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+  filter: drop-shadow(0 5px 5px rgba(0,0,0,0.1));
+}
+
+.game-card h2 {
+  font-family: var(--font-title);
+  font-size: 1.4rem;
+  color: var(--secondary-color);
+  margin-bottom: 0.8rem;
+}
+
+.game-card p {
+  font-size: 0.9rem;
+  color: #64748b;
+  margin-bottom: 1.5rem;
+}
+
+/* Botón de jugar dentro de la card */
+.game-card button {
+  font-family: var(--font-title);
+  background: var(--secondary-color);
+  color: white;
+  border: none;
+  padding: 0.8rem;
+  border-radius: 15px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  width: 100%;
+}
+
+.game-card button:hover {
+  background: var(--primary-color);
+}
+
+/* ==========================================================================
+   4. ÁREA DE JUEGO (PLAY AREA)
+   ========================================================================== */
+.play-area {
+  width: 90%;
+  max-width: 1100px;
+  background: var(--white);
+  margin: 2rem 0 4rem 0;
+  padding: 3rem;
+  border-radius: 30px;
+  border: 4px dashed #cbd5e1;
+  text-align: center;
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#gameTitle {
+  font-family: var(--font-title);
+  font-size: 2.2rem;
+  color: var(--accent-color);
+  margin-bottom: 1rem;
+}
+
+#gameContent {
+  font-size: 1.2rem;
+  color: #475569;
+}
+
+/* ==========================================================================
+   5. RESPONSIVE
+   ========================================================================== */
+@media (max-width: 600px) {
+  .topbar h1 { font-size: 1.4rem; }
+  .games-container { grid-template-columns: 1fr; }
+  .play-area { padding: 1.5rem; }
 }
