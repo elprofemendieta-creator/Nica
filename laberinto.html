@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Laberinto Turístico Nicaragua PRO</title>
+<title>Laberinto Extremo Nicaragua</title>
 
 <style>
 
@@ -30,17 +30,44 @@ h1{
   text-align:center;
 }
 
-.subtitle{
-  margin-top:10px;
-  margin-bottom:25px;
-  text-align:center;
-  max-width:700px;
-  opacity:0.9;
+.story-box{
+  width:100%;
+  max-width:900px;
+  background:rgba(255,255,255,0.12);
+  backdrop-filter:blur(10px);
+  border-radius:25px;
+  padding:25px;
+  margin-top:20px;
+  line-height:1.8;
+  box-shadow:0 10px 30px rgba(0,0,0,0.3);
+}
+
+.story-box h2{
+  margin-bottom:15px;
+}
+
+.start-btn{
+  margin-top:20px;
+  border:none;
+  padding:15px 30px;
+  border-radius:15px;
+  background:white;
+  color:#0077b6;
+  font-size:1rem;
+  font-weight:bold;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.start-btn:hover{
+  transform:scale(1.05);
 }
 
 .game-container{
+  display:none;
   width:100%;
-  max-width:850px;
+  max-width:1000px;
+  margin-top:25px;
   background:rgba(255,255,255,0.12);
   backdrop-filter:blur(10px);
   border-radius:25px;
@@ -50,15 +77,20 @@ h1{
 }
 
 .level{
-  font-size:1.3rem;
-  margin-bottom:20px;
+  font-size:1.4rem;
+  margin-bottom:10px;
+}
+
+.mission{
+  margin-bottom:15px;
+  opacity:0.9;
 }
 
 canvas{
   background:white;
   border-radius:20px;
   width:100%;
-  max-width:600px;
+  max-width:700px;
   height:auto;
   border:5px solid rgba(255,255,255,0.4);
 }
@@ -81,18 +113,13 @@ canvas{
   font-size:1.5rem;
   font-weight:bold;
   cursor:pointer;
-  transition:0.3s;
-}
-
-.control-btn:hover{
-  transform:scale(1.05);
 }
 
 .notification{
   position:fixed;
   top:20px;
   right:20px;
-  width:320px;
+  width:340px;
   max-width:90%;
   background:white;
   color:#0077b6;
@@ -100,10 +127,10 @@ canvas{
   border-radius:18px;
   box-shadow:0 10px 30px rgba(0,0,0,0.3);
   z-index:1000;
-  transform:translateX(400px);
+  transform:translateX(500px);
   transition:0.5s;
+  line-height:1.6;
   font-weight:bold;
-  line-height:1.5;
 }
 
 .notification.show{
@@ -111,18 +138,13 @@ canvas{
 }
 
 .back-btn{
-  margin-top:30px;
+  margin-top:25px;
   text-decoration:none;
   background:white;
   color:#0077b6;
   padding:14px 25px;
   border-radius:12px;
   font-weight:bold;
-  transition:0.3s;
-}
-
-.back-btn:hover{
-  transform:scale(1.05);
 }
 
 @media(max-width:768px){
@@ -146,41 +168,66 @@ canvas{
 </head>
 <body>
 
-<h1>🌋 Laberinto Turístico</h1>
+<h1>🌋 Laberinto Extremo Nicaragua</h1>
 
-<p class="subtitle">
-Explora Nicaragua encontrando la salida y descubriendo lugares turísticos 😄
+<div class="story-box" id="storyBox">
+
+<h2>📜 Historia</h2>
+
+<p>
+Eres un explorador turístico que ha quedado atrapado en antiguos laberintos secretos de Nicaragua.
 </p>
 
-<div class="game-container">
+<p>
+Cada nivel representa una región del país llena de cultura, volcanes, playas y naturaleza.
+</p>
+
+<p>
+Tu misión será:
+</p>
+
+<ul style="margin-top:10px; margin-left:20px; line-height:1.8;">
+<li>✅ Encontrar los 3 puntos turísticos ocultos</li>
+<li>✅ Descubrir información turística</li>
+<li>✅ Llegar a la salida</li>
+<li>❌ Evitar caminos falsos y callejones sin salida</li>
+</ul>
+
+<p style="margin-top:15px;">
+Si intentas salir sin completar la misión, el portal permanecerá cerrado.
+</p>
+
+<button class="start-btn" onclick="startGame()">
+🚀 Iniciar Aventura
+</button>
+
+</div>
+
+<div class="game-container" id="gameContainer">
 
 <div class="level" id="levelText">
 Nivel 1
 </div>
 
-<canvas id="mazeCanvas" width="600" height="600"></canvas>
+<div class="mission" id="missionText">
+Puntos encontrados: 0/3
+</div>
+
+<canvas id="mazeCanvas" width="700" height="700"></canvas>
 
 <div class="controls">
 
 <div></div>
 
-<button class="control-btn" onclick="movePlayer(0,-1)">
-⬆
-</button>
+<button class="control-btn" onclick="movePlayer(0,-1)">⬆</button>
 
 <div></div>
 
-<button class="control-btn" onclick="movePlayer(-1,0)">
-⬅
-</button>
+<button class="control-btn" onclick="movePlayer(-1,0)">⬅</button>
 
-<button class="control-btn" onclick="movePlayer(0,1)">
-⬇
-</button>
+<button class="control-btn" onclick="movePlayer(0,1)">⬇</button>
 
-<button class="control-btn" onclick="movePlayer(1,0)">
-➡
-</button>
+<button class="control-btn" onclick="movePlayer(1,0)">➡</button>
 
 </div>
 
@@ -198,172 +245,117 @@ const canvas = document.getElementById("mazeCanvas");
 const ctx = canvas.getContext("2d");
 
 const notification = document.getElementById("notification");
-const levelText = document.getElementById("levelText");
 
-const tileSize = 60;
+const tileSize = 35;
 
-let level = 0;
+let currentLevel = 0;
 
-const levels = [
+let player = {x:1,y:1};
 
-{
+let collected = [];
 
-map:[
+const baseMap = [
 
-[1,1,1,1,1,1,1,1,1,1],
-[1,0,0,0,1,0,0,0,0,1],
-[1,0,1,0,1,0,1,1,0,1],
-[1,0,1,0,0,0,1,0,0,1],
-[1,0,1,1,1,0,1,0,1,1],
-[1,0,0,0,1,0,1,0,0,1],
-[1,1,1,0,1,0,1,1,0,1],
-[1,0,0,0,0,0,0,1,0,1],
-[1,0,1,1,1,1,0,0,2,1],
-[1,1,1,1,1,1,1,1,1,1]
-
-],
-
-messages:[
-
-{
-x:1,
-y:1,
-text:"🏛 Granada: famosa por su arquitectura colonial."
-},
-
-{
-x:5,
-y:5,
-text:"🌋 Ometepe: isla formada por dos volcanes."
-},
-
-{
-x:8,
-y:2,
-text:"🌊 San Juan del Sur: playas y surf."
-}
-
-]
-
-},
-
-{
-
-map:[
-
-[1,1,1,1,1,1,1,1,1,1],
-[1,0,0,0,0,0,1,0,0,1],
-[1,0,1,1,1,0,1,0,1,1],
-[1,0,0,0,1,0,0,0,0,1],
-[1,1,1,0,1,1,1,1,0,1],
-[1,0,0,0,0,0,0,1,0,1],
-[1,0,1,1,1,1,0,1,0,1],
-[1,0,0,0,0,1,0,0,0,1],
-[1,1,1,1,0,0,0,1,2,1],
-[1,1,1,1,1,1,1,1,1,1]
-
-],
-
-messages:[
-
-{
-x:1,
-y:2,
-text:"☕ Matagalpa: región cafetalera y montañosa."
-},
-
-{
-x:3,
-y:5,
-text:"🏝 Corn Island: aguas cristalinas del Caribe."
-},
-
-{
-x:8,
-y:7,
-text:"🎨 León: cultura y volcanes."
-}
-
-]
-
-},
-
-{
-
-map:[
-
-[1,1,1,1,1,1,1,1,1,1],
-[1,0,0,0,1,0,0,0,0,1],
-[1,0,1,0,1,0,1,1,0,1],
-[1,0,1,0,0,0,1,0,0,1],
-[1,0,1,1,1,0,1,0,1,1],
-[1,0,0,0,1,0,0,0,0,1],
-[1,1,1,0,1,1,1,1,0,1],
-[1,0,0,0,0,0,0,1,0,1],
-[1,0,1,1,1,1,0,0,2,1],
-[1,1,1,1,1,1,1,1,1,1]
-
-],
-
-messages:[
-
-{
-x:1,
-y:7,
-text:"🌋 Masaya: hogar de un volcán activo."
-},
-
-{
-x:5,
-y:3,
-text:"🌲 Jinotega: ciudad de las brumas."
-},
-
-{
-x:7,
-y:5,
-text:"🌴 Bluefields: ambiente tropical caribeño."
-}
-
-]
-
-}
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+[1,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,2,1],
+[1,0,1,0,1,0,1,1,1,0,1,0,1,1,1,1,1,0,1,1],
+[1,0,1,0,0,0,1,0,1,0,0,0,1,0,0,0,1,0,0,1],
+[1,0,1,1,1,0,1,0,1,1,1,1,1,0,1,0,1,1,0,1],
+[1,0,0,0,1,0,1,0,0,0,0,0,1,0,1,0,0,0,0,1],
+[1,1,1,0,1,0,1,1,1,1,1,0,1,0,1,1,1,1,0,1],
+[1,0,0,0,1,0,0,0,0,0,1,0,1,0,0,0,0,1,0,1],
+[1,0,1,1,1,1,1,1,1,0,1,0,1,1,1,1,0,1,0,1],
+[1,0,0,0,0,0,0,0,1,0,1,0,0,0,0,1,0,0,0,1],
+[1,1,1,1,1,1,1,0,1,0,1,1,1,1,0,1,1,1,0,1],
+[1,0,0,0,0,0,1,0,1,0,0,0,0,1,0,0,0,1,0,1],
+[1,0,1,1,1,0,1,0,1,1,1,1,0,1,1,1,0,1,0,1],
+[1,0,0,0,1,0,0,0,0,0,0,1,0,0,0,1,0,0,0,1],
+[1,1,1,0,1,1,1,1,1,1,0,1,1,1,0,1,1,1,0,1],
+[1,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,1,0,1],
+[1,0,1,1,1,1,1,1,0,1,1,1,0,1,1,1,0,1,0,1],
+[1,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,1,0,1],
+[1,1,1,1,1,1,0,1,1,1,0,1,1,1,1,1,0,0,0,1],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
 
 ];
 
-let player = {
-x:5,
-y:5
-};
+const touristData = [
 
-let visitedMessages = [];
+[
+{x:3,y:5,text:"🏛 Granada: ciudad colonial llena de historia."},
+{x:10,y:15,text:"🌊 San Juan del Sur: playas ideales para surf."},
+{x:17,y:3,text:"🌋 Ometepe: isla volcánica única en el mundo."}
+],
+
+[
+{x:5,y:9,text:"☕ Matagalpa: café y clima fresco."},
+{x:13,y:13,text:"🏝 Corn Island: paraíso caribeño."},
+{x:16,y:17,text:"🎨 León: arte y cultura nicaragüense."}
+],
+
+[
+{x:7,y:1,text:"🌲 Jinotega: montañas y naturaleza."},
+{x:2,y:17,text:"🌋 Masaya: famoso por su volcán activo."},
+{x:18,y:9,text:"🌴 Bluefields: cultura caribeña."}
+],
+
+[
+{x:8,y:7,text:"🏞 Estelí: paisajes impresionantes."},
+{x:14,y:5,text:"🌊 Laguna de Apoyo: reserva natural."},
+{x:4,y:13,text:"⛪ Catedral de León: patrimonio histórico."}
+],
+
+[
+{x:6,y:18,text:"🏝 Little Corn Island: playas paradisíacas."},
+{x:15,y:1,text:"🌋 Cerro Negro: volcán para sandboarding."},
+{x:11,y:11,text:"🌄 Cañón de Somoto: aventura natural."}
+]
+
+];
+
+function startGame(){
+
+document.getElementById("storyBox").style.display="none";
+
+document.getElementById("gameContainer").style.display="block";
+
+loadLevel();
+
+}
 
 function showNotification(text){
 
-notification.innerHTML = text;
+notification.innerHTML=text;
 
 notification.classList.add("show");
 
-setTimeout(() => {
+setTimeout(()=>{
 
 notification.classList.remove("show");
 
-},3000);
+},3500);
 
 }
 
 function loadLevel(){
 
-player = {
-x:5,
-y:5
-};
+player={x:1,y:1};
 
-visitedMessages = [];
+collected=[];
 
-levelText.innerText = `Nivel ${level + 1}`;
+document.getElementById("levelText").innerText=
+`Nivel ${currentLevel+1}`;
+
+updateMission();
 
 drawMaze();
+
+}
+
+function updateMission(){
+
+document.getElementById("missionText").innerText=
+`Puntos encontrados: ${collected.length}/3`;
 
 }
 
@@ -371,59 +363,46 @@ function drawMaze(){
 
 ctx.clearRect(0,0,canvas.width,canvas.height);
 
-const currentMap = levels[level].map;
+for(let y=0;y<20;y++){
 
-for(let y=0;y<10;y++){
+for(let x=0;x<20;x++){
 
-for(let x=0;x<10;x++){
+if(baseMap[y][x]===1){
 
-if(currentMap[y][x] === 1){
-
-ctx.fillStyle = "#023e8a";
+ctx.fillStyle="#023e8a";
 
 ctx.fillRect(
-x * tileSize,
-y * tileSize,
+x*tileSize,
+y*tileSize,
+tileSize,
+tileSize
+);
+
+}else{
+
+ctx.fillStyle="white";
+
+ctx.fillRect(
+x*tileSize,
+y*tileSize,
 tileSize,
 tileSize
 );
 
 }
 
-else{
+if(baseMap[y][x]===2){
 
-ctx.fillStyle = "white";
-
-ctx.fillRect(
-x * tileSize,
-y * tileSize,
-tileSize,
-tileSize
-);
-
-ctx.strokeStyle = "#ddd";
-
-ctx.strokeRect(
-x * tileSize,
-y * tileSize,
-tileSize,
-tileSize
-);
-
-}
-
-if(currentMap[y][x] === 2){
-
-ctx.fillStyle = "green";
+ctx.fillStyle="green";
 
 ctx.beginPath();
 
 ctx.arc(
-x * tileSize + 30,
-y * tileSize + 30,
-18,
+x*tileSize+17,
+y*tileSize+17,
+10,
 0,
-Math.PI * 2
+Math.PI*2
 );
 
 ctx.fill();
@@ -434,16 +413,38 @@ ctx.fill();
 
 }
 
-ctx.fillStyle = "#00b4d8";
+touristData[currentLevel].forEach((point,index)=>{
+
+if(!collected.includes(index)){
+
+ctx.fillStyle="orange";
 
 ctx.beginPath();
 
 ctx.arc(
-player.x * tileSize + 30,
-player.y * tileSize + 30,
-20,
+point.x*tileSize+17,
+point.y*tileSize+17,
+8,
 0,
-Math.PI * 2
+Math.PI*2
+);
+
+ctx.fill();
+
+}
+
+});
+
+ctx.fillStyle="#00b4d8";
+
+ctx.beginPath();
+
+ctx.arc(
+player.x*tileSize+17,
+player.y*tileSize+17,
+12,
+0,
+Math.PI*2
 );
 
 ctx.fill();
@@ -452,41 +453,51 @@ ctx.fill();
 
 function movePlayer(dx,dy){
 
-const currentMap = levels[level].map;
+const newX=player.x+dx;
+const newY=player.y+dy;
 
-const newX = player.x + dx;
-const newY = player.y + dy;
-
-if(currentMap[newY][newX] === 1){
+if(baseMap[newY][newX]===1){
 
 return;
 
 }
 
-player.x = newX;
-player.y = newY;
+player.x=newX;
+player.y=newY;
 
-checkMessages();
+checkTouristPoints();
 
-if(currentMap[newY][newX] === 2){
+if(baseMap[newY][newX]===2){
 
-if(level < levels.length - 1){
+if(collected.length<3){
 
-showNotification("🎉 Nivel completado");
+showNotification(
+"❌ Debes encontrar los 3 puntos turísticos antes de salir."
+);
 
-level++;
+}else{
 
-setTimeout(() => {
+if(currentLevel<4){
+
+showNotification(
+`🎉 Nivel ${currentLevel+1} completado`
+);
+
+currentLevel++;
+
+setTimeout(()=>{
 
 loadLevel();
 
-},1200);
+},1500);
+
+}else{
+
+showNotification(
+"🏆 ¡Completaste toda la aventura turística!"
+);
 
 }
-
-else{
-
-showNotification("🏆 ¡Completaste todos los niveles!");
 
 }
 
@@ -496,19 +507,21 @@ drawMaze();
 
 }
 
-function checkMessages(){
+function checkTouristPoints(){
 
-levels[level].messages.forEach((msg,index) => {
+touristData[currentLevel].forEach((point,index)=>{
 
 if(
-msg.x === player.x &&
-msg.y === player.y &&
-!visitedMessages.includes(index)
+point.x===player.x &&
+point.y===player.y &&
+!collected.includes(index)
 ){
 
-visitedMessages.push(index);
+collected.push(index);
 
-showNotification(msg.text);
+updateMission();
+
+showNotification(point.text);
 
 }
 
@@ -518,14 +531,12 @@ showNotification(msg.text);
 
 document.addEventListener("keydown",(e)=>{
 
-if(e.key === "ArrowUp") movePlayer(0,-1);
-if(e.key === "ArrowDown") movePlayer(0,1);
-if(e.key === "ArrowLeft") movePlayer(-1,0);
-if(e.key === "ArrowRight") movePlayer(1,0);
+if(e.key==="ArrowUp") movePlayer(0,-1);
+if(e.key==="ArrowDown") movePlayer(0,1);
+if(e.key==="ArrowLeft") movePlayer(-1,0);
+if(e.key==="ArrowRight") movePlayer(1,0);
 
 });
-
-loadLevel();
 
 </script>
 
