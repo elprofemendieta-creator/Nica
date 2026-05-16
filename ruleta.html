@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ruleta Turística Nicaragua</title>
+
+  <style>
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    body{
+      font-family: Arial, sans-serif;
+      min-height:100vh;
+      background: linear-gradient(135deg,#03045e,#0077b6,#00b4d8);
+      color:white;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      overflow-x:hidden;
+    }
+
+    h1{
+      text-align:center;
+      font-size:3rem;
+      margin-bottom:10px;
+    }
+
+    .subtitle{
+      text-align:center;
+      margin-bottom:30px;
+      font-size:1.1rem;
+      opacity:0.9;
+    }
+
+    .container{
+      width:100%;
+      max-width:1000px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:30px;
+    }
+
+    .wheel-container{
+      position:relative;
+      width:320px;
+      height:320px;
+    }
+
+    .pointer{
+      position:absolute;
+      top:-10px;
+      left:50%;
+      transform:translateX(-50%);
+      width:0;
+      height:0;
+      border-left:20px solid transparent;
+      border-right:20px solid transparent;
+      border-top:40px solid white;
+      z-index:10;
+    }
+
+    .wheel{
+      width:100%;
+      height:100%;
+      border-radius:50%;
+      border:10px solid white;
+      position:relative;
+      overflow:hidden;
+      transition: transform 5s ease-out;
+      box-shadow:0 0 30px rgba(255,255,255,0.3);
+      background:
+      conic-gradient(
+        #00b4d8 0deg 36deg,
+        #0096c7 36deg 72deg,
+        #48cae4 72deg 108deg,
+        #0077b6 108deg 144deg,
+        #90e0ef 144deg 180deg,
+        #023e8a 180deg 216deg,
+        #00b4d8 216deg 252deg,
+        #0096c7 252deg 288deg,
+        #48cae4 288deg 324deg,
+        #0077b6 324deg 360deg
+      );
+    }
+
+    .label{
+      position:absolute;
+      width:50%;
+      height:50%;
+      top:50%;
+      left:50%;
+      transform-origin:0% 0%;
+      display:flex;
+      justify-content:center;
+      align-items:flex-start;
+      padding-top:20px;
+      font-size:0.9rem;
+      font-weight:bold;
+      text-shadow:1px 1px 3px black;
+    }
+
+    .center-circle{
+      position:absolute;
+      width:90px;
+      height:90px;
+      background:white;
+      border-radius:50%;
+      top:50%;
+      left:50%;
+      transform:translate(-50%, -50%);
+      z-index:5;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      color:#0077b6;
+      font-weight:bold;
+      text-align:center;
+      box-shadow:0 0 15px rgba(0,0,0,0.3);
+    }
+
+    .spin-btn{
+      padding:16px 35px;
+      border:none;
+      border-radius:15px;
+      background:white;
+      color:#0077b6;
+      font-size:1rem;
+      font-weight:bold;
+      cursor:pointer;
+      transition:0.3s;
+    }
+
+    .spin-btn:hover{
+      transform:scale(1.05);
+    }
+
+    .result{
+      min-height:80px;
+      width:100%;
+      max-width:700px;
+      background:rgba(255,255,255,0.12);
+      backdrop-filter:blur(10px);
+      border-radius:20px;
+      padding:25px;
+      text-align:center;
+      font-size:1.2rem;
+      line-height:1.6;
+    }
+
+    .back-btn{
+      margin-top:10px;
+      text-decoration:none;
+      background:white;
+      color:#0077b6;
+      padding:14px 25px;
+      border-radius:12px;
+      font-weight:bold;
+      transition:0.3s;
+    }
+
+    .back-btn:hover{
+      transform:scale(1.05);
+    }
+
+    footer{
+      margin-top:40px;
+    }
+
+    @media(max-width:768px){
+
+      h1{
+        font-size:2rem;
+      }
+
+      .wheel-container{
+        width:280px;
+        height:280px;
+      }
+
+      .label{
+        font-size:0.7rem;
+      }
+
+      .result{
+        font-size:1rem;
+      }
+
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <h1>🎡 Ruleta Turística</h1>
+
+    <p class="subtitle">
+      Descubre tu próximo destino en Nicaragua 🌋🌊
+    </p>
+
+    <div class="wheel-container">
+
+      <div class="pointer"></div>
+
+      <div class="wheel" id="wheel">
+
+        <div class="label" style="transform:rotate(18deg)">Granada</div>
+        <div class="label" style="transform:rotate(54deg)">León</div>
+        <div class="label" style="transform:rotate(90deg)">Ometepe</div>
+        <div class="label" style="transform:rotate(126deg)">San Juan del Sur</div>
+        <div class="label" style="transform:rotate(162deg)">Corn Island</div>
+        <div class="label" style="transform:rotate(198deg)">Matagalpa</div>
+        <div class="label" style="transform:rotate(234deg)">Masaya</div>
+        <div class="label" style="transform:rotate(270deg)">Estelí</div>
+        <div class="label" style="transform:rotate(306deg)">Jinotega</div>
+        <div class="label" style="transform:rotate(342deg)">Bluefields</div>
+
+        <div class="center-circle">
+          NICA
+        </div>
+
+      </div>
+
+    </div>
+
+    <button class="spin-btn" id="spinBtn">
+      Girar Ruleta
+    </button>
+
+    <div class="result" id="result">
+      Presiona el botón para descubrir un destino 😄
+    </div>
+
+    <footer>
+      <a href="juegos.html" class="back-btn">
+        ⬅ Volver a Juegos
+      </a>
+    </footer>
+
+  </div>
+
+  <script>
+
+    const wheel = document.getElementById("wheel");
+    const spinBtn = document.getElementById("spinBtn");
+    const result = document.getElementById("result");
+
+    const lugares = [
+
+      {
+        nombre:"Granada",
+        descripcion:"Ciudad colonial famosa por su arquitectura e historia."
+      },
+
+      {
+        nombre:"León",
+        descripcion:"Destino cultural lleno de arte, volcanes y tradición."
+      },
+
+      {
+        nombre:"Ometepe",
+        descripcion:"Isla volcánica impresionante ubicada en el Lago Cocibolca."
+      },
+
+      {
+        nombre:"San Juan del Sur",
+        descripcion:"Uno de los destinos de playa más famosos de Nicaragua."
+      },
+
+      {
+        nombre:"Corn Island",
+        descripcion:"Playas paradisíacas y aguas cristalinas del Caribe."
+      },
+
+      {
+        nombre:"Matagalpa",
+        descripcion:"Montañas, café y clima fresco en el norte del país."
+      },
+
+      {
+        nombre:"Masaya",
+        descripcion:"Conocida por su volcán activo y artesanías."
+      },
+
+      {
+        nombre:"Estelí",
+        descripcion:"Naturaleza, cultura y paisajes impresionantes."
+      },
+
+      {
+        nombre:"Jinotega",
+        descripcion:"La ciudad de las brumas y gran producción cafetalera."
+      },
+
+      {
+        nombre:"Bluefields",
+        descripcion:"Cultura caribeña única y ambiente tropical."
+      }
+
+    ];
+
+    let rotation = 0;
+
+    spinBtn.addEventListener("click", () => {
+
+      const randomIndex = Math.floor(Math.random() * lugares.length);
+
+      const extraRotation = 3600;
+
+      const degreePerPlace = 360 / lugares.length;
+
+      const finalRotation =
+        extraRotation +
+        (360 - (randomIndex * degreePerPlace));
+
+      rotation += finalRotation;
+
+      wheel.style.transform = `rotate(${rotation}deg)`;
+
+      setTimeout(() => {
+
+        result.innerHTML = `
+          <h2>📍 ${lugares[randomIndex].nombre}</h2>
+          <p>${lugares[randomIndex].descripcion}</p>
+        `;
+
+      }, 5000);
+
+    });
+
+  </script>
+
+</body>
+</html>

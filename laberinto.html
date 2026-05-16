@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Laberinto Turístico Nicaragua PRO</title>
+
+<style>
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  font-family:Arial,sans-serif;
+  background:linear-gradient(135deg,#03045e,#0077b6,#00b4d8);
+  color:white;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:20px;
+  overflow-x:hidden;
+}
+
+h1{
+  font-size:3rem;
+  text-align:center;
+}
+
+.subtitle{
+  margin-top:10px;
+  margin-bottom:25px;
+  text-align:center;
+  max-width:700px;
+  opacity:0.9;
+}
+
+.game-container{
+  width:100%;
+  max-width:850px;
+  background:rgba(255,255,255,0.12);
+  backdrop-filter:blur(10px);
+  border-radius:25px;
+  padding:20px;
+  text-align:center;
+  box-shadow:0 10px 30px rgba(0,0,0,0.3);
+}
+
+.level{
+  font-size:1.3rem;
+  margin-bottom:20px;
+}
+
+canvas{
+  background:white;
+  border-radius:20px;
+  width:100%;
+  max-width:600px;
+  height:auto;
+  border:5px solid rgba(255,255,255,0.4);
+}
+
+.controls{
+  margin-top:25px;
+  display:grid;
+  grid-template-columns:repeat(3,70px);
+  gap:10px;
+  justify-content:center;
+}
+
+.control-btn{
+  width:70px;
+  height:70px;
+  border:none;
+  border-radius:15px;
+  background:white;
+  color:#0077b6;
+  font-size:1.5rem;
+  font-weight:bold;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.control-btn:hover{
+  transform:scale(1.05);
+}
+
+.notification{
+  position:fixed;
+  top:20px;
+  right:20px;
+  width:320px;
+  max-width:90%;
+  background:white;
+  color:#0077b6;
+  padding:18px;
+  border-radius:18px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.3);
+  z-index:1000;
+  transform:translateX(400px);
+  transition:0.5s;
+  font-weight:bold;
+  line-height:1.5;
+}
+
+.notification.show{
+  transform:translateX(0);
+}
+
+.back-btn{
+  margin-top:30px;
+  text-decoration:none;
+  background:white;
+  color:#0077b6;
+  padding:14px 25px;
+  border-radius:12px;
+  font-weight:bold;
+  transition:0.3s;
+}
+
+.back-btn:hover{
+  transform:scale(1.05);
+}
+
+@media(max-width:768px){
+
+  h1{
+    font-size:2rem;
+  }
+
+  .controls{
+    grid-template-columns:repeat(3,60px);
+  }
+
+  .control-btn{
+    width:60px;
+    height:60px;
+  }
+
+}
+
+</style>
+</head>
+<body>
+
+<h1>🌋 Laberinto Turístico</h1>
+
+<p class="subtitle">
+Explora Nicaragua encontrando la salida y descubriendo lugares turísticos 😄
+</p>
+
+<div class="game-container">
+
+<div class="level" id="levelText">
+Nivel 1
+</div>
+
+<canvas id="mazeCanvas" width="600" height="600"></canvas>
+
+<div class="controls">
+
+<div></div>
+
+<button class="control-btn" onclick="movePlayer(0,-1)">
+⬆
+</button>
+
+<div></div>
+
+<button class="control-btn" onclick="movePlayer(-1,0)">
+⬅
+</button>
+
+<button class="control-btn" onclick="movePlayer(0,1)">
+⬇
+</button>
+
+<button class="control-btn" onclick="movePlayer(1,0)">
+➡
+</button>
+
+</div>
+
+</div>
+
+<div class="notification" id="notification"></div>
+
+<a href="juegos.html" class="back-btn">
+⬅ Volver a Juegos
+</a>
+
+<script>
+
+const canvas = document.getElementById("mazeCanvas");
+const ctx = canvas.getContext("2d");
+
+const notification = document.getElementById("notification");
+const levelText = document.getElementById("levelText");
+
+const tileSize = 60;
+
+let level = 0;
+
+const levels = [
+
+{
+
+map:[
+
+[1,1,1,1,1,1,1,1,1,1],
+[1,0,0,0,1,0,0,0,0,1],
+[1,0,1,0,1,0,1,1,0,1],
+[1,0,1,0,0,0,1,0,0,1],
+[1,0,1,1,1,0,1,0,1,1],
+[1,0,0,0,1,0,1,0,0,1],
+[1,1,1,0,1,0,1,1,0,1],
+[1,0,0,0,0,0,0,1,0,1],
+[1,0,1,1,1,1,0,0,2,1],
+[1,1,1,1,1,1,1,1,1,1]
+
+],
+
+messages:[
+
+{
+x:1,
+y:1,
+text:"🏛 Granada: famosa por su arquitectura colonial."
+},
+
+{
+x:5,
+y:5,
+text:"🌋 Ometepe: isla formada por dos volcanes."
+},
+
+{
+x:8,
+y:2,
+text:"🌊 San Juan del Sur: playas y surf."
+}
+
+]
+
+},
+
+{
+
+map:[
+
+[1,1,1,1,1,1,1,1,1,1],
+[1,0,0,0,0,0,1,0,0,1],
+[1,0,1,1,1,0,1,0,1,1],
+[1,0,0,0,1,0,0,0,0,1],
+[1,1,1,0,1,1,1,1,0,1],
+[1,0,0,0,0,0,0,1,0,1],
+[1,0,1,1,1,1,0,1,0,1],
+[1,0,0,0,0,1,0,0,0,1],
+[1,1,1,1,0,0,0,1,2,1],
+[1,1,1,1,1,1,1,1,1,1]
+
+],
+
+messages:[
+
+{
+x:1,
+y:2,
+text:"☕ Matagalpa: región cafetalera y montañosa."
+},
+
+{
+x:3,
+y:5,
+text:"🏝 Corn Island: aguas cristalinas del Caribe."
+},
+
+{
+x:8,
+y:7,
+text:"🎨 León: cultura y volcanes."
+}
+
+]
+
+},
+
+{
+
+map:[
+
+[1,1,1,1,1,1,1,1,1,1],
+[1,0,0,0,1,0,0,0,0,1],
+[1,0,1,0,1,0,1,1,0,1],
+[1,0,1,0,0,0,1,0,0,1],
+[1,0,1,1,1,0,1,0,1,1],
+[1,0,0,0,1,0,0,0,0,1],
+[1,1,1,0,1,1,1,1,0,1],
+[1,0,0,0,0,0,0,1,0,1],
+[1,0,1,1,1,1,0,0,2,1],
+[1,1,1,1,1,1,1,1,1,1]
+
+],
+
+messages:[
+
+{
+x:1,
+y:7,
+text:"🌋 Masaya: hogar de un volcán activo."
+},
+
+{
+x:5,
+y:3,
+text:"🌲 Jinotega: ciudad de las brumas."
+},
+
+{
+x:7,
+y:5,
+text:"🌴 Bluefields: ambiente tropical caribeño."
+}
+
+]
+
+}
+
+];
+
+let player = {
+x:5,
+y:5
+};
+
+let visitedMessages = [];
+
+function showNotification(text){
+
+notification.innerHTML = text;
+
+notification.classList.add("show");
+
+setTimeout(() => {
+
+notification.classList.remove("show");
+
+},3000);
+
+}
+
+function loadLevel(){
+
+player = {
+x:5,
+y:5
+};
+
+visitedMessages = [];
+
+levelText.innerText = `Nivel ${level + 1}`;
+
+drawMaze();
+
+}
+
+function drawMaze(){
+
+ctx.clearRect(0,0,canvas.width,canvas.height);
+
+const currentMap = levels[level].map;
+
+for(let y=0;y<10;y++){
+
+for(let x=0;x<10;x++){
+
+if(currentMap[y][x] === 1){
+
+ctx.fillStyle = "#023e8a";
+
+ctx.fillRect(
+x * tileSize,
+y * tileSize,
+tileSize,
+tileSize
+);
+
+}
+
+else{
+
+ctx.fillStyle = "white";
+
+ctx.fillRect(
+x * tileSize,
+y * tileSize,
+tileSize,
+tileSize
+);
+
+ctx.strokeStyle = "#ddd";
+
+ctx.strokeRect(
+x * tileSize,
+y * tileSize,
+tileSize,
+tileSize
+);
+
+}
+
+if(currentMap[y][x] === 2){
+
+ctx.fillStyle = "green";
+
+ctx.beginPath();
+
+ctx.arc(
+x * tileSize + 30,
+y * tileSize + 30,
+18,
+0,
+Math.PI * 2
+);
+
+ctx.fill();
+
+}
+
+}
+
+}
+
+ctx.fillStyle = "#00b4d8";
+
+ctx.beginPath();
+
+ctx.arc(
+player.x * tileSize + 30,
+player.y * tileSize + 30,
+20,
+0,
+Math.PI * 2
+);
+
+ctx.fill();
+
+}
+
+function movePlayer(dx,dy){
+
+const currentMap = levels[level].map;
+
+const newX = player.x + dx;
+const newY = player.y + dy;
+
+if(currentMap[newY][newX] === 1){
+
+return;
+
+}
+
+player.x = newX;
+player.y = newY;
+
+checkMessages();
+
+if(currentMap[newY][newX] === 2){
+
+if(level < levels.length - 1){
+
+showNotification("🎉 Nivel completado");
+
+level++;
+
+setTimeout(() => {
+
+loadLevel();
+
+},1200);
+
+}
+
+else{
+
+showNotification("🏆 ¡Completaste todos los niveles!");
+
+}
+
+}
+
+drawMaze();
+
+}
+
+function checkMessages(){
+
+levels[level].messages.forEach((msg,index) => {
+
+if(
+msg.x === player.x &&
+msg.y === player.y &&
+!visitedMessages.includes(index)
+){
+
+visitedMessages.push(index);
+
+showNotification(msg.text);
+
+}
+
+});
+
+}
+
+document.addEventListener("keydown",(e)=>{
+
+if(e.key === "ArrowUp") movePlayer(0,-1);
+if(e.key === "ArrowDown") movePlayer(0,1);
+if(e.key === "ArrowLeft") movePlayer(-1,0);
+if(e.key === "ArrowRight") movePlayer(1,0);
+
+});
+
+loadLevel();
+
+</script>
+
+</body>
+</html>
