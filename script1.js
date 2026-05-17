@@ -33,11 +33,11 @@ function cargarDatos() {
     } else {
         // Datos iniciales de ejemplo (Nicaragua)
         allPlaces = [
-            { id: Date.now() + 1, nombre: "Granada", lat: 11.9294, lng: -85.9536, url: "https://es.wikipedia.org/wiki/Granada_(Nicaragua)", imagen: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Granada%2C_Nicaragua.jpg/300px-Granada%2C_Nicaragua.jpg", categoria: "ciudad" },
-            { id: Date.now() + 2, nombre: "León", lat: 12.4358, lng: -86.8781, url: "https://es.wikipedia.org/wiki/León_(Nicaragua)", imagen: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Leon_Nicaragua.jpg/300px-Leon_Nicaragua.jpg", categoria: "ciudad" },
-            { id: Date.now() + 3, nombre: "Corn Island", lat: 12.1758, lng: -83.0615, url: "https://es.wikipedia.org/wiki/Islas_del_Maíz", imagen: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Corn_Island.jpg/300px-Corn_Island.jpg", categoria: "playa" },
-            { id: Date.now() + 4, nombre: "Volcán Masaya", lat: 11.9844, lng: -86.1611, url: "https://es.wikipedia.org/wiki/Volcán_Masaya", imagen: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Masaya_Volcano.jpg/300px-Masaya_Volcano.jpg", categoria: "volcán" },
-            { id: Date.now() + 5, nombre: "San Juan del Sur", lat: 11.2528, lng: -85.8683, url: "https://es.wikipedia.org/wiki/San_Juan_del_Sur", imagen: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/San_Juan_del_Sur.jpg/300px-San_Juan_del_Sur.jpg", categoria: "playa" }
+            { id: Date.now() + 1, nombre: "Granada", lat: 11.9294, lng: -85.9536, url: "granada.html", imagen: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Granada%2C_Nicaragua.jpg/300px-Granada%2C_Nicaragua.jpg", categoria: "ciudad" },
+            { id: Date.now() + 2, nombre: "León", lat: 12.4358, lng: -86.8781, url: "leon.html", imagen: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Leon_Nicaragua.jpg/300px-Leon_Nicaragua.jpg", categoria: "ciudad" },
+            { id: Date.now() + 3, nombre: "Corn Island", lat: 12.1758, lng: -83.0615, url: "cornislan.html", imagen: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Corn_Island.jpg/300px-Corn_Island.jpg", categoria: "playa" },
+            { id: Date.now() + 4, nombre: "Volcán Masaya", lat: 11.9844, lng: -86.1611, url: "volcanmasaya.html", imagen: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Masaya_Volcano.jpg/300px-Masaya_Volcano.jpg", categoria: "volcán" },
+            { id: Date.now() + 5, nombre: "San Juan del Sur", lat: 11.2528, lng: -85.8683, url: "sanjuan.html", imagen: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/San_Juan_del_Sur.jpg/300px-San_Juan_del_Sur.jpg", categoria: "playa" }
         ];
         guardarDatos();
     }
