@@ -127,8 +127,8 @@ body {
 }
 
 #map {
-  height: 50vh; /* o 100% si el contenedor padre tiene altura fija */
-  width: 100%;
+  height: 150vh; /* o 100% si el contenedor padre tiene altura fija */
+  width: 80%;
 }
 
 /* Ajustes para móvil */
