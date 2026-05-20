@@ -355,6 +355,10 @@ function init() {
     }, 100);
 }
 
+document.addEventListener('DOMContentLoaded', () => {
+  map.invalidateSize();
+});
+
 // Asegurar que el mapa se redibuje cuando la página termina de cargar
 window.addEventListener('load', () => {
     if (map) map.invalidateSize(true);
