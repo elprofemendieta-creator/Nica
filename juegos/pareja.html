@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Memoria Turística Nicaragua</title>
+
+  <style>
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    body{
+      font-family: Arial, sans-serif;
+      min-height:100vh;
+      background: linear-gradient(135deg,#03045e,#0077b6,#00b4d8);
+      color:white;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      padding:20px;
+      overflow-x:hidden;
+    }
+
+    h1{
+      margin-top:20px;
+      font-size:3rem;
+      text-align:center;
+    }
+
+    .subtitle{
+      margin-top:10px;
+      margin-bottom:30px;
+      text-align:center;
+      max-width:700px;
+      opacity:0.9;
+    }
+
+    .game-board{
+      width:100%;
+      max-width:1100px;
+      display:grid;
+      grid-template-columns: repeat(auto-fit,minmax(180px,1fr));
+      gap:18px;
+    }
+
+    .card{
+      height:150px;
+      perspective:1000px;
+      cursor:pointer;
+    }
+
+    .card-inner{
+      position:relative;
+      width:100%;
+      height:100%;
+      transition:transform 0.7s;
+      transform-style:preserve-3d;
+    }
+
+    .card.flipped .card-inner{
+      transform:rotateY(180deg);
+    }
+
+    .front,
+    .back{
+      position:absolute;
+      width:100%;
+      height:100%;
+      border-radius:18px;
+      backface-visibility:hidden;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding:15px;
+      font-weight:bold;
+      box-shadow:0 5px 15px rgba(0,0,0,0.3);
+    }
+
+    .front{
+      background:rgba(255,255,255,0.15);
+      backdrop-filter:blur(10px);
+      font-size:2.5rem;
+    }
+
+    .back{
+      background:white;
+      color:#0077b6;
+      transform:rotateY(180deg);
+      font-size:0.95rem;
+      line-height:1.4;
+    }
+
+    .status{
+      margin-top:30px;
+      background:rgba(255,255,255,0.12);
+      backdrop-filter:blur(10px);
+      padding:20px;
+      border-radius:18px;
+      width:100%;
+      max-width:700px;
+      text-align:center;
+      font-size:1.1rem;
+    }
+
+    .back-btn{
+      margin-top:30px;
+      text-decoration:none;
+      background:white;
+      color:#0077b6;
+      padding:14px 25px;
+      border-radius:12px;
+      font-weight:bold;
+      transition:0.3s;
+    }
+
+    .back-btn:hover{
+      transform:scale(1.05);
+    }
+
+    @media(max-width:768px){
+
+      h1{
+        font-size:2rem;
+      }
+
+      .game-board{
+        grid-template-columns: repeat(2,1fr);
+      }
+
+      .card{
+        height:130px;
+      }
+
+      .back{
+        font-size:0.8rem;
+      }
+
+    }
+
+  </style>
+</head>
+<body>
+
+  <h1>🃏 Memoria Turística</h1>
+
+  <p class="subtitle">
+    Encuentra la pareja correcta entre el lugar turístico y su descripción 🌋🌊
+  </p>
+
+  <div class="game-board" id="gameBoard"></div>
+
+  <div class="status" id="status">
+    Encuentra todas las parejas 😄
+  </div>
+
+  <a href="juegos.html" class="back-btn">
+    ⬅ Volver a Juegos
+  </a>
+
+  <script>
+
+    const lugares = [
+
+      {
+        id:1,
+        titulo:"Granada",
+        descripcion:"Ciudad colonial famosa por su arquitectura histórica."
+      },
+
+      {
+        id:2,
+        titulo:"Ometepe",
+        descripcion:"Isla formada por dos volcanes en el Lago Cocibolca."
+      },
+
+      {
+        id:3,
+        titulo:"Corn Island",
+        descripcion:"Playas paradisíacas del Caribe nicaragüense."
+      },
+
+      {
+        id:4,
+        titulo:"León",
+        descripcion:"Ciudad cultural conocida por volcanes y arte."
+      },
+
+      {
+        id:5,
+        titulo:"San Juan del Sur",
+        descripcion:"Destino turístico famoso por sus playas y surf."
+      },
+
+      {
+        id:6,
+        titulo:"Matagalpa",
+        descripcion:"Región montañosa reconocida por su café y clima fresco."
+      }
+
+    ];
+
+    let cards = [];
+
+    lugares.forEach(lugar => {
+
+      cards.push({
+        id:lugar.id,
+        text:lugar.titulo
+      });
+
+      cards.push({
+        id:lugar.id,
+        text:lugar.descripcion
+      });
+
+    });
+
+    cards.sort(() => Math.random() - 0.5);
+
+    const board = document.getElementById("gameBoard");
+
+    let firstCard = null;
+    let secondCard = null;
+    let lockBoard = false;
+    let parejas = 0;
+
+    cards.forEach(cardData => {
+
+      const card = document.createElement("div");
+
+      card.classList.add("card");
+
+      card.dataset.id = cardData.id;
+
+      card.innerHTML = `
+
+        <div class="card-inner">
+
+          <div class="front">
+            ❓
+          </div>
+
+          <div class="back">
+            ${cardData.text}
+          </div>
+
+        </div>
+
+      `;
+
+      card.addEventListener("click", () => flipCard(card));
+
+      board.appendChild(card);
+
+    });
+
+    function flipCard(card){
+
+      if(lockBoard) return;
+
+      if(card === firstCard) return;
+
+      card.classList.add("flipped");
+
+      if(!firstCard){
+
+        firstCard = card;
+        return;
+
+      }
+
+      secondCard = card;
+
+      checkMatch();
+
+    }
+
+    function checkMatch(){
+
+      const isMatch =
+        firstCard.dataset.id === secondCard.dataset.id;
+
+      if(isMatch){
+
+        parejas++;
+
+        resetBoard();
+
+        if(parejas === lugares.length){
+
+          document.getElementById("status").innerHTML = `
+            🎉 ¡Excelente! Encontraste todas las parejas turísticas.
+          `;
+
+        }
+
+      }
+
+      else{
+
+        lockBoard = true;
+
+        setTimeout(() => {
+
+          firstCard.classList.remove("flipped");
+          secondCard.classList.remove("flipped");
+
+          resetBoard();
+
+        }, 1200);
+
+      }
+
+    }
+
+    function resetBoard(){
+
+      [firstCard, secondCard] = [null, null];
+
+      lockBoard = false;
+
+    }
+
+  </script>
+
+</body>
+</html>
