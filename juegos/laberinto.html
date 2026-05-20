@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Laberinto Extremo Nicaragua</title>
+
+<style>
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  font-family:Arial,sans-serif;
+  background:linear-gradient(135deg,#03045e,#0077b6,#00b4d8);
+  color:white;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:20px;
+  overflow-x:hidden;
+}
+
+h1{
+  font-size:3rem;
+  text-align:center;
+}
+
+.story-box{
+  width:100%;
+  max-width:900px;
+  background:rgba(255,255,255,0.12);
+  backdrop-filter:blur(10px);
+  border-radius:25px;
+  padding:25px;
+  margin-top:20px;
+  line-height:1.8;
+  box-shadow:0 10px 30px rgba(0,0,0,0.3);
+}
+
+.story-box h2{
+  margin-bottom:15px;
+}
+
+.start-btn{
+  margin-top:20px;
+  border:none;
+  padding:15px 30px;
+  border-radius:15px;
+  background:white;
+  color:#0077b6;
+  font-size:1rem;
+  font-weight:bold;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.start-btn:hover{
+  transform:scale(1.05);
+}
+
+.game-container{
+  display:none;
+  width:100%;
+  max-width:1000px;
+  margin-top:25px;
+  background:rgba(255,255,255,0.12);
+  backdrop-filter:blur(10px);
+  border-radius:25px;
+  padding:20px;
+  text-align:center;
+  box-shadow:0 10px 30px rgba(0,0,0,0.3);
+}
+
+.level{
+  font-size:1.4rem;
+  margin-bottom:10px;
+}
+
+.mission{
+  margin-bottom:15px;
+  opacity:0.9;
+}
+
+canvas{
+  background:white;
+  border-radius:20px;
+  width:100%;
+  max-width:700px;
+  height:auto;
+  border:5px solid rgba(255,255,255,0.4);
+}
+
+.controls{
+  margin-top:25px;
+  display:grid;
+  grid-template-columns:repeat(3,70px);
+  gap:10px;
+  justify-content:center;
+}
+
+.control-btn{
+  width:70px;
+  height:70px;
+  border:none;
+  border-radius:15px;
+  background:white;
+  color:#0077b6;
+  font-size:1.5rem;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.notification{
+  position:fixed;
+  top:20px;
+  right:20px;
+  width:340px;
+  max-width:90%;
+  background:white;
+  color:#0077b6;
+  padding:18px;
+  border-radius:18px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.3);
+  z-index:1000;
+  transform:translateX(500px);
+  transition:0.5s;
+  line-height:1.6;
+  font-weight:bold;
+}
+
+.notification.show{
+  transform:translateX(0);
+}
+
+.back-btn{
+  margin-top:25px;
+  text-decoration:none;
+  background:white;
+  color:#0077b6;
+  padding:14px 25px;
+  border-radius:12px;
+  font-weight:bold;
+}
+
+@media(max-width:768px){
+
+  h1{
+    font-size:2rem;
+  }
+
+  .controls{
+    grid-template-columns:repeat(3,60px);
+  }
+
+  .control-btn{
+    width:60px;
+    height:60px;
+  }
+
+}
+
+</style>
+</head>
+<body>
+
+<h1>🌋 Laberinto Extremo Nicaragua</h1>
+
+<div class="story-box" id="storyBox">
+
+<h2>📜 Historia</h2>
+
+<p>
+Eres un explorador turístico que ha quedado atrapado en antiguos laberintos secretos de Nicaragua.
+</p>
+
+<p>
+Cada nivel representa una región del país llena de cultura, volcanes, playas y naturaleza.
+</p>
+
+<p>
+Tu misión será:
+</p>
+
+<ul style="margin-top:10px; margin-left:20px; line-height:1.8;">
+<li>✅ Encontrar los 3 puntos turísticos ocultos</li>
+<li>✅ Descubrir información turística</li>
+<li>✅ Llegar a la salida</li>
+<li>❌ Evitar caminos falsos y callejones sin salida</li>
+</ul>
+
+<p style="margin-top:15px;">
+Si intentas salir sin completar la misión, el portal permanecerá cerrado.
+</p>
+
+<button class="start-btn" onclick="startGame()">
+🚀 Iniciar Aventura
+</button>
+
+</div>
+
+<div class="game-container" id="gameContainer">
+
+<div class="level" id="levelText">
+Nivel 1
+</div>
+
+<div class="mission" id="missionText">
+Puntos encontrados: 0/3
+</div>
+
+<canvas id="mazeCanvas" width="700" height="700"></canvas>
+
+<div class="controls">
+
+<div></div>
+
+<button class="control-btn" onclick="movePlayer(0,-1)">⬆</button>
+
+<div></div>
+
+<button class="control-btn" onclick="movePlayer(-1,0)">⬅</button>
+
+<button class="control-btn" onclick="movePlayer(0,1)">⬇</button>
+
+<button class="control-btn" onclick="movePlayer(1,0)">➡</button>
+
+</div>
+
+</div>
+
+<div class="notification" id="notification"></div>
+
+<a href="juegos.html" class="back-btn">
+⬅ Volver a Juegos
+</a>
+
+<script>
+
+const canvas = document.getElementById("mazeCanvas");
+const ctx = canvas.getContext("2d");
+
+const notification = document.getElementById("notification");
+
+const tileSize = 35;
+
+let currentLevel = 0;
+
+let player = {x:1,y:1};
+
+let collected = [];
+
+const baseMap = [
+
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+[1,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,2,1],
+[1,0,1,0,1,0,1,1,1,0,1,0,1,1,1,1,1,0,1,1],
+[1,0,1,0,0,0,1,0,1,0,0,0,1,0,0,0,1,0,0,1],
+[1,0,1,1,1,0,1,0,1,1,1,1,1,0,1,0,1,1,0,1],
+[1,0,0,0,1,0,1,0,0,0,0,0,1,0,1,0,0,0,0,1],
+[1,1,1,0,1,0,1,1,1,1,1,0,1,0,1,1,1,1,0,1],
+[1,0,0,0,1,0,0,0,0,0,1,0,1,0,0,0,0,1,0,1],
+[1,0,1,1,1,1,1,1,1,0,1,0,1,1,1,1,0,1,0,1],
+[1,0,0,0,0,0,0,0,1,0,1,0,0,0,0,1,0,0,0,1],
+[1,1,1,1,1,1,1,0,1,0,1,1,1,1,0,1,1,1,0,1],
+[1,0,0,0,0,0,1,0,1,0,0,0,0,1,0,0,0,1,0,1],
+[1,0,1,1,1,0,1,0,1,1,1,1,0,1,1,1,0,1,0,1],
+[1,0,0,0,1,0,0,0,0,0,0,1,0,0,0,1,0,0,0,1],
+[1,1,1,0,1,1,1,1,1,1,0,1,1,1,0,1,1,1,0,1],
+[1,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,1,0,1],
+[1,0,1,1,1,1,1,1,0,1,1,1,0,1,1,1,0,1,0,1],
+[1,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,1,0,1],
+[1,1,1,1,1,1,0,1,1,1,0,1,1,1,1,1,0,0,0,1],
+[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+
+];
+
+const touristData = [
+
+[
+{x:3,y:5,text:"🏛 Granada: ciudad colonial llena de historia."},
+{x:10,y:15,text:"🌊 San Juan del Sur: playas ideales para surf."},
+{x:17,y:3,text:"🌋 Ometepe: isla volcánica única en el mundo."}
+],
+
+[
+{x:5,y:9,text:"☕ Matagalpa: café y clima fresco."},
+{x:13,y:13,text:"🏝 Corn Island: paraíso caribeño."},
+{x:16,y:17,text:"🎨 León: arte y cultura nicaragüense."}
+],
+
+[
+{x:7,y:1,text:"🌲 Jinotega: montañas y naturaleza."},
+{x:2,y:17,text:"🌋 Masaya: famoso por su volcán activo."},
+{x:18,y:9,text:"🌴 Bluefields: cultura caribeña."}
+],
+
+[
+{x:8,y:7,text:"🏞 Estelí: paisajes impresionantes."},
+{x:14,y:5,text:"🌊 Laguna de Apoyo: reserva natural."},
+{x:4,y:13,text:"⛪ Catedral de León: patrimonio histórico."}
+],
+
+[
+{x:6,y:18,text:"🏝 Little Corn Island: playas paradisíacas."},
+{x:15,y:1,text:"🌋 Cerro Negro: volcán para sandboarding."},
+{x:11,y:11,text:"🌄 Cañón de Somoto: aventura natural."}
+]
+
+];
+
+function startGame(){
+
+document.getElementById("storyBox").style.display="none";
+
+document.getElementById("gameContainer").style.display="block";
+
+loadLevel();
+
+}
+
+function showNotification(text){
+
+notification.innerHTML=text;
+
+notification.classList.add("show");
+
+setTimeout(()=>{
+
+notification.classList.remove("show");
+
+},3500);
+
+}
+
+function loadLevel(){
+
+player={x:1,y:1};
+
+collected=[];
+
+document.getElementById("levelText").innerText=
+`Nivel ${currentLevel+1}`;
+
+updateMission();
+
+drawMaze();
+
+}
+
+function updateMission(){
+
+document.getElementById("missionText").innerText=
+`Puntos encontrados: ${collected.length}/3`;
+
+}
+
+function drawMaze(){
+
+ctx.clearRect(0,0,canvas.width,canvas.height);
+
+for(let y=0;y<20;y++){
+
+for(let x=0;x<20;x++){
+
+if(baseMap[y][x]===1){
+
+ctx.fillStyle="#023e8a";
+
+ctx.fillRect(
+x*tileSize,
+y*tileSize,
+tileSize,
+tileSize
+);
+
+}else{
+
+ctx.fillStyle="white";
+
+ctx.fillRect(
+x*tileSize,
+y*tileSize,
+tileSize,
+tileSize
+);
+
+}
+
+if(baseMap[y][x]===2){
+
+ctx.fillStyle="green";
+
+ctx.beginPath();
+
+ctx.arc(
+x*tileSize+17,
+y*tileSize+17,
+10,
+0,
+Math.PI*2
+);
+
+ctx.fill();
+
+}
+
+}
+
+}
+
+touristData[currentLevel].forEach((point,index)=>{
+
+if(!collected.includes(index)){
+
+ctx.fillStyle="orange";
+
+ctx.beginPath();
+
+ctx.arc(
+point.x*tileSize+17,
+point.y*tileSize+17,
+8,
+0,
+Math.PI*2
+);
+
+ctx.fill();
+
+}
+
+});
+
+ctx.fillStyle="#00b4d8";
+
+ctx.beginPath();
+
+ctx.arc(
+player.x*tileSize+17,
+player.y*tileSize+17,
+12,
+0,
+Math.PI*2
+);
+
+ctx.fill();
+
+}
+
+function movePlayer(dx,dy){
+
+const newX=player.x+dx;
+const newY=player.y+dy;
+
+if(baseMap[newY][newX]===1){
+
+return;
+
+}
+
+player.x=newX;
+player.y=newY;
+
+checkTouristPoints();
+
+if(baseMap[newY][newX]===2){
+
+if(collected.length<3){
+
+showNotification(
+"❌ Debes encontrar los 3 puntos turísticos antes de salir."
+);
+
+}else{
+
+if(currentLevel<4){
+
+showNotification(
+`🎉 Nivel ${currentLevel+1} completado`
+);
+
+currentLevel++;
+
+setTimeout(()=>{
+
+loadLevel();
+
+},1500);
+
+}else{
+
+showNotification(
+"🏆 ¡Completaste toda la aventura turística!"
+);
+
+}
+
+}
+
+}
+
+drawMaze();
+
+}
+
+function checkTouristPoints(){
+
+touristData[currentLevel].forEach((point,index)=>{
+
+if(
+point.x===player.x &&
+point.y===player.y &&
+!collected.includes(index)
+){
+
+collected.push(index);
+
+updateMission();
+
+showNotification(point.text);
+
+}
+
+});
+
+}
+
+document.addEventListener("keydown",(e)=>{
+
+if(e.key==="ArrowUp") movePlayer(0,-1);
+if(e.key==="ArrowDown") movePlayer(0,1);
+if(e.key==="ArrowLeft") movePlayer(-1,0);
+if(e.key==="ArrowRight") movePlayer(1,0);
+
+});
+
+</script>
+
+</body>
+</html>
