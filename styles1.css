@@ -127,9 +127,8 @@ body {
 }
 
 #map {
-    width: 100%;
-    height: 100%;
-    background: #ccc; /* Fondo mientras carga */
+  height: 100vh; /* o 100% si el contenedor padre tiene altura fija */
+  width: 100%;
 }
 
 /* Ajustes para móvil */
