@@ -127,7 +127,7 @@ body {
 }
 
 #map {
-  height: 100vh; /* o 100% si el contenedor padre tiene altura fija */
+  height: 50vh; /* o 100% si el contenedor padre tiene altura fija */
   width: 100%;
 }
 
