@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ordena la Palabra - Nicaragua</title>
+
+  <style>
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    body{
+      font-family: Arial, sans-serif;
+      min-height:100vh;
+      background: linear-gradient(135deg,#03045e,#0077b6,#00b4d8);
+      color:white;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      overflow-x:hidden;
+    }
+
+    h1{
+      font-size:3rem;
+      text-align:center;
+    }
+
+    .subtitle{
+      margin-top:10px;
+      margin-bottom:30px;
+      text-align:center;
+      max-width:700px;
+      opacity:0.9;
+    }
+
+    .game-container{
+      width:100%;
+      max-width:700px;
+      background:rgba(255,255,255,0.12);
+      backdrop-filter:blur(10px);
+      border-radius:25px;
+      padding:35px;
+      text-align:center;
+      box-shadow:0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    .scrambled-word{
+      margin-top:20px;
+      font-size:2.5rem;
+      letter-spacing:8px;
+      font-weight:bold;
+      color:#ffffff;
+      word-wrap:break-word;
+    }
+
+    .input-word{
+      width:100%;
+      margin-top:25px;
+      padding:15px;
+      border:none;
+      border-radius:12px;
+      font-size:1rem;
+      outline:none;
+    }
+
+    .buttons{
+      display:flex;
+      gap:15px;
+      justify-content:center;
+      flex-wrap:wrap;
+      margin-top:25px;
+    }
+
+    button{
+      border:none;
+      padding:14px 25px;
+      border-radius:12px;
+      background:white;
+      color:#0077b6;
+      font-weight:bold;
+      cursor:pointer;
+      transition:0.3s;
+    }
+
+    button:hover{
+      transform:scale(1.05);
+    }
+
+    .message{
+      margin-top:25px;
+      font-size:1.1rem;
+      min-height:40px;
+    }
+
+    .hint-box{
+      margin-top:20px;
+      background:rgba(255,255,255,0.15);
+      padding:18px;
+      border-radius:15px;
+      display:none;
+      line-height:1.6;
+    }
+
+    .score{
+      margin-top:20px;
+      font-size:1rem;
+    }
+
+    .back-btn{
+      margin-top:30px;
+      text-decoration:none;
+      background:white;
+      color:#0077b6;
+      padding:14px 25px;
+      border-radius:12px;
+      font-weight:bold;
+      transition:0.3s;
+    }
+
+    .back-btn:hover{
+      transform:scale(1.05);
+    }
+
+    @media(max-width:768px){
+
+      h1{
+        font-size:2rem;
+      }
+
+      .game-container{
+        padding:25px;
+      }
+
+      .scrambled-word{
+        font-size:1.8rem;
+        letter-spacing:5px;
+      }
+
+    }
+
+  </style>
+</head>
+<body>
+
+  <h1>🔤 Ordena la Palabra</h1>
+
+  <p class="subtitle">
+    Descubre lugares turísticos de Nicaragua ordenando las letras 🌋🌊
+  </p>
+
+  <div class="game-container">
+
+    <h2>Palabra desordenada</h2>
+
+    <div class="scrambled-word" id="scrambledWord">
+      Cargando...
+    </div>
+
+    <input
+      type="text"
+      id="userInput"
+      class="input-word"
+      placeholder="Escribe la respuesta"
+    >
+
+    <div class="buttons">
+
+      <button onclick="checkWord()">
+        Verificar
+      </button>
+
+      <button onclick="showHint()">
+        💡 Pista
+      </button>
+
+      <button onclick="nextWord()">
+        ➡ Siguiente
+      </button>
+
+    </div>
+
+    <div class="hint-box" id="hintBox"></div>
+
+    <div class="message" id="message"></div>
+
+    <div class="score" id="score">
+      Puntos: 0
+    </div>
+
+  </div>
+
+  <a href="juegos.html" class="back-btn">
+    ⬅ Volver a Juegos
+  </a>
+
+  <script>
+
+    const lugares = [
+
+      {
+        palabra:"GRANADA",
+        pista:"Ciudad colonial famosa por su arquitectura histórica."
+      },
+
+      {
+        palabra:"LEON",
+        pista:"Ciudad reconocida por su cultura y volcanes."
+      },
+
+      {
+        palabra:"OMETEPE",
+        pista:"Isla formada por dos volcanes en el Lago Cocibolca."
+      },
+
+      {
+        palabra:"MASAYA",
+        pista:"Lugar famoso por su volcán activo y artesanías."
+      },
+
+      {
+        palabra:"MATAGALPA",
+        pista:"Región montañosa conocida por el café."
+      },
+
+      {
+        palabra:"ESTELI",
+        pista:"Ciudad rodeada de naturaleza y paisajes."
+      },
+
+      {
+        palabra:"BLUEFIELDS",
+        pista:"Ciudad caribeña con ambiente tropical."
+      },
+
+      {
+        palabra:"JINOTEGA",
+        pista:"Conocida como la ciudad de las brumas."
+      },
+
+      {
+        palabra:"CORNISLAND",
+        pista:"Destino paradisíaco del Caribe nicaragüense."
+      },
+
+      {
+        palabra:"SANJUANDELSUR",
+        pista:"Destino turístico famoso por playas y surf."
+      }
+
+    ];
+
+    let current = 0;
+    let points = 0;
+
+    const scrambledWord = document.getElementById("scrambledWord");
+    const hintBox = document.getElementById("hintBox");
+    const message = document.getElementById("message");
+    const score = document.getElementById("score");
+
+    function shuffleWord(word){
+
+      return word
+        .split("")
+        .sort(() => Math.random() - 0.5)
+        .join("");
+
+    }
+
+    function loadWord(){
+
+      const actual = lugares[current];
+
+      scrambledWord.innerText =
+        shuffleWord(actual.palabra);
+
+      hintBox.style.display = "none";
+
+      hintBox.innerText = actual.pista;
+
+      message.innerText = "";
+
+      document.getElementById("userInput").value = "";
+
+    }
+
+    function checkWord(){
+
+      const input = document
+        .getElementById("userInput")
+        .value
+        .toUpperCase()
+        .replace(/\s/g,'');
+
+      const correct =
+        lugares[current].palabra;
+
+      if(input === correct){
+
+        points++;
+
+        score.innerText = `Puntos: ${points}`;
+
+        message.innerHTML =
+          "✅ ¡Correcto!";
+
+      }
+
+      else{
+
+        message.innerHTML =
+          "❌ Intenta nuevamente";
+
+      }
+
+    }
+
+    function showHint(){
+
+      hintBox.style.display = "block";
+
+    }
+
+    function nextWord(){
+
+      current++;
+
+      if(current >= lugares.length){
+
+        current = 0;
+
+      }
+
+      loadWord();
+
+    }
+
+    loadWord();
+
+  </script>
+
+</body>
+</html>
