@@ -1,9 +1,15 @@
-// script1.js - Versión Firebase con corrección de mapa
+// ========== SCRIPT PRINCIPAL CON MAPA + AUTENTICACIÓN + GPS ==========
 let map;
 let markerCluster;
 let currentLayers = {};
 let allPlaces = [];
 let isAdmin = false;
+let currentUser = null;
+let userPoints = 0;
+let gpsActive = false;
+let watchId = null;
+let userDocId = null;
+
 const ADMIN_PASSWORD = "Diriamba2026";
 
 // DOM elements
@@ -21,6 +27,12 @@ const addPlaceBtn = document.getElementById('addPlaceBtn');
 const lugarForm = document.getElementById('lugarForm');
 const modalTitle = document.getElementById('modalTitle');
 const geolocationBtn = document.getElementById('geolocationBtn');
+const userBtn = document.getElementById('userBtn');
+const userModal = document.getElementById('userModal');
+const profileModal = document.getElementById('profileModal');
+const gpsBtn = document.getElementById('gpsBtn');
+const userPointsSpan = document.getElementById('pointsValue');
+const userPointsDiv = document.getElementById('userPoints');
 
 function mostrarToast(mensaje, tipo = 'info') {
     const container = document.getElementById('toastContainer');
@@ -31,7 +43,7 @@ function mostrarToast(mensaje, tipo = 'info') {
     setTimeout(() => toast.remove(), 3000);
 }
 
-// Firestore: suscripción en tiempo real
+// ========== FIRESTORE: LUGARES ==========
 let unsubscribePlaces = null;
 function cargarLugaresFirestore() {
     if (!window.firebaseHelpers || !window.firebaseHelpers.onSnapshot) {
@@ -70,17 +82,20 @@ async function eliminarLugarFirestore(id) {
     } catch (error) { mostrarToast("Error: " + error.message, "error"); }
 }
 
-// MAPA
+// ========== MAPA ==========
 function initMap() {
     const mapContainer = document.getElementById('map');
     if (!mapContainer) return;
     if (map) map.remove();
     map = L.map('map').setView([12.8654, -85.2072], 8);
+    
     currentLayers.calles = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { attribution: '&copy; OpenStreetMap' }).addTo(map);
     currentLayers.satelite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { attribution: 'Esri' });
     currentLayers.relieve = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', { attribution: 'OpenTopoMap' });
+    
     markerCluster = L.markerClusterGroup();
     map.addLayer(markerCluster);
+    
     setTimeout(() => map.invalidateSize(true), 200);
     window.addEventListener('resize', () => map && map.invalidateSize(true));
     
@@ -93,6 +108,7 @@ function initMap() {
             btn.classList.add('active');
         });
     });
+    
     map.on('click', (e) => {
         if (isAdmin) abrirFormularioNuevo(e.latlng.lat, e.latlng.lng);
         else mostrarToast("Solo admin puede añadir", "error");
@@ -106,27 +122,58 @@ function actualizarMarcadores() {
     const busqueda = searchInput.value.toLowerCase();
     const filtered = allPlaces.filter(p => (filtroCat === 'todos' || p.categoria === filtroCat) && p.nombre.toLowerCase().includes(busqueda));
     filtered.forEach(place => {
-        const popupContent = `<b>${place.nombre}</b><br>${place.imagen ? `<img src="${place.imagen}" style="width:100%; border-radius:8px; max-width:200px;">` : ''}<a href="${place.url || '#'}" target="_blank" style="display:block; background:#F57C00; color:white; padding:5px; border-radius:5px; text-align:center;">🔗 Visitar</a>${isAdmin ? `<br><button onclick="editarLugar('${place.id}')">✏️ Editar</button> <button onclick="eliminarLugar('${place.id}')">🗑️ Eliminar</button>` : ''}`;
-        markerCluster.addLayer(L.marker([place.lat, place.lng]).bindPopup(popupContent));
+        const popupContent = `
+            <b>${place.nombre}</b><br>
+            ${place.imagen ? `<img src="${place.imagen}" style="width:100%; border-radius:8px; max-width:200px;">` : ''}
+            <a href="${place.url || '#'}" target="_blank" style="display:block; background:#F57C00; color:white; padding:5px; border-radius:5px; text-align:center;">🔗 Visitar</a>
+            ${isAdmin ? `<br><button onclick="editarLugar('${place.id}')">✏️ Editar</button> <button onclick="eliminarLugar('${place.id}')">🗑️ Eliminar</button>` : ''}
+        `;
+        const marker = L.marker([place.lat, place.lng]).bindPopup(popupContent);
+        markerCluster.addLayer(marker);
     });
 }
 
-function actualizarListaLugares() { /* similar al original */ 
+function actualizarListaLugares() {
     const filtroCat = obtenerFiltroActual();
     const busqueda = searchInput.value.toLowerCase();
     let filtered = allPlaces.filter(p => (filtroCat === 'todos' || p.categoria === filtroCat) && p.nombre.toLowerCase().includes(busqueda));
-    if (!filtered.length) { placesList.innerHTML = '<div style="padding:20px; text-align:center;">No hay lugares</div>'; return; }
-    placesList.innerHTML = filtered.map(place => `<div class="place-card" onclick="centrarMapa(${place.lat}, ${place.lng})"><div class="place-card-header">${place.imagen ? `<img src="${place.imagen}">` : '<div style="width:60px;background:#e0e0e0; border-radius:10px; display:flex; align-items:center; justify-content:center;"><i class="fas fa-map-marker-alt"></i></div>'}<div class="place-info"><h4>${place.nombre}</h4><div class="place-categoria">${place.categoria || 'sin categoría'}</div>${isAdmin ? `<div class="admin-actions"><button class="edit-btn" onclick="event.stopPropagation(); editarLugar('${place.id}')">Editar</button><button class="delete-btn" onclick="event.stopPropagation(); eliminarLugar('${place.id}')">Eliminar</button></div>` : ''}</div></div></div>`).join('');
+    if (!filtered.length) {
+        placesList.innerHTML = '<div style="padding:20px; text-align:center;">No hay lugares</div>';
+        return;
+    }
+    placesList.innerHTML = filtered.map(place => `
+        <div class="place-card" onclick="centrarMapa(${place.lat}, ${place.lng})">
+            <div class="place-card-header">
+                ${place.imagen ? `<img src="${place.imagen}">` : '<div style="width:60px;background:#e0e0e0; border-radius:10px; display:flex; align-items:center; justify-content:center;"><i class="fas fa-map-marker-alt"></i></div>'}
+                <div class="place-info">
+                    <h4>${place.nombre}</h4>
+                    <div class="place-categoria">${place.categoria || 'sin categoría'}</div>
+                    ${isAdmin ? `<div class="admin-actions"><button class="edit-btn" onclick="event.stopPropagation(); editarLugar('${place.id}')">Editar</button><button class="delete-btn" onclick="event.stopPropagation(); eliminarLugar('${place.id}')">Eliminar</button></div>` : ''}
+                </div>
+            </div>
+        </div>
+    `).join('');
 }
-function obtenerFiltroActual() { const a = document.querySelector('.categoria-filtro.active'); return a ? a.dataset.cat : 'todos'; }
+
+function obtenerFiltroActual() {
+    const active = document.querySelector('.categoria-filtro.active');
+    return active ? active.dataset.cat : 'todos';
+}
+
 function actualizarCategoriasUnicas() {
     const cats = [...new Set(allPlaces.map(p => p.categoria).filter(c => c))];
     categoriasFiltro.innerHTML = '<div class="categoria-filtro active" data-cat="todos">Todos</div>' + cats.map(c => `<div class="categoria-filtro" data-cat="${c}">${c}</div>`).join('');
-    document.querySelectorAll('.categoria-filtro').forEach(el => el.addEventListener('click', function() { document.querySelectorAll('.categoria-filtro').forEach(c => c.classList.remove('active')); this.classList.add('active'); actualizarMarcadores(); actualizarListaLugares(); }));
+    document.querySelectorAll('.categoria-filtro').forEach(el => el.addEventListener('click', function() {
+        document.querySelectorAll('.categoria-filtro').forEach(c => c.classList.remove('active'));
+        this.classList.add('active');
+        actualizarMarcadores();
+        actualizarListaLugares();
+    }));
 }
+
 window.centrarMapa = (lat, lng) => map && map.setView([lat, lng], 14);
 
-// Admin
+// ========== ADMIN LOCAL ==========
 function entrarModoAdmin() { isAdmin = true; adminLoginBtn.classList.add('hidden'); adminPanelHeader.classList.remove('hidden'); adminAddBtn.classList.remove('hidden'); mostrarToast("Modo Admin activado", "success"); actualizarMarcadores(); actualizarListaLugares(); }
 function salirModoAdmin() { isAdmin = false; adminLoginBtn.classList.remove('hidden'); adminPanelHeader.classList.add('hidden'); adminAddBtn.classList.add('hidden'); mostrarToast("Modo Admin desactivado", "info"); actualizarMarcadores(); actualizarListaLugares(); }
 adminLoginBtn.onclick = () => adminModal.style.display = 'flex';
@@ -138,50 +185,11 @@ window.editarLugar = (id) => { const p = allPlaces.find(p => p.id === id); if (!
 window.eliminarLugar = (id) => { if (confirm('¿Eliminar?')) eliminarLugarFirestore(id); };
 lugarForm.addEventListener('submit', async (e) => { e.preventDefault(); const id = document.getElementById('lugarId').value; const nombre = document.getElementById('lugarNombre').value.trim(); const lat = parseFloat(document.getElementById('lugarLat').value); const lng = parseFloat(document.getElementById('lugarLng').value); const url = document.getElementById('lugarUrl').value.trim(); const imagen = document.getElementById('lugarImagen').value.trim(); const categoria = document.getElementById('lugarCategoria').value.trim(); if (!nombre || isNaN(lat) || isNaN(lng)) { mostrarToast("Nombre, latitud y longitud requeridos", "error"); return; } const data = { nombre, lat, lng, url, imagen, categoria }; if (id) await actualizarLugarFirestore(id, data); else await agregarLugarFirestore(data); lugarModal.style.display = 'none'; });
 addPlaceBtn.onclick = () => { if (map) abrirFormularioNuevo(map.getCenter().lat, map.getCenter().lng); else abrirFormularioNuevo(12.8654, -85.2072); };
+
 searchInput.addEventListener('input', () => { actualizarMarcadores(); actualizarListaLugares(); });
 geolocationBtn.onclick = () => { if (navigator.geolocation) navigator.geolocation.getCurrentPosition(pos => map.setView([pos.coords.latitude, pos.coords.longitude], 13), () => mostrarToast("Error ubicación", "error")); else mostrarToast("No soportado", "error"); };
-function initDarkMode() { const isDark = localStorage.getItem('darkMode') === 'true'; if (isDark) document.body.classList.add('dark-mode'); darkModeBtn.innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>'; darkModeBtn.onclick = () => { document.body.classList.toggle('dark-mode'); const dark = document.body.classList.contains('dark-mode'); localStorage.setItem('darkMode', dark); darkModeBtn.innerHTML = dark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>'; }; }
-document.querySelectorAll('.close-modal').forEach(btn => btn.onclick = function() { this.closest('.modal').style.display = 'none'; });
-function init() { initDarkMode(); initMap(); if (window.firebaseHelpers && window.firebaseHelpers.collection) cargarLugaresFirestore(); else setTimeout(() => { if (window.firebaseHelpers) cargarLugaresFirestore(); else mostrarToast("Error: Firebase no inicializado", "error"); }, 1000); }
-document.addEventListener('DOMContentLoaded', () => map && map.invalidateSize());
-window.addEventListener('load', () => map && map.invalidateSize(true));
-init();
 
-// ========== SCRIPT PRINCIPAL CON AUTENTICACIÓN Y PUNTOS ==========
-let map, markerCluster, currentLayers = {}, allPlaces = [], isAdmin = false;
-let currentUser = null;           // objeto usuario de Firebase
-let userPoints = 0;               // puntos totales del usuario
-let gpsActive = false;            // estado del botón GPS
-let watchId = null;               // ID del watchPosition
-let userDocId = null;             // ID del documento en colección 'usuarios'
-
-const ADMIN_PASSWORD = "Diriamba2026";
-
-// DOM elements
-const darkModeBtn = document.getElementById('darkModeBtn');
-const adminLoginBtn = document.getElementById('adminLoginBtn');
-const adminPanelHeader = document.getElementById('adminPanelHeader');
-const logoutAdminBtn = document.getElementById('logoutAdminBtn');
-const adminModal = document.getElementById('adminModal');
-const lugarModal = document.getElementById('lugarModal');
-const searchInput = document.getElementById('searchInput');
-const categoriasFiltro = document.getElementById('categoriasFiltro');
-const placesList = document.getElementById('placesList');
-const adminAddBtn = document.getElementById('adminAddBtn');
-const addPlaceBtn = document.getElementById('addPlaceBtn');
-const lugarForm = document.getElementById('lugarForm');
-const modalTitle = document.getElementById('modalTitle');
-const geolocationBtn = document.getElementById('geolocationBtn');
-const userBtn = document.getElementById('userBtn');
-const userModal = document.getElementById('userModal');
-const profileModal = document.getElementById('profileModal');
-const gpsBtn = document.getElementById('gpsBtn');
-const userPointsSpan = document.getElementById('pointsValue');
-const userPointsDiv = document.getElementById('userPoints');
-
-function mostrarToast(mensaje, tipo = 'info') { /* igual que antes */ }
-
-// ========== FUNCIONES DE USUARIO ==========
+// ========== AUTENTICACIÓN Y PUNTOS ==========
 function actualizarUIUsuario() {
     if (currentUser) {
         userPointsDiv.style.display = 'flex';
@@ -209,7 +217,6 @@ async function cargarPuntosUsuario() {
         userPoints = doc.data().puntos || 0;
         userPointsSpan.innerText = userPoints;
     } else {
-        // Crear documento de usuario
         const col = window.firebaseHelpers.collection('usuarios');
         const newDoc = await window.firebaseHelpers.addDoc(col, {
             uid: currentUser.uid,
@@ -234,11 +241,8 @@ async function sumarPuntos(cantidad, motivo, lugarId = null) {
     await window.firebaseHelpers.updateDoc(userRef, { puntos: nuevoTotal });
     userPoints = nuevoTotal;
     userPointsSpan.innerText = userPoints;
-    // Registrar en subcolección "transacciones" (opcional)
-    // Aquí puedes guardar el motivo
 }
 
-// ========== GPS Y PUNTOS POR VISITAS ==========
 function toggleGPS() {
     if (!currentUser) {
         mostrarToast("Inicia sesión para activar GPS", "error");
@@ -259,7 +263,6 @@ function toggleGPS() {
                 gpsActive = true;
                 gpsBtn.classList.add('active');
                 mostrarToast("GPS activado. Acércate a lugares para ganar puntos.", "success");
-                // Iniciar watch cada 10 segundos
                 watchId = navigator.geolocation.watchPosition(procesarUbicacion, errorGPS, { enableHighAccuracy: true, maximumAge: 10000, timeout: 15000 });
             },
             () => mostrarToast("Permiso de ubicación denegado", "error")
@@ -272,23 +275,17 @@ function errorGPS(err) {
     mostrarToast("Error de GPS: " + err.message, "error");
 }
 
-let ultimaRecompensaPorLugar = {}; // evitar spam (cooldown por lugar)
+let ultimaRecompensaPorLugar = {};
 
 async function procesarUbicacion(position) {
     if (!currentUser) return;
     const lat = position.coords.latitude;
     const lng = position.coords.longitude;
-    
-    // Calcular distancia a cada lugar
     for (let place of allPlaces) {
         const distancia = calcularDistancia(lat, lng, place.lat, place.lng);
-        if (distancia <= 50) { // 50 metros
-            // Verificar cooldown (evitar múltiples detecciones seguidas)
+        if (distancia <= 50) {
             const ahora = Date.now();
-            const ultima = ultimaRecompensaPorLugar[place.id];
-            if (ultima && (ahora - ultima) < 60000) continue; // 1 min de cooldown
-            
-            // Verificar si ya visitó este lugar antes
+            if (ultimaRecompensaPorLugar[place.id] && (ahora - ultimaRecompensaPorLugar[place.id]) < 60000) continue;
             const visitasRef = window.firebaseHelpers.collection('visitas');
             const qVisit = window.firebaseHelpers.query(
                 visitasRef,
@@ -298,8 +295,6 @@ async function procesarUbicacion(position) {
             const snap = await window.firebaseHelpers.getDocs(qVisit);
             const esPrimeraVez = snap.empty;
             const puntosGanados = esPrimeraVez ? 10 : 2;
-            
-            // Guardar visita
             await window.firebaseHelpers.addDoc(visitasRef, {
                 usuarioId: currentUser.uid,
                 lugarId: place.id,
@@ -307,11 +302,9 @@ async function procesarUbicacion(position) {
                 puntos: puntosGanados,
                 tipo: esPrimeraVez ? 'primera' : 'repetida'
             });
-            // Sumar puntos al usuario
             await sumarPuntos(puntosGanados, `Visita a ${place.nombre}`, place.id);
             ultimaRecompensaPorLugar[place.id] = ahora;
             mostrarToast(`¡${place.nombre}! +${puntosGanados} puntos`, "success");
-            // Reproducir sonido si está activado
             if (localStorage.getItem('sonidos') !== 'false') {
                 new Audio('https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3').play().catch(e=>console.log);
             }
@@ -319,9 +312,8 @@ async function procesarUbicacion(position) {
     }
 }
 
-// Fórmula de Haversine
 function calcularDistancia(lat1, lon1, lat2, lon2) {
-    const R = 6371e3; // metros
+    const R = 6371e3;
     const φ1 = lat1 * Math.PI/180;
     const φ2 = lat2 * Math.PI/180;
     const Δφ = (lat2-lat1) * Math.PI/180;
@@ -331,10 +323,8 @@ function calcularDistancia(lat1, lon1, lat2, lon2) {
     return R * c;
 }
 
-// ========== MODAL DE USUARIO (Login/Registro) ==========
 function mostrarModalUsuario() {
     if (currentUser) {
-        // Mostrar perfil
         document.getElementById('profileBody').innerHTML = `
             <div style="text-align:center;">
                 <img src="${currentUser.photoURL || 'https://via.placeholder.com/80'}" style="width:80px; border-radius:50%;">
@@ -347,14 +337,10 @@ function mostrarModalUsuario() {
             </div>
         `;
         document.getElementById('sonidosCheck').addEventListener('change', (e) => localStorage.setItem('sonidos', e.target.checked));
-        document.getElementById('cerrarSesionBtn').onclick = async () => {
-            await window.auth.signOut();
-            location.reload();
-        };
+        document.getElementById('cerrarSesionBtn').onclick = async () => { await window.auth.signOut(); location.reload(); };
         document.getElementById('eliminarCuentaBtn').onclick = eliminarCuenta;
         profileModal.style.display = 'flex';
     } else {
-        // Mostrar opciones de login
         document.getElementById('userModalBody').innerHTML = `
             <div style="padding:20px;">
                 <button id="googleLoginBtn" class="submit-btn" style="background:#4285F4;">Iniciar con Google</button>
@@ -382,15 +368,12 @@ function mostrarModalUsuario() {
 
 async function eliminarCuenta() {
     if (confirm("¿Eliminar permanentemente tu cuenta y todos tus datos?")) {
-        // Borrar documentos asociados
         const uid = currentUser.uid;
         const colecciones = ['usuarios', 'visitas', 'comentarios', 'amigos', 'progreso_juegos'];
         for (let col of colecciones) {
             const q = window.firebaseHelpers.query(window.firebaseHelpers.collection(col), window.firebaseHelpers.where('usuarioId', '==', uid));
             const snap = await window.firebaseHelpers.getDocs(q);
-            snap.forEach(async (docSnap) => {
-                await window.firebaseHelpers.deleteDoc(docSnap.ref);
-            });
+            snap.forEach(async (docSnap) => { await window.firebaseHelpers.deleteDoc(docSnap.ref); });
         }
         await currentUser.delete();
         await window.auth.signOut();
@@ -398,29 +381,39 @@ async function eliminarCuenta() {
     }
 }
 
-// ========== COMENTARIOS Y ESTRELLAS (solo post-visita) ==========
-// Se agregará dentro del popup de cada lugar
-function mostrarComentarios(place) {
-    // Función que se llama desde el popup; primero verificar si el usuario ha visitado el lugar.
-    // Implementación detallada la damos después.
+// ========== MODO OSCURO ==========
+function initDarkMode() {
+    const isDark = localStorage.getItem('darkMode') === 'true';
+    if (isDark) document.body.classList.add('dark-mode');
+    darkModeBtn.innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+    darkModeBtn.onclick = () => {
+        document.body.classList.toggle('dark-mode');
+        const dark = document.body.classList.contains('dark-mode');
+        localStorage.setItem('darkMode', dark);
+        darkModeBtn.innerHTML = dark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+    };
 }
 
-// ========== INICIALIZACIÓN CON AUTENTICACIÓN ==========
+// Cerrar modales
+document.querySelectorAll('.close-modal').forEach(btn => btn.onclick = function() { this.closest('.modal').style.display = 'none'; });
+
+// ========== INICIALIZACIÓN ==========
 window.onAuthStateChanged = (user) => {
     currentUser = user;
     actualizarUIUsuario();
     if (user) cargarPuntosUsuario();
 };
 
-// El resto de funciones (initMap, actualizarMarcadores, CRUD, etc.) se mantienen igual que en la versión anterior.
-// Solo hay que añadir la llamada a toggleGPS en el botón gpsBtn:
 gpsBtn.onclick = toggleGPS;
 userBtn.onclick = mostrarModalUsuario;
 
-// Inicializar
-document.addEventListener('DOMContentLoaded', () => {
+function init() {
     initDarkMode();
     initMap();
     if (window.firebaseHelpers && window.firebaseHelpers.collection) cargarLugaresFirestore();
     else setTimeout(() => cargarLugaresFirestore(), 1000);
-});
+}
+
+document.addEventListener('DOMContentLoaded', () => { if (map) map.invalidateSize(); });
+window.addEventListener('load', () => { if (map) map.invalidateSize(true); });
+init();
