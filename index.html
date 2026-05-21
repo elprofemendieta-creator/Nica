@@ -9,12 +9,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: 'Inter', sans-serif;
       min-height: 100vh;
@@ -22,7 +17,6 @@
       position: relative;
       overflow-x: hidden;
     }
-
     .wave-bg {
       position: fixed;
       bottom: 0;
@@ -33,14 +27,6 @@
       opacity: 0.2;
       pointer-events: none;
     }
-
-    .wave-bg svg {
-      position: absolute;
-      bottom: 0;
-      width: 100%;
-      height: 60%;
-    }
-
     .container {
       position: relative;
       z-index: 2;
@@ -53,7 +39,6 @@
       justify-content: center;
       align-items: center;
     }
-
     .glass-card {
       background: rgba(255, 255, 255, 0.1);
       backdrop-filter: blur(12px);
@@ -63,35 +48,17 @@
       border: 1px solid rgba(255, 255, 255, 0.2);
       width: 100%;
       max-width: 500px;
-      transition: all 0.3s ease;
       text-align: center;
     }
-
-    .mascota {
-      margin-bottom: 1rem;
-    }
-    .mascota img {
-      width: 90px;
-      filter: drop-shadow(0 10px 15px rgba(0,0,0,0.2));
-    }
-
+    .mascota img { width: 90px; margin-bottom: 1rem; }
     h1 {
       font-size: 2.5rem;
-      font-weight: 800;
       background: linear-gradient(135deg, #FFE259, #FFA751);
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
-      margin-bottom: 0.5rem;
     }
-
-    .subtitle {
-      color: rgba(255,255,255,0.9);
-      font-weight: 400;
-      margin-bottom: 2rem;
-      font-size: 1rem;
-    }
-
+    .subtitle { color: rgba(255,255,255,0.9); margin-bottom: 2rem; }
     .btn {
       display: inline-flex;
       align-items: center;
@@ -100,99 +67,33 @@
       padding: 12px 24px;
       border-radius: 60px;
       font-weight: 600;
-      border: none;
       cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.2s;
       width: 100%;
       font-size: 1rem;
       margin-bottom: 12px;
+      border: none;
     }
-    .btn-primary {
-      background: linear-gradient(95deg, #F9A826, #F57C00);
-      color: white;
-      box-shadow: 0 4px 12px rgba(245, 124, 0, 0.3);
-    }
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(245,124,0,0.4);
-    }
-    .btn-google {
-      background: white;
-      color: #444;
-      border: 1px solid #ddd;
-    }
-    .btn-google:hover {
-      background: #f5f5f5;
-      transform: translateY(-2px);
-    }
-    .btn-outline {
-      background: transparent;
-      border: 1px solid rgba(255,255,255,0.5);
-      color: white;
-    }
-    .btn-outline:hover {
-      background: rgba(255,255,255,0.1);
-    }
-
-    .input-group {
-      margin-bottom: 1rem;
-      text-align: left;
-    }
+    .btn-primary { background: linear-gradient(95deg, #F9A826, #F57C00); color: white; }
+    .btn-google { background: white; color: #444; border: 1px solid #ddd; }
+    .btn-outline { background: transparent; border: 1px solid rgba(255,255,255,0.5); color: white; }
+    .input-group { margin-bottom: 1rem; text-align: left; }
     .input-group input {
       width: 100%;
       padding: 14px 18px;
       border-radius: 40px;
       border: none;
       background: rgba(255,255,255,0.15);
-      backdrop-filter: blur(4px);
       color: white;
       font-size: 0.95rem;
       outline: none;
-      transition: 0.2s;
     }
-    .input-group input::placeholder {
-      color: rgba(255,255,255,0.6);
-    }
-    .input-group input:focus {
-      background: rgba(255,255,255,0.25);
-      box-shadow: 0 0 0 2px #F57C00;
-    }
-
-    .divider {
-      display: flex;
-      align-items: center;
-      text-align: center;
-      color: rgba(255,255,255,0.5);
-      margin: 1.2rem 0;
-    }
-    .divider::before, .divider::after {
-      content: '';
-      flex: 1;
-      border-bottom: 1px solid rgba(255,255,255,0.2);
-    }
-    .divider span {
-      margin: 0 10px;
-      font-size: 0.8rem;
-    }
-
-    .menu-section {
-      display: none;
-      margin-top: 2rem;
-      width: 100%;
-      animation: fadeInUp 0.6s ease;
-    }
-    .menu-section h2 {
-      color: white;
-      text-align: center;
-      margin-bottom: 1.5rem;
-      font-weight: 600;
-    }
-    .menu-buttons {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 1.5rem;
-    }
+    .input-group input::placeholder { color: rgba(255,255,255,0.6); }
+    .divider { display: flex; align-items: center; text-align: center; color: rgba(255,255,255,0.5); margin: 1.2rem 0; }
+    .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid rgba(255,255,255,0.2); }
+    .divider span { margin: 0 10px; }
+    .menu-section { display: none; margin-top: 2rem; width: 100%; animation: fadeInUp 0.6s ease; }
+    .menu-section h2 { color: white; text-align: center; margin-bottom: 1.5rem; }
+    .menu-buttons { display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5rem; }
     .menu-card {
       background: rgba(255,255,255,0.15);
       backdrop-filter: blur(8px);
@@ -202,22 +103,10 @@
       text-align: center;
       text-decoration: none;
       color: white;
-      transition: all 0.3s;
-      border: 1px solid rgba(255,255,255,0.2);
+      transition: 0.3s;
     }
-    .menu-card:hover {
-      transform: translateY(-8px);
-      background: rgba(255,255,255,0.25);
-    }
-    .menu-card span {
-      font-size: 3rem;
-      display: block;
-      margin-bottom: 0.5rem;
-    }
-    .menu-card h3 {
-      font-size: 1.2rem;
-    }
-
+    .menu-card:hover { transform: translateY(-8px); background: rgba(255,255,255,0.25); }
+    .menu-card span { font-size: 3rem; display: block; margin-bottom: 0.5rem; }
     .toast-message {
       position: fixed;
       bottom: 20px;
@@ -227,13 +116,8 @@
       color: white;
       padding: 10px 20px;
       border-radius: 40px;
-      font-size: 0.9rem;
       z-index: 1000;
-      backdrop-filter: blur(10px);
-      pointer-events: none;
-      transition: 0.2s;
     }
-
     .whatsapp-float {
       position: fixed;
       bottom: 25px;
@@ -247,45 +131,16 @@
       align-items: center;
       justify-content: center;
       font-size: 30px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-      transition: all 0.3s;
-      z-index: 99;
       text-decoration: none;
     }
-    .whatsapp-float:hover {
-      transform: scale(1.1);
-      background-color: #20b859;
-    }
-
     @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
     }
-
     @media (max-width: 550px) {
       .glass-card { padding: 1.5rem; }
       h1 { font-size: 2rem; }
       .menu-card { width: 160px; padding: 1rem; }
-      .menu-card span { font-size: 2.5rem; }
-    }
-
-    .hidden-form {
-      display: none;
-    }
-    .inline-link {
-      color: #F57C00;
-      cursor: pointer;
-      text-decoration: underline;
-      background: none;
-      border: none;
-      font-size: 0.9rem;
-      margin-top: 10px;
     }
   </style>
 </head>
@@ -298,33 +153,21 @@
 
   <div class="container">
     <div id="authCard" class="glass-card">
-      <div class="mascota">
-        <img src="https://cdn-icons-png.flaticon.com/512/4712/4712109.png" alt="Mascota" />
-      </div>
+      <div class="mascota"><img src="https://cdn-icons-png.flaticon.com/512/4712/4712109.png" alt="Mascota" /></div>
       <h1>Nica Explorer</h1>
       <p class="subtitle">Explora Nicaragua jugando y descubriendo lugares increíbles 🌋🌊</p>
-
       <div id="authForms">
         <div id="loginForm">
-          <div class="input-group">
-            <input type="email" id="loginEmail" placeholder="Correo electrónico" />
-          </div>
-          <div class="input-group">
-            <input type="password" id="loginPassword" placeholder="Contraseña" />
-          </div>
+          <div class="input-group"><input type="email" id="loginEmail" placeholder="Correo electrónico" /></div>
+          <div class="input-group"><input type="password" id="loginPassword" placeholder="Contraseña" /></div>
           <button id="doLoginBtn" class="btn btn-primary">Iniciar sesión</button>
           <button id="googleLoginBtn" class="btn btn-google"><i class="fab fa-google"></i> Continuar con Google</button>
           <div class="divider"><span>o</span></div>
           <button id="showRegisterBtn" class="btn btn-outline">Crear cuenta nueva</button>
         </div>
-
         <div id="registerForm" style="display:none;">
-          <div class="input-group">
-            <input type="email" id="regEmail" placeholder="Correo electrónico" />
-          </div>
-          <div class="input-group">
-            <input type="password" id="regPassword" placeholder="Contraseña" />
-          </div>
+          <div class="input-group"><input type="email" id="regEmail" placeholder="Correo electrónico" /></div>
+          <div class="input-group"><input type="password" id="regPassword" placeholder="Contraseña" /></div>
           <button id="doRegisterBtn" class="btn btn-primary">Registrarse</button>
           <button id="backToLoginBtn" class="btn btn-outline">← Volver al inicio</button>
         </div>
@@ -334,33 +177,22 @@
     <div id="menuSection" class="menu-section">
       <h2>¡Bienvenido, <span id="userName"></span>! ¿Qué deseas explorar?</h2>
       <div class="menu-buttons">
-        <a href="../juegos/juegos.html" class="menu-card">
-          <span>🎮</span>
-          <h3>Juegos Turísticos</h3>
-        </a>
-        <a href="mapa.html" class="menu-card">
-          <span>🗺️</span>
-          <h3>Mapa Interactivo</h3>
-        </a>
+        <a href="../juegos/juegos.html" class="menu-card"><span>🎮</span><h3>Juegos Turísticos</h3></a>
+        <a href="mapa.html" class="menu-card"><span>🗺️</span><h3>Mapa Interactivo</h3></a>
       </div>
-      <div style="margin-top: 2rem;">
-        <button id="logoutBtn" class="btn btn-outline" style="width: auto; padding: 8px 20px;">Cerrar sesión</button>
-      </div>
+      <div style="margin-top: 2rem;"><button id="logoutBtn" class="btn btn-outline" style="width: auto; padding: 8px 20px;">Cerrar sesión</button></div>
     </div>
   </div>
 
-  <a href="https://wa.me/50588170531?text=Hola%20quiero%20consultar%20sobre%20Nica%20Explorer" class="whatsapp-float" target="_blank">
-    <i class="fab fa-whatsapp"></i>
-  </a>
-
+  <a href="https://wa.me/50588170531?text=Hola%20quiero%20consultar%20sobre%20Nica%20Explorer" class="whatsapp-float" target="_blank"><i class="fab fa-whatsapp"></i></a>
   <div id="toast" class="toast-message" style="display: none;"></div>
 
-  <!-- Firebase SDK (usando módulos) -->
   <script type="importmap">
     {
       "imports": {
         "firebase/app": "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js",
-        "firebase/auth": "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js"
+        "firebase/auth": "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js",
+        "firebase/firestore": "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"
       }
     }
   </script>
@@ -368,8 +200,8 @@
   <script type="module">
     import { initializeApp } from "firebase/app";
     import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "firebase/auth";
+    import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
 
-    // Tus credenciales reales
     const firebaseConfig = {
       apiKey: "AIzaSyA6jVICuE17KJcO34gE1brMxqWEfNd3Fy0",
       authDomain: "mapa-41b00.firebaseapp.com",
@@ -382,9 +214,10 @@
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
+    const db = getFirestore(app);
     const provider = new GoogleAuthProvider();
 
-    // Elementos DOM
+    // Elementos
     const authCard = document.getElementById('authCard');
     const menuSection = document.getElementById('menuSection');
     const userNameSpan = document.getElementById('userName');
@@ -396,9 +229,26 @@
       toastDiv.textContent = msg;
       toastDiv.style.display = 'block';
       toastDiv.style.background = isError ? 'rgba(220,53,69,0.9)' : 'rgba(0,0,0,0.8)';
-      setTimeout(() => {
-        toastDiv.style.display = 'none';
-      }, 3000);
+      setTimeout(() => { toastDiv.style.display = 'none'; }, 3000);
+    }
+
+    // Guardar usuario en Firestore (si no existe)
+    async function guardarUsuarioEnFirestore(user) {
+      const userRef = doc(db, 'usuarios', user.uid);
+      const userSnap = await getDoc(userRef);
+      if (!userSnap.exists()) {
+        await setDoc(userRef, {
+          uid: user.uid,
+          email: user.email,
+          nombre: user.displayName || user.email.split('@')[0],
+          fotoURL: user.photoURL || '',
+          puntos: 0,
+          fechaRegistro: new Date(),
+          sonidosActivos: true,
+          tema: 'claro'
+        });
+        console.log("Usuario guardado en Firestore");
+      }
     }
 
     function updateUI(user) {
@@ -407,6 +257,8 @@
         menuSection.style.display = 'block';
         const displayName = user.displayName || user.email.split('@')[0];
         userNameSpan.textContent = displayName;
+        // Guardar perfil en Firestore si es nuevo
+        guardarUsuarioEnFirestore(user);
       } else {
         authCard.style.display = 'block';
         menuSection.style.display = 'none';
@@ -428,10 +280,7 @@
     document.getElementById('doLoginBtn').addEventListener('click', async () => {
       const email = document.getElementById('loginEmail').value.trim();
       const password = document.getElementById('loginPassword').value;
-      if (!email || !password) {
-        showToast('Completa todos los campos', true);
-        return;
-      }
+      if (!email || !password) return showToast('Completa todos los campos', true);
       try {
         await signInWithEmailAndPassword(auth, email, password);
         showToast('¡Bienvenido de vuelta!');
@@ -439,7 +288,6 @@
         let msg = error.message;
         if (msg.includes('user-not-found')) msg = 'Usuario no registrado';
         else if (msg.includes('wrong-password')) msg = 'Contraseña incorrecta';
-        else if (msg.includes('invalid-email')) msg = 'Correo inválido';
         showToast(msg, true);
       }
     });
@@ -448,16 +296,12 @@
     document.getElementById('doRegisterBtn').addEventListener('click', async () => {
       const email = document.getElementById('regEmail').value.trim();
       const password = document.getElementById('regPassword').value;
-      if (!email || !password) {
-        showToast('Completa todos los campos', true);
-        return;
-      }
-      if (password.length < 6) {
-        showToast('La contraseña debe tener al menos 6 caracteres', true);
-        return;
-      }
+      if (!email || !password) return showToast('Completa todos los campos', true);
+      if (password.length < 6) return showToast('La contraseña debe tener al menos 6 caracteres', true);
       try {
-        await createUserWithEmailAndPassword(auth, email, password);
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        // Guardar inmediatamente en Firestore
+        await guardarUsuarioEnFirestore(userCredential.user);
         showToast('Registro exitoso. ¡Ya puedes explorar!');
       } catch (error) {
         let msg = error.message;
@@ -469,14 +313,15 @@
     // Google
     document.getElementById('googleLoginBtn').addEventListener('click', async () => {
       try {
-        await signInWithPopup(auth, provider);
+        const result = await signInWithPopup(auth, provider);
+        await guardarUsuarioEnFirestore(result.user);
         showToast('Inicio con Google correcto');
       } catch (error) {
         showToast('Error con Google: ' + error.message, true);
       }
     });
 
-    // Cambiar entre formularios
+    // Cambiar formularios
     document.getElementById('showRegisterBtn').addEventListener('click', () => {
       loginFormDiv.style.display = 'none';
       registerFormDiv.style.display = 'block';
