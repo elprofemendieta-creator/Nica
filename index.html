@@ -387,12 +387,18 @@
 
     // Configuración de Firebase (¡CAMBIAR POR TUS DATOS REALES!)
     const firebaseConfig = {
-      apiKey: "TU_API_KEY",
-      authDomain: "TU_AUTH_DOMAIN",
-      projectId: "TU_PROJECT_ID",
-      storageBucket: "TU_STORAGE_BUCKET",
-      messagingSenderId: "TU_SENDER_ID",
-      appId: "TU_APP_ID"
+      apiKey: "AIzaSyA6jVICuE17KJcO34gE1brMxqWEfNd3Fy0",
+  authDomain: "mapa-41b00.firebaseapp.com",
+  projectId: "mapa-41b00",
+  storageBucket: "mapa-41b00.firebasestorage.app",
+  messagingSenderId: "535032835400",
+  appId: "1:535032835400:web:68c079cbc3f419eafd177d",
+  measurementId: "G-7R3DSH7PPN"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
     };
 
     const app = initializeApp(firebaseConfig);
