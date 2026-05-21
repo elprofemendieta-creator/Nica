@@ -127,7 +127,7 @@ body {
 }
 
 #map {
-  height: 70vh; 
+  height: 60vh; 
   width: 100%;
 }
 
@@ -144,6 +144,10 @@ body {
         min-height: 300px;
         order: 1;
     }
+    #map {
+  height: 60vh; 
+  width: 100%;
+}
     .main-content {
         flex-direction: column;
     }
