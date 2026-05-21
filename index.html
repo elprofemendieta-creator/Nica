@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>Nica Explorer - Autenticación</title>
   
-  <!-- Google Fonts + Font Awesome -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 
@@ -24,7 +23,6 @@
       overflow-x: hidden;
     }
 
-    /* Fondo animado (ondas sutiles) */
     .wave-bg {
       position: fixed;
       bottom: 0;
@@ -56,7 +54,6 @@
       align-items: center;
     }
 
-    /* Tarjeta principal */
     .glass-card {
       background: rgba(255, 255, 255, 0.1);
       backdrop-filter: blur(12px);
@@ -95,7 +92,6 @@
       font-size: 1rem;
     }
 
-    /* Botones */
     .btn {
       display: inline-flex;
       align-items: center;
@@ -138,7 +134,6 @@
       background: rgba(255,255,255,0.1);
     }
 
-    /* Inputs */
     .input-group {
       margin-bottom: 1rem;
       text-align: left;
@@ -180,7 +175,6 @@
       font-size: 0.8rem;
     }
 
-    /* Menu (oculto hasta login) */
     .menu-section {
       display: none;
       margin-top: 2rem;
@@ -224,7 +218,6 @@
       font-size: 1.2rem;
     }
 
-    /* Toast personalizado */
     .toast-message {
       position: fixed;
       bottom: 20px;
@@ -241,7 +234,6 @@
       transition: 0.2s;
     }
 
-    /* Botón flotante WhatsApp */
     .whatsapp-float {
       position: fixed;
       bottom: 25px;
@@ -276,7 +268,6 @@
       }
     }
 
-    /* Responsive */
     @media (max-width: 550px) {
       .glass-card { padding: 1.5rem; }
       h1 { font-size: 2rem; }
@@ -284,7 +275,6 @@
       .menu-card span { font-size: 2.5rem; }
     }
 
-    /* Estado oculto */
     .hidden-form {
       display: none;
     }
@@ -307,7 +297,6 @@
   </div>
 
   <div class="container">
-    <!-- Tarjeta de autenticación (se muestra hasta login exitoso) -->
     <div id="authCard" class="glass-card">
       <div class="mascota">
         <img src="https://cdn-icons-png.flaticon.com/512/4712/4712109.png" alt="Mascota" />
@@ -315,9 +304,7 @@
       <h1>Nica Explorer</h1>
       <p class="subtitle">Explora Nicaragua jugando y descubriendo lugares increíbles 🌋🌊</p>
 
-      <!-- Formulario dinámico: login / registro -->
       <div id="authForms">
-        <!-- Login por defecto -->
         <div id="loginForm">
           <div class="input-group">
             <input type="email" id="loginEmail" placeholder="Correo electrónico" />
@@ -331,7 +318,6 @@
           <button id="showRegisterBtn" class="btn btn-outline">Crear cuenta nueva</button>
         </div>
 
-        <!-- Registro (oculto inicialmente) -->
         <div id="registerForm" style="display:none;">
           <div class="input-group">
             <input type="email" id="regEmail" placeholder="Correo electrónico" />
@@ -340,12 +326,11 @@
             <input type="password" id="regPassword" placeholder="Contraseña" />
           </div>
           <button id="doRegisterBtn" class="btn btn-primary">Registrarse</button>
-          <button id="backToLoginBtn" class="btn btn-outline">← Volver al inicio de sesión</button>
+          <button id="backToLoginBtn" class="btn btn-outline">← Volver al inicio</button>
         </div>
       </div>
     </div>
 
-    <!-- Menú de juegos / mapa (se muestra después de login) -->
     <div id="menuSection" class="menu-section">
       <h2>¡Bienvenido, <span id="userName"></span>! ¿Qué deseas explorar?</h2>
       <div class="menu-buttons">
@@ -364,7 +349,6 @@
     </div>
   </div>
 
-  <!-- Botón WhatsApp -->
   <a href="https://wa.me/50588170531?text=Hola%20quiero%20consultar%20sobre%20Nica%20Explorer" class="whatsapp-float" target="_blank">
     <i class="fab fa-whatsapp"></i>
   </a>
@@ -385,20 +369,18 @@
     import { initializeApp } from "firebase/app";
     import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "firebase/auth";
 
-    // Configuración de Firebase (¡CAMBIAR POR TUS DATOS REALES!)
+    // Tus credenciales reales
     const firebaseConfig = {
-  apiKey: "AIzaSyA6jVICuE17KJcO34gE1brMxqWEfNd3Fy0",
-  authDomain: "mapa-41b00.firebaseapp.com",
-  projectId: "mapa-41b00",
-  storageBucket: "mapa-41b00.firebasestorage.app",
-  messagingSenderId: "535032835400",
-  appId: "1:535032835400:web:68c079cbc3f419eafd177d",
-  measurementId: "G-7R3DSH7PPN"
-};
+      apiKey: "AIzaSyA6jVICuE17KJcO34gE1brMxqWEfNd3Fy0",
+      authDomain: "mapa-41b00.firebaseapp.com",
+      projectId: "mapa-41b00",
+      storageBucket: "mapa-41b00.firebasestorage.app",
+      messagingSenderId: "535032835400",
+      appId: "1:535032835400:web:68c079cbc3f419eafd177d",
+      measurementId: "G-7R3DSH7PPN"
+    };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+    const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const provider = new GoogleAuthProvider();
 
@@ -419,10 +401,8 @@ const analytics = getAnalytics(app);
       }, 3000);
     }
 
-    // Mostrar UI según estado de autenticación
     function updateUI(user) {
       if (user) {
-        // Usuario logueado: ocultar tarjeta de login, mostrar menú
         authCard.style.display = 'none';
         menuSection.style.display = 'block';
         const displayName = user.displayName || user.email.split('@')[0];
@@ -430,18 +410,21 @@ const analytics = getAnalytics(app);
       } else {
         authCard.style.display = 'block';
         menuSection.style.display = 'none';
-        // Resetear formularios a login visible
         loginFormDiv.style.display = 'block';
         registerFormDiv.style.display = 'none';
+        // Limpiar campos
+        document.getElementById('loginEmail').value = '';
+        document.getElementById('loginPassword').value = '';
+        document.getElementById('regEmail').value = '';
+        document.getElementById('regPassword').value = '';
       }
     }
 
-    // Observador de estado
     onAuthStateChanged(auth, (user) => {
       updateUI(user);
     });
 
-    // ---- LOGIN con email/pass ----
+    // Login email/pass
     document.getElementById('doLoginBtn').addEventListener('click', async () => {
       const email = document.getElementById('loginEmail').value.trim();
       const password = document.getElementById('loginPassword').value;
@@ -456,11 +439,12 @@ const analytics = getAnalytics(app);
         let msg = error.message;
         if (msg.includes('user-not-found')) msg = 'Usuario no registrado';
         else if (msg.includes('wrong-password')) msg = 'Contraseña incorrecta';
+        else if (msg.includes('invalid-email')) msg = 'Correo inválido';
         showToast(msg, true);
       }
     });
 
-    // ---- Registro con email/pass ----
+    // Registro
     document.getElementById('doRegisterBtn').addEventListener('click', async () => {
       const email = document.getElementById('regEmail').value.trim();
       const password = document.getElementById('regPassword').value;
@@ -482,7 +466,7 @@ const analytics = getAnalytics(app);
       }
     });
 
-    // ---- Google Login ----
+    // Google
     document.getElementById('googleLoginBtn').addEventListener('click', async () => {
       try {
         await signInWithPopup(auth, provider);
@@ -492,7 +476,7 @@ const analytics = getAnalytics(app);
       }
     });
 
-    // ---- Cambiar entre login y registro ----
+    // Cambiar entre formularios
     document.getElementById('showRegisterBtn').addEventListener('click', () => {
       loginFormDiv.style.display = 'none';
       registerFormDiv.style.display = 'block';
@@ -502,18 +486,11 @@ const analytics = getAnalytics(app);
       loginFormDiv.style.display = 'block';
     });
 
-    // ---- Cerrar sesión ----
+    // Cerrar sesión
     document.getElementById('logoutBtn').addEventListener('click', async () => {
       await signOut(auth);
       showToast('Sesión cerrada');
     });
-
-    // Pequeño detalle: limpiar campos al cambiar formulario
-    function clearInputs(container) {
-      container.querySelectorAll('input').forEach(inp => inp.value = '');
-    }
-    document.getElementById('showRegisterBtn').addEventListener('click', () => clearInputs(loginFormDiv));
-    document.getElementById('backToLoginBtn').addEventListener('click', () => clearInputs(registerFormDiv));
   </script>
 </body>
 </html>
