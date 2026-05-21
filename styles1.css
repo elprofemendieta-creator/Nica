@@ -5,11 +5,18 @@
     box-sizing: border-box;
 }
 
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
 body {
     font-family: 'Poppins', sans-serif;
     background: #F5F5F0;
     overflow-x: hidden;
     transition: background 0.3s, color 0.3s;
+    height: 100%;
 }
 
 /* ========== PANTALLA DE INICIO (index.html) ========== */
@@ -135,54 +142,57 @@ body {
     }
 }
 
-/* ========== MAPA Y APP PRINCIPAL (mapa.html) ========== */
+/* ========== MAPA Y APP PRINCIPAL (mapa.html) - CORREGIDO PARA MÓVILES ========== */
 .app-container {
-    min-height: 100vh;
     display: flex;
     flex-direction: column;
+    height: 100vh;  /* Ocupa toda la altura de la ventana */
+    width: 100%;
+    overflow: hidden;
 }
 
-/* Header */
+/* Header fijo arriba */
 .app-header {
     background: white;
-    padding: 12px 25px;
+    padding: 12px 16px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
-    gap: 15px;
+    gap: 10px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     z-index: 100;
+    flex-shrink: 0;
 }
 
 .logo {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
 }
 
 .logo i {
-    font-size: 28px;
+    font-size: 24px;
     color: #F57C00;
 }
 
 .logo h2 {
     color: #2E7D32;
-    font-size: 20px;
+    font-size: 18px;
 }
 
 .header-controls {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 10px;
 }
 
 .icon-btn, .admin-login-btn {
     background: none;
     border: none;
-    font-size: 20px;
+    font-size: 18px;
     cursor: pointer;
-    padding: 8px;
+    padding: 6px;
     border-radius: 50%;
     transition: all 0.3s;
     color: #666;
@@ -197,78 +207,78 @@ body {
     background: #2E7D32;
     color: white;
     border-radius: 30px;
-    padding: 6px 15px;
-    font-size: 14px;
-}
-
-.admin-login-btn:hover {
-    background: #1B5E20;
-    color: white;
+    padding: 4px 12px;
+    font-size: 12px;
 }
 
 .admin-panel-header {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     background: #FFF3E0;
-    padding: 5px 15px;
+    padding: 4px 12px;
     border-radius: 30px;
     color: #F57C00;
 }
 
 .admin-panel-header span {
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 500;
 }
 
-.admin-panel-header .icon-btn {
-    color: #d32f2f;
-}
-
-/* Main layout */
+/* Main content: flex para que sidebar y mapa ocupen el resto */
 .main-content {
     display: flex;
-    flex-wrap: wrap;
     flex: 1;
+    min-height: 0;  /* Importante para que los hijos puedan hacer scroll/ocupar espacio */
+    overflow: hidden;
 }
 
+/* Sidebar (lista de lugares) */
 .sidebar {
     width: 320px;
     background: white;
-    padding: 20px;
+    padding: 16px;
     overflow-y: auto;
     box-shadow: 2px 0 10px rgba(0,0,0,0.05);
-    height: calc(100vh - 70px);
+    flex-shrink: 0;
 }
 
+/* Contenedor del mapa: debe ocupar todo el espacio restante */
 .map-container {
     flex: 1;
     position: relative;
+    min-height: 0;  /* Clave para que el mapa se muestre */
+    background: #f0f0f0;  /* Color de respaldo mientras carga */
 }
 
-/* IMPORTANTE: arregla mapa blanco en móviles */
+/* El mapa Leaflet ocupará el 100% del contenedor */
 #map {
-    height: 80vh;
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
-    min-height: 400px;
+    height: 100%;
+    z-index: 1;
 }
 
-/* Responsive */
+/* Ajustes para móvil: sidebar debajo, mapa arriba ocupando más espacio */
 @media (max-width: 768px) {
     .sidebar {
         width: 100%;
-        height: auto;
-        max-height: 300px;
+        max-height: 35%;
         order: 2;
+        flex-shrink: 1;
     }
     .map-container {
         order: 1;
-        height: 60vh;
-        min-height: 300px;
+        flex: 2;  /* Ocupa más espacio que la sidebar */
     }
-    #map {
-        height: 60vh;
-        min-height: 300px;
+    .app-header {
+        padding: 8px 12px;
+    }
+    .logo h2 {
+        font-size: 16px;
     }
     .menu-buttons {
         gap: 1rem;
@@ -282,7 +292,7 @@ body {
     }
 }
 
-/* Búsqueda y filtros */
+/* ========== RESTO DE ESTILOS (búsqueda, filtros, modales, etc.) ========== */
 .search-box {
     display: flex;
     align-items: center;
@@ -333,7 +343,6 @@ body {
     color: white;
 }
 
-/* Lista de lugares */
 .places-list-container h3 {
     font-size: 16px;
     margin-bottom: 15px;
@@ -424,7 +433,6 @@ body {
     font-weight: 600;
 }
 
-/* Layer control (botones del mapa) */
 .layer-control {
     position: absolute;
     bottom: 20px;
@@ -454,7 +462,6 @@ body {
     color: white;
 }
 
-/* Modales */
 .modal {
     display: none;
     position: fixed;
@@ -540,7 +547,6 @@ body {
     font-weight: 600;
 }
 
-/* Toast */
 .toast-container {
     position: fixed;
     bottom: 20px;
@@ -563,7 +569,7 @@ body {
     to { transform: translateX(0); opacity: 1; }
 }
 
-/* ========== MODO OSCURO ========== */
+/* Modo oscuro */
 body.dark-mode {
     background: #1a1a2e;
 }
