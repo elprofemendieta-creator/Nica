@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Nica Explorer - Inicio de Sesión</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Animaciones AOS (opcional, para efectos) -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f2b1d 0%, #1e4a2f 50%, #f57c00 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        /* Contenedor principal */
+        .login-container {
+            width: 100%;
+            max-width: 450px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 48px;
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.2);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .login-container:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Encabezado con mascota */
+        .login-header {
+            background: linear-gradient(120deg, #2E7D32, #F57C00);
+            padding: 30px 20px;
+            text-align: center;
+            color: white;
+        }
+
+        .mascota {
+            width: 80px;
+            margin: 0 auto 15px;
+            filter: drop-shadow(0 10px 8px rgba(0,0,0,0.2));
+        }
+
+        .mascota img {
+            width: 100%;
+            border-radius: 50%;
+            background: white;
+            padding: 10px;
+        }
+
+        .login-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .login-header p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-top: 8px;
+        }
+
+        /* Cuerpo del formulario */
+        .login-body {
+            padding: 30px 25px 35px;
+        }
+
+        .btn-google {
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            color: #444;
+            padding: 14px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 1rem;
+            width: 100%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            transition: all 0.2s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            margin-bottom: 25px;
+        }
+
+        .btn-google i {
+            font-size: 1.3rem;
+            color: #4285F4;
+        }
+
+        .btn-google:hover {
+            background: #f5f5f5;
+            transform: scale(1.01);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            color: #aaa;
+            font-size: 0.8rem;
+            margin: 20px 0;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .divider span {
+            margin: 0 12px;
+        }
+
+        .input-group {
+            margin-bottom: 18px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #2d2d2d;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1.5px solid #e2e2e2;
+            border-radius: 40px;
+            font-size: 0.95rem;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.2s;
+            background: #fefefe;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #F57C00;
+            box-shadow: 0 0 0 3px rgba(245, 124, 0, 0.2);
+        }
+
+        .btn-submit {
+            background: linear-gradient(95deg, #2E7D32, #F57C00);
+            border: none;
+            color: white;
+            padding: 14px;
+            width: 100%;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.05);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        .toggle-link {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 0.85rem;
+        }
+
+        .toggle-link a {
+            color: #F57C00;
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .toggle-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* Mensajes de error/éxito */
+        .message {
+            background: #ffe6e5;
+            color: #c62828;
+            padding: 10px 15px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            margin-bottom: 20px;
+            text-align: center;
+            display: none;
+        }
+
+        .message.success {
+            background: #e0f2e9;
+            color: #1e6f3f;
+        }
+
+        /* Botón flotante de WhatsApp */
+        .whatsapp-float {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background-color: #25D366;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            transition: all 0.3s;
+            z-index: 1000;
+            text-decoration: none;
+            animation: pulse-wa 1.5s infinite;
+        }
+
+        .whatsapp-float:hover {
+            transform: scale(1.1);
+            background-color: #20b359;
+        }
+
+        @keyframes pulse-wa {
+            0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+        }
+
+        /* Responsive */
+        @media (max-width: 500px) {
+            .login-container {
+                margin: 20px;
+            }
+            .login-body {
+                padding: 25px 20px;
+            }
+            .whatsapp-float {
+                width: 50px;
+                height: 50px;
+                font-size: 28px;
+                bottom: 20px;
+                right: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-container" data-aos="fade-up" data-aos-duration="800">
+    <div class="login-header">
+        <div class="mascota">
+            <img src="https://cdn-icons-png.flaticon.com/512/4712/4712109.png" alt="Mascota Nica Explorer">
+        </div>
+        <h1>Nica Explorer</h1>
+        <p>Descubre Nicaragua, gana puntos, vive la aventura</p>
+    </div>
+    <div class="login-body">
+        <div id="loginMessage" class="message"></div>
+
+        <!-- Botón Google -->
+        <button id="googleBtn" class="btn-google">
+            <i class="fab fa-google"></i> Continuar con Google
+        </button>
+
+        <div class="divider"><span>o</span></div>
+
+        <!-- Formulario dinámico: login o registro -->
+        <div id="formContainer">
+            <!-- Por defecto formulario de login -->
+            <div class="input-group">
+                <label>Correo electrónico</label>
+                <input type="email" id="email" placeholder="tú@ejemplo.com">
+            </div>
+            <div class="input-group">
+                <label>Contraseña</label>
+                <input type="password" id="password" placeholder="••••••">
+            </div>
+            <button id="actionBtn" class="btn-submit">Iniciar Sesión</button>
+            <div class="toggle-link">
+                ¿No tienes cuenta? <a id="toggleFormLink">Regístrate aquí</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Botón flotante WhatsApp -->
+<a href="https://wa.me/50588170531?text=Hola%20Nica%20Explorer%2C%20necesito%20ayuda" 
+   class="whatsapp-float" target="_blank" rel="noopener noreferrer">
+    <i class="fab fa-whatsapp"></i>
+</a>
+
+<!-- Importar Firebase (módulos) -->
+<script type="importmap">
+    {
+        "imports": {
+            "firebase/app": "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js",
+            "firebase/auth": "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js"
+        }
+    }
+</script>
+
+<script type="module">
+    import { initializeApp } from "firebase/app";
+    import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+
+    // --- CONFIGURACIÓN DE FIREBASE (¡REEMPLAZA CON TUS DATOS REALES!) ---
+    const firebaseConfig = {
+        apiKey: "TU_API_KEY",
+        authDomain: "TU_AUTH_DOMAIN",
+        projectId: "TU_PROJECT_ID",
+        storageBucket: "TU_STORAGE_BUCKET",
+        messagingSenderId: "TU_SENDER_ID",
+        appId: "TU_APP_ID"
+    };
+
+    // Inicializar Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
+
+    // Elementos DOM
+    const googleBtn = document.getElementById('googleBtn');
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const actionBtn = document.getElementById('actionBtn');
+    const toggleLink = document.getElementById('toggleFormLink');
+    const formContainer = document.getElementById('formContainer');
+    const messageDiv = document.getElementById('loginMessage');
+
+    let isLoginMode = true;  // true = login, false = registro
+
+    // Función para mostrar mensajes
+    function showMessage(text, isError = true) {
+        messageDiv.textContent = text;
+        messageDiv.className = 'message';
+        if (!isError) messageDiv.classList.add('success');
+        messageDiv.style.display = 'block';
+        setTimeout(() => {
+            messageDiv.style.display = 'none';
+        }, 4000);
+    }
+
+    // Alternar entre login y registro
+    toggleLink.addEventListener('click', () => {
+        isLoginMode = !isLoginMode;
+        if (isLoginMode) {
+            actionBtn.textContent = 'Iniciar Sesión';
+            toggleLink.innerHTML = '¿No tienes cuenta? <a id="toggleFormLink">Regístrate aquí</a>';
+            // Aseguramos que el nuevo enlace tenga el evento
+            document.getElementById('toggleFormLink').addEventListener('click', arguments.callee);
+        } else {
+            actionBtn.textContent = 'Registrarse';
+            toggleLink.innerHTML = '¿Ya tienes cuenta? <a id="toggleFormLink">Inicia sesión aquí</a>';
+            document.getElementById('toggleFormLink').addEventListener('click', arguments.callee);
+        }
+    });
+
+    // Acción principal (login o registro)
+    async function handleAuth() {
+        const email = emailInput.value.trim();
+        const password = passwordInput.value.trim();
+
+        if (!email || !password) {
+            showMessage('Por favor completa todos los campos', true);
+            return;
+        }
+
+        try {
+            if (isLoginMode) {
+                // Iniciar sesión con email/contraseña
+                await signInWithEmailAndPassword(auth, email, password);
+                showMessage('¡Bienvenido de vuelta! Redirigiendo...', false);
+                setTimeout(() => {
+                    window.location.href = 'mapa.html';
+                }, 1500);
+            } else {
+                // Registrar nuevo usuario
+                await createUserWithEmailAndPassword(auth, email, password);
+                showMessage('Cuenta creada exitosamente. Redirigiendo...', false);
+                setTimeout(() => {
+                    window.location.href = 'mapa.html';
+                }, 1500);
+            }
+        } catch (error) {
+            console.error(error);
+            let errorMsg = error.message;
+            if (error.code === 'auth/user-not-found') errorMsg = 'Usuario no encontrado';
+            if (error.code === 'auth/wrong-password') errorMsg = 'Contraseña incorrecta';
+            if (error.code === 'auth/email-already-in-use') errorMsg = 'El correo ya está registrado';
+            if (error.code === 'auth/weak-password') errorMsg = 'La contraseña debe tener al menos 6 caracteres';
+            showMessage(errorMsg, true);
+        }
+    }
+
+    actionBtn.addEventListener('click', handleAuth);
+
+    // Autenticación con Google
+    googleBtn.addEventListener('click', async () => {
+        try {
+            const result = await signInWithPopup(auth, provider);
+            // El usuario ya está autenticado
+            showMessage(`Hola ${result.user.displayName || result.user.email}, redirigiendo...`, false);
+            setTimeout(() => {
+                window.location.href = 'mapa.html';
+            }, 1500);
+        } catch (error) {
+            console.error(error);
+            showMessage('Error al autenticar con Google: ' + error.message, true);
+        }
+    });
+
+    // Si ya hay sesión activa, redirigir directamente al mapa
+    auth.onAuthStateChanged((user) => {
+        if (user && window.location.pathname.includes('login.html')) {
+            window.location.href = 'mapa.html';
+        }
+    });
+
+    // Inicializar AOS (animaciones)
+    import('https://unpkg.com/aos@2.3.1/dist/aos.js').then((module) => {
+        const AOS = module.default;
+        AOS.init({ once: true });
+    });
+</script>
+</body>
+</html>
