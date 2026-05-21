@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ranking - Nica Explorer</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <style>
+        body { padding: 20px; }
+        .ranking-container { max-width: 800px; margin: auto; }
+        .ranking-table { width: 100%; border-collapse: collapse; }
+        .ranking-table th, .ranking-table td { padding: 10px; border-bottom: 1px solid #ddd; text-align: left; }
+        .amigos-section { margin-top: 30px; }
+        .qr-container { text-align: center; margin: 20px; }
+        button { background: #F57C00; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="ranking-container">
+        <h1><i class="fas fa-trophy"></i> Ranking Global</h1>
+        <table class="ranking-table" id="globalRanking">
+            <thead><tr><th>#</th><th>Usuario</th><th>Puntos</th></tr></thead>
+            <tbody></tbody>
+        </table>
+        
+        <div class="amigos-section">
+            <h2>Mis Amigos <button id="shareQRBtn"><i class="fas fa-qrcode"></i> Compartir QR</button></h2>
+            <div id="qrCode" class="qr-container" style="display:none;"></div>
+            <table class="ranking-table" id="amigosRanking">
+                <thead><tr><th>#</th><th>Usuario</th><th>Puntos</th></tr></thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+    <script type="importmap">...</script> <!-- Mismo importmap que en mapa.html -->
+    <script type="module">
+        import { initializeApp } from "firebase/app";
+        import { getFirestore, collection, getDocs, query, orderBy, where, doc, updateDoc, arrayUnion } from "firebase/firestore";
+        import { getAuth, onAuthStateChanged } from "firebase/auth";
+        const firebaseConfig = { /* TU CONFIGURACIÓN */ };
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+        
+        async function cargarRankingGlobal() {
+            const q = query(collection(db, 'usuarios'), orderBy('puntos', 'desc'));
+            const snap = await getDocs(q);
+            const tbody = document.querySelector('#globalRanking tbody');
+            tbody.innerHTML = '';
+            let i=1;
+            snap.forEach(doc => {
+                const data = doc.data();
+                const tr = `<tr><td>${i++}</td><td>${data.nombre || data.email}</td><td>${data.puntos || 0}</td></tr>`;
+                tbody.innerHTML += tr;
+            });
+        }
+        
+        async function cargarAmigos(uid) {
+            // Obtener lista de amigos del usuario (colección 'amigos' donde usuarioId = uid)
+            const amigosSnap = await getDocs(query(collection(db, 'amigos'), where('usuarioId', '==', uid)));
+            const amigosIds = amigosSnap.docs.map(d => d.data().amigoId);
+            if (amigosIds.length === 0) {
+                document.querySelector('#amigosRanking tbody').innerHTML = '<tr><td colspan="3">Aún no tienes amigos. Comparte tu QR para que te sigan.</td></tr>';
+                return;
+            }
+            const usersSnap = await getDocs(query(collection(db, 'usuarios'), where('uid', 'in', amigosIds)));
+            const usuarios = usersSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+            usuarios.sort((a,b) => (b.puntos||0) - (a.puntos||0));
+            const tbody = document.querySelector('#amigosRanking tbody');
+            tbody.innerHTML = '';
+            let i=1;
+            for (let u of usuarios) {
+                tbody.innerHTML += `<tr><td>${i++}</td><td>${u.nombre || u.email}</td><td>${u.puntos || 0}</td></tr>`;
+            }
+        }
+        
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                cargarRankingGlobal();
+                cargarAmigos(user.uid);
+                document.getElementById('shareQRBtn').onclick = () => {
+                    const qrDiv = document.getElementById('qrCode');
+                    qrDiv.style.display = 'block';
+                    qrDiv.innerHTML = '';
+                    new QRCode(qrDiv, {
+                        text: `https://tuapp.com/amigo?uid=${user.uid}`,
+                        width: 200,
+                        height: 200
+                    });
+                };
+            } else {
+                window.location.href = 'mapa.html';
+            }
+        });
+    </script>
+</body>
+</html>
