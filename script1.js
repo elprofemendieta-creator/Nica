@@ -1,12 +1,14 @@
-// ========== CONFIGURACIÓN INICIAL ==========
+// ========== SCRIPT PRINCIPAL CON FIREBASE ==========
+// Dependencias globales: window.db (Firestore) y window.auth (Auth) inyectados desde mapa.html
+
 let map;
 let markerCluster;
 let currentLayers = {};
 let allPlaces = [];
 let isAdmin = false;
-let editingId = null;
+let editingId = null; // guarda el ID del documento Firestore (string)
 
-// Clave de administrador
+// Admin password (misma que antes)
 const ADMIN_PASSWORD = "Diriamba2026";
 
 // Elementos DOM
@@ -25,31 +27,6 @@ const lugarForm = document.getElementById('lugarForm');
 const modalTitle = document.getElementById('modalTitle');
 const geolocationBtn = document.getElementById('geolocationBtn');
 
-// ========== LOCALSTORAGE ==========
-function cargarDatos() {
-    const data = localStorage.getItem('turismo_puntos');
-    if (data) {
-        allPlaces = JSON.parse(data);
-    } else {
-        // Datos iniciales de ejemplo (Nicaragua)
-        allPlaces = [
-            { id: Date.now() + 1, nombre: "Granada", lat: 11.9294, lng: -85.9536, url: "../lugares/granada.html", imagen: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Granada%2C_Nicaragua.jpg/300px-Granada%2C_Nicaragua.jpg", categoria: "ciudad" },
-            { id: Date.now() + 2, nombre: "León", lat: 12.4358, lng: -86.8781, url: "../lugares/leon.html", imagen: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Leon_Nicaragua.jpg/300px-Leon_Nicaragua.jpg", categoria: "ciudad" },
-            { id: Date.now() + 3, nombre: "Corn Island", lat: 12.1758, lng: -83.0615, url: "../lugares/cornislan.html", imagen: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Corn_Island.jpg/300px-Corn_Island.jpg", categoria: "playa" },
-            { id: Date.now() + 4, nombre: "Volcán Masaya", lat: 11.9844, lng: -86.1611, url: "../lugares/volcanmasaya.html", imagen: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Masaya_Volcano.jpg/300px-Masaya_Volcano.jpg", categoria: "volcán" },
-            { id: Date.now() + 5, nombre: "San Juan del Sur", lat: 11.2528, lng: -85.8683, url: "../lugares/sanjuan.html", imagen: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/San_Juan_del_Sur.jpg/300px-San_Juan_del_Sur.jpg", categoria: "playa" },
-            { id: Date.now() + 6, nombre: "Isletas de Granada", lat: 11.9719, lng: -85.9560, url: "lugares/isletas.html", imagen: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Isletas_de_Granada.jpg/300px-Isletas_de_Granada.jpg", categoria: "naturaleza" },        ];
-        guardarDatos();
-    }
-    actualizarCategoriasUnicas();
-    actualizarMarcadores();
-    actualizarListaLugares();
-}
-
-function guardarDatos() {
-    localStorage.setItem('turismo_puntos', JSON.stringify(allPlaces));
-}
-
 // ========== FUNCIONES AUXILIARES ==========
 function mostrarToast(mensaje, tipo = 'info') {
     const container = document.getElementById('toastContainer');
@@ -60,54 +37,135 @@ function mostrarToast(mensaje, tipo = 'info') {
     setTimeout(() => toast.remove(), 3000);
 }
 
-function actualizarCategoriasUnicas() {
-    const categorias = [...new Set(allPlaces.map(p => p.categoria).filter(c => c))];
-    categoriasFiltro.innerHTML = '<div class="categoria-filtro active" data-cat="todos">Todos</div>' +
-        categorias.map(cat => `<div class="categoria-filtro" data-cat="${cat}">${cat}</div>`).join('');
-    
-    document.querySelectorAll('.categoria-filtro').forEach(el => {
-        el.addEventListener('click', () => {
-            document.querySelectorAll('.categoria-filtro').forEach(c => c.classList.remove('active'));
-            el.classList.add('active');
-            actualizarMarcadores();
-            actualizarListaLugares();
-        });
+// ========== CARGA DE LUGARES DESDE FIRESTORE ==========
+let unsubscribePlaces = null;
+
+function iniciarSuscripcionLugares() {
+    if (unsubscribePlaces) unsubscribePlaces();
+    const q = window.db.collection ? window.db.collection('lugares') : window.db.collection('lugares');
+    // Firestore v9 modular: usamos collection y onSnapshot
+    // Como window.db es la instancia de Firestore, lo hacemos así:
+    const collectionRef = window.db.collection ? window.db.collection('lugares') : (() => { throw new Error("Firestore no inicializado correctamente") })();
+    // Pero mejor usar la sintaxis modular: como tenemos window.db, es el objeto Firestore, necesitamos las funciones importadas.
+    // Para simplificar, usaremos la API de Firestore v9 compat (la que permite db.collection).
+    // Como en mapa.html importamos modular, pero asignamos window.db = db (objeto Firestore). Ese objeto no tiene método .collection directamente.
+    // Debemos usar las funciones exportadas: collection, getDocs, onSnapshot, etc.
+    // Por tanto, en lugar de hacer window.db.collection, necesitamos acceder a las funciones desde el script de tipo module.
+    // Pero nuestro script1.js es normal, no module. Solución: crear un bridge.
+    // Para evitar complicaciones, reescribiré esta parte asumiendo que en mapa.html ya se expusieron las funciones necesarias.
+    // Lo más limpio: en mapa.html, en el módulo, asignar también window.collectionRef = collection(db, 'lugares') y window.onSnapshot = onSnapshot, etc.
+    // Dado que el usuario ya tiene el mapa.html que preparé, voy a modificar el mapa.html también para exponer esas funciones.
+    // Pero para no retrasar, voy a suponer que en el mapa.html se hizo:
+    // import { collection, onSnapshot, addDoc, updateDoc, deleteDoc, doc } from "firebase/firestore";
+    // y luego:
+    // window.lugaresCol = collection(db, 'lugares');
+    // window.firestoreAdd = addDoc;
+    // window.firestoreUpdate = updateDoc;
+    // window.firestoreDelete = deleteDoc;
+    // window.firestoreDoc = doc;
+    // window.firestoreOnSnapshot = onSnapshot;
+    // Por claridad, voy a reescribir el mapa.html de nuevo incluyendo esas asignaciones. Pero como el usuario ya tiene el primer mapa.html, mejor le daré un script1.js que funcione con las APIs modulares importadas globalmente.
+    // Voy a asumir que el usuario actualizará el mapa.html con la siguiente versión (le daré luego), o que usará este script1.js con un pequeño puente.
+}
+
+// Para evitar confusiones, voy a entregar un script1.js que funciona con la configuración ESTÁNDAR de Firebase v9 modular,
+// suponiendo que en mapa.html se han expuesto las siguientes variables globales desde el módulo:
+// window.db = db (instancia de Firestore)
+// window.firestore = {
+//   collection: (path) => collection(db, path),
+//   onSnapshot: onSnapshot,
+//   addDoc: addDoc,
+//   updateDoc: updateDoc,
+//   deleteDoc: deleteDoc,
+//   doc: doc,
+//   getDocs: getDocs
+// }
+// Esto es fácil de hacer en el mapa.html. Voy a modificar el mapa.html que entregué antes para incluir estas asignaciones.
+// Como el usuario pidió primero el script1.js, se lo daré con la lógica que usa esas funciones globales.
+// Le indicaré que debe actualizar el mapa.html con una pequeña adición (que también le proporcionaré).
+
+console.log("Usando Firebase - script1.js cargado");
+
+// Definimos un objeto global firebaseHelpers que se llenará desde el módulo
+window.firebaseHelpers = window.firebaseHelpers || {};
+
+function cargarLugaresFirestore() {
+    if (!window.firebaseHelpers || !window.firebaseHelpers.onSnapshot || !window.firebaseHelpers.collection) {
+        console.error("Firebase helpers no listos aún. Reintentando en 1s...");
+        setTimeout(cargarLugaresFirestore, 1000);
+        return;
+    }
+    const colRef = window.firebaseHelpers.collection('lugares');
+    unsubscribePlaces = window.firebaseHelpers.onSnapshot(colRef, (snapshot) => {
+        allPlaces = snapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+        }));
+        actualizarCategoriasUnicas();
+        actualizarMarcadores();
+        actualizarListaLugares();
+        mostrarToast(`${allPlaces.length} lugares cargados desde la nube`, 'info');
+    }, (error) => {
+        console.error("Error en onSnapshot:", error);
+        mostrarToast("Error al cargar lugares: " + error.message, 'error');
     });
 }
 
-function obtenerFiltroActual() {
-    const active = document.querySelector('.categoria-filtro.active');
-    return active ? active.dataset.cat : 'todos';
+// ========== GUARDAR EN FIRESTORE (CRUD) ==========
+async function agregarLugarFirestore(lugarData) {
+    try {
+        const colRef = window.firebaseHelpers.collection('lugares');
+        const docRef = await window.firebaseHelpers.addDoc(colRef, lugarData);
+        mostrarToast("Lugar añadido correctamente", "success");
+        return docRef.id;
+    } catch (error) {
+        console.error(error);
+        mostrarToast("Error al guardar: " + error.message, "error");
+        return null;
+    }
 }
 
-// ========== MAPA ==========
+async function actualizarLugarFirestore(id, lugarData) {
+    try {
+        const docRef = window.firebaseHelpers.doc(window.firebaseHelpers.collection('lugares'), id);
+        await window.firebaseHelpers.updateDoc(docRef, lugarData);
+        mostrarToast("Lugar actualizado", "success");
+    } catch (error) {
+        console.error(error);
+        mostrarToast("Error al actualizar: " + error.message, "error");
+    }
+}
+
+async function eliminarLugarFirestore(id) {
+    try {
+        const docRef = window.firebaseHelpers.doc(window.firebaseHelpers.collection('lugares'), id);
+        await window.firebaseHelpers.deleteDoc(docRef);
+        mostrarToast("Lugar eliminado", "info");
+    } catch (error) {
+        console.error(error);
+        mostrarToast("Error al eliminar: " + error.message, "error");
+    }
+}
+
+// ========== FUNCIONES DEL MAPA Y UI (similares al original, pero adaptadas a Firestore) ==========
 function initMap() {
-    // Asegurarse de que el contenedor tenga altura antes de crear el mapa
     const mapContainer = document.getElementById('map');
     if (!mapContainer) return;
-    
-    // Si el mapa ya existe, destruirlo (útil para redimensiones)
-    if (map) {
-        map.remove();
-    }
+    if (map) map.remove();
     
     map = L.map('map').setView([12.8654, -85.2072], 8);
     
-    // Capas
     currentLayers.calles = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { attribution: '&copy; OpenStreetMap' }).addTo(map);
     currentLayers.satelite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { attribution: 'Esri' });
     currentLayers.relieve = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', { attribution: 'OpenTopoMap' });
     
-    // Cluster
     markerCluster = L.markerClusterGroup();
     map.addLayer(markerCluster);
     
-    // Forzar redimensionamiento correcto en móvil después de un breve retardo
     setTimeout(() => {
-        map.invalidateSize(true);
+        if (map) map.invalidateSize(true);
     }, 200);
     
-    // También al cambiar orientación
     window.addEventListener('resize', () => {
         if (map) map.invalidateSize(true);
     });
@@ -150,8 +208,8 @@ function actualizarMarcadores() {
             <b>${place.nombre}</b><br>
             ${place.imagen ? `<img src="${place.imagen}" style="width:100%; border-radius:8px; margin:5px 0; max-width:200px;">` : ''}
             <a href="${place.url || '#'}" target="_blank" style="display:inline-block; margin-top:5px; background:#F57C00; color:white; padding:5px 10px; border-radius:5px; text-decoration:none;">🔗 Visitar</a>
-            ${isAdmin ? `<br><button onclick="editarLugar(${place.id})" style="margin-top:5px; background:#2E7D32; color:white; border:none; padding:3px 8px; border-radius:5px; cursor:pointer;">✏️ Editar</button>
-            <button onclick="eliminarLugar(${place.id})" style="background:#d32f2f; color:white; border:none; padding:3px 8px; border-radius:5px; cursor:pointer;">🗑️ Eliminar</button>` : ''}
+            ${isAdmin ? `<br><button onclick="editarLugar('${place.id}')" style="margin-top:5px; background:#2E7D32; color:white; border:none; padding:3px 8px; border-radius:5px; cursor:pointer;">✏️ Editar</button>
+            <button onclick="eliminarLugar('${place.id}')" style="background:#d32f2f; color:white; border:none; padding:3px 8px; border-radius:5px; cursor:pointer;">🗑️ Eliminar</button>` : ''}
         `;
         const marker = L.marker([place.lat, place.lng]).bindPopup(popupContent);
         markerCluster.addLayer(marker);
@@ -179,18 +237,38 @@ function actualizarListaLugares() {
                 <div class="place-info">
                     <h4>${place.nombre}</h4>
                     <div class="place-categoria">${place.categoria || 'sin categoría'}</div>
-                    ${isAdmin ? `<div class="admin-actions"><button class="edit-btn" onclick="event.stopPropagation(); editarLugar(${place.id})"><i class="fas fa-edit"></i> Editar</button><button class="delete-btn" onclick="event.stopPropagation(); eliminarLugar(${place.id})"><i class="fas fa-trash"></i> Eliminar</button></div>` : ''}
+                    ${isAdmin ? `<div class="admin-actions"><button class="edit-btn" onclick="event.stopPropagation(); editarLugar('${place.id}')"><i class="fas fa-edit"></i> Editar</button><button class="delete-btn" onclick="event.stopPropagation(); eliminarLugar('${place.id}')"><i class="fas fa-trash"></i> Eliminar</button></div>` : ''}
                 </div>
             </div>
         </div>
     `).join('');
 }
 
+function obtenerFiltroActual() {
+    const active = document.querySelector('.categoria-filtro.active');
+    return active ? active.dataset.cat : 'todos';
+}
+
+function actualizarCategoriasUnicas() {
+    const categorias = [...new Set(allPlaces.map(p => p.categoria).filter(c => c))];
+    categoriasFiltro.innerHTML = '<div class="categoria-filtro active" data-cat="todos">Todos</div>' +
+        categorias.map(cat => `<div class="categoria-filtro" data-cat="${cat}">${cat}</div>`).join('');
+    
+    document.querySelectorAll('.categoria-filtro').forEach(el => {
+        el.addEventListener('click', () => {
+            document.querySelectorAll('.categoria-filtro').forEach(c => c.classList.remove('active'));
+            el.classList.add('active');
+            actualizarMarcadores();
+            actualizarListaLugares();
+        });
+    });
+}
+
 window.centrarMapa = (lat, lng) => {
     if (map) map.setView([lat, lng], 14);
 };
 
-// ========== ADMIN ==========
+// ========== ADMIN (contraseña fija) ==========
 function entrarModoAdmin() {
     isAdmin = true;
     adminLoginBtn.classList.add('hidden');
@@ -229,7 +307,7 @@ document.getElementById('adminLoginForm').addEventListener('submit', (e) => {
 
 logoutAdminBtn.addEventListener('click', salirModoAdmin);
 
-// ========== CRUD LUGARES ==========
+// ========== CRUD LUGARES (Firestore) ==========
 function abrirFormularioNuevo(lat, lng) {
     modalTitle.innerText = 'Añadir Lugar';
     document.getElementById('lugarId').value = '';
@@ -242,7 +320,7 @@ function abrirFormularioNuevo(lat, lng) {
     lugarModal.style.display = 'flex';
 }
 
-window.editarLugar = (id) => {
+window.editarLugar = async (id) => {
     const place = allPlaces.find(p => p.id === id);
     if (!place) return;
     modalTitle.innerText = 'Editar Lugar';
@@ -256,18 +334,13 @@ window.editarLugar = (id) => {
     lugarModal.style.display = 'flex';
 };
 
-window.eliminarLugar = (id) => {
+window.eliminarLugar = async (id) => {
     if (confirm('¿Eliminar este lugar permanentemente?')) {
-        allPlaces = allPlaces.filter(p => p.id !== id);
-        guardarDatos();
-        actualizarCategoriasUnicas();
-        actualizarMarcadores();
-        actualizarListaLugares();
-        mostrarToast("Lugar eliminado", "info");
+        await eliminarLugarFirestore(id);
     }
 };
 
-lugarForm.addEventListener('submit', (e) => {
+lugarForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const id = document.getElementById('lugarId').value;
     const nombre = document.getElementById('lugarNombre').value.trim();
@@ -282,21 +355,14 @@ lugarForm.addEventListener('submit', (e) => {
         return;
     }
     
+    const lugarData = { nombre, lat, lng, url, imagen, categoria };
+    
     if (id) {
-        const index = allPlaces.findIndex(p => p.id == id);
-        if (index !== -1) {
-            allPlaces[index] = { ...allPlaces[index], nombre, lat, lng, url, imagen, categoria };
-        }
+        await actualizarLugarFirestore(id, lugarData);
     } else {
-        const nuevoId = Date.now();
-        allPlaces.push({ id: nuevoId, nombre, lat, lng, url, imagen, categoria });
+        await agregarLugarFirestore(lugarData);
     }
-    guardarDatos();
     lugarModal.style.display = 'none';
-    actualizarCategoriasUnicas();
-    actualizarMarcadores();
-    actualizarListaLugares();
-    mostrarToast(id ? "Lugar actualizado" : "Lugar añadido", "success");
 });
 
 addPlaceBtn.addEventListener('click', () => {
@@ -308,13 +374,12 @@ addPlaceBtn.addEventListener('click', () => {
     }
 });
 
-// ========== BÚSQUEDA Y OTROS ==========
+// ========== BÚSQUEDA Y GEOLOCALIZACIÓN ==========
 searchInput.addEventListener('input', () => {
     actualizarMarcadores();
     actualizarListaLugares();
 });
 
-// Geolocalización
 geolocationBtn.addEventListener('click', () => {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(pos => {
@@ -325,7 +390,7 @@ geolocationBtn.addEventListener('click', () => {
     }
 });
 
-// Modo oscuro
+// ========== MODO OSCURO (por ahora localStorage) ==========
 function initDarkMode() {
     const isDark = localStorage.getItem('darkMode') === 'true';
     if (isDark) document.body.classList.add('dark-mode');
@@ -345,21 +410,29 @@ document.querySelectorAll('.close-modal').forEach(btn => {
     });
 });
 
-// Inicialización con espera para móvil
+// ========== INICIALIZACIÓN ==========
 function init() {
     initDarkMode();
-    // Esperar un poco a que el DOM esté completamente listo y el contenedor tenga tamaño
-    setTimeout(() => {
+    // Esperar a que los helpers de Firebase estén listos (asignados en mapa.html)
+    if (window.firebaseHelpers && window.firebaseHelpers.collection) {
         initMap();
-        cargarDatos();
-    }, 100);
+        cargarLugaresFirestore();
+    } else {
+        mostrarToast("Esperando conexión con Firebase...", "info");
+        const checkInterval = setInterval(() => {
+            if (window.firebaseHelpers && window.firebaseHelpers.collection) {
+                clearInterval(checkInterval);
+                initMap();
+                cargarLugaresFirestore();
+            }
+        }, 500);
+    }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  map.invalidateSize();
+    if (map) map.invalidateSize();
 });
 
-// Asegurar que el mapa se redibuje cuando la página termina de cargar
 window.addEventListener('load', () => {
     if (map) map.invalidateSize(true);
 });
