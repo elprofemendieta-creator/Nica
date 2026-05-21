@@ -625,3 +625,24 @@ body.dark-mode .form-group textarea {
     border-color: #555;
     color: white;
 }
+.user-points {
+    background: #F57C00;
+    color: white;
+    padding: 5px 12px;
+    border-radius: 30px;
+    font-size: 14px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.gps-btn.active {
+    background: #4CAF50;
+    color: white;
+    animation: pulse 1s infinite;
+}
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
