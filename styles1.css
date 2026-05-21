@@ -122,7 +122,7 @@ body {
 .map-container {
     flex: 1;
     position: relative;
-    height: calc(60vh - 70px);
+    height: calc(90vh - 70px);
     min-height: 400px; /* Fuerza altura mínima */
 }
 
