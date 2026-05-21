@@ -146,6 +146,27 @@
         import { initializeApp } from "firebase/app";
         import { getFirestore } from "firebase/firestore";
         import { getAuth } from "firebase/auth";
+        import { initializeApp } from "firebase/app";
+import { getFirestore, collection, onSnapshot, addDoc, updateDoc, deleteDoc, doc, getDocs } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+
+const firebaseConfig = { /* tus claves */ };
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+
+// Exponer helpers globalmente para script1.js
+window.firebaseHelpers = {
+    collection: (path) => collection(db, path),
+    onSnapshot: onSnapshot,
+    addDoc: addDoc,
+    updateDoc: updateDoc,
+    deleteDoc: deleteDoc,
+    doc: (colRef, id) => doc(colRef, id),
+    getDocs: getDocs
+};
+window.db = db;
+window.auth = auth;
 
         // TODO: Reemplazar con tu configuración de Firebase
         const firebaseConfig = {
