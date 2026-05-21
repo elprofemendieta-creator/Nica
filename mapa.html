@@ -21,135 +21,120 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Estilos propios -->
-    <link rel="stylesheet" href="styles1.css">
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Librería para QR -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 </head>
 <body>
 
-    <div class="app-container">
-        <header class="app-header">
-            <div class="logo">
-                <i class="fas fa-map-marked-alt"></i>
-                <h2>Nicaragua Turismo</h2>
+<div class="app-container">
+    <header class="app-header">
+        <div class="logo">
+            <i class="fas fa-map-marked-alt"></i>
+            <h2>Nicaragua Turismo</h2>
+        </div>
+        <div class="header-controls">
+            <!-- Puntos del usuario -->
+            <div id="userPoints" class="user-points" style="display:none;">
+                <i class="fas fa-star"></i> <span id="pointsValue">0</span>
             </div>
-            <div class="header-controls">
-                <button id="darkModeBtn" class="icon-btn"><i class="fas fa-moon"></i></button>
-                <button id="adminLoginBtn" class="admin-login-btn"><i class="fas fa-user-shield"></i> Admin</button>
-                <div id="adminPanelHeader" class="admin-panel-header hidden">
-                    <span><i class="fas fa-crown"></i> Modo Admin</span>
-                    <button id="logoutAdminBtn" class="icon-btn"><i class="fas fa-sign-out-alt"></i></button>
-                </div>
+            <!-- Botón GPS -->
+            <button id="gpsBtn" class="icon-btn gps-btn" style="display:none;">
+                <i class="fas fa-satellite-dish"></i>
+            </button>
+            <!-- Botón perfil / login -->
+            <button id="userBtn" class="icon-btn">
+                <i class="fas fa-user-circle"></i>
+            </button>
+            <button id="darkModeBtn" class="icon-btn"><i class="fas fa-moon"></i></button>
+            <button id="adminLoginBtn" class="admin-login-btn"><i class="fas fa-user-shield"></i> Admin</button>
+            <div id="adminPanelHeader" class="admin-panel-header hidden">
+                <span><i class="fas fa-crown"></i> Modo Admin</span>
+                <button id="logoutAdminBtn" class="icon-btn"><i class="fas fa-sign-out-alt"></i></button>
             </div>
-        </header>
+        </div>
+    </header>
 
-        <div class="main-content">
-            <aside class="sidebar">
-                <div class="search-box">
-                    <i class="fas fa-search"></i>
-                    <input type="text" id="searchInput" placeholder="Buscar lugar...">
-                </div>
-                <div class="filter-group">
-                    <label><i class="fas fa-tags"></i> Categorías:</label>
-                    <div id="categoriasFiltro" class="categorias-container"></div>
-                </div>
-                <div class="places-list-container">
-                    <h3><i class="fas fa-map-pin"></i> Lugares</h3>
-                    <div id="placesList" class="places-list"></div>
-                </div>
-                <div id="adminAddBtn" class="admin-add-btn hidden">
-                    <button id="addPlaceBtn"><i class="fas fa-plus-circle"></i> Añadir lugar</button>
-                </div>
-            </aside>
+    <div class="main-content">
+        <aside class="sidebar">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="Buscar lugar...">
+            </div>
+            <div class="filter-group">
+                <label><i class="fas fa-tags"></i> Categorías:</label>
+                <div id="categoriasFiltro" class="categorias-container"></div>
+            </div>
+            <div class="places-list-container">
+                <h3><i class="fas fa-map-pin"></i> Lugares</h3>
+                <div id="placesList" class="places-list"></div>
+            </div>
+            <div id="adminAddBtn" class="admin-add-btn hidden">
+                <button id="addPlaceBtn"><i class="fas fa-plus-circle"></i> Añadir lugar</button>
+            </div>
+        </aside>
 
-            <div class="map-container">
-                <div id="map"></div>
-                <div id="layerControl" class="layer-control">
-                    <button class="layer-btn active" data-layer="calles"><i class="fas fa-road"></i></button>
-                    <button class="layer-btn" data-layer="satelite"><i class="fas fa-satellite"></i></button>
-                    <button class="layer-btn" data-layer="relieve"><i class="fas fa-mountain"></i></button>
-                    <button id="geolocationBtn" class="layer-btn"><i class="fas fa-location-dot"></i></button>
-                </div>
+        <div class="map-container">
+            <div id="map"></div>
+            <div id="layerControl" class="layer-control">
+                <button class="layer-btn active" data-layer="calles"><i class="fas fa-road"></i></button>
+                <button class="layer-btn" data-layer="satelite"><i class="fas fa-satellite"></i></button>
+                <button class="layer-btn" data-layer="relieve"><i class="fas fa-mountain"></i></button>
+                <button id="geolocationBtn" class="layer-btn"><i class="fas fa-location-dot"></i></button>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Modal Login Admin -->
-    <div id="adminModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Acceso Administrador</h3>
-                <button class="close-modal">&times;</button>
-            </div>
-            <form id="adminLoginForm">
-                <div class="form-group">
-                    <label>Contraseña</label>
-                    <input type="password" id="adminPassword" placeholder="Contraseña" required>
-                </div>
-                <button type="submit" class="submit-btn">Entrar</button>
-            </form>
+<!-- Modales -->
+<div id="adminModal" class="modal"> ... (igual que antes) ... </div>
+<div id="lugarModal" class="modal"> ... (igual que antes) ... </div>
+
+<!-- Modal de Usuario (Login/Registro/Perfil) -->
+<div id="userModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="userModalTitle">Iniciar Sesión</h3>
+            <button class="close-modal">&times;</button>
+        </div>
+        <div id="userModalBody">
+            <!-- Contenido dinámico -->
         </div>
     </div>
+</div>
 
-    <!-- Modal Añadir/Editar Lugar -->
-    <div id="lugarModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="modalTitle">Añadir Lugar</h3>
-                <button class="close-modal">&times;</button>
-            </div>
-            <form id="lugarForm">
-                <input type="hidden" id="lugarId">
-                <div class="form-group">
-                    <label>Nombre del lugar *</label>
-                    <input type="text" id="lugarNombre" required>
-                </div>
-                <div class="form-row">
-                    <div class="form-group half">
-                        <label>Latitud *</label>
-                        <input type="number" step="any" id="lugarLat" required>
-                    </div>
-                    <div class="form-group half">
-                        <label>Longitud *</label>
-                        <input type="number" step="any" id="lugarLng" required>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>URL del enlace (HTML)</label>
-                    <input type="text" id="lugarUrl" placeholder="ej: lugar.html">
-                </div>
-                <div class="form-group">
-                    <label>URL Imagen (opcional)</label>
-                    <input type="text" id="lugarImagen" placeholder="https://...">
-                </div>
-                <div class="form-group">
-                    <label>Categoría (etiqueta)</label>
-                    <input type="text" id="lugarCategoria" placeholder="ej: playa, volcán, ciudad">
-                </div>
-                <button type="submit" class="submit-btn">Guardar</button>
-            </form>
+<!-- Modal de perfil (cuando logueado) -->
+<div id="profileModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Mi Perfil</h3>
+            <button class="close-modal">&times;</button>
         </div>
+        <div id="profileBody"></div>
     </div>
+</div>
 
-    <div id="toastContainer" class="toast-container"></div>
+<div id="toastContainer" class="toast-container"></div>
 
-    <!-- Firebase SDK (modular) -->
-    <script type="importmap">
-        {
-            "imports": {
-                "firebase/app": "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js",
-                "firebase/firestore": "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js",
-                "firebase/auth": "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js"
-            }
+<!-- Firebase SDK -->
+<script type="importmap">
+    {
+        "imports": {
+            "firebase/app": "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js",
+            "firebase/firestore": "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js",
+            "firebase/auth": "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js"
         }
-    </script>
+    }
+</script>
 
-    <script type="module">
-        import { initializeApp } from "firebase/app";
-        import { getFirestore, collection, onSnapshot, addDoc, updateDoc, deleteDoc, doc, getDocs } from "firebase/firestore";
-        import { getAuth } from "firebase/auth";
+<script type="module">
+    import { initializeApp } from "firebase/app";
+    import { getFirestore, collection, onSnapshot, addDoc, updateDoc, deleteDoc, doc, getDocs, query, where, orderBy, limit } from "firebase/firestore";
+    import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
 
-        // Reemplaza con tus credenciales de Firebase
-        const firebaseConfig = {
-           apiKey: "AIzaSyA6jVICuE17KJcO34gE1brMxqWEfNd3Fy0",
+    const firebaseConfig = {
+       apiKey: "AIzaSyA6jVICuE17KJcO34gE1brMxqWEfNd3Fy0",
   authDomain: "mapa-41b00.firebaseapp.com",
   projectId: "mapa-41b00",
   storageBucket: "mapa-41b00.firebasestorage.app",
@@ -158,27 +143,29 @@
   measurementId: "G-7R3DSH7PPN"
 };
 
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const auth = getAuth(app);
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
 
-        // Exponer helpers para script1.js (NO MODULAR)
-        window.firebaseHelpers = {
-            collection: (path) => collection(db, path),
-            onSnapshot: onSnapshot,
-            addDoc: addDoc,
-            updateDoc: updateDoc,
-            deleteDoc: deleteDoc,
-            doc: (colRef, id) => doc(colRef, id),
-            getDocs: getDocs
-        };
-        window.db = db;
-        window.auth = auth;
+    // Exponer helpers globalmente para script1.js
+    window.firebaseHelpers = {
+        collection: (path) => collection(db, path),
+        onSnapshot: onSnapshot,
+        addDoc: addDoc,
+        updateDoc: updateDoc,
+        deleteDoc: deleteDoc,
+        doc: (colRef, id) => doc(colRef, id),
+        getDocs: getDocs,
+        query: query,
+        where: where,
+        orderBy: orderBy,
+        limit: limit
+    };
+    window.auth = auth;
+    window.db = db;
+</script>
 
-        console.log("Firebase inicializado correctamente");
-    </script>
-
-    <!-- Script principal (no modular) -->
-    <script src="script1.js"></script>
+<script src="script1.js"></script>
 </body>
 </html>
