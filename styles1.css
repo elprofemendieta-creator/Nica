@@ -1,3 +1,4 @@
+/* ========== RESET Y BASE ========== */
 * {
     margin: 0;
     padding: 0;
@@ -8,8 +9,133 @@ body {
     font-family: 'Poppins', sans-serif;
     background: #F5F5F0;
     overflow-x: hidden;
+    transition: background 0.3s, color 0.3s;
 }
 
+/* ========== PANTALLA DE INICIO (index.html) ========== */
+.background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #2E7D32 0%, #F57C00 100%);
+    z-index: -1;
+}
+
+.container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+}
+
+.hero {
+    text-align: center;
+    color: white;
+    animation: fadeInUp 1s ease;
+}
+
+.mascota img {
+    width: 120px;
+    filter: drop-shadow(0 10px 20px rgba(0,0,0,0.2));
+    margin-bottom: 1rem;
+}
+
+.hero h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+}
+
+.subtitle {
+    font-size: 1.2rem;
+    opacity: 0.9;
+    margin-bottom: 2rem;
+}
+
+.start-btn {
+    background: white;
+    color: #2E7D32;
+    border: none;
+    padding: 12px 30px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.start-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+}
+
+.menu {
+    margin-top: 3rem;
+    text-align: center;
+    animation: fadeInUp 0.8s ease;
+}
+
+.menu h2 {
+    color: white;
+    margin-bottom: 2rem;
+    font-size: 1.8rem;
+}
+
+.menu-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: center;
+}
+
+.menu-card {
+    background: rgba(255,255,255,0.95);
+    border-radius: 20px;
+    padding: 2rem;
+    width: 250px;
+    text-decoration: none;
+    color: #333;
+    transition: transform 0.3s, box-shadow 0.3s;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.menu-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 35px rgba(0,0,0,0.2);
+}
+
+.menu-card span {
+    font-size: 4rem;
+    display: block;
+    margin-bottom: 1rem;
+}
+
+.menu-card h3 {
+    font-size: 1.3rem;
+    color: #2E7D32;
+}
+
+.hidden {
+    display: none !important;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ========== MAPA Y APP PRINCIPAL (mapa.html) ========== */
 .app-container {
     min-height: 100vh;
     display: flex;
@@ -99,10 +225,6 @@ body {
     color: #d32f2f;
 }
 
-.hidden {
-    display: none !important;
-}
-
 /* Main layout */
 .main-content {
     display: flex;
@@ -122,16 +244,16 @@ body {
 .map-container {
     flex: 1;
     position: relative;
-    height: calc(90vh - 70px);
-    min-height: 400px; /* Fuerza altura mínima */
 }
 
+/* IMPORTANTE: arregla mapa blanco en móviles */
 #map {
-  height: 80vh; 
-  width: 100%;
+    height: 80vh;
+    width: 100%;
+    min-height: 400px;
 }
 
-/* Ajustes para móvil */
+/* Responsive */
 @media (max-width: 768px) {
     .sidebar {
         width: 100%;
@@ -140,16 +262,23 @@ body {
         order: 2;
     }
     .map-container {
-        height: 60vh; /* Altura relativa en móvil */
-        min-height: 200px;
         order: 1;
+        height: 60vh;
+        min-height: 300px;
     }
     #map {
-  height: 60vh; 
-  width: 100%;
-}
-    .main-content {
-        flex-direction: column;
+        height: 60vh;
+        min-height: 300px;
+    }
+    .menu-buttons {
+        gap: 1rem;
+    }
+    .menu-card {
+        width: 200px;
+        padding: 1.5rem;
+    }
+    .hero h1 {
+        font-size: 2rem;
     }
 }
 
@@ -295,7 +424,7 @@ body {
     font-weight: 600;
 }
 
-/* Layer control */
+/* Layer control (botones del mapa) */
 .layer-control {
     position: absolute;
     bottom: 20px;
@@ -325,7 +454,7 @@ body {
     color: white;
 }
 
-/* Modal */
+/* Modales */
 .modal {
     display: none;
     position: fixed;
@@ -434,7 +563,7 @@ body {
     to { transform: translateX(0); opacity: 1; }
 }
 
-/* Dark Mode */
+/* ========== MODO OSCURO ========== */
 body.dark-mode {
     background: #1a1a2e;
 }
@@ -443,7 +572,8 @@ body.dark-mode .app-header,
 body.dark-mode .sidebar,
 body.dark-mode .modal-content,
 body.dark-mode .place-card,
-body.dark-mode .toast {
+body.dark-mode .toast,
+body.dark-mode .menu-card {
     background: #2d2d44;
     color: #eee;
 }
@@ -453,15 +583,39 @@ body.dark-mode .place-info h4 {
 }
 
 body.dark-mode .search-box,
-body.dark-mode .admin-panel-header {
+body.dark-mode .admin-panel-header,
+body.dark-mode .categoria-filtro {
     background: #3d3d5c;
+    color: #ddd;
 }
 
 body.dark-mode .search-box input {
     color: white;
 }
 
-body.dark-mode .categoria-filtro {
+body.dark-mode .layer-control,
+body.dark-mode .layer-btn {
+    background: #2d2d44;
+    color: white;
+}
+
+body.dark-mode .layer-btn:hover,
+body.dark-mode .layer-btn.active {
+    background: #F57C00;
+}
+
+body.dark-mode .modal-header {
+    background: #1B5E20;
+}
+
+body.dark-mode .form-group label {
+    color: #ccc;
+}
+
+body.dark-mode .form-group input,
+body.dark-mode .form-group select,
+body.dark-mode .form-group textarea {
     background: #3d3d5c;
-    color: #ddd;
+    border-color: #555;
+    color: white;
 }
