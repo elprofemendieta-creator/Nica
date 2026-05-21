@@ -437,4 +437,23 @@ window.addEventListener('load', () => {
     if (map) map.invalidateSize(true);
 });
 
+function init() {
+    initDarkMode();
+    // Inicializar el mapa inmediatamente (sin esperar Firebase)
+    initMap();
+    
+    // Luego intentar cargar lugares cuando Firebase esté listo
+    if (window.firebaseHelpers && window.firebaseHelpers.collection) {
+        cargarLugaresFirestore();
+    } else {
+        mostrarToast("Conectando con Firebase...", "info");
+        const checkInterval = setInterval(() => {
+            if (window.firebaseHelpers && window.firebaseHelpers.collection) {
+                clearInterval(checkInterval);
+                cargarLugaresFirestore();
+            }
+        }, 500);
+    }
+}
+
 init();
