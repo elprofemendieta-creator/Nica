@@ -21,7 +21,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Estilos propios -->
-    <link rel="stylesheet" href="styles1.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
@@ -144,53 +144,43 @@
 
     <script type="module">
         import { initializeApp } from "firebase/app";
-        import { getFirestore } from "firebase/firestore";
+        import { getFirestore, collection, onSnapshot, addDoc, updateDoc, deleteDoc, doc, getDocs } from "firebase/firestore";
         import { getAuth } from "firebase/auth";
-        import { initializeApp } from "firebase/app";
-import { getFirestore, collection, onSnapshot, addDoc, updateDoc, deleteDoc, doc, getDocs } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
 
-const firebaseConfig = { /* tus claves */ };
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const auth = getAuth(app);
-
-// Exponer helpers globalmente para script1.js
-window.firebaseHelpers = {
-    collection: (path) => collection(db, path),
-    onSnapshot: onSnapshot,
-    addDoc: addDoc,
-    updateDoc: updateDoc,
-    deleteDoc: deleteDoc,
-    doc: (colRef, id) => doc(colRef, id),
-    getDocs: getDocs
-};
-window.db = db;
-window.auth = auth;
-
-        // TODO: Reemplazar con tu configuración de Firebase
+        // Reemplaza con tus credenciales de Firebase
         const firebaseConfig = {
-            apiKey: "AIzaSyA6jVICuE17KJcO34gE1brMxqWEfNd3Fy0",
-            authDomain: "mapa-41b00.firebaseapp.com",
-             projectId: "mapa-41b00",
-              storageBucket: "mapa-41b00.firebasestorage.app",
-              messagingSenderId: "535032835400",
-              appId: "1:535032835400:web:68c079cbc3f419eafd177d",
-            measurementId: "G-7R3DSH7PPN"
-                };
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+           apiKey: "AIzaSyA6jVICuE17KJcO34gE1brMxqWEfNd3Fy0",
+  authDomain: "mapa-41b00.firebaseapp.com",
+  projectId: "mapa-41b00",
+  storageBucket: "mapa-41b00.firebasestorage.app",
+  messagingSenderId: "535032835400",
+  appId: "1:535032835400:web:68c079cbc3f419eafd177d",
+  measurementId: "G-7R3DSH7PPN"
+};
+
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const auth = getAuth(app);
 
-        // Hacer disponibles globalmente para el script no modular (script1.js)
+        // Exponer helpers para script1.js (NO MODULAR)
+        window.firebaseHelpers = {
+            collection: (path) => collection(db, path),
+            onSnapshot: onSnapshot,
+            addDoc: addDoc,
+            updateDoc: updateDoc,
+            deleteDoc: deleteDoc,
+            doc: (colRef, id) => doc(colRef, id),
+            getDocs: getDocs
+        };
         window.db = db;
         window.auth = auth;
+
+        console.log("Firebase inicializado correctamente");
     </script>
 
-    <!-- Script principal (no modular, modificado para usar Firebase) -->
+    <!-- Script principal (no modular) -->
     <script src="script1.js"></script>
+</body>
+</html>
 </body>
 </html>
