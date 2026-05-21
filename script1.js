@@ -146,3 +146,281 @@ function init() { initDarkMode(); initMap(); if (window.firebaseHelpers && windo
 document.addEventListener('DOMContentLoaded', () => map && map.invalidateSize());
 window.addEventListener('load', () => map && map.invalidateSize(true));
 init();
+
+// ========== SCRIPT PRINCIPAL CON AUTENTICACIÓN Y PUNTOS ==========
+let map, markerCluster, currentLayers = {}, allPlaces = [], isAdmin = false;
+let currentUser = null;           // objeto usuario de Firebase
+let userPoints = 0;               // puntos totales del usuario
+let gpsActive = false;            // estado del botón GPS
+let watchId = null;               // ID del watchPosition
+let userDocId = null;             // ID del documento en colección 'usuarios'
+
+const ADMIN_PASSWORD = "Diriamba2026";
+
+// DOM elements
+const darkModeBtn = document.getElementById('darkModeBtn');
+const adminLoginBtn = document.getElementById('adminLoginBtn');
+const adminPanelHeader = document.getElementById('adminPanelHeader');
+const logoutAdminBtn = document.getElementById('logoutAdminBtn');
+const adminModal = document.getElementById('adminModal');
+const lugarModal = document.getElementById('lugarModal');
+const searchInput = document.getElementById('searchInput');
+const categoriasFiltro = document.getElementById('categoriasFiltro');
+const placesList = document.getElementById('placesList');
+const adminAddBtn = document.getElementById('adminAddBtn');
+const addPlaceBtn = document.getElementById('addPlaceBtn');
+const lugarForm = document.getElementById('lugarForm');
+const modalTitle = document.getElementById('modalTitle');
+const geolocationBtn = document.getElementById('geolocationBtn');
+const userBtn = document.getElementById('userBtn');
+const userModal = document.getElementById('userModal');
+const profileModal = document.getElementById('profileModal');
+const gpsBtn = document.getElementById('gpsBtn');
+const userPointsSpan = document.getElementById('pointsValue');
+const userPointsDiv = document.getElementById('userPoints');
+
+function mostrarToast(mensaje, tipo = 'info') { /* igual que antes */ }
+
+// ========== FUNCIONES DE USUARIO ==========
+function actualizarUIUsuario() {
+    if (currentUser) {
+        userPointsDiv.style.display = 'flex';
+        gpsBtn.style.display = 'flex';
+        userBtn.innerHTML = `<i class="fas fa-user-check"></i>`;
+        cargarPuntosUsuario();
+    } else {
+        userPointsDiv.style.display = 'none';
+        gpsBtn.style.display = 'none';
+        userBtn.innerHTML = `<i class="fas fa-user-circle"></i>`;
+        if (gpsActive) toggleGPS();
+    }
+}
+
+async function cargarPuntosUsuario() {
+    if (!currentUser) return;
+    const q = window.firebaseHelpers.query(
+        window.firebaseHelpers.collection('usuarios'),
+        window.firebaseHelpers.where('uid', '==', currentUser.uid)
+    );
+    const snap = await window.firebaseHelpers.getDocs(q);
+    if (!snap.empty) {
+        const doc = snap.docs[0];
+        userDocId = doc.id;
+        userPoints = doc.data().puntos || 0;
+        userPointsSpan.innerText = userPoints;
+    } else {
+        // Crear documento de usuario
+        const col = window.firebaseHelpers.collection('usuarios');
+        const newDoc = await window.firebaseHelpers.addDoc(col, {
+            uid: currentUser.uid,
+            email: currentUser.email,
+            nombre: currentUser.displayName || currentUser.email,
+            fotoURL: currentUser.photoURL || '',
+            puntos: 0,
+            fechaRegistro: new Date(),
+            tema: localStorage.getItem('darkMode') === 'true' ? 'oscuro' : 'claro',
+            sonidosActivos: true
+        });
+        userDocId = newDoc.id;
+        userPoints = 0;
+        userPointsSpan.innerText = '0';
+    }
+}
+
+async function sumarPuntos(cantidad, motivo, lugarId = null) {
+    if (!currentUser) return;
+    const nuevoTotal = userPoints + cantidad;
+    const userRef = window.firebaseHelpers.doc(window.firebaseHelpers.collection('usuarios'), userDocId);
+    await window.firebaseHelpers.updateDoc(userRef, { puntos: nuevoTotal });
+    userPoints = nuevoTotal;
+    userPointsSpan.innerText = userPoints;
+    // Registrar en subcolección "transacciones" (opcional)
+    // Aquí puedes guardar el motivo
+}
+
+// ========== GPS Y PUNTOS POR VISITAS ==========
+function toggleGPS() {
+    if (!currentUser) {
+        mostrarToast("Inicia sesión para activar GPS", "error");
+        return;
+    }
+    if (gpsActive) {
+        if (watchId) navigator.geolocation.clearWatch(watchId);
+        gpsActive = false;
+        gpsBtn.classList.remove('active');
+        mostrarToast("GPS desactivado", "info");
+    } else {
+        if (!navigator.geolocation) {
+            mostrarToast("Geolocalización no soportada", "error");
+            return;
+        }
+        navigator.geolocation.getCurrentPosition(
+            () => {
+                gpsActive = true;
+                gpsBtn.classList.add('active');
+                mostrarToast("GPS activado. Acércate a lugares para ganar puntos.", "success");
+                // Iniciar watch cada 10 segundos
+                watchId = navigator.geolocation.watchPosition(procesarUbicacion, errorGPS, { enableHighAccuracy: true, maximumAge: 10000, timeout: 15000 });
+            },
+            () => mostrarToast("Permiso de ubicación denegado", "error")
+        );
+    }
+}
+
+function errorGPS(err) {
+    console.error(err);
+    mostrarToast("Error de GPS: " + err.message, "error");
+}
+
+let ultimaRecompensaPorLugar = {}; // evitar spam (cooldown por lugar)
+
+async function procesarUbicacion(position) {
+    if (!currentUser) return;
+    const lat = position.coords.latitude;
+    const lng = position.coords.longitude;
+    
+    // Calcular distancia a cada lugar
+    for (let place of allPlaces) {
+        const distancia = calcularDistancia(lat, lng, place.lat, place.lng);
+        if (distancia <= 50) { // 50 metros
+            // Verificar cooldown (evitar múltiples detecciones seguidas)
+            const ahora = Date.now();
+            const ultima = ultimaRecompensaPorLugar[place.id];
+            if (ultima && (ahora - ultima) < 60000) continue; // 1 min de cooldown
+            
+            // Verificar si ya visitó este lugar antes
+            const visitasRef = window.firebaseHelpers.collection('visitas');
+            const qVisit = window.firebaseHelpers.query(
+                visitasRef,
+                window.firebaseHelpers.where('usuarioId', '==', currentUser.uid),
+                window.firebaseHelpers.where('lugarId', '==', place.id)
+            );
+            const snap = await window.firebaseHelpers.getDocs(qVisit);
+            const esPrimeraVez = snap.empty;
+            const puntosGanados = esPrimeraVez ? 10 : 2;
+            
+            // Guardar visita
+            await window.firebaseHelpers.addDoc(visitasRef, {
+                usuarioId: currentUser.uid,
+                lugarId: place.id,
+                fecha: new Date(),
+                puntos: puntosGanados,
+                tipo: esPrimeraVez ? 'primera' : 'repetida'
+            });
+            // Sumar puntos al usuario
+            await sumarPuntos(puntosGanados, `Visita a ${place.nombre}`, place.id);
+            ultimaRecompensaPorLugar[place.id] = ahora;
+            mostrarToast(`¡${place.nombre}! +${puntosGanados} puntos`, "success");
+            // Reproducir sonido si está activado
+            if (localStorage.getItem('sonidos') !== 'false') {
+                new Audio('https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3').play().catch(e=>console.log);
+            }
+        }
+    }
+}
+
+// Fórmula de Haversine
+function calcularDistancia(lat1, lon1, lat2, lon2) {
+    const R = 6371e3; // metros
+    const φ1 = lat1 * Math.PI/180;
+    const φ2 = lat2 * Math.PI/180;
+    const Δφ = (lat2-lat1) * Math.PI/180;
+    const Δλ = (lon2-lon1) * Math.PI/180;
+    const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) + Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ/2) * Math.sin(Δλ/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    return R * c;
+}
+
+// ========== MODAL DE USUARIO (Login/Registro) ==========
+function mostrarModalUsuario() {
+    if (currentUser) {
+        // Mostrar perfil
+        document.getElementById('profileBody').innerHTML = `
+            <div style="text-align:center;">
+                <img src="${currentUser.photoURL || 'https://via.placeholder.com/80'}" style="width:80px; border-radius:50%;">
+                <h4>${currentUser.displayName || currentUser.email}</h4>
+                <p>Puntos: ${userPoints}</p>
+                <hr>
+                <label><input type="checkbox" id="sonidosCheck" ${localStorage.getItem('sonidos') !== 'false' ? 'checked' : ''}> Activar sonidos</label><br>
+                <button id="cerrarSesionBtn" class="submit-btn" style="background:#d32f2f;">Cerrar Sesión</button>
+                <button id="eliminarCuentaBtn" class="submit-btn" style="background:#666;">Eliminar Cuenta</button>
+            </div>
+        `;
+        document.getElementById('sonidosCheck').addEventListener('change', (e) => localStorage.setItem('sonidos', e.target.checked));
+        document.getElementById('cerrarSesionBtn').onclick = async () => {
+            await window.auth.signOut();
+            location.reload();
+        };
+        document.getElementById('eliminarCuentaBtn').onclick = eliminarCuenta;
+        profileModal.style.display = 'flex';
+    } else {
+        // Mostrar opciones de login
+        document.getElementById('userModalBody').innerHTML = `
+            <div style="padding:20px;">
+                <button id="googleLoginBtn" class="submit-btn" style="background:#4285F4;">Iniciar con Google</button>
+                <hr>
+                <input type="email" id="loginEmail" placeholder="Email" style="width:100%; margin-bottom:10px;">
+                <input type="password" id="loginPassword" placeholder="Contraseña" style="width:100%; margin-bottom:10px;">
+                <button id="emailLoginBtn" class="submit-btn">Iniciar Sesión</button>
+                <button id="emailRegistroBtn" class="submit-btn" style="background:#2E7D32;">Registrarse</button>
+            </div>
+        `;
+        document.getElementById('googleLoginBtn').onclick = () => signInWithPopup(window.auth, provider).then(() => location.reload());
+        document.getElementById('emailLoginBtn').onclick = () => {
+            const email = document.getElementById('loginEmail').value;
+            const pass = document.getElementById('loginPassword').value;
+            signInWithEmailAndPassword(window.auth, email, pass).then(() => location.reload());
+        };
+        document.getElementById('emailRegistroBtn').onclick = () => {
+            const email = document.getElementById('loginEmail').value;
+            const pass = document.getElementById('loginPassword').value;
+            createUserWithEmailAndPassword(window.auth, email, pass).then(() => location.reload());
+        };
+        userModal.style.display = 'flex';
+    }
+}
+
+async function eliminarCuenta() {
+    if (confirm("¿Eliminar permanentemente tu cuenta y todos tus datos?")) {
+        // Borrar documentos asociados
+        const uid = currentUser.uid;
+        const colecciones = ['usuarios', 'visitas', 'comentarios', 'amigos', 'progreso_juegos'];
+        for (let col of colecciones) {
+            const q = window.firebaseHelpers.query(window.firebaseHelpers.collection(col), window.firebaseHelpers.where('usuarioId', '==', uid));
+            const snap = await window.firebaseHelpers.getDocs(q);
+            snap.forEach(async (docSnap) => {
+                await window.firebaseHelpers.deleteDoc(docSnap.ref);
+            });
+        }
+        await currentUser.delete();
+        await window.auth.signOut();
+        location.reload();
+    }
+}
+
+// ========== COMENTARIOS Y ESTRELLAS (solo post-visita) ==========
+// Se agregará dentro del popup de cada lugar
+function mostrarComentarios(place) {
+    // Función que se llama desde el popup; primero verificar si el usuario ha visitado el lugar.
+    // Implementación detallada la damos después.
+}
+
+// ========== INICIALIZACIÓN CON AUTENTICACIÓN ==========
+window.onAuthStateChanged = (user) => {
+    currentUser = user;
+    actualizarUIUsuario();
+    if (user) cargarPuntosUsuario();
+};
+
+// El resto de funciones (initMap, actualizarMarcadores, CRUD, etc.) se mantienen igual que en la versión anterior.
+// Solo hay que añadir la llamada a toggleGPS en el botón gpsBtn:
+gpsBtn.onclick = toggleGPS;
+userBtn.onclick = mostrarModalUsuario;
+
+// Inicializar
+document.addEventListener('DOMContentLoaded', () => {
+    initDarkMode();
+    initMap();
+    if (window.firebaseHelpers && window.firebaseHelpers.collection) cargarLugaresFirestore();
+    else setTimeout(() => cargarLugaresFirestore(), 1000);
+});
