@@ -4,425 +4,651 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Diriamba - Turismo Nicaragua</title>
+<title>Diriamba Nicaragua - Turismo Cultural</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
 
 <style>
 
 *{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    scroll-behavior:smooth;
+}
+
+:root{
+    --verde:#00b894;
+    --azul:#0984e3;
+    --amarillo:#fdcb6e;
+    --oscuro:#061a17;
+    --blanco:#ffffff;
 }
 
 body{
-  font-family:Arial,sans-serif;
-  background:linear-gradient(135deg,#03045e,#0077b6,#00b4d8);
-  color:white;
-  min-height:100vh;
-  overflow-x:hidden;
+    font-family:'Poppins',sans-serif;
+    background:#f2fff8;
+    color:#222;
+    overflow-x:hidden;
+    transition:0.5s;
+}
+
+body.dark{
+    background:#071d18;
+    color:white;
+}
+
+/* NAVBAR */
+
+nav{
+    position:fixed;
+    width:100%;
+    top:0;
+    left:0;
+    z-index:1000;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:15px 40px;
+    background:rgba(0,0,0,0.3);
+    backdrop-filter:blur(10px);
+}
+
+.logo{
+    color:white;
+    font-size:30px;
+    font-weight:700;
+}
+
+nav ul{
+    display:flex;
+    gap:25px;
+    list-style:none;
+}
+
+nav ul li a{
+    text-decoration:none;
+    color:white;
+    font-weight:500;
+    transition:0.3s;
+}
+
+nav ul li a:hover{
+    color:var(--amarillo);
 }
 
 /* HERO */
 
 .hero{
-  min-height:100vh;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  text-align:center;
-  padding:30px;
-  position:relative;
+    height:100vh;
+    background:
+    linear-gradient(rgba(0,0,0,0.45),rgba(0,0,0,0.5)),
+    url('https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=2070&auto=format&fit=crop');
+    background-size:cover;
+    background-position:center;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    position:relative;
+    color:white;
 }
 
-.hero::before{
-  content:"";
-  position:absolute;
-  width:500px;
-  height:500px;
-  background:rgba(255,255,255,0.08);
-  border-radius:50%;
-  top:-150px;
-  left:-150px;
-  filter:blur(40px);
+.hero-content{
+    animation:fadeUp 2s ease;
 }
 
 .hero h1{
-  font-size:5rem;
-  z-index:2;
+    font-size:75px;
+    text-shadow:0 0 20px rgba(0,0,0,0.5);
 }
 
 .hero p{
-  margin-top:15px;
-  font-size:1.3rem;
-  max-width:700px;
-  z-index:2;
-  line-height:1.7;
+    margin-top:20px;
+    font-size:24px;
 }
 
-.mascota{
-  margin-top:25px;
-  background:rgba(255,255,255,0.12);
-  backdrop-filter:blur(10px);
-  padding:18px 25px;
-  border-radius:18px;
-  z-index:2;
-  box-shadow:0 10px 30px rgba(0,0,0,0.2);
+.hero button{
+    margin-top:35px;
+    padding:15px 40px;
+    border:none;
+    border-radius:50px;
+    background:linear-gradient(45deg,var(--verde),var(--azul));
+    color:white;
+    font-size:18px;
+    cursor:pointer;
+    transition:0.4s;
+    box-shadow:0 0 20px rgba(0,255,170,0.5);
 }
 
-.scroll-btn{
-  margin-top:30px;
-  padding:15px 28px;
-  border:none;
-  border-radius:15px;
-  background:white;
-  color:#0077b6;
-  font-weight:bold;
-  cursor:pointer;
-  transition:0.3s;
-  z-index:2;
+.hero button:hover{
+    transform:scale(1.1);
 }
 
-.scroll-btn:hover{
-  transform:scale(1.05);
+/* FLOATING LIGHTS */
+
+.lights{
+    position:absolute;
+    width:100%;
+    height:100%;
+    overflow:hidden;
 }
 
-/* CONTENT */
-
-.container{
-  width:100%;
-  max-width:1200px;
-  margin:auto;
-  padding:30px 20px 60px;
+.lights span{
+    position:absolute;
+    bottom:-100px;
+    width:20px;
+    height:20px;
+    border-radius:50%;
+    background:rgba(255,255,255,0.3);
+    animation:float 10s linear infinite;
 }
 
-.section-title{
-  text-align:center;
-  margin-bottom:30px;
-  font-size:2.5rem;
+.lights span:nth-child(1){left:10%;animation-duration:8s;}
+.lights span:nth-child(2){left:30%;animation-duration:12s;}
+.lights span:nth-child(3){left:50%;animation-duration:7s;}
+.lights span:nth-child(4){left:70%;animation-duration:11s;}
+.lights span:nth-child(5){left:90%;animation-duration:9s;}
+
+/* SECTIONS */
+
+section{
+    padding:100px 10%;
 }
+
+.title{
+    text-align:center;
+    margin-bottom:50px;
+}
+
+.title h2{
+    font-size:45px;
+    color:var(--verde);
+}
+
+/* CARDS */
 
 .cards{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-  gap:25px;
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+    gap:30px;
 }
 
 .card{
-  background:rgba(255,255,255,0.12);
-  backdrop-filter:blur(10px);
-  padding:25px;
-  border-radius:22px;
-  transition:0.3s;
-  box-shadow:0 10px 30px rgba(0,0,0,0.2);
+    background:white;
+    border-radius:20px;
+    overflow:hidden;
+    transition:0.5s;
+    box-shadow:0 10px 25px rgba(0,0,0,0.1);
+}
+
+body.dark .card{
+    background:#10342d;
 }
 
 .card:hover{
-  transform:translateY(-8px);
+    transform:translateY(-10px) scale(1.03);
 }
 
-.card h3{
-  margin-bottom:15px;
-  font-size:1.4rem;
+.card img{
+    width:100%;
+    height:230px;
+    object-fit:cover;
 }
 
-.card p{
-  line-height:1.7;
-  opacity:0.95;
+.card-content{
+    padding:20px;
 }
 
-/* INTERACTIVO */
-
-.interactive{
-  margin-top:70px;
+.card-content h3{
+    color:var(--verde);
+    margin-bottom:10px;
 }
 
-.buttons{
-  display:flex;
-  flex-wrap:wrap;
-  justify-content:center;
-  gap:15px;
-  margin-bottom:25px;
+/* GALLERY */
+
+.gallery{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:20px;
 }
 
-.action-btn{
-  border:none;
-  padding:14px 25px;
-  border-radius:15px;
-  background:white;
-  color:#0077b6;
-  font-weight:bold;
-  cursor:pointer;
-  transition:0.3s;
+.gallery img{
+    width:100%;
+    height:250px;
+    object-fit:cover;
+    border-radius:20px;
+    transition:0.5s;
 }
 
-.action-btn:hover{
-  transform:scale(1.05);
+.gallery img:hover{
+    transform:scale(1.05);
 }
 
-.info-box{
-  width:100%;
-  max-width:900px;
-  margin:auto;
-  background:rgba(255,255,255,0.12);
-  backdrop-filter:blur(10px);
-  padding:30px;
-  border-radius:22px;
-  line-height:1.8;
-  text-align:center;
-  min-height:150px;
-  box-shadow:0 10px 30px rgba(0,0,0,0.2);
+/* WEATHER */
+
+.weather{
+    background:linear-gradient(45deg,var(--verde),var(--azul));
+    padding:35px;
+    border-radius:25px;
+    text-align:center;
+    color:white;
+    font-size:24px;
+    box-shadow:0 0 25px rgba(0,0,0,0.2);
+}
+
+/* CLOCK */
+
+.clock{
+    text-align:center;
+    margin-top:30px;
+    font-size:45px;
+    color:var(--amarillo);
+    font-weight:bold;
+}
+
+/* FLOAT BUTTONS */
+
+.music-btn,
+.dark-btn{
+    position:fixed;
+    right:20px;
+    width:60px;
+    height:60px;
+    border:none;
+    border-radius:50%;
+    cursor:pointer;
+    z-index:999;
+    color:white;
+    font-size:22px;
+    transition:0.4s;
+}
+
+.music-btn{
+    bottom:100px;
+    background:linear-gradient(45deg,#ff416c,#ff4b2b);
+}
+
+.dark-btn{
+    bottom:25px;
+    background:linear-gradient(45deg,#141e30,#243b55);
+}
+
+.music-btn:hover,
+.dark-btn:hover{
+    transform:scale(1.1);
 }
 
 /* FOOTER */
 
-.footer{
-  margin-top:70px;
-  display:flex;
-  justify-content:center;
-  flex-wrap:wrap;
-  gap:20px;
-  padding-bottom:40px;
+footer{
+    background:#041410;
+    color:white;
+    text-align:center;
+    padding:50px 20px;
 }
 
-.footer a{
-  text-decoration:none;
-  background:white;
-  color:#0077b6;
-  padding:15px 25px;
-  border-radius:14px;
-  font-weight:bold;
-  transition:0.3s;
+.map-btn{
+    display:inline-block;
+    margin-top:25px;
+    padding:15px 35px;
+    border-radius:50px;
+    background:linear-gradient(45deg,var(--verde),var(--azul));
+    color:white;
+    text-decoration:none;
+    transition:0.4s;
+    font-size:18px;
 }
 
-.footer a:hover{
-  transform:scale(1.05);
+.map-btn:hover{
+    transform:scale(1.1);
+}
+
+/* ANIMATIONS */
+
+@keyframes float{
+    0%{
+        transform:translateY(0) scale(0);
+        opacity:0;
+    }
+    50%{
+        opacity:1;
+    }
+    100%{
+        transform:translateY(-110vh) scale(1);
+        opacity:0;
+    }
+}
+
+@keyframes fadeUp{
+    from{
+        opacity:0;
+        transform:translateY(40px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
 }
 
 /* RESPONSIVE */
 
 @media(max-width:768px){
 
-  .hero h1{
-    font-size:3rem;
-  }
+    nav{
+        padding:15px 20px;
+    }
 
-  .hero p{
-    font-size:1rem;
-  }
+    nav ul{
+        display:none;
+    }
 
-  .section-title{
-    font-size:2rem;
-  }
+    .hero h1{
+        font-size:45px;
+    }
+
+    .hero p{
+        font-size:18px;
+    }
+
+    .title h2{
+        font-size:32px;
+    }
 
 }
 
 </style>
 </head>
+
 <body>
+
+<!-- NAV -->
+
+<nav>
+
+<div class="logo">Diriamba</div>
+
+<ul>
+<li><a href="#inicio">Inicio</a></li>
+<li><a href="#cultura">Cultura</a></li>
+<li><a href="#lugares">Lugares</a></li>
+<li><a href="#galeria">Galería</a></li>
+<li><a href="#clima">Clima</a></li>
+</ul>
+
+</nav>
 
 <!-- HERO -->
 
-<section class="hero">
+<section class="hero" id="inicio">
 
-<h1>🎭 DIRIAMBA</h1>
-
-<p>
-La ciudad de las tradiciones,
-la cultura folklórica
-y las famosas fiestas de San Sebastián.
-</p>
-
-<div class="mascota">
-🤖 ¡Bienvenido explorador! Descubre la riqueza cultural
-y las tradiciones de Diriamba.
+<div class="lights">
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+<span></span>
 </div>
 
-<button class="scroll-btn" onclick="scrollToContent()">
-🎉 Explorar Diriamba
+<div class="hero-content">
+
+<h1>Diriamba</h1>
+
+<p>
+Folklore, Tradición y Encanto Tropical
+</p>
+
+<button onclick="explorar()">
+Explorar Destino
 </button>
+
+</div>
 
 </section>
 
-<!-- CONTENIDO -->
+<!-- CULTURA -->
 
-<div class="container" id="content">
+<section id="cultura">
 
-<h2 class="section-title">
-✨ Descubre Diriamba
-</h2>
+<div class="title">
+<h2>Cultura y Tradición</h2>
+</div>
 
 <div class="cards">
 
 <div class="card">
-<h3>📜 Historia</h3>
+<img src="https://images.unsplash.com/photo-1513622470522-26c3c8a854bc?q=80&w=2070&auto=format&fit=crop">
+
+<div class="card-content">
+<h3>El Güegüense</h3>
 <p>
-Diriamba es una de las ciudades más tradicionales de Nicaragua
-y destaca por su herencia cultural,
-religiosa
-y folklórica.
+Diriamba es reconocida por sus expresiones culturales,
+danzas y tradiciones folclóricas únicas.
 </p>
+</div>
 </div>
 
 <div class="card">
-<h3>🎭 Cultura y Tradiciones</h3>
+<img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=2070&auto=format&fit=crop">
+
+<div class="card-content">
+<h3>Fiestas Patronales</h3>
 <p>
-La ciudad es famosa por las fiestas de San Sebastián,
-donde destacan bailes tradicionales,
-música folklórica
-y expresiones culturales.
+Celebraciones llenas de música, color y tradición
+nicaragüense.
 </p>
+</div>
 </div>
 
 <div class="card">
-<h3>🌄 Lugares Turísticos</h3>
+<img src="https://images.unsplash.com/photo-1493246507139-91e8fad9978e?q=80&w=2070&auto=format&fit=crop">
+
+<div class="card-content">
+<h3>Gastronomía</h3>
 <p>
-Entre los lugares más visitados están:
-la Basílica de San Sebastián,
-miradores naturales,
-mercados tradicionales
-y pueblos cercanos de Carazo.
+Sabores típicos que representan la identidad cultural
+de Carazo.
 </p>
+</div>
+</div>
+
+</div>
+
+</section>
+
+<!-- LUGARES -->
+
+<section id="lugares">
+
+<div class="title">
+<h2>Lugares Turísticos</h2>
+</div>
+
+<div class="cards">
+
+<div class="card">
+<img src="https://images.unsplash.com/photo-1521295121783-8a321d551ad2?q=80&w=2070&auto=format&fit=crop">
+
+<div class="card-content">
+<h3>Parques</h3>
+<p>
+Espacios naturales para relajarse y disfrutar.
+</p>
+</div>
 </div>
 
 <div class="card">
-<h3>🍛 Gastronomía</h3>
+<img src="https://images.unsplash.com/photo-1518509562904-e7ef99cdcc86?q=80&w=2070&auto=format&fit=crop">
+
+<div class="card-content">
+<h3>Iglesias</h3>
 <p>
-La gastronomía local incluye:
-nacatamales,
-rosquillas,
-dulces tradicionales,
-quesillos
-y comidas típicas nicaragüenses.
+Arquitectura colonial y cultural impresionante.
 </p>
 </div>
-
 </div>
 
-<!-- INTERACTIVO -->
+<div class="card">
+<img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=2070&auto=format&fit=crop">
 
-<div class="interactive">
-
-<h2 class="section-title">
-🎮 Explora Más
-</h2>
-
-<div class="buttons">
-
-<button class="action-btn" onclick="showInfo('historia')">
-📜 Historia
-</button>
-
-<button class="action-btn" onclick="showInfo('curioso')">
-😮 Dato Curioso
-</button>
-
-<button class="action-btn" onclick="showInfo('hacer')">
-🎭 ¿Qué hacer?
-</button>
-
-<button class="action-btn" onclick="showInfo('consejos')">
-🧭 Consejos
-</button>
-
+<div class="card-content">
+<h3>Miradores</h3>
+<p>
+Atardeceres espectaculares y vistas tropicales.
+</p>
 </div>
-
-<div class="info-box" id="infoBox">
-
-Selecciona una opción para descubrir más sobre Diriamba 😄
-
 </div>
 
 </div>
+
+</section>
+
+<!-- GALERIA -->
+
+<section id="galeria">
+
+<div class="title">
+<h2>Galería Interactiva</h2>
+</div>
+
+<div class="gallery">
+
+<img src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=2070&auto=format&fit=crop">
+
+<img src="https://images.unsplash.com/photo-1470770841072-f978cf4d019e?q=80&w=2070&auto=format&fit=crop">
+
+<img src="https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?q=80&w=2070&auto=format&fit=crop">
+
+<img src="https://images.unsplash.com/photo-1493558103817-58b2924bce98?q=80&w=2070&auto=format&fit=crop">
+
+</div>
+
+</section>
+
+<!-- CLIMA -->
+
+<section id="clima">
+
+<div class="title">
+<h2>Clima en Vivo</h2>
+</div>
+
+<div class="weather">
+🌤️ Temperatura Actual: 25°C <br><br>
+🌴 Ambiente fresco y tropical de Carazo
+</div>
+
+<div class="clock" id="clock">
+00:00:00
+</div>
+
+</section>
 
 <!-- FOOTER -->
 
-<div class="footer">
+<footer>
 
-<a href="../mapa.html">
-🗺 Volver al Mapa
+<h2>Descubre Diriamba Nicaragua</h2>
+
+<p>
+Turismo • Cultura • Folklore • Tradición
+</p>
+
+<a class="map-btn"
+href="https://www.google.com/maps/place/Diriamba,+Nicaragua/"
+target="_blank">
+
+📍 Cómo llegar
+
 </a>
 
-<a href="../juegos/juegos.html">
-🎮 Juegos
-</a>
+</footer>
 
-<a href="../index.html">
-🏠 Inicio
-</a>
+<!-- AUDIO -->
 
-</div>
+<audio id="music" loop>
+<source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+</audio>
 
-</div>
+<!-- FLOAT BUTTONS -->
+
+<button class="music-btn" onclick="toggleMusic()">
+<i class="fas fa-music"></i>
+</button>
+
+<button class="dark-btn" onclick="toggleDark()">
+<i class="fas fa-moon"></i>
+</button>
 
 <script>
 
-function scrollToContent(){
+/* EXPLORAR */
 
-document.getElementById("content")
-.scrollIntoView({
-behavior:"smooth"
+function explorar(){
+
+document.querySelector('#cultura').scrollIntoView({
+behavior:'smooth'
 });
 
 }
 
-function showInfo(type){
+/* CLOCK */
 
-const box = document.getElementById("infoBox");
+function updateClock(){
 
-if(type === "historia"){
+const now = new Date();
 
-box.innerHTML = `
-<h3>📜 Historia de Diriamba</h3>
-<p>
-Diriamba es reconocida como una de las ciudades más tradicionales
-de Nicaragua y conserva importantes expresiones culturales y religiosas.
-</p>
-`;
+let h = String(now.getHours()).padStart(2,'0');
+let m = String(now.getMinutes()).padStart(2,'0');
+let s = String(now.getSeconds()).padStart(2,'0');
 
-}
-
-if(type === "curioso"){
-
-box.innerHTML = `
-<h3>😮 Dato Curioso</h3>
-<p>
-Las fiestas patronales de San Sebastián en Diriamba
-son consideradas unas de las celebraciones folklóricas más importantes del país.
-</p>
-`;
+document.getElementById('clock').innerHTML =
+`${h}:${m}:${s}`;
 
 }
 
-if(type === "hacer"){
+setInterval(updateClock,1000);
 
-box.innerHTML = `
-<h3>🎭 ¿Qué puedes hacer?</h3>
-<p>
-Puedes disfrutar bailes tradicionales,
-visitar iglesias históricas,
-recorrer mercados locales
-y participar en festividades culturales.
-</p>
-`;
+/* MUSIC */
 
-}
+const music = document.getElementById("music");
 
-if(type === "consejos"){
+function toggleMusic(){
 
-box.innerHTML = `
-<h3>🧭 Consejos para visitar Diriamba</h3>
-<p>
-Lleva ropa cómoda,
-explora la cultura local,
-prueba la gastronomía típica
-y disfruta de las festividades tradicionales.
-</p>
-`;
-
+if(music.paused){
+music.play();
+}else{
+music.pause();
 }
 
 }
+
+/* DARK MODE */
+
+function toggleDark(){
+document.body.classList.toggle('dark');
+}
+
+/* GALLERY EFFECT */
+
+let imgs = document.querySelectorAll('.gallery img');
+
+imgs.forEach((img,index)=>{
+
+setInterval(()=>{
+
+img.style.transform='scale(1.05)';
+
+setTimeout(()=>{
+img.style.transform='scale(1)';
+},1500);
+
+},3000 + index*1000);
+
+});
 
 </script>
 
