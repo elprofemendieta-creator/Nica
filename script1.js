@@ -37,9 +37,8 @@ function cargarDatos() {
             { id: Date.now() + 2, nombre: "León", lat: 12.4358, lng: -86.8781, url: "../lugares/leon.html", imagen: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Leon_Nicaragua.jpg/300px-Leon_Nicaragua.jpg", categoria: "ciudad" },
             { id: Date.now() + 3, nombre: "Corn Island", lat: 12.1758, lng: -83.0615, url: "../lugares/cornislan.html", imagen: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Corn_Island.jpg/300px-Corn_Island.jpg", categoria: "playa" },
             { id: Date.now() + 4, nombre: "Volcán Masaya", lat: 11.9844, lng: -86.1611, url: "../lugares/volcanmasaya.html", imagen: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Masaya_Volcano.jpg/300px-Masaya_Volcano.jpg", categoria: "volcán" },
-            { id: Date.now() + 5, nombre: "San Juan del Sur", lat: 11.2528, lng: -85.8683, url: "../lugares/sanjuan.html", imagen: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/San_Juan_del_Sur.jpg/300px-San_Juan_del_Sur.jpg", categoria: "playa" }
-            { id: Date.now() + 6, nombre: "Isletas de Granada", lat: 11.9719, lng: -85.9560, url: "lugares/isletas.html", imagen: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Isletas_de_Granada.jpg/300px-Isletas_de_Granada.jpg", categoria: "naturaleza" }
-        ];
+            { id: Date.now() + 5, nombre: "San Juan del Sur", lat: 11.2528, lng: -85.8683, url: "../lugares/sanjuan.html", imagen: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/San_Juan_del_Sur.jpg/300px-San_Juan_del_Sur.jpg", categoria: "playa" },
+            { id: Date.now() + 6, nombre: "Isletas de Granada", lat: 11.9719, lng: -85.9560, url: "lugares/isletas.html", imagen: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Isletas_de_Granada.jpg/300px-Isletas_de_Granada.jpg", categoria: "naturaleza" },        ];
         guardarDatos();
     }
     actualizarCategoriasUnicas();
