@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Volcán Masaya - Turismo Nicaragua</title>
+
+<style>
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  font-family:Arial,sans-serif;
+  background:linear-gradient(135deg,#03045e,#0077b6,#00b4d8);
+  color:white;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* HERO */
+
+.hero{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  padding:30px;
+  position:relative;
+}
+
+.hero::before{
+  content:"";
+  position:absolute;
+  width:500px;
+  height:500px;
+  background:rgba(255,255,255,0.08);
+  border-radius:50%;
+  top:-150px;
+  right:-150px;
+  filter:blur(40px);
+}
+
+.hero h1{
+  font-size:5rem;
+  z-index:2;
+}
+
+.hero p{
+  margin-top:15px;
+  font-size:1.3rem;
+  max-width:700px;
+  z-index:2;
+  line-height:1.7;
+}
+
+.mascota{
+  margin-top:25px;
+  background:rgba(255,255,255,0.12);
+  backdrop-filter:blur(10px);
+  padding:18px 25px;
+  border-radius:18px;
+  z-index:2;
+  box-shadow:0 10px 30px rgba(0,0,0,0.2);
+}
+
+.scroll-btn{
+  margin-top:30px;
+  padding:15px 28px;
+  border:none;
+  border-radius:15px;
+  background:white;
+  color:#0077b6;
+  font-weight:bold;
+  cursor:pointer;
+  transition:0.3s;
+  z-index:2;
+}
+
+.scroll-btn:hover{
+  transform:scale(1.05);
+}
+
+/* CONTENT */
+
+.container{
+  width:100%;
+  max-width:1200px;
+  margin:auto;
+  padding:30px 20px 60px;
+}
+
+.section-title{
+  text-align:center;
+  margin-bottom:30px;
+  font-size:2.5rem;
+}
+
+.cards{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:25px;
+}
+
+.card{
+  background:rgba(255,255,255,0.12);
+  backdrop-filter:blur(10px);
+  padding:25px;
+  border-radius:22px;
+  transition:0.3s;
+  box-shadow:0 10px 30px rgba(0,0,0,0.2);
+}
+
+.card:hover{
+  transform:translateY(-8px);
+}
+
+.card h3{
+  margin-bottom:15px;
+  font-size:1.4rem;
+}
+
+.card p{
+  line-height:1.7;
+  opacity:0.95;
+}
+
+/* INTERACTIVO */
+
+.interactive{
+  margin-top:70px;
+}
+
+.buttons{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:15px;
+  margin-bottom:25px;
+}
+
+.action-btn{
+  border:none;
+  padding:14px 25px;
+  border-radius:15px;
+  background:white;
+  color:#0077b6;
+  font-weight:bold;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.action-btn:hover{
+  transform:scale(1.05);
+}
+
+.info-box{
+  width:100%;
+  max-width:900px;
+  margin:auto;
+  background:rgba(255,255,255,0.12);
+  backdrop-filter:blur(10px);
+  padding:30px;
+  border-radius:22px;
+  line-height:1.8;
+  text-align:center;
+  min-height:150px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.2);
+}
+
+/* FOOTER */
+
+.footer{
+  margin-top:70px;
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:20px;
+  padding-bottom:40px;
+}
+
+.footer a{
+  text-decoration:none;
+  background:white;
+  color:#0077b6;
+  padding:15px 25px;
+  border-radius:14px;
+  font-weight:bold;
+  transition:0.3s;
+}
+
+.footer a:hover{
+  transform:scale(1.05);
+}
+
+/* RESPONSIVE */
+
+@media(max-width:768px){
+
+  .hero h1{
+    font-size:3rem;
+  }
+
+  .hero p{
+    font-size:1rem;
+  }
+
+  .section-title{
+    font-size:2rem;
+  }
+
+}
+
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+
+<section class="hero">
+
+<h1>🌋 VOLCÁN MASAYA</h1>
+
+<p>
+Uno de los volcanes activos más impresionantes de Nicaragua,
+famoso por su cráter humeante y paisajes volcánicos.
+</p>
+
+<div class="mascota">
+🤖 ¡Bienvenido explorador! Prepárate para descubrir
+la energía y misterio del Volcán Masaya.
+</div>
+
+<button class="scroll-btn" onclick="scrollToContent()">
+🔥 Explorar Volcán Masaya
+</button>
+
+</section>
+
+<!-- CONTENIDO -->
+
+<div class="container" id="content">
+
+<h2 class="section-title">
+✨ Descubre el Volcán Masaya
+</h2>
+
+<div class="cards">
+
+<div class="card">
+<h3>📜 Historia</h3>
+<p>
+El Volcán Masaya forma parte del Parque Nacional Volcán Masaya
+y ha sido considerado un lugar místico desde tiempos precolombinos.
+</p>
+</div>
+
+<div class="card">
+<h3>🌋 Atracciones</h3>
+<p>
+Los visitantes pueden observar:
+el cráter Santiago,
+senderos volcánicos,
+cuevas,
+miradores
+y espectaculares emisiones de gases volcánicos.
+</p>
+</div>
+
+<div class="card">
+<h3>🌌 Experiencia Nocturna</h3>
+<p>
+El volcán es famoso por las visitas nocturnas,
+donde puede observarse el brillo de lava
+y el humo saliendo del cráter activo.
+</p>
+</div>
+
+<div class="card">
+<h3>🌿 Naturaleza</h3>
+<p>
+El parque posee senderos ecológicos,
+vegetación adaptada al entorno volcánico
+y fauna característica de la región.
+</p>
+</div>
+
+</div>
+
+<!-- INTERACTIVO -->
+
+<div class="interactive">
+
+<h2 class="section-title">
+🎮 Explora Más
+</h2>
+
+<div class="buttons">
+
+<button class="action-btn" onclick="showInfo('historia')">
+📜 Historia
+</button>
+
+<button class="action-btn" onclick="showInfo('curioso')">
+😮 Dato Curioso
+</button>
+
+<button class="action-btn" onclick="showInfo('hacer')">
+🌋 ¿Qué hacer?
+</button>
+
+<button class="action-btn" onclick="showInfo('consejos')">
+🧭 Consejos
+</button>
+
+</div>
+
+<div class="info-box" id="infoBox">
+
+Selecciona una opción para descubrir más sobre el Volcán Masaya 😄
+
+</div>
+
+</div>
+
+<!-- FOOTER -->
+
+<div class="footer">
+
+<a href="mapa.html">
+🗺 Volver al Mapa
+</a>
+
+<a href="juegos.html">
+🎮 Juegos
+</a>
+
+<a href="index.html">
+🏠 Inicio
+</a>
+
+</div>
+
+</div>
+
+<script>
+
+function scrollToContent(){
+
+document.getElementById("content")
+.scrollIntoView({
+behavior:"smooth"
+});
+
+}
+
+function showInfo(type){
+
+const box = document.getElementById("infoBox");
+
+if(type === "historia"){
+
+box.innerHTML = `
+<h3>📜 Historia del Volcán Masaya</h3>
+<p>
+El Volcán Masaya ha sido uno de los volcanes más estudiados de Nicaragua
+y fue considerado por antiguos pobladores como un sitio sagrado y misterioso.
+</p>
+`;
+
+}
+
+if(type === "curioso"){
+
+box.innerHTML = `
+<h3>😮 Dato Curioso</h3>
+<p>
+El Volcán Masaya es conocido como “La Boca del Infierno”
+debido al humo y resplandor que sale de su cráter activo.
+</p>
+`;
+
+}
+
+if(type === "hacer"){
+
+box.innerHTML = `
+<h3>🌋 ¿Qué puedes hacer?</h3>
+<p>
+Puedes recorrer senderos,
+visitar miradores,
+explorar cuevas,
+tomar fotografías
+y observar el impresionante cráter activo.
+</p>
+`;
+
+}
+
+if(type === "consejos"){
+
+box.innerHTML = `
+<h3>🧭 Consejos para visitar el Volcán Masaya</h3>
+<p>
+Lleva ropa cómoda,
+agua,
+protector solar
+y sigue siempre las indicaciones de seguridad del parque.
+</p>
+`;
+
+}
+
+}
+
+</script>
+
+</body>
+</html>
