@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<title>Jinotepe - Corazón Cultural de Carazo</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    background:#f5fff8;
+    color:#222;
+    overflow-x:hidden;
+    transition:0.4s;
+}
+
+/* DARK MODE */
+
+body.dark{
+    background:#081b12;
+    color:white;
+}
+
+body.dark .card,
+body.dark .gallery img,
+body.dark .weather-box,
+body.dark .clock,
+body.dark .glass{
+    background:rgba(255,255,255,0.08);
+    color:white;
+}
+
+/* SCROLL BAR */
+
+::-webkit-scrollbar{
+    width:10px;
+}
+
+::-webkit-scrollbar-thumb{
+    background:linear-gradient(#00c853,#ff9800);
+    border-radius:10px;
+}
+
+/* PARTICLES */
+
+.particles{
+    position:fixed;
+    width:100%;
+    height:100%;
+    z-index:-1;
+    overflow:hidden;
+}
+
+.particles span{
+    position:absolute;
+    display:block;
+    width:15px;
+    height:15px;
+    background:rgba(0,255,100,0.3);
+    animation:animate 20s linear infinite;
+    bottom:-150px;
+    border-radius:50%;
+}
+
+.particles span:nth-child(1){
+    left:10%;
+    width:20px;
+    height:20px;
+    animation-duration:15s;
+}
+
+.particles span:nth-child(2){
+    left:20%;
+    animation-duration:22s;
+}
+
+.particles span:nth-child(3){
+    left:35%;
+    width:25px;
+    height:25px;
+    animation-duration:17s;
+}
+
+.particles span:nth-child(4){
+    left:50%;
+    animation-duration:30s;
+}
+
+.particles span:nth-child(5){
+    left:65%;
+    width:18px;
+    height:18px;
+}
+
+.particles span:nth-child(6){
+    left:80%;
+    animation-duration:12s;
+}
+
+.particles span:nth-child(7){
+    left:90%;
+    width:25px;
+    height:25px;
+}
+
+@keyframes animate{
+    0%{
+        transform:translateY(0) rotate(0deg);
+        opacity:0;
+    }
+    50%{
+        opacity:1;
+    }
+    100%{
+        transform:translateY(-1200px) rotate(720deg);
+        opacity:0;
+    }
+}
+
+/* NAVBAR */
+
+nav{
+    position:fixed;
+    top:0;
+    width:100%;
+    padding:15px 8%;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    z-index:999;
+    background:rgba(255,255,255,0.15);
+    backdrop-filter:blur(12px);
+}
+
+.logo{
+    font-size:28px;
+    font-weight:700;
+    color:#fff;
+    text-shadow:2px 2px 10px black;
+}
+
+nav ul{
+    display:flex;
+    list-style:none;
+    gap:25px;
+}
+
+nav ul li a{
+    color:white;
+    text-decoration:none;
+    font-weight:600;
+    transition:0.3s;
+}
+
+nav ul li a:hover{
+    color:#00ff95;
+}
+
+/* HERO */
+
+.hero{
+    height:100vh;
+    background:
+    linear-gradient(rgba(0,0,0,0.45),rgba(0,0,0,0.45)),
+    url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1400') center/cover;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    color:white;
+    position:relative;
+}
+
+.hero-content{
+    animation:fadeUp 2s ease;
+    padding:20px;
+}
+
+.hero h1{
+    font-size:70px;
+    text-shadow:4px 4px 15px black;
+}
+
+.hero p{
+    margin-top:20px;
+    font-size:22px;
+}
+
+.hero button{
+    margin-top:30px;
+    padding:15px 40px;
+    border:none;
+    border-radius:50px;
+    font-size:18px;
+    cursor:pointer;
+    background:linear-gradient(45deg,#00c853,#ff9800);
+    color:white;
+    transition:0.4s;
+    box-shadow:0 0 25px rgba(0,255,120,0.6);
+}
+
+.hero button:hover{
+    transform:scale(1.1);
+}
+
+@keyframes fadeUp{
+    from{
+        opacity:0;
+        transform:translateY(100px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+/* SECTION */
+
+section{
+    padding:90px 8%;
+}
+
+.section-title{
+    text-align:center;
+    font-size:42px;
+    margin-bottom:50px;
+    color:#00a651;
+}
+
+/* CARDS */
+
+.cards{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:25px;
+}
+
+.card{
+    background:white;
+    padding:30px;
+    border-radius:25px;
+    transition:0.4s;
+    box-shadow:0 10px 30px rgba(0,0,0,0.1);
+}
+
+.card:hover{
+    transform:translateY(-10px) scale(1.03);
+}
+
+.card i{
+    font-size:45px;
+    color:#ff9800;
+    margin-bottom:20px;
+}
+
+/* GALLERY */
+
+.gallery{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:20px;
+}
+
+.gallery img{
+    width:100%;
+    height:250px;
+    object-fit:cover;
+    border-radius:20px;
+    transition:0.5s;
+    cursor:pointer;
+}
+
+.gallery img:hover{
+    transform:scale(1.05);
+}
+
+/* WEATHER CLOCK */
+
+.info-boxes{
+    display:flex;
+    gap:30px;
+    flex-wrap:wrap;
+    justify-content:center;
+}
+
+.weather-box,
+.clock{
+    padding:30px;
+    border-radius:20px;
+    background:white;
+    min-width:250px;
+    text-align:center;
+    box-shadow:0 10px 30px rgba(0,0,0,0.1);
+}
+
+.clock h1{
+    font-size:45px;
+    margin-top:15px;
+}
+
+/* FOOTER */
+
+footer{
+    padding:60px 8%;
+    background:linear-gradient(45deg,#003b1f,#006633);
+    color:white;
+    text-align:center;
+}
+
+footer h2{
+    margin-bottom:25px;
+}
+
+.map-btn{
+    display:inline-block;
+    margin-top:20px;
+    padding:16px 35px;
+    background:#ff9800;
+    color:white;
+    border-radius:50px;
+    text-decoration:none;
+    font-weight:600;
+    transition:0.4s;
+}
+
+.map-btn:hover{
+    transform:scale(1.1);
+}
+
+/* FLOAT BUTTONS */
+
+.music-btn,
+.dark-btn{
+    position:fixed;
+    right:20px;
+    width:60px;
+    height:60px;
+    border:none;
+    border-radius:50%;
+    cursor:pointer;
+    color:white;
+    font-size:22px;
+    z-index:999;
+    box-shadow:0 5px 20px rgba(0,0,0,0.4);
+}
+
+.music-btn{
+    bottom:90px;
+    background:#ff9800;
+}
+
+.dark-btn{
+    bottom:20px;
+    background:#00c853;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:768px){
+
+    .hero h1{
+        font-size:42px;
+    }
+
+    nav ul{
+        display:none;
+    }
+
+    .section-title{
+        font-size:32px;
+    }
+
+}
+
+</style>
+</head>
+<body>
+
+<!-- PARTICLES -->
+
+<div class="particles">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+</div>
+
+<!-- NAVBAR -->
+
+<nav>
+    <div class="logo">Jinotepe</div>
+
+    <ul>
+        <li><a href="#inicio">Inicio</a></li>
+        <li><a href="#cultura">Cultura</a></li>
+        <li><a href="#lugares">Lugares</a></li>
+        <li><a href="#galeria">Galería</a></li>
+        <li><a href="#clima">Clima</a></li>
+    </ul>
+</nav>
+
+<!-- HERO -->
+
+<section class="hero" id="inicio">
+
+    <div class="hero-content">
+        <h1>Bienvenido a Jinotepe</h1>
+        <p>Tradición, cultura y naturaleza tropical de Nicaragua</p>
+
+        <button onclick="scrollToSection()">
+            Explorar Destino
+        </button>
+    </div>
+
+</section>
+
+<!-- CULTURA -->
+
+<section id="cultura">
+
+    <h2 class="section-title">
+        Cultura y Tradición
+    </h2>
+
+    <div class="cards">
+
+        <div class="card">
+            <i class="fa-solid fa-masks-theater"></i>
+            <h3>Festividades</h3>
+            <p>
+                Jinotepe destaca por sus coloridas fiestas patronales
+                llenas de música, danza y tradición.
+            </p>
+        </div>
+
+        <div class="card">
+            <i class="fa-solid fa-drum"></i>
+            <h3>Folklore</h3>
+            <p>
+                La marimba y las expresiones culturales forman parte
+                esencial de la identidad local.
+            </p>
+        </div>
+
+        <div class="card">
+            <i class="fa-solid fa-leaf"></i>
+            <h3>Naturaleza</h3>
+            <p>
+                Clima fresco, paisajes verdes y ambiente relajante
+                hacen de Jinotepe un destino especial.
+            </p>
+        </div>
+
+    </div>
+
+</section>
+
+<!-- LUGARES -->
+
+<section id="lugares">
+
+    <h2 class="section-title">
+        Lugares Turísticos
+    </h2>
+
+    <div class="cards">
+
+        <div class="card">
+            <i class="fa-solid fa-church"></i>
+            <h3>Catedral Santiago</h3>
+            <p>
+                Una joya arquitectónica y símbolo histórico
+                del departamento de Carazo.
+            </p>
+        </div>
+
+        <div class="card">
+            <i class="fa-solid fa-tree-city"></i>
+            <h3>Parques</h3>
+            <p>
+                Espacios ideales para disfrutar en familia
+                y admirar la belleza urbana tropical.
+            </p>
+        </div>
+
+        <div class="card">
+            <i class="fa-solid fa-mountain-sun"></i>
+            <h3>Miradores</h3>
+            <p>
+                Vistas espectaculares rodeadas de naturaleza
+                y aire fresco.
+            </p>
+        </div>
+
+    </div>
+
+</section>
+
+<!-- GALERIA -->
+
+<section id="galeria">
+
+    <h2 class="section-title">
+        Galería Tropical
+    </h2>
+
+    <div class="gallery">
+
+        <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1200">
+
+        <img src="https://images.unsplash.com/photo-1493558103817-58b2924bce98?q=80&w=1200">
+
+        <img src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?q=80&w=1200">
+
+        <img src="https://images.unsplash.com/photo-1470770841072-f978cf4d019e?q=80&w=1200">
+
+    </div>
+
+</section>
+
+<!-- CLIMA -->
+
+<section id="clima">
+
+    <h2 class="section-title">
+        Clima y Hora Local
+    </h2>
+
+    <div class="info-boxes">
+
+        <div class="weather-box">
+            <h3>🌤 Clima</h3>
+            <p id="weather">
+                26°C - Tropical Fresco
+            </p>
+        </div>
+
+        <div class="clock">
+            <h3>🕒 Hora Local</h3>
+            <h1 id="clock"></h1>
+        </div>
+
+    </div>
+
+</section>
+
+<!-- FOOTER -->
+
+<footer>
+
+    <h2>Descubre Jinotepe, Nicaragua</h2>
+
+    <p>
+        Vive una experiencia cultural llena de tradición,
+        naturaleza y energía tropical.
+    </p>
+
+    <a class="map-btn"
+       href="https://www.google.com/maps/place/Jinotepe,+Nicaragua/"
+       target="_blank">
+
+       📍 Cómo llegar a Jinotepe
+
+    </a>
+
+</footer>
+
+<!-- AUDIO -->
+
+<audio id="music" loop>
+    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8f6c4d1d2.mp3?filename=relaxing-marimba-112191.mp3" type="audio/mp3">
+</audio>
+
+<!-- FLOAT BUTTONS -->
+
+<button class="music-btn" onclick="toggleMusic()">
+    <i class="fa-solid fa-music"></i>
+</button>
+
+<button class="dark-btn" onclick="toggleDark()">
+    <i class="fa-solid fa-moon"></i>
+</button>
+
+<script>
+
+/* SCROLL */
+
+function scrollToSection(){
+    document.getElementById("cultura")
+    .scrollIntoView({
+        behavior:"smooth"
+    });
+}
+
+/* CLOCK */
+
+function updateClock(){
+
+    const now = new Date();
+
+    const time = now.toLocaleTimeString();
+
+    document.getElementById("clock")
+    .innerHTML = time;
+}
+
+setInterval(updateClock,1000);
+
+/* MUSIC */
+
+const music = document.getElementById("music");
+
+let playing = false;
+
+function toggleMusic(){
+
+    if(!playing){
+        music.play();
+        playing = true;
+    }else{
+        music.pause();
+        playing = false;
+    }
+
+}
+
+/* DARK MODE */
+
+function toggleDark(){
+    document.body.classList.toggle("dark");
+}
+
+/* AUTO GALLERY EFFECT */
+
+let galleryImages = document.querySelectorAll(".gallery img");
+
+galleryImages.forEach((img,index)=>{
+
+    setInterval(()=>{
+        img.style.transform = "scale(1.05)";
+
+        setTimeout(()=>{
+            img.style.transform = "scale(1)";
+        },1500);
+
+    },3000 + (index * 1000));
+
+});
+
+</script>
+
+</body>
+</html>
