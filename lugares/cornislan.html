@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Corn Island - Turismo Nicaragua</title>
+
+<style>
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  font-family:Arial,sans-serif;
+  background:linear-gradient(135deg,#03045e,#0077b6,#00b4d8);
+  color:white;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* HERO */
+
+.hero{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  padding:30px;
+  position:relative;
+}
+
+.hero::before{
+  content:"";
+  position:absolute;
+  width:500px;
+  height:500px;
+  background:rgba(255,255,255,0.08);
+  border-radius:50%;
+  bottom:-150px;
+  right:-150px;
+  filter:blur(40px);
+}
+
+.hero h1{
+  font-size:5rem;
+  z-index:2;
+}
+
+.hero p{
+  margin-top:15px;
+  font-size:1.3rem;
+  max-width:700px;
+  z-index:2;
+  line-height:1.7;
+}
+
+.mascota{
+  margin-top:25px;
+  background:rgba(255,255,255,0.12);
+  backdrop-filter:blur(10px);
+  padding:18px 25px;
+  border-radius:18px;
+  z-index:2;
+  box-shadow:0 10px 30px rgba(0,0,0,0.2);
+}
+
+.scroll-btn{
+  margin-top:30px;
+  padding:15px 28px;
+  border:none;
+  border-radius:15px;
+  background:white;
+  color:#0077b6;
+  font-weight:bold;
+  cursor:pointer;
+  transition:0.3s;
+  z-index:2;
+}
+
+.scroll-btn:hover{
+  transform:scale(1.05);
+}
+
+/* CONTENT */
+
+.container{
+  width:100%;
+  max-width:1200px;
+  margin:auto;
+  padding:30px 20px 60px;
+}
+
+.section-title{
+  text-align:center;
+  margin-bottom:30px;
+  font-size:2.5rem;
+}
+
+.cards{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:25px;
+}
+
+.card{
+  background:rgba(255,255,255,0.12);
+  backdrop-filter:blur(10px);
+  padding:25px;
+  border-radius:22px;
+  transition:0.3s;
+  box-shadow:0 10px 30px rgba(0,0,0,0.2);
+}
+
+.card:hover{
+  transform:translateY(-8px);
+}
+
+.card h3{
+  margin-bottom:15px;
+  font-size:1.4rem;
+}
+
+.card p{
+  line-height:1.7;
+  opacity:0.95;
+}
+
+/* INTERACTIVO */
+
+.interactive{
+  margin-top:70px;
+}
+
+.buttons{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:15px;
+  margin-bottom:25px;
+}
+
+.action-btn{
+  border:none;
+  padding:14px 25px;
+  border-radius:15px;
+  background:white;
+  color:#0077b6;
+  font-weight:bold;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.action-btn:hover{
+  transform:scale(1.05);
+}
+
+.info-box{
+  width:100%;
+  max-width:900px;
+  margin:auto;
+  background:rgba(255,255,255,0.12);
+  backdrop-filter:blur(10px);
+  padding:30px;
+  border-radius:22px;
+  line-height:1.8;
+  text-align:center;
+  min-height:150px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.2);
+}
+
+/* FOOTER */
+
+.footer{
+  margin-top:70px;
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:20px;
+  padding-bottom:40px;
+}
+
+.footer a{
+  text-decoration:none;
+  background:white;
+  color:#0077b6;
+  padding:15px 25px;
+  border-radius:14px;
+  font-weight:bold;
+  transition:0.3s;
+}
+
+.footer a:hover{
+  transform:scale(1.05);
+}
+
+/* RESPONSIVE */
+
+@media(max-width:768px){
+
+  .hero h1{
+    font-size:3rem;
+  }
+
+  .hero p{
+    font-size:1rem;
+  }
+
+  .section-title{
+    font-size:2rem;
+  }
+
+}
+
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+
+<section class="hero">
+
+<h1>🏝 CORN ISLAND</h1>
+
+<p>
+El paraíso caribeño de Nicaragua,
+famoso por sus playas cristalinas,
+arena blanca y ambiente tropical.
+</p>
+
+<div class="mascota">
+🤖 ¡Bienvenido explorador! Prepárate para descubrir
+uno de los destinos más paradisíacos del Caribe nicaragüense.
+</div>
+
+<button class="scroll-btn" onclick="scrollToContent()">
+🌊 Explorar Corn Island
+</button>
+
+</section>
+
+<!-- CONTENIDO -->
+
+<div class="container" id="content">
+
+<h2 class="section-title">
+✨ Descubre Corn Island
+</h2>
+
+<div class="cards">
+
+<div class="card">
+<h3>📜 Historia</h3>
+<p>
+Corn Island está ubicada en el Caribe de Nicaragua
+y es conocida por su mezcla cultural afrocaribeña,
+tradiciones pesqueras y ambiente relajado.
+</p>
+</div>
+
+<div class="card">
+<h3>🌊 Lugares Turísticos</h3>
+<p>
+Entre los lugares más visitados destacan:
+Little Corn Island,
+las playas tropicales,
+los arrecifes coralinos
+y zonas ideales para buceo y snorkel.
+</p>
+</div>
+
+<div class="card">
+<h3>🍛 Gastronomía</h3>
+<p>
+La gastronomía caribeña incluye:
+pescados frescos,
+langosta,
+rice and beans,
+mariscos
+y deliciosos platillos con coco.
+</p>
+</div>
+
+<div class="card">
+<h3>🎶 Cultura</h3>
+<p>
+La isla posee una cultura afrocaribeña vibrante,
+música reggae,
+tradiciones locales
+y un ambiente relajado junto al mar.
+</p>
+</div>
+
+</div>
+
+<!-- INTERACTIVO -->
+
+<div class="interactive">
+
+<h2 class="section-title">
+🎮 Explora Más
+</h2>
+
+<div class="buttons">
+
+<button class="action-btn" onclick="showInfo('historia')">
+📜 Historia
+</button>
+
+<button class="action-btn" onclick="showInfo('curioso')">
+😮 Dato Curioso
+</button>
+
+<button class="action-btn" onclick="showInfo('hacer')">
+🏖 ¿Qué hacer?
+</button>
+
+<button class="action-btn" onclick="showInfo('consejos')">
+🧭 Consejos
+</button>
+
+</div>
+
+<div class="info-box" id="infoBox">
+
+Selecciona una opción para descubrir más sobre Corn Island 😄
+
+</div>
+
+</div>
+
+<!-- FOOTER -->
+
+<div class="footer">
+
+<a href="mapa.html">
+🗺 Volver al Mapa
+</a>
+
+<a href="juegos.html">
+🎮 Juegos
+</a>
+
+<a href="index.html">
+🏠 Inicio
+</a>
+
+</div>
+
+</div>
+
+<script>
+
+function scrollToContent(){
+
+document.getElementById("content")
+.scrollIntoView({
+behavior:"smooth"
+});
+
+}
+
+function showInfo(type){
+
+const box = document.getElementById("infoBox");
+
+if(type === "historia"){
+
+box.innerHTML = `
+<h3>📜 Historia de Corn Island</h3>
+<p>
+Corn Island ha sido históricamente un importante punto del Caribe nicaragüense,
+con fuerte influencia afrocaribeña y tradición pesquera.
+</p>
+`;
+
+}
+
+if(type === "curioso"){
+
+box.innerHTML = `
+<h3>😮 Dato Curioso</h3>
+<p>
+Little Corn Island no tiene vehículos motorizados,
+lo que la convierte en un destino tranquilo y natural.
+</p>
+`;
+
+}
+
+if(type === "hacer"){
+
+box.innerHTML = `
+<h3>🏖 ¿Qué puedes hacer?</h3>
+<p>
+Puedes practicar snorkel,
+buceo,
+paseos en lancha,
+pesca,
+disfrutar las playas
+y explorar arrecifes coralinos.
+</p>
+`;
+
+}
+
+if(type === "consejos"){
+
+box.innerHTML = `
+<h3>🧭 Consejos para visitar Corn Island</h3>
+<p>
+Lleva ropa fresca,
+protector solar,
+equipo para playa
+y disfruta de las actividades acuáticas del Caribe.
+</p>
+`;
+
+}
+
+}
+
+</script>
+
+</body>
+</html>
