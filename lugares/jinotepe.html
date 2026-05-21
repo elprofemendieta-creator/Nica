@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-<title>Jinotepe - Corazón Cultural de Carazo</title>
+<title>Jinotepe Nicaragua - Turismo</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -17,143 +17,51 @@
     margin:0;
     padding:0;
     box-sizing:border-box;
-    font-family:'Poppins',sans-serif;
-}
-
-html{
     scroll-behavior:smooth;
 }
 
+:root{
+    --verde:#1db954;
+    --azul:#00c3ff;
+    --amarillo:#ffd166;
+    --oscuro:#081c15;
+    --claro:#ffffff;
+    --glass:rgba(255,255,255,0.15);
+}
+
 body{
-    background:#f5fff8;
+    font-family:'Poppins',sans-serif;
+    background:#f4fff8;
     color:#222;
     overflow-x:hidden;
-    transition:0.4s;
+    transition:0.5s;
 }
-
-/* DARK MODE */
 
 body.dark{
-    background:#081b12;
+    background:#081c15;
     color:white;
-}
-
-body.dark .card,
-body.dark .gallery img,
-body.dark .weather-box,
-body.dark .clock,
-body.dark .glass{
-    background:rgba(255,255,255,0.08);
-    color:white;
-}
-
-/* SCROLL BAR */
-
-::-webkit-scrollbar{
-    width:10px;
-}
-
-::-webkit-scrollbar-thumb{
-    background:linear-gradient(#00c853,#ff9800);
-    border-radius:10px;
-}
-
-/* PARTICLES */
-
-.particles{
-    position:fixed;
-    width:100%;
-    height:100%;
-    z-index:-1;
-    overflow:hidden;
-}
-
-.particles span{
-    position:absolute;
-    display:block;
-    width:15px;
-    height:15px;
-    background:rgba(0,255,100,0.3);
-    animation:animate 20s linear infinite;
-    bottom:-150px;
-    border-radius:50%;
-}
-
-.particles span:nth-child(1){
-    left:10%;
-    width:20px;
-    height:20px;
-    animation-duration:15s;
-}
-
-.particles span:nth-child(2){
-    left:20%;
-    animation-duration:22s;
-}
-
-.particles span:nth-child(3){
-    left:35%;
-    width:25px;
-    height:25px;
-    animation-duration:17s;
-}
-
-.particles span:nth-child(4){
-    left:50%;
-    animation-duration:30s;
-}
-
-.particles span:nth-child(5){
-    left:65%;
-    width:18px;
-    height:18px;
-}
-
-.particles span:nth-child(6){
-    left:80%;
-    animation-duration:12s;
-}
-
-.particles span:nth-child(7){
-    left:90%;
-    width:25px;
-    height:25px;
-}
-
-@keyframes animate{
-    0%{
-        transform:translateY(0) rotate(0deg);
-        opacity:0;
-    }
-    50%{
-        opacity:1;
-    }
-    100%{
-        transform:translateY(-1200px) rotate(720deg);
-        opacity:0;
-    }
 }
 
 /* NAVBAR */
 
 nav{
     position:fixed;
-    top:0;
     width:100%;
-    padding:15px 8%;
+    top:0;
+    left:0;
+    z-index:999;
     display:flex;
     justify-content:space-between;
     align-items:center;
-    z-index:999;
-    background:rgba(255,255,255,0.15);
-    backdrop-filter:blur(12px);
+    padding:15px 40px;
+    background:rgba(0,0,0,0.3);
+    backdrop-filter:blur(10px);
 }
 
 .logo{
+    color:white;
     font-size:28px;
     font-weight:700;
-    color:#fff;
-    text-shadow:2px 2px 10px black;
 }
 
 nav ul{
@@ -163,14 +71,14 @@ nav ul{
 }
 
 nav ul li a{
-    color:white;
     text-decoration:none;
-    font-weight:600;
+    color:white;
+    font-weight:500;
     transition:0.3s;
 }
 
 nav ul li a:hover{
-    color:#00ff95;
+    color:var(--amarillo);
 }
 
 /* HERO */
@@ -178,8 +86,10 @@ nav ul li a:hover{
 .hero{
     height:100vh;
     background:
-    linear-gradient(rgba(0,0,0,0.45),rgba(0,0,0,0.45)),
-    url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1400') center/cover;
+    linear-gradient(rgba(0,0,0,0.4),rgba(0,0,0,0.5)),
+    url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=2070&auto=format&fit=crop');
+    background-size:cover;
+    background-position:center;
     display:flex;
     justify-content:center;
     align-items:center;
@@ -190,12 +100,11 @@ nav ul li a:hover{
 
 .hero-content{
     animation:fadeUp 2s ease;
-    padding:20px;
 }
 
 .hero h1{
     font-size:70px;
-    text-shadow:4px 4px 15px black;
+    text-shadow:0 0 20px rgba(0,0,0,0.5);
 }
 
 .hero p{
@@ -205,69 +114,98 @@ nav ul li a:hover{
 
 .hero button{
     margin-top:30px;
-    padding:15px 40px;
+    padding:15px 35px;
     border:none;
     border-radius:50px;
+    background:linear-gradient(45deg,var(--verde),var(--azul));
+    color:white;
     font-size:18px;
     cursor:pointer;
-    background:linear-gradient(45deg,#00c853,#ff9800);
-    color:white;
     transition:0.4s;
-    box-shadow:0 0 25px rgba(0,255,120,0.6);
+    box-shadow:0 0 20px rgba(0,255,150,0.5);
 }
 
 .hero button:hover{
     transform:scale(1.1);
 }
 
-@keyframes fadeUp{
-    from{
-        opacity:0;
-        transform:translateY(100px);
-    }
-    to{
-        opacity:1;
-        transform:translateY(0);
-    }
+/* FLOATING PARTICLES */
+
+.bubbles{
+    position:absolute;
+    width:100%;
+    height:100%;
+    overflow:hidden;
 }
 
-/* SECTION */
+.bubbles span{
+    position:absolute;
+    bottom:-100px;
+    width:25px;
+    height:25px;
+    background:rgba(255,255,255,0.3);
+    border-radius:50%;
+    animation:animate 10s linear infinite;
+}
+
+.bubbles span:nth-child(1){left:10%;animation-duration:8s;}
+.bubbles span:nth-child(2){left:20%;animation-duration:12s;}
+.bubbles span:nth-child(3){left:35%;animation-duration:7s;}
+.bubbles span:nth-child(4){left:50%;animation-duration:11s;}
+.bubbles span:nth-child(5){left:70%;animation-duration:9s;}
+.bubbles span:nth-child(6){left:85%;animation-duration:13s;}
+
+/* SECTIONS */
 
 section{
-    padding:90px 8%;
+    padding:100px 10%;
 }
 
-.section-title{
+.title{
     text-align:center;
-    font-size:42px;
     margin-bottom:50px;
-    color:#00a651;
 }
 
-/* CARDS */
+.title h2{
+    font-size:45px;
+    color:var(--verde);
+}
 
 .cards{
     display:grid;
     grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-    gap:25px;
+    gap:30px;
 }
 
 .card{
     background:white;
-    padding:30px;
-    border-radius:25px;
-    transition:0.4s;
-    box-shadow:0 10px 30px rgba(0,0,0,0.1);
+    border-radius:20px;
+    overflow:hidden;
+    transition:0.5s;
+    box-shadow:0 10px 25px rgba(0,0,0,0.1);
+}
+
+body.dark .card{
+    background:#133b2c;
 }
 
 .card:hover{
     transform:translateY(-10px) scale(1.03);
 }
 
-.card i{
-    font-size:45px;
-    color:#ff9800;
-    margin-bottom:20px;
+.card img{
+    width:100%;
+    height:220px;
+    object-fit:cover;
+}
+
+.card-content{
+    padding:20px;
+}
+
+.card-content h3{
+    margin-bottom:10px;
+    color:var(--verde);
 }
 
 /* GALLERY */
@@ -280,68 +218,36 @@ section{
 
 .gallery img{
     width:100%;
-    height:250px;
-    object-fit:cover;
     border-radius:20px;
     transition:0.5s;
-    cursor:pointer;
+    height:250px;
+    object-fit:cover;
 }
 
 .gallery img:hover{
     transform:scale(1.05);
 }
 
-/* WEATHER CLOCK */
+/* WEATHER */
 
-.info-boxes{
-    display:flex;
-    gap:30px;
-    flex-wrap:wrap;
-    justify-content:center;
-}
-
-.weather-box,
-.clock{
+.weather-box{
+    background:linear-gradient(45deg,var(--verde),var(--azul));
     padding:30px;
     border-radius:20px;
-    background:white;
-    min-width:250px;
     text-align:center;
-    box-shadow:0 10px 30px rgba(0,0,0,0.1);
-}
-
-.clock h1{
-    font-size:45px;
-    margin-top:15px;
-}
-
-/* FOOTER */
-
-footer{
-    padding:60px 8%;
-    background:linear-gradient(45deg,#003b1f,#006633);
     color:white;
+    font-size:22px;
+    box-shadow:0 0 25px rgba(0,0,0,0.2);
+}
+
+/* CLOCK */
+
+.clock{
+    font-size:40px;
     text-align:center;
-}
-
-footer h2{
-    margin-bottom:25px;
-}
-
-.map-btn{
-    display:inline-block;
     margin-top:20px;
-    padding:16px 35px;
-    background:#ff9800;
-    color:white;
-    border-radius:50px;
-    text-decoration:none;
-    font-weight:600;
-    transition:0.4s;
-}
-
-.map-btn:hover{
-    transform:scale(1.1);
+    color:var(--amarillo);
+    font-weight:bold;
 }
 
 /* FLOAT BUTTONS */
@@ -352,38 +258,103 @@ footer h2{
     right:20px;
     width:60px;
     height:60px;
-    border:none;
     border-radius:50%;
+    border:none;
     cursor:pointer;
     color:white;
     font-size:22px;
     z-index:999;
-    box-shadow:0 5px 20px rgba(0,0,0,0.4);
+    transition:0.4s;
 }
 
 .music-btn{
-    bottom:90px;
-    background:#ff9800;
+    bottom:100px;
+    background:linear-gradient(45deg,#ff512f,#dd2476);
 }
 
 .dark-btn{
-    bottom:20px;
-    background:#00c853;
+    bottom:30px;
+    background:linear-gradient(45deg,#141e30,#243b55);
+}
+
+.music-btn:hover,
+.dark-btn:hover{
+    transform:scale(1.1);
+}
+
+/* FOOTER */
+
+footer{
+    background:#06140f;
+    color:white;
+    text-align:center;
+    padding:50px 20px;
+}
+
+.map-btn{
+    display:inline-block;
+    margin-top:20px;
+    padding:15px 30px;
+    background:linear-gradient(45deg,var(--verde),var(--azul));
+    border-radius:50px;
+    text-decoration:none;
+    color:white;
+    font-size:18px;
+    transition:0.4s;
+}
+
+.map-btn:hover{
+    transform:scale(1.1);
+}
+
+/* ANIMATIONS */
+
+@keyframes animate{
+    0%{
+        transform:translateY(0) scale(0);
+        opacity:0;
+    }
+    50%{
+        opacity:1;
+    }
+    100%{
+        transform:translateY(-110vh) scale(1);
+        opacity:0;
+    }
+}
+
+@keyframes fadeUp{
+    from{
+        opacity:0;
+        transform:translateY(40px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
 }
 
 /* RESPONSIVE */
 
 @media(max-width:768px){
 
-    .hero h1{
-        font-size:42px;
+    nav{
+        padding:15px 20px;
     }
 
     nav ul{
         display:none;
     }
 
-    .section-title{
+    .hero h1{
+        font-size:45px;
+    }
+
+    .hero p{
+        font-size:18px;
+    }
+
+    .title h2{
         font-size:32px;
     }
 
@@ -391,19 +362,8 @@ footer h2{
 
 </style>
 </head>
+
 <body>
-
-<!-- PARTICLES -->
-
-<div class="particles">
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-</div>
 
 <!-- NAVBAR -->
 
@@ -423,14 +383,23 @@ footer h2{
 
 <section class="hero" id="inicio">
 
-    <div class="hero-content">
-        <h1>Bienvenido a Jinotepe</h1>
-        <p>Tradición, cultura y naturaleza tropical de Nicaragua</p>
+<div class="bubbles">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+</div>
 
-        <button onclick="scrollToSection()">
-            Explorar Destino
-        </button>
-    </div>
+<div class="hero-content">
+    <h1>Jinotepe</h1>
+    <p>Tradición, Cultura y Naturaleza Tropical</p>
+
+    <button onclick="scrollToSection()">
+        Explorar Destino
+    </button>
+</div>
 
 </section>
 
@@ -438,40 +407,49 @@ footer h2{
 
 <section id="cultura">
 
-    <h2 class="section-title">
-        Cultura y Tradición
-    </h2>
+<div class="title">
+    <h2>Cultura Viva</h2>
+</div>
 
-    <div class="cards">
+<div class="cards">
 
-        <div class="card">
-            <i class="fa-solid fa-masks-theater"></i>
-            <h3>Festividades</h3>
-            <p>
-                Jinotepe destaca por sus coloridas fiestas patronales
-                llenas de música, danza y tradición.
-            </p>
-        </div>
+<div class="card">
+<img src="https://images.unsplash.com/photo-1513622470522-26c3c8a854bc?q=80&w=2070&auto=format&fit=crop">
 
-        <div class="card">
-            <i class="fa-solid fa-drum"></i>
-            <h3>Folklore</h3>
-            <p>
-                La marimba y las expresiones culturales forman parte
-                esencial de la identidad local.
-            </p>
-        </div>
+<div class="card-content">
+<h3>Tradiciones</h3>
+<p>
+Jinotepe destaca por sus fiestas patronales,
+música tradicional y su identidad cultural.
+</p>
+</div>
+</div>
 
-        <div class="card">
-            <i class="fa-solid fa-leaf"></i>
-            <h3>Naturaleza</h3>
-            <p>
-                Clima fresco, paisajes verdes y ambiente relajante
-                hacen de Jinotepe un destino especial.
-            </p>
-        </div>
+<div class="card">
+<img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=2070&auto=format&fit=crop">
 
-    </div>
+<div class="card-content">
+<h3>Gastronomía</h3>
+<p>
+Disfruta sabores típicos nicaragüenses con un
+ambiente auténtico y tropical.
+</p>
+</div>
+</div>
+
+<div class="card">
+<img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=2070&auto=format&fit=crop">
+
+<div class="card-content">
+<h3>Naturaleza</h3>
+<p>
+Paisajes verdes, clima fresco y cercanía con
+lugares turísticos increíbles.
+</p>
+</div>
+</div>
+
+</div>
 
 </section>
 
@@ -479,40 +457,46 @@ footer h2{
 
 <section id="lugares">
 
-    <h2 class="section-title">
-        Lugares Turísticos
-    </h2>
+<div class="title">
+<h2>Lugares Turísticos</h2>
+</div>
 
-    <div class="cards">
+<div class="cards">
 
-        <div class="card">
-            <i class="fa-solid fa-church"></i>
-            <h3>Catedral Santiago</h3>
-            <p>
-                Una joya arquitectónica y símbolo histórico
-                del departamento de Carazo.
-            </p>
-        </div>
+<div class="card">
+<img src="https://images.unsplash.com/photo-1521295121783-8a321d551ad2?q=80&w=2070&auto=format&fit=crop">
 
-        <div class="card">
-            <i class="fa-solid fa-tree-city"></i>
-            <h3>Parques</h3>
-            <p>
-                Espacios ideales para disfrutar en familia
-                y admirar la belleza urbana tropical.
-            </p>
-        </div>
+<div class="card-content">
+<h3>Parques</h3>
+<p>
+Espacios naturales ideales para relajarse y disfrutar.
+</p>
+</div>
+</div>
 
-        <div class="card">
-            <i class="fa-solid fa-mountain-sun"></i>
-            <h3>Miradores</h3>
-            <p>
-                Vistas espectaculares rodeadas de naturaleza
-                y aire fresco.
-            </p>
-        </div>
+<div class="card">
+<img src="https://images.unsplash.com/photo-1518509562904-e7ef99cdcc86?q=80&w=2070&auto=format&fit=crop">
 
-    </div>
+<div class="card-content">
+<h3>Iglesias</h3>
+<p>
+Arquitectura tradicional con mucha historia cultural.
+</p>
+</div>
+</div>
+
+<div class="card">
+<img src="https://images.unsplash.com/photo-1493558103817-58b2924bce98?q=80&w=2070&auto=format&fit=crop">
+
+<div class="card-content">
+<h3>Miradores</h3>
+<p>
+Disfruta vistas espectaculares y atardeceres únicos.
+</p>
+</div>
+</div>
+
+</div>
 
 </section>
 
@@ -520,21 +504,21 @@ footer h2{
 
 <section id="galeria">
 
-    <h2 class="section-title">
-        Galería Tropical
-    </h2>
+<div class="title">
+<h2>Galería Tropical</h2>
+</div>
 
-    <div class="gallery">
+<div class="gallery">
 
-        <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1200">
+<img src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=2070&auto=format&fit=crop">
 
-        <img src="https://images.unsplash.com/photo-1493558103817-58b2924bce98?q=80&w=1200">
+<img src="https://images.unsplash.com/photo-1493246507139-91e8fad9978e?q=80&w=2070&auto=format&fit=crop">
 
-        <img src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?q=80&w=1200">
+<img src="https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?q=80&w=2070&auto=format&fit=crop">
 
-        <img src="https://images.unsplash.com/photo-1470770841072-f978cf4d019e?q=80&w=1200">
+<img src="https://images.unsplash.com/photo-1470770841072-f978cf4d019e?q=80&w=2070&auto=format&fit=crop">
 
-    </div>
+</div>
 
 </section>
 
@@ -542,25 +526,18 @@ footer h2{
 
 <section id="clima">
 
-    <h2 class="section-title">
-        Clima y Hora Local
-    </h2>
+<div class="title">
+<h2>Clima en Vivo</h2>
+</div>
 
-    <div class="info-boxes">
+<div class="weather-box">
+🌤️ Temperatura Tropical: 26°C <br><br>
+💨 Brisa fresca de Carazo
+</div>
 
-        <div class="weather-box">
-            <h3>🌤 Clima</h3>
-            <p id="weather">
-                26°C - Tropical Fresco
-            </p>
-        </div>
-
-        <div class="clock">
-            <h3>🕒 Hora Local</h3>
-            <h1 id="clock"></h1>
-        </div>
-
-    </div>
+<div class="clock" id="clock">
+00:00:00
+</div>
 
 </section>
 
@@ -568,37 +545,36 @@ footer h2{
 
 <footer>
 
-    <h2>Descubre Jinotepe, Nicaragua</h2>
+<h2>Descubre Jinotepe Nicaragua</h2>
 
-    <p>
-        Vive una experiencia cultural llena de tradición,
-        naturaleza y energía tropical.
-    </p>
+<p>
+Turismo • Cultura • Naturaleza • Tradición
+</p>
 
-    <a class="map-btn"
-       href="https://www.google.com/maps/place/Jinotepe,+Nicaragua/"
-       target="_blank">
+<a class="map-btn"
+href="https://www.google.com/maps/place/Jinotepe,+Nicaragua/"
+target="_blank">
 
-       📍 Cómo llegar a Jinotepe
+📍 Cómo llegar
 
-    </a>
+</a>
 
 </footer>
 
 <!-- AUDIO -->
 
 <audio id="music" loop>
-    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8f6c4d1d2.mp3?filename=relaxing-marimba-112191.mp3" type="audio/mp3">
+<source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
 </audio>
 
 <!-- FLOAT BUTTONS -->
 
 <button class="music-btn" onclick="toggleMusic()">
-    <i class="fa-solid fa-music"></i>
+<i class="fas fa-music"></i>
 </button>
 
-<button class="dark-btn" onclick="toggleDark()">
-    <i class="fa-solid fa-moon"></i>
+<button class="dark-btn" onclick="toggleDarkMode()">
+<i class="fas fa-moon"></i>
 </button>
 
 <script>
@@ -606,9 +582,8 @@ footer h2{
 /* SCROLL */
 
 function scrollToSection(){
-    document.getElementById("cultura")
-    .scrollIntoView({
-        behavior:"smooth"
+    document.querySelector('#cultura').scrollIntoView({
+        behavior:'smooth'
     });
 }
 
@@ -618,10 +593,13 @@ function updateClock(){
 
     const now = new Date();
 
-    const time = now.toLocaleTimeString();
+    let h = String(now.getHours()).padStart(2,'0');
+    let m = String(now.getMinutes()).padStart(2,'0');
+    let s = String(now.getSeconds()).padStart(2,'0');
 
-    document.getElementById("clock")
-    .innerHTML = time;
+    document.getElementById('clock').innerHTML =
+    `${h}:${m}:${s}`;
+
 }
 
 setInterval(updateClock,1000);
@@ -630,40 +608,37 @@ setInterval(updateClock,1000);
 
 const music = document.getElementById("music");
 
-let playing = false;
-
 function toggleMusic(){
 
-    if(!playing){
+    if(music.paused){
         music.play();
-        playing = true;
     }else{
         music.pause();
-        playing = false;
     }
 
 }
 
 /* DARK MODE */
 
-function toggleDark(){
-    document.body.classList.toggle("dark");
+function toggleDarkMode(){
+    document.body.classList.toggle('dark');
 }
 
-/* AUTO GALLERY EFFECT */
+/* GALLERY AUTO EFFECT */
 
-let galleryImages = document.querySelectorAll(".gallery img");
+let galleryImages = document.querySelectorAll('.gallery img');
 
 galleryImages.forEach((img,index)=>{
 
     setInterval(()=>{
-        img.style.transform = "scale(1.05)";
+
+        img.style.transform='scale(1.05)';
 
         setTimeout(()=>{
-            img.style.transform = "scale(1)";
+            img.style.transform='scale(1)';
         },1500);
 
-    },3000 + (index * 1000));
+    },3000 + (index*1000));
 
 });
 
