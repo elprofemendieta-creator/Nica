@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Carazo - Nicaragua</title>
+  <style>
+    body {
+      font-family: 'Georgia', serif;
+      margin: 0;
+      padding: 0;
+      background-color: #fdf3e7;
+      color: #4b2e2e;
+    }
+    header {
+      background-color: #8b0000;
+      color: #fff;
+      text-align: center;
+      padding: 20px;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2.5em;
+    }
+    main {
+      padding: 20px;
+      text-align: center;
+    }
+    main p {
+      max-width: 800px;
+      margin: auto;
+      font-size: 1.2em;
+      line-height: 1.6;
+    }
+    section {
+      margin-top: 30px;
+    }
+    section h2 {
+      color: #8b0000;
+      margin-bottom: 15px;
+    }
+    .botones {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-top: 30px;
+    }
+    .botones button {
+      background-color: #d2691e;
+      color: #fff;
+      border: none;
+      padding: 15px 25px;
+      font-size: 1em;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: transform 0.2s, background-color 0.3s;
+    }
+    .botones button:hover {
+      background-color: #a0522d;
+      transform: scale(1.05);
+    }
+    footer {
+      background-color: #8b0000;
+      color: #fff;
+      text-align: center;
+      padding: 15px;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Departamento de Carazo - Nicaragua</h1>
+    <p>Tradición, cultura y naturaleza</p>
+  </header>
+
+  <main>
+    <p>
+      Carazo es un departamento lleno de historia, cultura y paisajes naturales. 
+      Sus ciudades y reservas ofrecen experiencias únicas que reflejan la riqueza 
+      de Nicaragua: desde las tradiciones folclóricas de Diriamba hasta las playas 
+      de La Boquita y la biodiversidad de la Reserva Chacocente.
+    </p>
+
+    <section>
+      <h2>Lugares Turísticos</h2>
+      <div class="botones">
+        <button onclick="redirigir('https://es.wikipedia.org/wiki/Diriamba')">Diriamba</button>
+        <button onclick="redirigir('https://es.wikipedia.org/wiki/San_Marcos_(Nicaragua)')">San Marcos</button>
+        <button onclick="redirigir('https://es.wikipedia.org/wiki/La_Boquita')">La Boquita</button>
+        <button onclick="redirigir('https://es.wikipedia.org/wiki/Jinotepe')">Jinotepe</button>
+        <button onclick="redirigir('https://es.wikipedia.org/wiki/Reserva_Natural_Chacocente')">Reserva Chacocente</button>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 Departamento de Carazo - Nicaragua</p>
+  </footer>
+
+  <script>
+    function redirigir(url) {
+      window.open(url, '_blank');
+    }
+  </script>
+</body>
+</html>
