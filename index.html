@@ -2,58 +2,515 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Nica Explorer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Nica Explorer - Autenticación</title>
+  
+  <!-- Google Fonts + Font Awesome -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 
-  <link rel="stylesheet" href="styles.css" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Fondo animado (ondas sutiles) */
+    .wave-bg {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      opacity: 0.2;
+      pointer-events: none;
+    }
+
+    .wave-bg svg {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 60%;
+    }
+
+    .container {
+      position: relative;
+      z-index: 2;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Tarjeta principal */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(12px);
+      border-radius: 2rem;
+      padding: 2rem 1.8rem;
+      box-shadow: 0 25px 45px rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      width: 100%;
+      max-width: 500px;
+      transition: all 0.3s ease;
+      text-align: center;
+    }
+
+    .mascota {
+      margin-bottom: 1rem;
+    }
+    .mascota img {
+      width: 90px;
+      filter: drop-shadow(0 10px 15px rgba(0,0,0,0.2));
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #FFE259, #FFA751);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 0.5rem;
+    }
+
+    .subtitle {
+      color: rgba(255,255,255,0.9);
+      font-weight: 400;
+      margin-bottom: 2rem;
+      font-size: 1rem;
+    }
+
+    /* Botones */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 12px 24px;
+      border-radius: 60px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      width: 100%;
+      font-size: 1rem;
+      margin-bottom: 12px;
+    }
+    .btn-primary {
+      background: linear-gradient(95deg, #F9A826, #F57C00);
+      color: white;
+      box-shadow: 0 4px 12px rgba(245, 124, 0, 0.3);
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(245,124,0,0.4);
+    }
+    .btn-google {
+      background: white;
+      color: #444;
+      border: 1px solid #ddd;
+    }
+    .btn-google:hover {
+      background: #f5f5f5;
+      transform: translateY(-2px);
+    }
+    .btn-outline {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.5);
+      color: white;
+    }
+    .btn-outline:hover {
+      background: rgba(255,255,255,0.1);
+    }
+
+    /* Inputs */
+    .input-group {
+      margin-bottom: 1rem;
+      text-align: left;
+    }
+    .input-group input {
+      width: 100%;
+      padding: 14px 18px;
+      border-radius: 40px;
+      border: none;
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(4px);
+      color: white;
+      font-size: 0.95rem;
+      outline: none;
+      transition: 0.2s;
+    }
+    .input-group input::placeholder {
+      color: rgba(255,255,255,0.6);
+    }
+    .input-group input:focus {
+      background: rgba(255,255,255,0.25);
+      box-shadow: 0 0 0 2px #F57C00;
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      color: rgba(255,255,255,0.5);
+      margin: 1.2rem 0;
+    }
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+    }
+    .divider span {
+      margin: 0 10px;
+      font-size: 0.8rem;
+    }
+
+    /* Menu (oculto hasta login) */
+    .menu-section {
+      display: none;
+      margin-top: 2rem;
+      width: 100%;
+      animation: fadeInUp 0.6s ease;
+    }
+    .menu-section h2 {
+      color: white;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      font-weight: 600;
+    }
+    .menu-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.5rem;
+    }
+    .menu-card {
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(8px);
+      border-radius: 1.5rem;
+      padding: 1.5rem;
+      width: 200px;
+      text-align: center;
+      text-decoration: none;
+      color: white;
+      transition: all 0.3s;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    .menu-card:hover {
+      transform: translateY(-8px);
+      background: rgba(255,255,255,0.25);
+    }
+    .menu-card span {
+      font-size: 3rem;
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .menu-card h3 {
+      font-size: 1.2rem;
+    }
+
+    /* Toast personalizado */
+    .toast-message {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.8);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 40px;
+      font-size: 0.9rem;
+      z-index: 1000;
+      backdrop-filter: blur(10px);
+      pointer-events: none;
+      transition: 0.2s;
+    }
+
+    /* Botón flotante WhatsApp */
+    .whatsapp-float {
+      position: fixed;
+      bottom: 25px;
+      right: 25px;
+      background-color: #25D366;
+      color: white;
+      width: 55px;
+      height: 55px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      transition: all 0.3s;
+      z-index: 99;
+      text-decoration: none;
+    }
+    .whatsapp-float:hover {
+      transform: scale(1.1);
+      background-color: #20b859;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Responsive */
+    @media (max-width: 550px) {
+      .glass-card { padding: 1.5rem; }
+      h1 { font-size: 2rem; }
+      .menu-card { width: 160px; padding: 1rem; }
+      .menu-card span { font-size: 2.5rem; }
+    }
+
+    /* Estado oculto */
+    .hidden-form {
+      display: none;
+    }
+    .inline-link {
+      color: #F57C00;
+      cursor: pointer;
+      text-decoration: underline;
+      background: none;
+      border: none;
+      font-size: 0.9rem;
+      margin-top: 10px;
+    }
+  </style>
 </head>
 <body>
+  <div class="wave-bg">
+    <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
+      <path fill="rgba(255,255,255,0.1)" d="M0,192L48,197.3C96,203,192,213,288,208C384,203,480,181,576,176C672,171,768,181,864,197.3C960,213,1056,235,1152,224C1248,213,1344,171,1392,149.3L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+    </svg>
+  </div>
 
-  <div class="background"></div>
-
-  <main class="container">
-
-    <section class="hero">
-
+  <div class="container">
+    <!-- Tarjeta de autenticación (se muestra hasta login exitoso) -->
+    <div id="authCard" class="glass-card">
       <div class="mascota">
         <img src="https://cdn-icons-png.flaticon.com/512/4712/4712109.png" alt="Mascota" />
       </div>
-
       <h1>Nica Explorer</h1>
+      <p class="subtitle">Explora Nicaragua jugando y descubriendo lugares increíbles 🌋🌊</p>
 
-      <p class="subtitle">
-        Explora Nicaragua jugando y descubriendo lugares increíbles 🌋🌊
-      </p>
+      <!-- Formulario dinámico: login / registro -->
+      <div id="authForms">
+        <!-- Login por defecto -->
+        <div id="loginForm">
+          <div class="input-group">
+            <input type="email" id="loginEmail" placeholder="Correo electrónico" />
+          </div>
+          <div class="input-group">
+            <input type="password" id="loginPassword" placeholder="Contraseña" />
+          </div>
+          <button id="doLoginBtn" class="btn btn-primary">Iniciar sesión</button>
+          <button id="googleLoginBtn" class="btn btn-google"><i class="fab fa-google"></i> Continuar con Google</button>
+          <div class="divider"><span>o</span></div>
+          <button id="showRegisterBtn" class="btn btn-outline">Crear cuenta nueva</button>
+        </div>
 
-      <button id="startBtn" class="start-btn">
-        Iniciar Aventura
-      </button>
+        <!-- Registro (oculto inicialmente) -->
+        <div id="registerForm" style="display:none;">
+          <div class="input-group">
+            <input type="email" id="regEmail" placeholder="Correo electrónico" />
+          </div>
+          <div class="input-group">
+            <input type="password" id="regPassword" placeholder="Contraseña" />
+          </div>
+          <button id="doRegisterBtn" class="btn btn-primary">Registrarse</button>
+          <button id="backToLoginBtn" class="btn btn-outline">← Volver al inicio de sesión</button>
+        </div>
+      </div>
+    </div>
 
-    </section>
-
-    <section class="menu hidden" id="menuSection">
-
-      <h2>¿Qué deseas explorar?</h2>
-
+    <!-- Menú de juegos / mapa (se muestra después de login) -->
+    <div id="menuSection" class="menu-section">
+      <h2>¡Bienvenido, <span id="userName"></span>! ¿Qué deseas explorar?</h2>
       <div class="menu-buttons">
-
         <a href="../juegos/juegos.html" class="menu-card">
           <span>🎮</span>
           <h3>Juegos Turísticos</h3>
         </a>
-
         <a href="mapa.html" class="menu-card">
           <span>🗺️</span>
           <h3>Mapa Interactivo</h3>
         </a>
-
       </div>
+      <div style="margin-top: 2rem;">
+        <button id="logoutBtn" class="btn btn-outline" style="width: auto; padding: 8px 20px;">Cerrar sesión</button>
+      </div>
+    </div>
+  </div>
 
-    </section>
+  <!-- Botón WhatsApp -->
+  <a href="https://wa.me/50588170531?text=Hola%20quiero%20consultar%20sobre%20Nica%20Explorer" class="whatsapp-float" target="_blank">
+    <i class="fab fa-whatsapp"></i>
+  </a>
 
-  </main>
+  <div id="toast" class="toast-message" style="display: none;"></div>
 
-  <script src="app.js"></script>
+  <!-- Firebase SDK (usando módulos) -->
+  <script type="importmap">
+    {
+      "imports": {
+        "firebase/app": "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js",
+        "firebase/auth": "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js"
+      }
+    }
+  </script>
 
+  <script type="module">
+    import { initializeApp } from "firebase/app";
+    import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "firebase/auth";
+
+    // Configuración de Firebase (¡CAMBIAR POR TUS DATOS REALES!)
+    const firebaseConfig = {
+      apiKey: "TU_API_KEY",
+      authDomain: "TU_AUTH_DOMAIN",
+      projectId: "TU_PROJECT_ID",
+      storageBucket: "TU_STORAGE_BUCKET",
+      messagingSenderId: "TU_SENDER_ID",
+      appId: "TU_APP_ID"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
+
+    // Elementos DOM
+    const authCard = document.getElementById('authCard');
+    const menuSection = document.getElementById('menuSection');
+    const userNameSpan = document.getElementById('userName');
+    const loginFormDiv = document.getElementById('loginForm');
+    const registerFormDiv = document.getElementById('registerForm');
+    const toastDiv = document.getElementById('toast');
+
+    function showToast(msg, isError = false) {
+      toastDiv.textContent = msg;
+      toastDiv.style.display = 'block';
+      toastDiv.style.background = isError ? 'rgba(220,53,69,0.9)' : 'rgba(0,0,0,0.8)';
+      setTimeout(() => {
+        toastDiv.style.display = 'none';
+      }, 3000);
+    }
+
+    // Mostrar UI según estado de autenticación
+    function updateUI(user) {
+      if (user) {
+        // Usuario logueado: ocultar tarjeta de login, mostrar menú
+        authCard.style.display = 'none';
+        menuSection.style.display = 'block';
+        const displayName = user.displayName || user.email.split('@')[0];
+        userNameSpan.textContent = displayName;
+      } else {
+        authCard.style.display = 'block';
+        menuSection.style.display = 'none';
+        // Resetear formularios a login visible
+        loginFormDiv.style.display = 'block';
+        registerFormDiv.style.display = 'none';
+      }
+    }
+
+    // Observador de estado
+    onAuthStateChanged(auth, (user) => {
+      updateUI(user);
+    });
+
+    // ---- LOGIN con email/pass ----
+    document.getElementById('doLoginBtn').addEventListener('click', async () => {
+      const email = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPassword').value;
+      if (!email || !password) {
+        showToast('Completa todos los campos', true);
+        return;
+      }
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        showToast('¡Bienvenido de vuelta!');
+      } catch (error) {
+        let msg = error.message;
+        if (msg.includes('user-not-found')) msg = 'Usuario no registrado';
+        else if (msg.includes('wrong-password')) msg = 'Contraseña incorrecta';
+        showToast(msg, true);
+      }
+    });
+
+    // ---- Registro con email/pass ----
+    document.getElementById('doRegisterBtn').addEventListener('click', async () => {
+      const email = document.getElementById('regEmail').value.trim();
+      const password = document.getElementById('regPassword').value;
+      if (!email || !password) {
+        showToast('Completa todos los campos', true);
+        return;
+      }
+      if (password.length < 6) {
+        showToast('La contraseña debe tener al menos 6 caracteres', true);
+        return;
+      }
+      try {
+        await createUserWithEmailAndPassword(auth, email, password);
+        showToast('Registro exitoso. ¡Ya puedes explorar!');
+      } catch (error) {
+        let msg = error.message;
+        if (msg.includes('email-already-in-use')) msg = 'El correo ya está registrado';
+        showToast(msg, true);
+      }
+    });
+
+    // ---- Google Login ----
+    document.getElementById('googleLoginBtn').addEventListener('click', async () => {
+      try {
+        await signInWithPopup(auth, provider);
+        showToast('Inicio con Google correcto');
+      } catch (error) {
+        showToast('Error con Google: ' + error.message, true);
+      }
+    });
+
+    // ---- Cambiar entre login y registro ----
+    document.getElementById('showRegisterBtn').addEventListener('click', () => {
+      loginFormDiv.style.display = 'none';
+      registerFormDiv.style.display = 'block';
+    });
+    document.getElementById('backToLoginBtn').addEventListener('click', () => {
+      registerFormDiv.style.display = 'none';
+      loginFormDiv.style.display = 'block';
+    });
+
+    // ---- Cerrar sesión ----
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+      await signOut(auth);
+      showToast('Sesión cerrada');
+    });
+
+    // Pequeño detalle: limpiar campos al cambiar formulario
+    function clearInputs(container) {
+      container.querySelectorAll('input').forEach(inp => inp.value = '');
+    }
+    document.getElementById('showRegisterBtn').addEventListener('click', () => clearInputs(loginFormDiv));
+    document.getElementById('backToLoginBtn').addEventListener('click', () => clearInputs(registerFormDiv));
+  </script>
 </body>
 </html>
