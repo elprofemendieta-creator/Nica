@@ -21,10 +21,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Estilos propios -->
-    <link rel="stylesheet" href="styles1.css">
-    
-    <!-- Librería para QR -->
-    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
@@ -87,24 +84,72 @@
     </div>
 </div>
 
-<!-- Modales -->
-<div id="adminModal" class="modal"> ... (igual que antes) ... </div>
-<div id="lugarModal" class="modal"> ... (igual que antes) ... </div>
+<!-- Modales (admin, lugar, usuario, perfil) -->
+<div id="adminModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Acceso Administrador</h3>
+            <button class="close-modal">&times;</button>
+        </div>
+        <form id="adminLoginForm">
+            <div class="form-group">
+                <label>Contraseña</label>
+                <input type="password" id="adminPassword" placeholder="Contraseña" required>
+            </div>
+            <button type="submit" class="submit-btn">Entrar</button>
+        </form>
+    </div>
+</div>
 
-<!-- Modal de Usuario (Login/Registro/Perfil) -->
+<div id="lugarModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="modalTitle">Añadir Lugar</h3>
+            <button class="close-modal">&times;</button>
+        </div>
+        <form id="lugarForm">
+            <input type="hidden" id="lugarId">
+            <div class="form-group">
+                <label>Nombre del lugar *</label>
+                <input type="text" id="lugarNombre" required>
+            </div>
+            <div class="form-row">
+                <div class="form-group half">
+                    <label>Latitud *</label>
+                    <input type="number" step="any" id="lugarLat" required>
+                </div>
+                <div class="form-group half">
+                    <label>Longitud *</label>
+                    <input type="number" step="any" id="lugarLng" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>URL del enlace (HTML)</label>
+                <input type="text" id="lugarUrl" placeholder="ej: lugar.html">
+            </div>
+            <div class="form-group">
+                <label>URL Imagen (opcional)</label>
+                <input type="text" id="lugarImagen" placeholder="https://...">
+            </div>
+            <div class="form-group">
+                <label>Categoría (etiqueta)</label>
+                <input type="text" id="lugarCategoria" placeholder="ej: playa, volcán, ciudad">
+            </div>
+            <button type="submit" class="submit-btn">Guardar</button>
+        </form>
+    </div>
+</div>
+
 <div id="userModal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
             <h3 id="userModalTitle">Iniciar Sesión</h3>
             <button class="close-modal">&times;</button>
         </div>
-        <div id="userModalBody">
-            <!-- Contenido dinámico -->
-        </div>
+        <div id="userModalBody"></div>
     </div>
 </div>
 
-<!-- Modal de perfil (cuando logueado) -->
 <div id="profileModal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
@@ -133,22 +178,22 @@
     import { getFirestore, collection, onSnapshot, addDoc, updateDoc, deleteDoc, doc, getDocs, query, where, orderBy, limit } from "firebase/firestore";
     import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
 
+    // Reemplaza con tus credenciales de Firebase
     const firebaseConfig = {
-       apiKey: "AIzaSyA6jVICuE17KJcO34gE1brMxqWEfNd3Fy0",
-  authDomain: "mapa-41b00.firebaseapp.com",
-  projectId: "mapa-41b00",
-  storageBucket: "mapa-41b00.firebasestorage.app",
-  messagingSenderId: "535032835400",
-  appId: "1:535032835400:web:68c079cbc3f419eafd177d",
-  measurementId: "G-7R3DSH7PPN"
-};
+        apiKey: "AIzaSyB...",  // <--- PON TU API KEY REAL
+        authDomain: "nicaexplorer.firebaseapp.com",
+        projectId: "nicaexplorer",
+        storageBucket: "nicaexplorer.appspot.com",
+        messagingSenderId: "123456789",
+        appId: "1:123456789:web:abcdef"
+    };
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     const auth = getAuth(app);
     const provider = new GoogleAuthProvider();
 
-    // Exponer helpers globalmente para script1.js
+    // Exponer helpers globales para script1.js
     window.firebaseHelpers = {
         collection: (path) => collection(db, path),
         onSnapshot: onSnapshot,
