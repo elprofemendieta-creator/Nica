@@ -122,7 +122,7 @@ body {
 .map-container {
     flex: 1;
     position: relative;
-    height: calc(70vh - 70px);
+    height: calc(60vh - 70px);
     min-height: 400px; /* Fuerza altura mínima */
 }
 
@@ -141,7 +141,7 @@ body {
     }
     .map-container {
         height: 60vh; /* Altura relativa en móvil */
-        min-height: 300px;
+        min-height: 200px;
         order: 1;
     }
     #map {
