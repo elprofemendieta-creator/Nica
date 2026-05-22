@@ -1,0 +1,281 @@
+# lugares.html
+
+```html
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lugares | Nicaventura</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f8fafc;
+      color: #0f172a;
+    }
+
+    header {
+      background: #0f172a;
+      color: white;
+      padding: 25px;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+
+    header p {
+      color: #cbd5e1;
+    }
+
+    .contenedor {
+      max-width: 1300px;
+      margin: auto;
+      padding: 40px 20px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 25px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+      transition: 0.3s;
+      border: 2px solid transparent;
+    }
+
+    .card:hover {
+      transform: translateY(-8px);
+      border-color: #0ea5e9;
+    }
+
+    .card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+    }
+
+    .card-content {
+      padding: 20px;
+    }
+
+    .card h2 {
+      font-size: 1.4rem;
+      margin-bottom: 10px;
+      color: #0f172a;
+    }
+
+    .card p {
+      color: #475569;
+      line-height: 1.5;
+      margin-bottom: 15px;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 10px 18px;
+      background: #0ea5e9;
+      color: white;
+      text-decoration: none;
+      border-radius: 10px;
+      transition: 0.3s;
+      font-weight: bold;
+    }
+
+    .btn:hover {
+      background: #0284c7;
+    }
+
+    footer {
+      background: #0f172a;
+      color: white;
+      text-align: center;
+      padding: 20px;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Departamentos de Nicaragua</h1>
+    <p>Explora los principales destinos turísticos del país</p>
+  </header>
+
+  <section class="contenedor">
+    <div class="grid">
+
+      <div class="card">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/7/74/Catedral_de_Le%C3%B3n%2C_Nicaragua.jpg">
+        <div class="card-content">
+          <h2>León</h2>
+          <p>Catedral de León, volcanes y playas del Pacífico.</p>
+          <a href="leon.html" class="btn">Explorar</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/Granada_Nicaragua.jpg">
+        <div class="card-content">
+          <h2>Granada</h2>
+          <p>Ciudad colonial, Isletas y Calle La Calzada.</p>
+          <a href="granada.html" class="btn">Explorar</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/1/1b/Volcan_Masaya.jpg">
+        <div class="card-content">
+          <h2>Masaya</h2>
+          <p>Volcán Masaya, artesanías y miradores.</p>
+          <a href="masaya.html" class="btn">Explorar</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/0/03/San_Juan_del_Sur.jpg">
+        <div class="card-content">
+          <h2>Rivas</h2>
+          <p>Playas, surf y la Isla de Ometepe.</p>
+          <a href="rivas.html" class="btn">Explorar</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/3/39/Managua_aerial.jpg">
+        <div class="card-content">
+          <h2>Managua</h2>
+          <p>Capital del país y centros turísticos modernos.</p>
+          <a href="managua.html" class="btn">Explorar</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/2/27/Selva_Negra_Matagalpa.jpg">
+        <div class="card-content">
+          <h2>Matagalpa</h2>
+          <p>Montañas, café y naturaleza fresca.</p>
+          <a href="matagalpa.html" class="btn">Explorar</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/0/0f/Jinotega.jpg">
+        <div class="card-content">
+          <h2>Jinotega</h2>
+          <p>Reservas naturales y clima montañoso.</p>
+          <a href="jinotega.html" class="btn">Explorar</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/f/f8/Somoto_Canyon.jpg">
+        <div class="card-content">
+          <h2>Madriz</h2>
+          <p>El impresionante Cañón de Somoto.</p>
+          <a href="madriz.html" class="btn">Explorar</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/4/4f/Esteli_Nicaragua.jpg">
+        <div class="card-content">
+          <h2>Estelí</h2>
+          <p>Arte urbano, montañas y cultura norteña.</p>
+          <a href="esteli.html" class="btn">Explorar</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/8/89/Ometepe_Island.jpg">
+        <div class="card-content">
+          <h2>Chontales</h2>
+          <p>Ganadería, paisajes y tradición campesina.</p>
+          <a href="chontales.html" class="btn">Explorar</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Boaco.jpg">
+        <div class="card-content">
+          <h2>Boaco</h2>
+          <p>Colinas verdes y ambiente tranquilo.</p>
+          <a href="boaco.html" class="btn">Explorar</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/9/98/Chinandega.jpg">
+        <div class="card-content">
+          <h2>Chinandega</h2>
+          <p>Volcanes, playas y calor tropical.</p>
+          <a href="chinandega.html" class="btn">Explorar</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/d/d0/Nueva_Segovia.jpg">
+        <div class="card-content">
+          <h2>Nueva Segovia</h2>
+          <p>Montañas y naturaleza del norte.</p>
+          <a href="nueva-segovia.html" class="btn">Explorar</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/0/09/El_Castillo_Rio_San_Juan.jpg">
+        <div class="card-content">
+          <h2>Río San Juan</h2>
+          <p>Selvas tropicales y el Castillo histórico.</p>
+          <a href="rio-san-juan.html" class="btn">Explorar</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/e/e7/Bluefields.jpg">
+        <div class="card-content">
+          <h2>Costa Caribe</h2>
+          <p>Playas caribeñas y cultura afrodescendiente.</p>
+          <a href="caribe.html" class="btn">Explorar</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2026 Nicaventura - Descubre Nicaragua</p>
+  </footer>
+
+</body>
+</html>
+```
+
+## Cómo usarlo
+
+1. Crea un archivo llamado:
+
+```bash
+lugares.html
+```
+
+2. Copia todo el código.
+
+3. Pégalo dentro del archivo.
+
+4. Guarda y abre la página en el navegador.
