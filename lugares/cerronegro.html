@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Cerro Negro - Nicaragua</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+scroll-behavior:smooth;
+}
+
+body{
+font-family:'Poppins',sans-serif;
+background:#f5f5f5;
+overflow-x:hidden;
+transition:0.5s;
+}
+
+body.dark{
+background:#0f172a;
+color:white;
+}
+
+/* NAVBAR */
+
+nav{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:18px 50px;
+background:rgba(0,0,0,0.35);
+backdrop-filter:blur(12px);
+z-index:999;
+}
+
+.logo{
+font-size:28px;
+font-weight:700;
+color:white;
+}
+
+nav ul{
+display:flex;
+gap:25px;
+list-style:none;
+}
+
+nav ul li a{
+color:white;
+text-decoration:none;
+font-weight:500;
+transition:0.3s;
+}
+
+nav ul li a:hover{
+color:#f97316;
+}
+
+/* HERO */
+
+.hero{
+height:100vh;
+background:
+linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0.6)),
+url('https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=2070&auto=format&fit=crop');
+
+background-size:cover;
+background-position:center;
+display:flex;
+justify-content:center;
+align-items:center;
+text-align:center;
+color:white;
+position:relative;
+overflow:hidden;
+}
+
+.hero-content{
+animation:fadeUp 2s ease;
+padding:20px;
+z-index:2;
+}
+
+.hero h1{
+font-size:80px;
+text-shadow:0 0 25px rgba(0,0,0,0.7);
+}
+
+.hero p{
+margin-top:20px;
+font-size:24px;
+}
+
+.hero button{
+margin-top:30px;
+padding:15px 35px;
+border:none;
+border-radius:50px;
+background:linear-gradient(45deg,#f97316,#ef4444);
+color:white;
+font-size:18px;
+cursor:pointer;
+transition:0.4s;
+box-shadow:0 0 20px rgba(255,100,0,0.5);
+}
+
+.hero button:hover{
+transform:scale(1.1);
+}
+
+/* PARTICLES */
+
+.particles span{
+position:absolute;
+bottom:-100px;
+width:25px;
+height:25px;
+background:rgba(255,255,255,0.3);
+border-radius:50%;
+animation:float 10s linear infinite;
+}
+
+.particles span:nth-child(1){left:10%;animation-duration:8s;}
+.particles span:nth-child(2){left:25%;animation-duration:12s;}
+.particles span:nth-child(3){left:40%;animation-duration:9s;}
+.particles span:nth-child(4){left:60%;animation-duration:11s;}
+.particles span:nth-child(5){left:80%;animation-duration:7s;}
+
+/* SECTIONS */
+
+section{
+padding:100px 10%;
+}
+
+.title{
+text-align:center;
+margin-bottom:50px;
+}
+
+.title h2{
+font-size:45px;
+color:#f97316;
+}
+
+.cards{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+gap:30px;
+}
+
+.card{
+background:white;
+border-radius:20px;
+overflow:hidden;
+box-shadow:0 10px 25px rgba(0,0,0,0.1);
+transition:0.5s;
+}
+
+body.dark .card{
+background:#1e293b;
+}
+
+.card:hover{
+transform:translateY(-10px) scale(1.03);
+}
+
+.card img{
+width:100%;
+height:220px;
+object-fit:cover;
+}
+
+.card-content{
+padding:20px;
+}
+
+.card-content h3{
+margin-bottom:10px;
+color:#f97316;
+}
+
+/* GALLERY */
+
+.gallery{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:20px;
+}
+
+.gallery img{
+width:100%;
+height:250px;
+object-fit:cover;
+border-radius:20px;
+transition:0.5s;
+}
+
+.gallery img:hover{
+transform:scale(1.05);
+}
+
+/* WEATHER */
+
+.weather{
+background:linear-gradient(45deg,#f97316,#ef4444);
+padding:30px;
+border-radius:20px;
+color:white;
+text-align:center;
+font-size:22px;
+box-shadow:0 0 20px rgba(0,0,0,0.2);
+}
+
+/* CLOCK */
+
+.clock{
+font-size:45px;
+text-align:center;
+margin-top:20px;
+font-weight:bold;
+color:#f97316;
+}
+
+/* FLOAT BUTTONS */
+
+.music-btn,
+.dark-btn{
+position:fixed;
+right:20px;
+width:60px;
+height:60px;
+border:none;
+border-radius:50%;
+cursor:pointer;
+color:white;
+font-size:22px;
+z-index:999;
+transition:0.4s;
+}
+
+.music-btn{
+bottom:100px;
+background:linear-gradient(45deg,#ef4444,#dc2626);
+}
+
+.dark-btn{
+bottom:30px;
+background:linear-gradient(45deg,#111827,#374151);
+}
+
+.music-btn:hover,
+.dark-btn:hover{
+transform:scale(1.1);
+}
+
+/* FOOTER */
+
+footer{
+background:#111827;
+color:white;
+text-align:center;
+padding:60px 20px;
+}
+
+.map-btn{
+display:inline-block;
+margin-top:25px;
+padding:15px 30px;
+border-radius:50px;
+background:linear-gradient(45deg,#f97316,#ef4444);
+color:white;
+text-decoration:none;
+font-size:18px;
+transition:0.4s;
+}
+
+.map-btn:hover{
+transform:scale(1.1);
+}
+
+/* ANIMATIONS */
+
+@keyframes fadeUp{
+from{
+opacity:0;
+transform:translateY(40px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+@keyframes float{
+0%{
+transform:translateY(0) scale(0);
+opacity:0;
+}
+50%{
+opacity:1;
+}
+100%{
+transform:translateY(-110vh) scale(1);
+opacity:0;
+}
+}
+
+/* RESPONSIVE */
+
+@media(max-width:768px){
+
+nav{
+padding:15px 20px;
+}
+
+nav ul{
+display:none;
+}
+
+.hero h1{
+font-size:50px;
+}
+
+.hero p{
+font-size:18px;
+}
+
+.title h2{
+font-size:32px;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+
+<nav>
+
+<div class="logo">Cerro Negro</div>
+
+<ul>
+<li><a href="#inicio">Inicio</a></li>
+<li><a href="#aventura">Aventura</a></li>
+<li><a href="#galeria">Galería</a></li>
+<li><a href="#clima">Clima</a></li>
+</ul>
+
+</nav>
+
+<!-- HERO -->
+
+<section class="hero" id="inicio">
+
+<div class="particles">
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+</div>
+
+<div class="hero-content">
+
+<h1>Cerro Negro</h1>
+
+<p>
+Adrenalina volcánica en Nicaragua
+</p>
+
+<button onclick="scrollSection()">
+Explorar
+</button>
+
+</div>
+
+</section>
+
+<!-- AVENTURA -->
+
+<section id="aventura">
+
+<div class="title">
+<h2>Experiencia Extrema</h2>
+</div>
+
+<div class="cards">
+
+<div class="card">
+
+<img src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=2070&auto=format&fit=crop">
+
+<div class="card-content">
+<h3>Volcán Activo</h3>
+<p>
+Cerro Negro es uno de los volcanes más jóvenes y activos de Centroamérica.
+</p>
+</div>
+
+</div>
+
+<div class="card">
+
+<img src="https://images.unsplash.com/photo-1521295121783-8a321d551ad2?q=80&w=2070&auto=format&fit=crop">
+
+<div class="card-content">
+<h3>Volcano Boarding</h3>
+<p>
+Disfruta deslizarte sobre ceniza volcánica en una experiencia única.
+</p>
+</div>
+
+</div>
+
+<div class="card">
+
+<img src="https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?q=80&w=2070&auto=format&fit=crop">
+
+<div class="card-content">
+<h3>Paisajes</h3>
+<p>
+Admira vistas impresionantes de volcanes y paisajes naturales.
+</p>
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- GALERIA -->
+
+<section id="galeria">
+
+<div class="title">
+<h2>Galería Volcánica</h2>
+</div>
+
+<div class="gallery">
+
+<img src="https://images.unsplash.com/photo-1470770841072-f978cf4d019e?q=80&w=2070&auto=format&fit=crop">
+
+<img src="https://images.unsplash.com/photo-1493246507139-91e8fad9978e?q=80&w=2070&auto=format&fit=crop">
+
+<img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=2070&auto=format&fit=crop">
+
+<img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=2070&auto=format&fit=crop">
+
+</div>
+
+</section>
+
+<!-- CLIMA -->
+
+<section id="clima">
+
+<div class="title">
+<h2>Ambiente Actual</h2>
+</div>
+
+<div class="weather">
+🌋 Clima cálido y seco <br><br>
+🌡️ Temperatura aproximada: 31°C
+</div>
+
+<div class="clock" id="clock">
+00:00:00
+</div>
+
+</section>
+
+<!-- FOOTER -->
+
+<footer>
+
+<h2>Explora Cerro Negro</h2>
+
+<p>
+Volcanes • Aventura • Naturaleza • Turismo Extremo
+</p>
+
+<a class="map-btn"
+href="https://www.google.com/maps/place/Cerro+Negro,+Nicaragua/"
+target="_blank">
+
+📍 Cómo llegar
+
+</a>
+
+</footer>
+
+<!-- AUDIO -->
+
+<audio id="music" loop>
+<source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+</audio>
+
+<!-- FLOAT BUTTONS -->
+
+<button class="music-btn" onclick="toggleMusic()">
+<i class="fas fa-music"></i>
+</button>
+
+<button class="dark-btn" onclick="toggleDarkMode()">
+<i class="fas fa-moon"></i>
+</button>
+
+<script>
+
+/* SCROLL */
+
+function scrollSection(){
+
+document.querySelector('#aventura').scrollIntoView({
+behavior:'smooth'
+});
+
+}
+
+/* CLOCK */
+
+function updateClock(){
+
+const now = new Date();
+
+let h = String(now.getHours()).padStart(2,'0');
+let m = String(now.getMinutes()).padStart(2,'0');
+let s = String(now.getSeconds()).padStart(2,'0');
+
+document.getElementById('clock').innerHTML =
+`${h}:${m}:${s}`;
+
+}
+
+setInterval(updateClock,1000);
+
+/* MUSIC */
+
+const music = document.getElementById("music");
+
+function toggleMusic(){
+
+if(music.paused){
+music.play();
+}else{
+music.pause();
+}
+
+}
+
+/* DARK MODE */
+
+function toggleDarkMode(){
+document.body.classList.toggle('dark');
+}
+
+/* GALLERY EFFECT */
+
+let images = document.querySelectorAll('.gallery img');
+
+images.forEach((img,index)=>{
+
+setInterval(()=>{
+
+img.style.transform='scale(1.05)';
+
+setTimeout(()=>{
+img.style.transform='scale(1)';
+},1500);
+
+},3000 + (index*1000));
+
+});
+
+</script>
+
+</body>
+</html>
