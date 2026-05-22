@@ -367,6 +367,61 @@
       }, 5000);
 
     });
+    // Variable para controlar si ya sumó puntos este juego
+let gameCompleted = false;
+
+async function awardPoints(pointsToAdd, gameId) {
+  // Verificar si ya se otorgaron puntos antes
+  if (gameCompleted) return;
+
+  const user = auth.currentUser;
+  if (!user) {
+    alert("Debes iniciar sesión para guardar puntos. Ve a la página principal.");
+    return;
+  }
+
+  // Buscar documento del usuario en Firestore (colección 'usuarios' con campo 'uid')
+  const usersRef = collection(db, "usuarios");
+  const q = query(usersRef, where("uid", "==", user.uid));
+  const querySnapshot = await getDocs(q);
+  
+  if (querySnapshot.empty) {
+    console.error("Usuario no encontrado en Firestore");
+    return;
+  }
+
+  const userDoc = querySnapshot.docs[0];
+  const userDocRef = userDoc.ref;
+  const currentPoints = userDoc.data().puntos || 0;
+
+  // Verificar si ya completó este juego antes (colección 'progreso_juegos')
+  const progressRef = collection(db, "progreso_juegos");
+  const qProgress = query(progressRef, where("usuarioId", "==", user.uid), where("juegoId", "==", gameId));
+  const progressSnap = await getDocs(qProgress);
+  
+  if (!progressSnap.empty) {
+    alert("Ya recibiste los puntos por este juego anteriormente.");
+    return;
+  }
+
+  // Sumar puntos
+  const nuevosPuntos = currentPoints + pointsToAdd;
+  await updateDoc(userDocRef, { puntos: nuevosPuntos });
+
+  // Registrar progreso
+  await addDoc(progressRef, {
+    usuarioId: user.uid,
+    juegoId: gameId,
+    puntosObtenidos: pointsToAdd,
+    completado: true,
+    fecha: new Date()
+  });
+
+  gameCompleted = true;
+  alert(`¡Felicidades! Has ganado ${pointsToAdd} puntos. Total: ${nuevosPuntos}`);
+}
+
+// Ejemplo: cuando el usuario completa el juego, llamas a awardPoints(10, "trivia_nicaragua")
 
   </script>
 
