@@ -1,432 +1,599 @@
+```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>León - Turismo Nicaragua</title>
+<title>Catedral de León - Nicaragua</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
 <style>
 
 *{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
+margin:0;
+padding:0;
+box-sizing:border-box;
+scroll-behavior:smooth;
 }
 
 body{
-  font-family:Arial,sans-serif;
-  background:linear-gradient(135deg,#03045e,#0077b6,#00b4d8);
-  color:white;
-  min-height:100vh;
-  overflow-x:hidden;
+font-family:'Poppins',sans-serif;
+background:#f4f4f4;
+overflow-x:hidden;
+transition:0.5s;
+}
+
+body.dark{
+background:#0f172a;
+color:white;
+}
+
+/* NAVBAR */
+
+nav{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:18px 50px;
+background:rgba(0,0,0,0.35);
+backdrop-filter:blur(12px);
+z-index:999;
+}
+
+.logo{
+font-size:28px;
+font-weight:700;
+color:white;
+}
+
+nav ul{
+display:flex;
+gap:25px;
+list-style:none;
+}
+
+nav ul li a{
+color:white;
+text-decoration:none;
+font-weight:500;
+transition:0.3s;
+}
+
+nav ul li a:hover{
+color:#ffd166;
 }
 
 /* HERO */
 
 .hero{
-  min-height:100vh;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  text-align:center;
-  padding:30px;
-  position:relative;
+height:100vh;
+background:
+linear-gradient(rgba(0,0,0,0.45),rgba(0,0,0,0.55)),
+url('https://images.unsplash.com/photo-1519608487953-e999c86e7455?q=80&w=2070&auto=format&fit=crop');
+
+background-size:cover;
+background-position:center;
+display:flex;
+justify-content:center;
+align-items:center;
+text-align:center;
+color:white;
+position:relative;
 }
 
-.hero::before{
-  content:"";
-  position:absolute;
-  width:500px;
-  height:500px;
-  background:rgba(255,255,255,0.08);
-  border-radius:50%;
-  top:-150px;
-  left:-150px;
-  filter:blur(40px);
+.hero-content{
+animation:fadeUp 2s ease;
+padding:20px;
 }
 
 .hero h1{
-  font-size:5rem;
-  z-index:2;
+font-size:75px;
+text-shadow:0 0 20px rgba(0,0,0,0.5);
 }
 
 .hero p{
-  margin-top:15px;
-  font-size:1.3rem;
-  max-width:700px;
-  z-index:2;
-  line-height:1.7;
+margin-top:20px;
+font-size:24px;
 }
 
-.mascota{
-  margin-top:25px;
-  background:rgba(255,255,255,0.12);
-  backdrop-filter:blur(10px);
-  padding:18px 25px;
-  border-radius:18px;
-  z-index:2;
-  box-shadow:0 10px 30px rgba(0,0,0,0.2);
+.hero button{
+margin-top:30px;
+padding:15px 35px;
+border:none;
+border-radius:50px;
+background:linear-gradient(45deg,#f59e0b,#ff512f);
+color:white;
+font-size:18px;
+cursor:pointer;
+transition:0.4s;
+box-shadow:0 0 20px rgba(255,140,0,0.5);
 }
 
-.scroll-btn{
-  margin-top:30px;
-  padding:15px 28px;
-  border:none;
-  border-radius:15px;
-  background:white;
-  color:#0077b6;
-  font-weight:bold;
-  cursor:pointer;
-  transition:0.3s;
-  z-index:2;
+.hero button:hover{
+transform:scale(1.1);
 }
 
-.scroll-btn:hover{
-  transform:scale(1.05);
+/* FLOATING LIGHTS */
+
+.lights span{
+position:absolute;
+width:20px;
+height:20px;
+background:rgba(255,255,255,0.4);
+border-radius:50%;
+bottom:-100px;
+animation:float 10s linear infinite;
 }
 
-/* CONTENT */
+.lights span:nth-child(1){left:10%;animation-duration:8s;}
+.lights span:nth-child(2){left:30%;animation-duration:12s;}
+.lights span:nth-child(3){left:50%;animation-duration:9s;}
+.lights span:nth-child(4){left:70%;animation-duration:11s;}
+.lights span:nth-child(5){left:90%;animation-duration:7s;}
 
-.container{
-  width:100%;
-  max-width:1200px;
-  margin:auto;
-  padding:30px 20px 60px;
+/* SECTIONS */
+
+section{
+padding:100px 10%;
 }
 
-.section-title{
-  text-align:center;
-  margin-bottom:30px;
-  font-size:2.5rem;
+.title{
+text-align:center;
+margin-bottom:50px;
+}
+
+.title h2{
+font-size:45px;
+color:#f59e0b;
 }
 
 .cards{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-  gap:25px;
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+gap:30px;
 }
 
 .card{
-  background:rgba(255,255,255,0.12);
-  backdrop-filter:blur(10px);
-  padding:25px;
-  border-radius:22px;
-  transition:0.3s;
-  box-shadow:0 10px 30px rgba(0,0,0,0.2);
+background:white;
+border-radius:20px;
+overflow:hidden;
+box-shadow:0 10px 25px rgba(0,0,0,0.1);
+transition:0.5s;
+}
+
+body.dark .card{
+background:#1e293b;
 }
 
 .card:hover{
-  transform:translateY(-8px);
+transform:translateY(-10px) scale(1.03);
 }
 
-.card h3{
-  margin-bottom:15px;
-  font-size:1.4rem;
+.card img{
+width:100%;
+height:220px;
+object-fit:cover;
 }
 
-.card p{
-  line-height:1.7;
-  opacity:0.95;
+.card-content{
+padding:20px;
 }
 
-/* INTERACTIVO */
-
-.interactive{
-  margin-top:70px;
+.card-content h3{
+margin-bottom:10px;
+color:#f59e0b;
 }
 
-.buttons{
-  display:flex;
-  flex-wrap:wrap;
-  justify-content:center;
-  gap:15px;
-  margin-bottom:25px;
+/* GALLERY */
+
+.gallery{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:20px;
 }
 
-.action-btn{
-  border:none;
-  padding:14px 25px;
-  border-radius:15px;
-  background:white;
-  color:#0077b6;
-  font-weight:bold;
-  cursor:pointer;
-  transition:0.3s;
+.gallery img{
+width:100%;
+height:250px;
+object-fit:cover;
+border-radius:20px;
+transition:0.5s;
 }
 
-.action-btn:hover{
-  transform:scale(1.05);
+.gallery img:hover{
+transform:scale(1.05);
 }
 
-.info-box{
-  width:100%;
-  max-width:900px;
-  margin:auto;
-  background:rgba(255,255,255,0.12);
-  backdrop-filter:blur(10px);
-  padding:30px;
-  border-radius:22px;
-  line-height:1.8;
-  text-align:center;
-  min-height:150px;
-  box-shadow:0 10px 30px rgba(0,0,0,0.2);
+/* CLOCK */
+
+.clock{
+font-size:45px;
+text-align:center;
+margin-top:20px;
+font-weight:bold;
+color:#f59e0b;
+}
+
+/* WEATHER */
+
+.weather{
+background:linear-gradient(45deg,#f59e0b,#ff512f);
+padding:30px;
+border-radius:20px;
+color:white;
+text-align:center;
+font-size:22px;
+box-shadow:0 0 20px rgba(0,0,0,0.2);
+}
+
+/* FLOAT BUTTONS */
+
+.music-btn,
+.dark-btn{
+position:fixed;
+right:20px;
+width:60px;
+height:60px;
+border:none;
+border-radius:50%;
+cursor:pointer;
+color:white;
+font-size:22px;
+z-index:999;
+transition:0.4s;
+}
+
+.music-btn{
+bottom:100px;
+background:linear-gradient(45deg,#ff512f,#dd2476);
+}
+
+.dark-btn{
+bottom:30px;
+background:linear-gradient(45deg,#0f172a,#334155);
+}
+
+.music-btn:hover,
+.dark-btn:hover{
+transform:scale(1.1);
 }
 
 /* FOOTER */
 
-.footer{
-  margin-top:70px;
-  display:flex;
-  justify-content:center;
-  flex-wrap:wrap;
-  gap:20px;
-  padding-bottom:40px;
+footer{
+background:#111827;
+color:white;
+text-align:center;
+padding:60px 20px;
 }
 
-.footer a{
-  text-decoration:none;
-  background:white;
-  color:#0077b6;
-  padding:15px 25px;
-  border-radius:14px;
-  font-weight:bold;
-  transition:0.3s;
+.map-btn{
+display:inline-block;
+margin-top:25px;
+padding:15px 30px;
+border-radius:50px;
+background:linear-gradient(45deg,#f59e0b,#ff512f);
+color:white;
+text-decoration:none;
+font-size:18px;
+transition:0.4s;
 }
 
-.footer a:hover{
-  transform:scale(1.05);
+.map-btn:hover{
+transform:scale(1.1);
+}
+
+/* ANIMATIONS */
+
+@keyframes fadeUp{
+from{
+opacity:0;
+transform:translateY(40px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+@keyframes float{
+0%{
+transform:translateY(0) scale(0);
+opacity:0;
+}
+50%{
+opacity:1;
+}
+100%{
+transform:translateY(-110vh) scale(1);
+opacity:0;
+}
 }
 
 /* RESPONSIVE */
 
 @media(max-width:768px){
 
-  .hero h1{
-    font-size:3rem;
-  }
+nav{
+padding:15px 20px;
+}
 
-  .hero p{
-    font-size:1rem;
-  }
+nav ul{
+display:none;
+}
 
-  .section-title{
-    font-size:2rem;
-  }
+.hero h1{
+font-size:45px;
+}
+
+.hero p{
+font-size:18px;
+}
+
+.title h2{
+font-size:32px;
+}
 
 }
 
 </style>
 </head>
+
 <body>
+
+<!-- NAV -->
+
+<nav>
+
+<div class="logo">Catedral de León</div>
+
+<ul>
+<li><a href="#inicio">Inicio</a></li>
+<li><a href="#historia">Historia</a></li>
+<li><a href="#galeria">Galería</a></li>
+<li><a href="#clima">Clima</a></li>
+</ul>
+
+</nav>
 
 <!-- HERO -->
 
-<section class="hero">
+<section class="hero" id="inicio">
 
-<h1>🎨 LEÓN</h1>
-
-<p>
-La ciudad universitaria y cultural de Nicaragua,
-rodeada de volcanes, arte e historia revolucionaria.
-</p>
-
-<div class="mascota">
-🤖 ¡Bienvenido explorador! León te espera con cultura,
-aventura y paisajes impresionantes.
+<div class="lights">
+<span></span>
+<span></span>
+<span></span>
+<span></span>
+<span></span>
 </div>
 
-<button class="scroll-btn" onclick="scrollToContent()">
-🌋 Explorar León
+<div class="hero-content">
+
+<h1>Catedral de León</h1>
+
+<p>
+La joya histórica y cultural de Nicaragua
+</p>
+
+<button onclick="scrollSection()">
+Explorar
 </button>
+
+</div>
 
 </section>
 
-<!-- CONTENIDO -->
+<!-- HISTORIA -->
 
-<div class="container" id="content">
+<section id="historia">
 
-<h2 class="section-title">
-✨ Descubre León
-</h2>
+<div class="title">
+<h2>Historia y Cultura</h2>
+</div>
 
 <div class="cards">
 
 <div class="card">
-<h3>📜 Historia</h3>
+
+<img src="https://images.unsplash.com/photo-1521295121783-8a321d551ad2?q=80&w=2070&auto=format&fit=crop">
+
+<div class="card-content">
+<h3>Arquitectura</h3>
 <p>
-León es una de las ciudades más antiguas de Nicaragua
-y ha sido un importante centro intelectual,
-político y cultural del país.
+La Catedral de León es considerada una de las obras
+más impresionantes de Centroamérica.
 </p>
+</div>
+
 </div>
 
 <div class="card">
-<h3>🌋 Lugares Turísticos</h3>
+
+<img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=2070&auto=format&fit=crop">
+
+<div class="card-content">
+<h3>Patrimonio</h3>
 <p>
-Entre sus destinos más famosos destacan:
-la Catedral de León,
-Cerro Negro,
-Las Peñitas,
-el Museo de la Revolución
-y León Viejo.
+Declarada Patrimonio de la Humanidad por la UNESCO,
+representa la identidad histórica de Nicaragua.
 </p>
+</div>
+
 </div>
 
 <div class="card">
-<h3>🍛 Gastronomía</h3>
-<p>
-León ofrece deliciosos platillos típicos como:
-indio viejo,
-quesillos,
-nacatamales,
-rosquillas
-y bebidas tradicionales.
-</p>
-</div>
 
-<div class="card">
-<h3>🎭 Cultura</h3>
+<img src="https://images.unsplash.com/photo-1519608487953-e999c86e7455?q=80&w=2070&auto=format&fit=crop">
+
+<div class="card-content">
+<h3>Turismo</h3>
 <p>
-La ciudad es reconocida por su poesía,
-arte,
-universidades,
-festivales culturales
-y tradiciones religiosas.
+Sus terrazas permiten admirar vistas espectaculares
+de la ciudad de León y sus volcanes.
 </p>
 </div>
 
 </div>
 
-<!-- INTERACTIVO -->
+</div>
 
-<div class="interactive">
+</section>
 
-<h2 class="section-title">
-🎮 Explora Más
-</h2>
+<!-- GALERIA -->
 
-<div class="buttons">
+<section id="galeria">
 
-<button class="action-btn" onclick="showInfo('historia')">
-📜 Historia
-</button>
+<div class="title">
+<h2>Galería Turística</h2>
+</div>
 
-<button class="action-btn" onclick="showInfo('curioso')">
-😮 Dato Curioso
-</button>
+<div class="gallery">
 
-<button class="action-btn" onclick="showInfo('hacer')">
-🌋 ¿Qué hacer?
-</button>
+<img src="https://images.unsplash.com/photo-1493246507139-91e8fad9978e?q=80&w=2070&auto=format&fit=crop">
 
-<button class="action-btn" onclick="showInfo('consejos')">
-🧭 Consejos
-</button>
+<img src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=2070&auto=format&fit=crop">
+
+<img src="https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?q=80&w=2070&auto=format&fit=crop">
+
+<img src="https://images.unsplash.com/photo-1470770841072-f978cf4d019e?q=80&w=2070&auto=format&fit=crop">
 
 </div>
 
-<div class="info-box" id="infoBox">
+</section>
 
-Selecciona una opción para descubrir más sobre León 😄
+<!-- CLIMA -->
 
+<section id="clima">
+
+<div class="title">
+<h2>Ambiente Actual</h2>
 </div>
 
+<div class="weather">
+🌤️ Clima cálido en León <br><br>
+🌡️ Temperatura aproximada: 30°C
 </div>
+
+<div class="clock" id="clock">
+00:00:00
+</div>
+
+</section>
 
 <!-- FOOTER -->
 
-<div class="footer">
+<footer>
 
-<a href="../mapa.html">
-🗺 Volver al Mapa
+<h2>Visita la Catedral de León</h2>
+
+<p>
+Historia • Cultura • Arquitectura • Turismo
+</p>
+
+<a class="map-btn"
+href="https://www.google.com/maps/place/Catedral+de+Leon,+Nicaragua/"
+target="_blank">
+
+📍 Cómo llegar
+
 </a>
 
-<a href="../jueegos/juegos.html">
-🎮 Juegos
-</a>
+</footer>
 
-<a href="../index.html">
-🏠 Inicio
-</a>
+<!-- AUDIO -->
 
-</div>
+<audio id="music" loop>
+<source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+</audio>
 
-</div>
+<!-- FLOAT BUTTONS -->
+
+<button class="music-btn" onclick="toggleMusic()">
+<i class="fas fa-music"></i>
+</button>
+
+<button class="dark-btn" onclick="toggleDarkMode()">
+<i class="fas fa-moon"></i>
+</button>
 
 <script>
 
-function scrollToContent(){
+/* SCROLL */
 
-document.getElementById("content")
-.scrollIntoView({
-behavior:"smooth"
+function scrollSection(){
+
+document.querySelector('#historia').scrollIntoView({
+behavior:'smooth'
 });
 
 }
 
-function showInfo(type){
+/* CLOCK */
 
-const box = document.getElementById("infoBox");
+function updateClock(){
 
-if(type === "historia"){
+const now = new Date();
 
-box.innerHTML = `
-<h3>📜 Historia de León</h3>
-<p>
-León fue fundada en 1524 y es considerada una de las ciudades
-más importantes en la historia cultural y política de Nicaragua.
-</p>
-`;
+let h = String(now.getHours()).padStart(2,'0');
+let m = String(now.getMinutes()).padStart(2,'0');
+let s = String(now.getSeconds()).padStart(2,'0');
 
-}
-
-if(type === "curioso"){
-
-box.innerHTML = `
-<h3>😮 Dato Curioso</h3>
-<p>
-La Catedral de León es la más grande de Centroamérica
-y fue declarada Patrimonio de la Humanidad por la UNESCO.
-</p>
-`;
+document.getElementById('clock').innerHTML =
+`${h}:${m}:${s}`;
 
 }
 
-if(type === "hacer"){
+setInterval(updateClock,1000);
 
-box.innerHTML = `
-<h3>🌋 ¿Qué puedes hacer?</h3>
-<p>
-Puedes practicar sandboarding en Cerro Negro,
-visitar museos,
-recorrer iglesias históricas,
-caminar por Las Peñitas
-y disfrutar de la vida cultural de la ciudad.
-</p>
-`;
+/* MUSIC */
 
-}
+const music = document.getElementById("music");
 
-if(type === "consejos"){
+function toggleMusic(){
 
-box.innerHTML = `
-<h3>🧭 Consejos para visitar León</h3>
-<p>
-Usa ropa cómoda,
-protector solar,
-lleva agua
-y aprovecha los recorridos históricos
-y volcánicos de la ciudad.
-</p>
-`;
-
+if(music.paused){
+music.play();
+}else{
+music.pause();
 }
 
 }
+
+/* DARK MODE */
+
+function toggleDarkMode(){
+document.body.classList.toggle('dark');
+}
+
+/* GALLERY EFFECT */
+
+let images = document.querySelectorAll('.gallery img');
+
+images.forEach((img,index)=>{
+
+setInterval(()=>{
+
+img.style.transform='scale(1.05)';
+
+setTimeout(()=>{
+img.style.transform='scale(1)';
+},1500);
+
+},3000 + (index*1000));
+
+});
 
 </script>
 
 </body>
 </html>
+```
