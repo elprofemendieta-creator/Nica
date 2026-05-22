@@ -217,7 +217,7 @@ function restartGame() {
   resultPanel.classList.add("hidden");
   renderQuestion();
 }
-
+awardPoints(10, "nombre_unico_del_juego");
 nextBtn.addEventListener("click", nextQuestion);
 restartBtn.addEventListener("click", restartGame);
 playAgainBtn.addEventListener("click", restartGame);
