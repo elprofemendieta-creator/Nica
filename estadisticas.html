@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Dashboard de Estadísticas - Visitas por Lugar</title>
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <!-- SheetJS para exportar a Excel -->
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        /* Modal de contraseña */
+        .password-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(8px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        .password-card {
+            background: white;
+            border-radius: 30px;
+            padding: 40px 30px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 20px 35px rgba(0,0,0,0.3);
+            animation: fadeInUp 0.5s;
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .password-card h2 {
+            color: #1e3c72;
+            margin-bottom: 10px;
+        }
+        .password-card p {
+            color: #555;
+            margin-bottom: 25px;
+            font-size: 14px;
+        }
+        .password-card input {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid #ddd;
+            border-radius: 50px;
+            font-size: 16px;
+            outline: none;
+            transition: 0.2s;
+            margin-bottom: 20px;
+        }
+        .password-card input:focus {
+            border-color: #2a5298;
+        }
+        .password-card button {
+            background: #2a5298;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+            width: 100%;
+            transition: 0.2s;
+        }
+        .password-card button:hover {
+            background: #1e3c72;
+            transform: scale(1.02);
+        }
+        .error-msg {
+            color: #e74c3c;
+            font-size: 13px;
+            margin-top: 12px;
+        }
+        /* Contenido principal (oculto hasta autenticar) */
+        .main-content {
+            display: none;
+            width: 100%;
+            max-width: 1300px;
+            background: rgba(255,255,255,0.95);
+            border-radius: 32px;
+            padding: 25px 30px;
+            box-shadow: 0 25px 45px rgba(0,0,0,0.2);
+            backdrop-filter: blur(2px);
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #eef2f7;
+            padding-bottom: 20px;
+        }
+        .header h1 {
+            color: #1e3c72;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .button-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            border: none;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+            background: #f0f2f5;
+            color: #1e3c72;
+        }
+        .btn-primary {
+            background: #2a5298;
+            color: white;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .btn-primary:hover {
+            background: #0f2b55;
+            transform: translateY(-2px);
+        }
+        .btn-success {
+            background: #27ae60;
+            color: white;
+        }
+        .btn-success:hover {
+            background: #1e8449;
+            transform: translateY(-2px);
+        }
+        .stats-info {
+            background: #eef2fc;
+            border-radius: 24px;
+            padding: 10px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            font-weight: 500;
+        }
+        .table-container {
+            overflow-x: auto;
+            border-radius: 20px;
+            border: 1px solid #e2e8f0;
+            background: white;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        th {
+            background: #1e3c72;
+            color: white;
+            padding: 14px 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #e2e8f0;
+            color: #2d3748;
+        }
+        tr:hover {
+            background: #f8fafc;
+        }
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #2a5298;
+            font-weight: bold;
+        }
+        footer {
+            margin-top: 25px;
+            text-align: center;
+            font-size: 12px;
+            color: #7f8c8d;
+        }
+        @media (max-width: 700px) {
+            .main-content { padding: 18px; }
+            .header h1 { font-size: 1.3rem; }
+            .btn { padding: 8px 16px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- MODAL DE CONTRASEÑA -->
+<div id="passwordModal" class="password-modal">
+    <div class="password-card">
+        <h2>🔐 Acceso restringido</h2>
+        <p>Este panel requiere autenticación</p>
+        <input type="password" id="passwordInput" placeholder="Contraseña" autofocus>
+        <button id="verifyBtn">Ingresar</button>
+        <div id="loginError" class="error-msg"></div>
+    </div>
+</div>
+
+<!-- CONTENIDO PRINCIPAL -->
+<div id="mainContent" class="main-content">
+    <div class="header">
+        <h1>📍 Estadísticas de visitas por lugar</h1>
+        <div class="button-group">
+            <button id="verOnlineBtn" class="btn btn-primary">📊 Ver online</button>
+            <button id="descargarExcelBtn" class="btn btn-success" disabled>📎 Descargar Excel</button>
+        </div>
+    </div>
+    <div class="stats-info">
+        <span>📌 Datos agregados: <strong id="totalRegistros">0</strong> visitas registradas</span>
+        <span>👥 Usuarios distintos: <strong id="totalUsuarios">0</strong></span>
+        <span>🏷️ Lugares distintos: <strong id="totalLugares">0</strong></span>
+    </div>
+    <div class="table-container">
+        <table id="dataTable">
+            <thead>
+                <tr>
+                    <th>Usuario</th>
+                    <th>Lugar</th>
+                    <th>Número de visitas</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <tr><td colspan="3" style="text-align:center">Presiona "Ver online" para cargar datos</td></tr>
+            </tbody>
+        </table>
+    </div>
+    <footer>
+        ⚡ Los datos se extraen desde Firestore (colección 'visitas'). Configura tu proyecto en el código.
+    </footer>
+</div>
+
+<script>
+    // ================= CONFIGURACIÓN DE FIREBASE =================
+    // 🔴 ¡REEMPLAZA ESTOS DATOS CON LOS DE TU PROYECTO FIREBASE! 🔴
+    const firebaseConfig = {
+        apiKey: "TU_API_KEY",
+        authDomain: "TU_AUTH_DOMAIN",
+        projectId: "TU_PROJECT_ID",
+        storageBucket: "TU_STORAGE_BUCKET",
+        messagingSenderId: "TU_SENDER_ID",
+        appId: "TU_APP_ID"
+    };
+    // ==============================================================
+
+    // Inicializar Firebase
+    let app, db;
+    let datosActuales = [];  // Guardar los datos agregados para exportar
+    let autenticado = false;
+
+    // Elementos del DOM
+    const modal = document.getElementById('passwordModal');
+    const mainContent = document.getElementById('mainContent');
+    const passwordInput = document.getElementById('passwordInput');
+    const verifyBtn = document.getElementById('verifyBtn');
+    const loginError = document.getElementById('loginError');
+    const verOnlineBtn = document.getElementById('verOnlineBtn');
+    const descargarBtn = document.getElementById('descargarExcelBtn');
+    const tableBody = document.getElementById('tableBody');
+    const totalRegistrosSpan = document.getElementById('totalRegistros');
+    const totalUsuariosSpan = document.getElementById('totalUsuarios');
+    const totalLugaresSpan = document.getElementById('totalLugares');
+
+    // Contraseña correcta
+    const CORRECT_PASSWORD = "Diriamba2026";
+
+    // ----- FUNCIÓN DE AUTENTICACIÓN -----
+    function verificarPassword() {
+        const ingresada = passwordInput.value.trim();
+        if (ingresada === CORRECT_PASSWORD) {
+            autenticado = true;
+            modal.style.display = 'none';
+            mainContent.style.display = 'block';
+            // Intentar inicializar Firebase (si hay config válida)
+            inicializarFirebase();
+        } else {
+            loginError.textContent = '❌ Contraseña incorrecta. Acceso denegado.';
+            passwordInput.value = '';
+            passwordInput.focus();
+        }
+    }
+
+    // Inicializar Firebase (comprobar que la config esté puesta)
+    function inicializarFirebase() {
+        // Validación mínima de que el usuario reemplazó las claves
+        if (firebaseConfig.apiKey === "TU_API_KEY" || firebaseConfig.projectId === "TU_PROJECT_ID") {
+            mostrarErrorConfiguracion();
+            return;
+        }
+        try {
+            if (!firebase.apps.length) {
+                app = firebase.initializeApp(firebaseConfig);
+            } else {
+                app = firebase.app();
+            }
+            db = firebase.firestore(app);
+            console.log("✅ Firebase conectado correctamente.");
+            // Habilitar botón ver online
+            verOnlineBtn.disabled = false;
+            verOnlineBtn.style.opacity = '1';
+        } catch (error) {
+            console.error("Error al inicializar Firebase:", error);
+            mostrarErrorConfiguracion("Error de conexión. Verifica tu configuración.");
+        }
+    }
+
+    function mostrarErrorConfiguracion(msg = "⚠️ Configuración de Firebase incompleta. Edita el código y coloca tus credenciales.") {
+        tableBody.innerHTML = `<tr><td colspan="3" style="color:red; text-align:center">${msg}</td></tr>`;
+        verOnlineBtn.disabled = true;
+        descargarBtn.disabled = true;
+    }
+
+    // ========== LÓGICA DE EXTRACCIÓN DE DATOS DESDE FIRESTORE ==========
+    // Asumimos una colección llamada "visitas" con campos: usuarioId, lugarId (y opcionalmente fecha)
+    // Para estadísticas: contar por (usuarioId, lugarId) -> total visitas
+    // Si tienes colecciones separadas de "usuarios" y "lugares", puedes enriquecer; si no, mostramos los IDs.
+    async function cargarDatosEstadisticos() {
+        if (!db) {
+            alert("Firebase no inicializado. Revisa tu configuración.");
+            return;
+        }
+        tableBody.innerHTML = '<tr><td colspan="3" class="loading">🔄 Cargando datos desde Firebase... por favor espera</td></tr>';
+        descargarBtn.disabled = true;
+        try {
+            // 1. Obtener todas las visitas
+            const visitasSnapshot = await db.collection("visitas").get();
+            if (visitasSnapshot.empty) {
+                tableBody.innerHTML = '<tr><td colspan="3" style="text-align:center">📭 No hay registros de visitas en la colección "visitas".</td></tr>';
+                actualizarResumen(0,0,0);
+                datosActuales = [];
+                descargarBtn.disabled = true;
+                return;
+            }
+            
+            // 2. Procesar: agrupar por usuarioId + lugarId
+            const mapaConteo = new Map(); // clave "usuarioId|lugarId" -> {usuario, lugar, visitas}
+            for (const doc of visitasSnapshot.docs) {
+                const data = doc.data();
+                const usuarioId = data.usuarioId || data.usuario_id || "desconocido";
+                const lugarId = data.lugarId || data.lugar_id || "desconocido";
+                const clave = `${usuarioId}|${lugarId}`;
+                if (mapaConteo.has(clave)) {
+                    mapaConteo.get(clave).visitas += 1;
+                } else {
+                    mapaConteo.set(clave, {
+                        usuario: usuarioId,
+                        lugar: lugarId,
+                        visitas: 1
+                    });
+                }
+            }
+            
+            // Convertir mapa a array y ordenar por visitas descendente
+            const datosAgrupados = Array.from(mapaConteo.values());
+            datosAgrupados.sort((a,b) => b.visitas - a.visitas);
+            datosActuales = datosAgrupados;
+            
+            // Obtener métricas únicas
+            const usuariosUnicos = new Set(datosAgrupados.map(item => item.usuario));
+            const lugaresUnicos = new Set(datosAgrupados.map(item => item.lugar));
+            const totalVisitasRaw = Array.from(visitasSnapshot.docs).length;
+            
+            // Actualizar resumen
+            actualizarResumen(totalVisitasRaw, usuariosUnicos.size, lugaresUnicos.size);
+            
+            // Renderizar tabla
+            renderizarTabla(datosAgrupados);
+            descargarBtn.disabled = false;
+            
+        } catch (error) {
+            console.error("Error al leer Firestore:", error);
+            tableBody.innerHTML = `<tr><td colspan="3" style="color:red; text-align:center">❌ Error al obtener datos: ${error.message}. Verifica permisos y estructura.</td></tr>`;
+            descargarBtn.disabled = true;
+        }
+    }
+    
+    function actualizarResumen(totalVisitas, totalUsers, totalLugares) {
+        totalRegistrosSpan.textContent = totalVisitas;
+        totalUsuariosSpan.textContent = totalUsers;
+        totalLugaresSpan.textContent = totalLugares;
+    }
+    
+    function renderizarTabla(datos) {
+        if (!datos.length) {
+            tableBody.innerHTML = '<tr><td colspan="3" style="text-align:center">No hay datos para mostrar.</td></tr>';
+            return;
+        }
+        let html = '';
+        for (const item of datos) {
+            html += `<tr>
+                        <td>${escapeHtml(item.usuario)}</td>
+                        <td>${escapeHtml(item.lugar)}</td>
+                        <td><strong>${item.visitas}</strong></td>
+                     </tr>`;
+        }
+        tableBody.innerHTML = html;
+    }
+    
+    // Función auxiliar para evitar XSS
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+    
+    // ========== EXPORTAR A EXCEL usando SheetJS ==========
+    function exportarAExcel() {
+        if (!datosActuales || datosActuales.length === 0) {
+            alert("No hay datos para exportar. Primero haz clic en 'Ver online'.");
+            return;
+        }
+        // Preparar hoja de cálculo
+        const hojaData = [
+            ["Usuario", "Lugar", "Número de visitas"]  // encabezados
+        ];
+        for (const item of datosActuales) {
+            hojaData.push([item.usuario, item.lugar, item.visitas]);
+        }
+        const ws = XLSX.utils.aoa_to_sheet(hojaData);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Estadisticas_Visitas");
+        // Descargar archivo .xlsx
+        XLSX.writeFile(wb, `reporte_visitas_${new Date().toISOString().slice(0,19).replace(/:/g, '-')}.xlsx`);
+    }
+    
+    // Eventos de autenticación y UI
+    verifyBtn.addEventListener('click', verificarPassword);
+    passwordInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') verificarPassword();
+    });
+    
+    verOnlineBtn.addEventListener('click', cargarDatosEstadisticos);
+    descargarBtn.addEventListener('click', exportarAExcel);
+    
+    // Prevenir que se vea el contenido antes de autenticar
+    if (!autenticado) {
+        mainContent.style.display = 'none';
+    }
+</script>
+</body>
+</html>
