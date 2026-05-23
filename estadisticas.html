@@ -276,9 +276,12 @@
   measurementId: "G-7R3DSH7PPN"
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+    // ==============================================================
+
+    // Inicializar Firebase
+    let app, db;
+    let datosActuales = [];  // Guardar los datos agregados para exportar
+    let autenticado = false;
 
     // Elementos del DOM
     const modal = document.getElementById('passwordModal');
