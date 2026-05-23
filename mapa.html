@@ -339,10 +339,27 @@
       background: #2d2d44;
       color: white;
     }
-    #map {
-  height: 100vh; /* o 100% si el contenedor padre tiene altura fija */
-  width: 100%;
+ .map-container {
+    flex: 1;
+    position: relative;
 }
+#map {
+    height: 80vh;
+    width: 100%;
+    min-height: 400px;
+}
+@media (max-width: 768px) {
+    .map-container {
+        order: 1;
+        height: 60vh;
+        min-height: 300px;
+    }
+    #map {
+        height: 60vh;
+        min-height: 300px;
+    }
+}
+    
   </style>
 </head>
 <body>
