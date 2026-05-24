@@ -142,6 +142,11 @@
       h1 { font-size: 2rem; }
       .menu-card { width: 160px; padding: 1rem; }
     }
+    #notificationBell{
+   position:fixed;
+   top:20px;
+   right:20px;
+}
   </style>
 </head>
 <body>
@@ -173,7 +178,13 @@
         </div>
       </div>
     </div>
+    
+<div id="notificationBell">
+   🔔 <span id="notificationCount">0</span>
+</div>
 
+<div id="notificationPanel"></div>
+    
     <div id="menuSection" class="menu-section">
       <h2>¡Bienvenido, <span id="userName"></span>! ¿Qué deseas explorar?</h2>
       <div class="menu-buttons">
@@ -322,7 +333,7 @@
         showToast('Error con Google: ' + error.message, true);
       }
     });
-
+<script type="module" src="notifications.js"></script>
     // Cambiar formularios
     document.getElementById('showRegisterBtn').addEventListener('click', () => {
       loginFormDiv.style.display = 'none';
