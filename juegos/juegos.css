@@ -1,6 +1,12 @@
 /* ==========================================================================
-   1. CONFIGURACIÓN Y VARIABLES (Coherencia con Index)
+   1. RESET Y CONFIGURACIÓN BASE
    ========================================================================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Poppins:wght@400;600;700&display=swap');
 
 :root {
@@ -23,7 +29,7 @@
 body {
   font-family: var(--font-body);
   background-color: var(--bg-light);
-  background-image: radial-gradient(#bae6fd 0.5px, transparent 0.5px); /* Patrón de puntos sutil */
+  background-image: radial-gradient(#bae6fd 0.5px, transparent 0.5px);
   background-size: 24px 24px;
   color: #334155;
   margin: 0;
@@ -31,6 +37,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  min-height: 100vh;
 }
 
 /* ==========================================================================
@@ -47,11 +54,13 @@ body {
   position: sticky;
   top: 0;
   z-index: 100;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }
 
 .topbar h1 {
   font-family: var(--font-title);
-  font-size: 1.8rem;
+  font-size: clamp(1.3rem, 5vw, 1.8rem);
   color: var(--secondary-color);
   margin: 0;
 }
@@ -65,6 +74,10 @@ body {
   border-radius: 12px;
   background: #e0f2fe;
   transition: all 0.3s ease;
+  display: inline-block;
+  min-height: 44px; /* Mejor para toque */
+  display: flex;
+  align-items: center;
 }
 
 .volver:hover {
@@ -74,21 +87,21 @@ body {
 }
 
 /* ==========================================================================
-   3. CONTENEDOR DE JUEGOS (GRID)
+   3. CONTENEDOR DE JUEGOS (GRID RESPONSIVO)
    ========================================================================== */
 .games-container {
   display: grid;
-  /* '1fr' asegura que en móviles la tarjeta ocupe todo el ancho disponible */
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 20px;
+  gap: 1.5rem;
   width: 90%;
   max-width: 1100px;
   padding: 2rem 0;
+  margin: 0 auto;
 }
 
 .game-card {
   background: var(--white);
-  padding: 1.5rem;
+  padding: clamp(1rem, 4vw, 1.5rem);
   border-radius: 24px;
   text-align: center;
   border: 3px solid #e2e8f0;
@@ -106,25 +119,24 @@ body {
 }
 
 .game-card .emoji {
-  font-size: 3.5rem;
+  font-size: clamp(2.5rem, 8vw, 3.5rem);
   margin-bottom: 1rem;
   filter: drop-shadow(0 5px 5px rgba(0,0,0,0.1));
 }
 
 .game-card h2 {
   font-family: var(--font-title);
-  font-size: 1.4rem;
+  font-size: clamp(1.2rem, 4vw, 1.4rem);
   color: var(--secondary-color);
   margin-bottom: 0.8rem;
 }
 
 .game-card p {
-  font-size: 0.9rem;
+  font-size: clamp(0.8rem, 3vw, 0.9rem);
   color: #64748b;
   margin-bottom: 1.5rem;
 }
 
-/* Botón de jugar dentro de la card */
 .game-card button {
   font-family: var(--font-title);
   background: var(--secondary-color);
@@ -132,10 +144,12 @@ body {
   border: none;
   padding: 0.8rem;
   border-radius: 15px;
-  font-size: 1.1rem;
+  font-size: 1rem;
   cursor: pointer;
   transition: background 0.3s ease;
   width: 100%;
+  min-height: 48px;
+  font-weight: 600;
 }
 
 .game-card button:hover {
@@ -149,8 +163,8 @@ body {
   width: 90%;
   max-width: 1100px;
   background: var(--white);
-  margin: 2rem 0 4rem 0;
-  padding: 3rem;
+  margin: 1.5rem auto 3rem auto;
+  padding: clamp(1.5rem, 5vw, 3rem);
   border-radius: 30px;
   border: 4px dashed #cbd5e1;
   text-align: center;
@@ -163,75 +177,71 @@ body {
 
 #gameTitle {
   font-family: var(--font-title);
-  font-size: 2.2rem;
+  font-size: clamp(1.6rem, 6vw, 2.2rem);
   color: var(--accent-color);
   margin-bottom: 1rem;
 }
 
 #gameContent {
-  font-size: 1.2rem;
+  font-size: clamp(1rem, 4vw, 1.2rem);
   color: #475569;
+  width: 100%;
 }
 
 /* ==========================================================================
-   5. RESPONSIVE
+   5. MEDIA QUERIES ESPECÍFICAS PARA MÓVILES Y TABLETS
    ========================================================================== */
-/* Responsive */
+
+/* Móviles pequeños (hasta 480px) */
 @media (max-width: 480px) {
-  .container {
-    width: 95%;
-    padding: 2rem 1.25rem;
-  }
-  
-  h1 {
-    font-size: 2.3rem;
-  }
-  
-  .start-btn {
-    font-size: 1.2rem;
-    padding: 0.8rem 2rem;
-  }
-}
-/* ==========================================================================
-   5. RESPONSIVE (Ajustes específicos para celulares)
-   ========================================================================== */
-@media (max-width: 600px) {
   .topbar {
     padding: 0.8rem 4%;
   }
 
-  .topbar h1 { 
-    font-size: 1.3rem; 
-  }
-
-  .volver {
-    padding: 0.4rem 0.8rem;
-    font-size: 0.9rem;
-  }
-
-  .games-container { 
-    grid-template-columns: 1fr; /* Fuerza una sola columna en pantallas muy chicas */
-    width: 95%; /* Aprovecha mejor el espacio lateral */
-    gap: 15px;
+  .games-container {
+    width: 95%;
+    gap: 1rem;
+    grid-template-columns: 1fr; /* Una sola columna */
   }
 
   .game-card {
-    padding: 1.25rem;
-    /* Reduce la sombra inferior para que no se vea tosca en pantallas pequeñas */
-    box-shadow: 0 5px 0px #e2e8f0; 
+    box-shadow: 0 4px 0px #e2e8f0; /* Sombra más ligera */
   }
 
-  .game-card .emoji {
-    font-size: 2.8rem; /* Emoji un poco más pequeño para equilibrar */
-  }
-
-  .play-area { 
+  .play-area {
     width: 95%;
-    padding: 1.5rem; 
-    margin-bottom: 2rem;
-  }
-
-  #gameTitle {
-    font-size: 1.8rem;
+    padding: 1.2rem;
   }
 }
+
+/* Móviles medianos y tablets (481px - 768px) */
+@media (min-width: 481px) and (max-width: 768px) {
+  .games-container {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.2rem;
+  }
+  
+  .game-card {
+    padding: 1.2rem;
+  }
+}
+
+/* Ajustes para pantallas muy anchas (escritorio) */
+@media (min-width: 1200px) {
+  .games-container {
+    max-width: 1200px;
+  }
+}
+
+/* Mejora de accesibilidad táctil para cualquier botón */
+button, 
+.volver,
+.game-card button {
+  touch-action: manipulation;
+  cursor: pointer;
+}
+
+/* Eliminar duplicados anteriores (asegurar coherencia) */
+/* ==========================================================================
+   FIN
+   ========================================================================== */
