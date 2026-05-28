@@ -1,714 +1,315 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
-  <title>Nicaragua Adventure | En construcción + GeoDash</title>
-  <!-- Google Fonts + Font Awesome -->
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+/* ==========================================================================
+   1. RESET Y CONFIGURACIÓN BASE
+   ========================================================================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-    :root {
-      --primary: #00a896;
-      --secondary: #028090;
-      --accent: #f26419;
-      --warm: #ffbf69;
-      --dark: #023047;
-      --light-sand: #fef9e6;
-      --shadow: 0 20px 35px -12px rgba(0,0,0,0.25);
-    }
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Poppins:wght@400;600;700&display=swap');
 
-    body {
-      font-family: 'Poppins', sans-serif;
-      background: linear-gradient(145deg, #eef4f0 0%, #d9e6db 100%);
-      color: #1e2f2f;
-      min-height: 100vh;
-      padding: 20px;
-      position: relative;
-      overflow-x: hidden;
-    }
+:root {
+  --primary-color: #00a896;
+  --secondary-color: #028090;
+  --accent-color: #f26419;
+  --bg-light: #f0fdfa;
+  --white: #ffffff;
+  --font-title: 'Fredoka', sans-serif;
+  --font-body: 'Poppins', sans-serif;
+  
+  /* Colores para tipos de juegos */
+  --color-trivia: #ff9f1c;
+  --color-ruleta: #2ec4b6;
+  --color-memoria: #e71d36;
+  --color-palabra: #011627;
+  --color-laberinto: #7209b7;
+}
 
-    /* Fondos animados: hojas volcánicas */
-    .bg-ornaments {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 0;
-      overflow: hidden;
-    }
-    .floating {
-      position: absolute;
-      font-size: 2.2rem;
-      opacity: 0.15;
-      animation: floatSlow 22s infinite linear;
-    }
-    @keyframes floatSlow {
-      0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
-      20% { opacity: 0.2; }
-      80% { opacity: 0.2; }
-      100% { transform: translateY(-20vh) rotate(380deg); opacity: 0; }
-    }
+body {
+  font-family: var(--font-body);
+  background-color: var(--bg-light);
+  background-image: radial-gradient(#bae6fd 0.5px, transparent 0.5px);
+  background-size: 24px 24px;
+  color: #334155;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+}
 
-    /* contenedor principal */
-    .main-wrapper {
-      max-width: 1300px;
-      margin: 0 auto;
-      position: relative;
-      z-index: 10;
-      display: flex;
-      flex-direction: column;
-      gap: 1.8rem;
-    }
+/* ==========================================================================
+   2. BARRA SUPERIOR (TOPBAR) - MEJORADA PARA MÓVIL
+   ========================================================================== */
+.topbar {
+  width: 100%;
+  background: var(--white);
+  padding: 0.8rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 15px rgba(2, 128, 144, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
 
-    /* header creativo */
-    .hero-construction {
-      background: rgba(2, 128, 144, 0.85);
-      backdrop-filter: blur(12px);
-      border-radius: 60px;
-      padding: 1.5rem 2rem;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      gap: 1rem;
-      box-shadow: var(--shadow);
-      border: 1px solid rgba(255, 215, 130, 0.5);
-    }
-    .title-nica {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      flex-wrap: wrap;
-    }
-    .title-nica h1 {
-      font-family: 'Fredoka', sans-serif;
-      font-size: clamp(1.8rem, 6vw, 2.4rem);
-      color: #fff7e8;
-      text-shadow: 3px 3px 0 #c4450c;
-      letter-spacing: -0.5px;
-    }
-    .badge-const {
-      background: #f26419;
-      border-radius: 100px;
-      padding: 0.4rem 1.2rem;
-      font-weight: 700;
-      color: white;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.9rem;
-      animation: pulse 1.8s infinite;
-    }
-    @keyframes pulse {
-      0% { box-shadow: 0 0 0 0 rgba(242,100,25,0.6); }
-      70% { box-shadow: 0 0 0 12px rgba(242,100,25,0); }
-      100% { box-shadow: 0 0 0 0 rgba(242,100,25,0); }
-    }
-    .status-text {
-      background: #023047aa;
-      border-radius: 40px;
-      padding: 0.5rem 1.3rem;
-      color: #ffdd99;
-      font-weight: 500;
-      backdrop-filter: blur(4px);
-    }
+.topbar h1 {
+  font-family: var(--font-title);
+  font-size: clamp(1.2rem, 6vw, 1.8rem);
+  color: var(--secondary-color);
+  margin: 0;
+  line-height: 1.2;
+  word-break: break-word;
+}
 
-    /* Layout de 2 columnas responsivo */
-    .two-columns {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 2rem;
-    }
+.volver {
+  text-decoration: none;
+  font-family: var(--font-title);
+  color: var(--primary-color);
+  font-weight: 600;
+  padding: 0.6rem 1rem;
+  border-radius: 40px;
+  background: #e0f2fe;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: clamp(0.85rem, 4vw, 1rem);
+  min-height: 44px;
+  touch-action: manipulation;
+}
 
-    @media (min-width: 900px) {
-      .two-columns {
-        grid-template-columns: 1.5fr 1fr;
-      }
-    }
+.volver:active {
+  transform: scale(0.96);
+}
 
-    /* Tarjeta izquierda: Info + Juego */
-    .card {
-      background: rgba(255, 255, 245, 0.92);
-      backdrop-filter: blur(8px);
-      border-radius: 48px;
-      padding: 1.5rem;
-      box-shadow: var(--shadow);
-      transition: transform 0.2s ease;
-      border: 1px solid #ffcf9a;
-    }
+/* ==========================================================================
+   3. CONTENEDOR DE JUEGOS (GRID RESPONSIVO MEJORADO)
+   ========================================================================== */
+.games-container {
+  display: grid;
+  grid-template-columns: 1fr; /* Por defecto una columna en móvil */
+  gap: 1.2rem;
+  width: 92%;
+  max-width: 1100px;
+  padding: 1.5rem 0;
+  margin: 0 auto;
+}
 
-    .construction-message {
-      background: #ffe6cf;
-      border-radius: 32px;
-      padding: 1rem 1.5rem;
-      margin-bottom: 1.5rem;
-      text-align: center;
-    }
-    .construction-message i {
-      font-size: 2rem;
-      margin-right: 0.5rem;
-      color: #f26419;
-    }
-    .construction-message p {
-      font-size: clamp(0.9rem, 4vw, 1rem);
-      font-weight: 600;
-    }
-
-    /* Canvas Juego */
-    .game-area {
-      text-align: center;
-      margin-bottom: 1.5rem;
-    }
-    canvas {
-      background: #241f17;
-      border-radius: 32px;
-      display: block;
-      margin: 0 auto;
-      width: 100%;
-      height: auto;
-      box-shadow: 0 12px 20px rgba(0,0,0,0.3);
-      cursor: pointer;
-      touch-action: manipulation;
-    }
-    .game-stats {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      flex-wrap: wrap;
-      margin-top: 12px;
-      gap: 10px;
-      background: #114b42b3;
-      padding: 8px 16px;
-      border-radius: 60px;
-      color: #ffedb5;
-      font-weight: bold;
-    }
-    .controls {
-      display: flex;
-      justify-content: center;
-      gap: 1rem;
-      margin: 1rem 0 0.5rem;
-      flex-wrap: wrap;
-    }
-    .btn {
-      font-family: 'Fredoka', sans-serif;
-      border: none;
-      padding: 12px 28px;
-      font-size: 1.1rem;
-      font-weight: 700;
-      border-radius: 60px;
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      cursor: pointer;
-      transition: all 0.1s linear;
-      background: #f26419;
-      color: white;
-      box-shadow: 0 5px 0 #a13c0a;
-      touch-action: manipulation;
-      min-height: 52px;
-    }
-    .btn-restart {
-      background: #2c5f5a;
-      box-shadow: 0 5px 0 #153b37;
-    }
-    .btn:active {
-      transform: translateY(2px);
-      box-shadow: 0 2px 0 #a13c0a;
-    }
-
-    /* CHAT card */
-    .chat-card {
-      background: rgba(20, 40, 35, 0.85);
-      backdrop-filter: blur(10px);
-      border-radius: 48px;
-      padding: 1.5rem;
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-      border: 1px solid #ffbc6e;
-    }
-    .chat-header {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      border-bottom: 2px solid #f4a261;
-      padding-bottom: 12px;
-      margin-bottom: 18px;
-      color: #fff0cf;
-    }
-    .chat-messages {
-      flex: 1;
-      max-height: 280px;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin-bottom: 18px;
-      padding-right: 6px;
-    }
-    .message {
-      display: flex;
-      gap: 10px;
-      animation: fadeSlide 0.2s ease;
-    }
-    @keyframes fadeSlide {
-      from { opacity: 0; transform: translateY(8px);}
-      to { opacity: 1; transform: translateY(0);}
-    }
-    .bot-msg { justify-content: flex-start; }
-    .user-msg { justify-content: flex-end; }
-    .bubble {
-      max-width: 85%;
-      padding: 10px 16px;
-      border-radius: 28px;
-      font-size: 0.9rem;
-      line-height: 1.4;
-      word-break: break-word;
-    }
-    .bot-msg .bubble {
-      background: #2a5f54;
-      color: #fff1cf;
-      border-top-left-radius: 6px;
-    }
-    .user-msg .bubble {
-      background: #f4a261;
-      color: #241f14;
-      border-top-right-radius: 6px;
-      font-weight: 500;
-    }
-    .chat-input-area {
-      display: flex;
-      gap: 12px;
-      margin-top: 6px;
-    }
-    .chat-input-area input {
-      flex: 1;
-      background: #2f3e38;
-      border: none;
-      padding: 14px 18px;
-      border-radius: 60px;
-      color: #fae6c3;
-      font-size: 1rem;
-      font-family: 'Poppins', sans-serif;
-      outline: none;
-    }
-    .chat-input-area button {
-      background: #f4a261;
-      border: none;
-      width: 54px;
-      border-radius: 60px;
-      color: #2c2b1f;
-      font-size: 1.5rem;
-      cursor: pointer;
-      transition: 0.1s;
-      touch-action: manipulation;
-    }
-    .footer-note {
-      text-align: center;
-      margin-top: 1rem;
-      font-size: 0.7rem;
-      color: #2a5f54;
-      font-weight: 500;
-    }
-    @media (max-width: 600px) {
-      body { padding: 12px; }
-      .btn { padding: 8px 20px; font-size: 1rem; min-height: 48px; }
-      .game-stats { font-size: 0.8rem; }
-      .bubble { font-size: 0.8rem; }
-      .construction-message i { font-size: 1.4rem; }
-    }
-  </style>
-</head>
-<body>
-<div class="bg-ornaments">
-  <div class="floating" style="left: 5%; animation-duration: 18s;">🌋</div>
-  <div class="floating" style="right: 10%; animation-duration: 24s; animation-delay: 1s;">🍃</div>
-  <div class="floating" style="left: 20%; bottom: 0; animation-duration: 27s;">🦜</div>
-  <div class="floating" style="right: 25%; animation-duration: 21s;">🌊</div>
-</div>
-
-<div class="main-wrapper">
-  <!-- Header llamativo -->
-  <div class="hero-construction">
-    <div class="title-nica">
-      <i class="fas fa-flag-checkered" style="font-size: 2.2rem; color:#ffbe76;"></i>
-      <h1>🇳🇮 Nicaragua · Tierra de Lagos y Volcanes</h1>
-    </div>
-    <div class="status-text">
-      <i class="fas fa-hard-hat"></i> Sitio oficial en construcción
-    </div>
-  </div>
-
-  <div class="two-columns">
-    <!-- COLUMNA IZQUIERDA: construcción + juego GeoDash -->
-    <div class="card">
-      <div class="construction-message">
-        <i class="fas fa-tools"></i> 
-        <p><strong>🚧 Página aún no disponible 🚧</strong><br>
-        Estamos creando la mejor experiencia turística para Nicaragua. Mientras tanto, ¡juega al <strong>VOLCAN DASH</strong> y conversa con nuestro asistente!</p>
-      </div>
-
-      <div class="game-area">
-        <canvas id="gameCanvas" width="600" height="250" style="width:100%; height:auto; max-width:600px; aspect-ratio:600/250"></canvas>
-        <div class="game-stats">
-          <span><i class="fas fa-star"></i> PUNTAJE: <span id="currentScore">0</span></span>
-          <span><i class="fas fa-trophy"></i> RÉCORD: <span id="highScoreDisplay">0</span></span>
-          <span><i class="fas fa-gamepad"></i> Salta obstáculos</span>
-        </div>
-        <div class="controls">
-          <button class="btn" id="jumpButton"><i class="fas fa-arrow-up"></i> SALTAR</button>
-          <button class="btn btn-restart" id="restartButton"><i class="fas fa-undo-alt"></i> REINICIAR</button>
-        </div>
-        <p style="font-size:0.7rem; text-align:center; margin-top:8px;"><i class="fas fa-mobile-alt"></i> Toca el juego o presiona espacio / clic</p>
-      </div>
-    </div>
-
-    <!-- COLUMNA DERECHA: CHAT ANTES DE CONSTRUIR -->
-    <div class="chat-card">
-      <div class="chat-header">
-        <i class="fas fa-comments" style="font-size: 2rem; color:#F4A261;"></i>
-        <div>
-          <strong style="font-size:1.3rem;">🤖 CHAT · CONSTRUCCIÓN</strong><br>
-          <span style="font-size:0.7rem;">Asistente turístico interactivo</span>
-        </div>
-      </div>
-      <div class="chat-messages" id="chatMessages">
-        <div class="message bot-msg">
-          <div class="bubble">🌋 ¡Bienvenida/o a Nicaragua en desarrollo! Soy tu guía digital. Puedes preguntarme sobre volcanes, playas, gastronomía o el estado de la página. 😊</div>
-        </div>
-        <div class="message bot-msg">
-          <div class="bubble">🎮 ¿Ya probaste "Volcán Dash"? Salta los bloques de lava y consigue el récord. ¿Listo?</div>
-        </div>
-      </div>
-      <div class="chat-input-area">
-        <input type="text" id="chatInput" placeholder="Escribe algo... ej: volcán, laguna, gallopinto" autocomplete="off">
-        <button id="sendChatBtn"><i class="fas fa-paper-plane"></i></button>
-      </div>
-      <div class="footer-note">
-        <i class="fas fa-hard-hat"></i> Chat de pre-lanzamiento • Respuestas sobre Nicaragua
-      </div>
-    </div>
-  </div>
-  <div class="footer-note" style="margin-top: 0;">
-    🌟 Próximamente: tours 360°, guías de aventura y reservas · ¡Seguimos construyendo tu viaje soñado! 🌟
-  </div>
-</div>
-
-<script>
-  // ======================= JUEGO GEOMETRY DASH LIGHT (Runner estilo salto) =======================
-  const canvas = document.getElementById('gameCanvas');
-  const ctx = canvas.getContext('2d');
-
-  // DIMENSIONES LÓGICAS (600x250 más visible en móvil)
-  const CANVAS_W = 600;
-  const CANVAS_H = 250;
-  canvas.width = CANVAS_W;
-  canvas.height = CANVAS_H;
-
-  // Jugador
-  const PLAYER_W = 15;
-  const PLAYER_H = 15;
-  const PLAYER_X = 70;        // posición fija horizontal
-  let playerY = CANVAS_H - 38 - PLAYER_H;
-  let playerVy = 0;
-  let onGround = true;
-  const GRAVITY = 0.68;
-  const JUMP_POWER = -8.7;
-  const GROUND_Y = CANVAS_H - 26;  // suelo visual
-
-  // Obstáculos
-  let obstacles = [];
-  const OBSTACLE_W = 13;
-  const OBSTACLE_H = 20;
-  let frameDelay = 0;
-  let spawnGap = 68;    // frames entre apariciones
-  let gameSpeed = 3.9;
-  let score = 0;
-  let highScore = localStorage.getItem('nicaVolcanHigh') ? parseInt(localStorage.getItem('nicaVolcanHigh')) : 0;
-  let gameOver = false;
-  let animationId = null;
-
-  // Elementos UI juego
-  const scoreSpan = document.getElementById('currentScore');
-  const highSpan = document.getElementById('highScoreDisplay');
-  highSpan.innerText = highScore;
-
-  function updateUI() {
-    scoreSpan.innerText = Math.floor(score);
-    if (Math.floor(score) > highScore) {
-      highScore = Math.floor(score);
-      highSpan.innerText = highScore;
-      localStorage.setItem('nicaVolcanHigh', highScore);
-    }
+/* Tablets pequeñas en adelante */
+@media (min-width: 480px) {
+  .games-container {
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
   }
+}
 
-  function restartGame() {
-    gameOver = false;
-    score = 0;
-    updateUI();
-    obstacles = [];
-    frameDelay = 0;
-    playerY = GROUND_Y - PLAYER_H;
-    playerVy = 0;
-    onGround = true;
-    gameSpeed = 3.9;
-    spawnGap = 68;
+.game-card {
+  background: var(--white);
+  padding: 1.2rem;
+  border-radius: 28px;
+  text-align: center;
+  border: 2px solid #e2e8f0;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 6px 0 #e2e8f0;
+  touch-action: manipulation;
+}
+
+.game-card:active {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 0 #cbd5e1;
+}
+
+.game-card .emoji {
+  font-size: clamp(2.2rem, 10vw, 3.5rem);
+  margin-bottom: 0.8rem;
+  filter: drop-shadow(0 3px 3px rgba(0,0,0,0.1));
+}
+
+.game-card h2 {
+  font-family: var(--font-title);
+  font-size: clamp(1.1rem, 5vw, 1.4rem);
+  color: var(--secondary-color);
+  margin-bottom: 0.6rem;
+}
+
+.game-card p {
+  font-size: clamp(0.75rem, 3.5vw, 0.9rem);
+  color: #64748b;
+  margin-bottom: 1.2rem;
+  line-height: 1.4;
+}
+
+.game-card button {
+  font-family: var(--font-title);
+  background: var(--secondary-color);
+  color: white;
+  border: none;
+  padding: 0.7rem;
+  border-radius: 60px;
+  font-size: clamp(0.9rem, 4vw, 1rem);
+  cursor: pointer;
+  transition: background 0.2s, transform 0.05s linear;
+  width: 100%;
+  min-height: 48px;
+  font-weight: 600;
+  touch-action: manipulation;
+}
+
+.game-card button:active {
+  background: var(--primary-color);
+  transform: scale(0.97);
+}
+
+/* ==========================================================================
+   4. ÁREA DE JUEGO (PLAY AREA) - VERSIÓN MÓVIL MEJORADA
+   ========================================================================== */
+.play-area {
+  width: 92%;
+  max-width: 1100px;
+  background: var(--white);
+  margin: 1rem auto 2rem auto;
+  padding: 1.2rem;
+  border-radius: 32px;
+  border: 3px dashed #cbd5e1;
+  text-align: center;
+  min-height: 280px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#gameTitle {
+  font-family: var(--font-title);
+  font-size: clamp(1.4rem, 7vw, 2.2rem);
+  color: var(--accent-color);
+  margin-bottom: 1rem;
+}
+
+#gameContent {
+  font-size: clamp(0.9rem, 4vw, 1.2rem);
+  color: #475569;
+  width: 100%;
+  line-height: 1.5;
+}
+
+/* ==========================================================================
+   5. MEDIA QUERIES MEJORADAS PARA MÓVILES Y TABLETS (SOLO CSS)
+   ========================================================================== */
+
+/* Móviles muy pequeños (hasta 360px) */
+@media (max-width: 360px) {
+  .topbar {
+    flex-direction: column;
+    text-align: center;
   }
-
-  function jump() {
-    if (gameOver) return;
-    // permitir salto si está en el suelo o muy cerca
-    if (playerY + PLAYER_H >= GROUND_Y - 1 && playerVy >= -0.5) {
-      playerVy = JUMP_POWER;
-      onGround = false;
-    }
+  .games-container {
+    width: 95%;
+    gap: 1rem;
   }
-
-  function updateGame() {
-    if (gameOver) return;
-
-    // Física jugador
-    playerVy += GRAVITY;
-    playerY += playerVy;
-    if (playerY + PLAYER_H >= GROUND_Y) {
-      playerY = GROUND_Y - PLAYER_H;
-      playerVy = 0;
-      onGround = true;
-    }
-    if (playerY < 0) {
-      playerY = 0;
-      if (playerVy < 0) playerVy = 0;
-    }
-
-    // Spawn obstáculos
-    if (frameDelay >= spawnGap) {
-      frameDelay = 0;
-      let dynamicGap = Math.max(48, 75 - Math.floor(score / 450));
-      spawnGap = Math.floor(Math.random() * 22) + dynamicGap;
-      obstacles.push({
-        x: CANVAS_W,
-        y: GROUND_Y - OBSTACLE_H,
-        w: OBSTACLE_W,
-        h: OBSTACLE_H,
-        counted: false
-      });
-    } else {
-      frameDelay++;
-    }
-
-    // mover obstáculos y aumentar velocidad gradual
-    for (let i = 0; i < obstacles.length; i++) {
-      obstacles[i].x -= gameSpeed;
-    }
-    // aceleración hasta máx 7.8
-    if (!gameOver) gameSpeed = Math.min(7.4, 3.9 + Math.floor(score / 950));
-
-    // eliminar fuera y sumar puntos al pasar
-    obstacles = obstacles.filter(obs => {
-      if (obs.x + obs.w < 0) return false;
-      if (obs.x + obs.w < PLAYER_X && !obs.counted) {
-        obs.counted = true;
-        score += 10;
-        updateUI();
-      }
-      return true;
-    });
-
-    // Colisiones (AABB)
-    const playerRect = { x: PLAYER_X, y: playerY, w: PLAYER_W, h: PLAYER_H };
-    for (let obs of obstacles) {
-      const obsRect = { x: obs.x, y: obs.y, w: obs.w, h: obs.h };
-      if (playerRect.x < obsRect.x + obsRect.w &&
-          playerRect.x + playerRect.w > obsRect.x &&
-          playerRect.y < obsRect.y + obsRect.h &&
-          playerRect.y + playerRect.h > obsRect.y) {
-        gameOver = true;
-        break;
-      }
-    }
-
-    // Puntuación por tiempo (adrenalina)
-    if (!gameOver) {
-      score += 0.22;
-      updateUI();
-    }
+  .game-card {
+    padding: 1rem;
   }
-
-  // Dibujar estilo volcánico, geometría
-  function draw() {
-    ctx.clearRect(0, 0, CANVAS_W, CANVAS_H);
-    // cielo
-    const grad = ctx.createLinearGradient(0, 0, 0, CANVAS_H);
-    grad.addColorStop(0, "#332411");
-    grad.addColorStop(0.7, "#653d1a");
-    ctx.fillStyle = grad;
-    ctx.fillRect(0, 0, CANVAS_W, CANVAS_H);
-
-    // suelo
-    ctx.fillStyle = "#8b5a2b";
-    ctx.fillRect(0, GROUND_Y, CANVAS_W, CANVAS_H - GROUND_Y + 5);
-    ctx.fillStyle = "#d49447";
-    for(let i=0;i<12;i++) ctx.fillRect(i*55, GROUND_Y-4, 25, 5);
-    ctx.fillStyle = "#e7ac6c";
-    ctx.fillRect(0, GROUND_Y-2, CANVAS_W, 3);
-
-    // obstáculos (rocas ardientes)
-    for (let obs of obstacles) {
-      ctx.fillStyle = "#e65c1e";
-      ctx.fillRect(obs.x, obs.y, obs.w, obs.h);
-      ctx.fillStyle = "#bc3a0a";
-      ctx.fillRect(obs.x+3, obs.y-4, obs.w-6, 6);
-      ctx.fillStyle = "#ffae70";
-      ctx.fillRect(obs.x+4, obs.y+6, 5, 7);
-    }
-
-    // jugador (cuadrado dinámico estilo geometría)
-    ctx.shadowBlur = 6;
-    ctx.shadowColor = "#f9b43a";
-    ctx.fillStyle = "#FFB347";
-    ctx.fillRect(PLAYER_X, playerY, PLAYER_W, PLAYER_H);
-    ctx.fillStyle = "#d97a2b";
-    ctx.fillRect(PLAYER_X+3, playerY+3, 4, 4);
-    ctx.fillStyle = "white";
-    ctx.fillRect(PLAYER_X+10, playerY+5, 3, 3);
-    ctx.fillStyle = "#262216";
-    ctx.fillRect(PLAYER_X+11, playerY+10, 3, 4);
-    ctx.shadowBlur = 0;
-
-    // efecto de velocidad
-    if (!gameOver && gameSpeed > 5.2) {
-      ctx.beginPath();
-      for(let i=0;i<8;i++) {
-        let off = (frameDelay * 2 + i * 25) % CANVAS_W;
-        ctx.moveTo(CANVAS_W - off, GROUND_Y-6);
-        ctx.lineTo(CANVAS_W - off - 18, GROUND_Y-12);
-        ctx.lineWidth = 2;
-        ctx.strokeStyle = "#ffbd6eaa";
-        ctx.stroke();
-      }
-    }
-
-    if (gameOver) {
-      ctx.font = "bold 22px 'Fredoka', sans-serif";
-      ctx.fillStyle = "#ffdfaa";
-      ctx.shadowBlur = 0;
-      ctx.fillText("💥 GAME OVER 💥", CANVAS_W/2-100, 65);
-      ctx.font = "12px monospace";
-      ctx.fillStyle = "#ffcd94";
-      ctx.fillText("Presiona REINICIAR para seguir", CANVAS_W/2-95, 100);
-    }
-
-    // mini indicador
-    ctx.font = "bold 16monospace";
-    ctx.fillStyle = "#FFE6B3";
-    ctx.fillText(`⚡${Math.floor(score)}`, CANVAS_W-55, 28);
+  .play-area {
+    width: 95%;
+    padding: 1rem;
   }
+}
 
-  function gameLoop() {
-    if (!gameOver) updateGame();
-    draw();
-    animationId = requestAnimationFrame(gameLoop);
+/* Móviles estándar (361px - 480px) */
+@media (max-width: 480px) {
+  .topbar {
+    padding: 0.7rem 0.9rem;
   }
-
-  // Eventos juego
-  function attachGameEvents() {
-    const jumpHandler = (e) => {
-      // Evitar salto mientras se escribe en chat
-      if (document.activeElement && document.activeElement.id === 'chatInput') return;
-      e.preventDefault();
-      jump();
-    };
-    window.addEventListener('keydown', (e) => {
-      if (e.code === 'Space' || e.code === 'ArrowUp') {
-        e.preventDefault();
-        jumpHandler(e);
-      }
-    });
-    canvas.addEventListener('click', (e) => {
-      e.preventDefault();
-      jump();
-    });
-    canvas.addEventListener('touchstart', (e) => {
-      e.preventDefault();
-      jump();
-    }, { passive: false });
-    document.getElementById('jumpButton').addEventListener('click', () => jump());
-    document.getElementById('restartButton').addEventListener('click', () => restartGame());
+  .games-container {
+    width: 94%;
+    gap: 1rem;
   }
-
-  restartGame();
-  attachGameEvents();
-  gameLoop();
-
-  // ======================= CHAT INTELIGENTE (ASISTENTE PRE-CONSTRUCCIÓN) =======================
-  const chatMessagesDiv = document.getElementById('chatMessages');
-  const chatInput = document.getElementById('chatInput');
-  const sendBtn = document.getElementById('sendChatBtn');
-
-  function addMessage(sender, text, isUser = false) {
-    const msgDiv = document.createElement('div');
-    msgDiv.className = `message ${isUser ? 'user-msg' : 'bot-msg'}`;
-    const bubble = document.createElement('div');
-    bubble.className = 'bubble';
-    bubble.innerText = text;
-    msgDiv.appendChild(bubble);
-    chatMessagesDiv.appendChild(msgDiv);
-    chatMessagesDiv.scrollTop = chatMessagesDiv.scrollHeight;
+  .game-card {
+    border-radius: 24px;
+    box-shadow: 0 4px 0 #e2e8f0;
   }
-
-  function botResponse(userMsg) {
-    const msg = userMsg.toLowerCase().trim();
-    if (msg.includes('volcán') || msg.includes('volcan') || msg.includes('cerro negro')) {
-      return "🌋 ¡Nicaragua tiene más de 19 volcanes activos! Podrás hacer sandboard en el Cerro Negro. Próximamente tours interactivos.";
-    } else if (msg.includes('lago') || msg.includes('cocibolca') || msg.includes('granada')) {
-      return "💧 El Lago Cocibolca es el más grande de Centroamérica, con isletas y cayos. En construcción: guía de navegación.";
-    } else if (msg.includes('playa') || msg.includes('san juan') || msg.includes('surf')) {
-      return "🏄‍♂️ San Juan del Sur es paraíso del surf. Estamos diseñando un mapa de olas y eco-lodges. ¡Paciencia!";
-    } else if (msg.includes('comida') || msg.includes('gallo pinto') || msg.includes('nacatamal')) {
-      return "🍛 ¡Gallo pinto, quesillo, vigorón y nacatamales! Nuestra futura sección gastronómica te hará agua la boca.";
-    } else if (msg.includes('juego') || msg.includes('dash') || msg.includes('saltar')) {
-      return "🎮 El 'Volcán Dash' es estilo Geometry Dash: evita los obstáculos rojos. Toca el canvas o usa espacio. ¡Intenta batir el récord!";
-    } else if (msg.includes('construcción') || msg.includes('sitio') || msg.includes('web')) {
-      return "🚧 La página oficial aún está en desarrollo, pero este chat y el juego son un adelanto. ¡Gracias por tu paciencia! 🇳🇮";
-    } else if (msg.includes('hola') || msg.includes('buenas') || msg.includes('saludo')) {
-      return "👋 ¡Hola! Bienvenido a la aventura nicaragüense. Pregúntame sobre naturaleza, volcanes o el estado del sitio.";
-    } else if (msg.includes('gracias')) {
-      return "😊 ¡A ti por visitarnos! Mientras construimos, juega y comparte tus ideas con nosotros.";
-    } else {
-      return "✨ ¡Excelente pregunta! Estamos llenando la base de datos turística. Pronto tendrás toda la info sobre Nicaragua. ¿Te gustaría saber algo de los volcanes o las playas?";
-    }
+  .play-area {
+    border-radius: 28px;
+    padding: 1rem;
+    border-width: 2px;
   }
+}
 
-  function sendUserMessage() {
-    const text = chatInput.value.trim();
-    if (text === "") return;
-    addMessage("Tú", text, true);
-    chatInput.value = "";
-    setTimeout(() => {
-      const reply = botResponse(text);
-      addMessage("Asistente Nica", reply, false);
-    }, 280);
+/* Móviles grandes y tablets pequeñas (481px - 768px) */
+@media (min-width: 481px) and (max-width: 768px) {
+  .games-container {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.2rem;
+    width: 90%;
   }
+  .game-card {
+    padding: 1.2rem;
+  }
+  .play-area {
+    width: 90%;
+    padding: 1.8rem;
+  }
+}
 
-  sendBtn.addEventListener('click', sendUserMessage);
-  chatInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      sendUserMessage();
-    }
-  });
+/* Ajustes para orientación horizontal en móviles */
+@media (max-width: 768px) and (orientation: landscape) {
+  .games-container {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem;
+  }
+  .topbar {
+    padding: 0.5rem 1rem;
+  }
+  .play-area {
+    min-height: 200px;
+  }
+}
 
-  // mensaje adicional después de carga
-  setTimeout(() => {
-    addMessage("Asistente Nica", "🌿 Recuerda que cada salto en el juego esquivará lava. A mayor puntaje, más velocidad. ¡Celebremos Nicaragua juntos! 🦜", false);
-  }, 2000);
-</script>
-</body>
-</html>
+/* Mejora de accesibilidad táctil para todos los botones y enlaces */
+button, 
+.volver,
+.game-card button,
+[role="button"] {
+  touch-action: manipulation;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Ajustes adicionales para inputs y elementos interactivos */
+input, textarea, select {
+  font-size: 16px; /* Previene zoom automático en iOS */
+  font-family: var(--font-body);
+}
+
+/* Evitar desbordes en imágenes y elementos flexibles */
+img, canvas, iframe {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Mejora del espaciado en móviles para contenido de juegos */
+@media (max-width: 600px) {
+  .game-card .emoji {
+    margin-bottom: 0.5rem;
+  }
+  .game-card p {
+    margin-bottom: 1rem;
+  }
+  #gameContent {
+    font-size: 0.9rem;
+  }
+}
+
+/* ==========================================================================
+   FIN - CSS REWRITTEN PARA MEJOR RESPONSIVE EN MÓVILES
+   ========================================================================== */
