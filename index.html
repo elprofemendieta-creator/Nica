@@ -16,7 +16,6 @@
       background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
       position: relative;
       overflow-x: hidden;
-      top: 0px !important;
     }
     .wave-bg {
       position: fixed;
@@ -120,60 +119,6 @@
       z-index: 1000;
     }
     
-    /* Estilos del traductor - Limpio sin mensajes */
-    .google-translate-widget {
-      position: fixed;
-      bottom: 100px;
-      right: 20px;
-      z-index: 9999;
-      background: transparent;
-      padding: 0;
-    }
-    
-    /* Ocultar elementos no deseados del traductor */
-    .goog-te-gadget span,
-    .goog-te-gadget a,
-    .goog-te-gadget img {
-      display: none !important;
-    }
-    
-    .goog-te-banner-frame,
-    .goog-te-balloon-frame,
-    .goog-te-spinner-pos {
-      display: none !important;
-    }
-    
-    .goog-te-banner {
-      display: none !important;
-    }
-    
-    .skiptranslate iframe,
-    .skiptranslate div {
-      display: none !important;
-    }
-    
-    /* Estilo solo para el selector */
-    .goog-te-combo {
-      padding: 10px 15px;
-      border-radius: 30px;
-      border: 1px solid rgba(255,255,255,0.3);
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(10px);
-      cursor: pointer;
-      font-size: 13px;
-      outline: none;
-      font-family: 'Inter', sans-serif;
-      font-weight: 500;
-      min-width: 140px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      transition: all 0.3s ease;
-    }
-    
-    .goog-te-combo:hover {
-      transform: scale(1.02);
-      box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-    }
-    
     @keyframes fadeInUp {
       from { opacity: 0; transform: translateY(30px); }
       to { opacity: 1; transform: translateY(0); }
@@ -182,15 +127,6 @@
       .glass-card { padding: 1.5rem; }
       h1 { font-size: 2rem; }
       .menu-card { width: 160px; padding: 1rem; }
-      .google-translate-widget {
-        bottom: 90px;
-        right: 15px;
-      }
-      .goog-te-combo {
-        padding: 7px 12px;
-        font-size: 11px;
-        min-width: 120px;
-      }
     }
   </style>
 </head>
@@ -248,8 +184,14 @@
     </a>
   </div>
 
-  <!-- ========== WIDGET TRADUCTOR LIMPIO (SIN MENSAJES DE GOOGLE) ========== -->
-  <div id="google_translate_element" class="google-translate-widget"></div>
+  <!-- ========== TRADUCTOR MANUAL (SIEMPRE FUNCIONA) ========== -->
+  <div class="traductor-manual">
+    <select id="idiomaSelector">
+      <option value="es">🇪🇸 Español</option>
+      <option value="en">🇺🇸 English</option>
+      <option value="zh-CN">🇨🇳 中文</option>
+    </select>
+  </div>
 
   <style>
     .whatsapp-container {
@@ -315,11 +257,53 @@
       }
     }
 
+    /* Estilos del traductor manual */
+    .traductor-manual {
+      position: fixed;
+      bottom: 100px;
+      right: 20px;
+      z-index: 9999;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 8px 12px;
+      border-radius: 30px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .traductor-manual:hover {
+      transform: scale(1.02);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    }
+
+    .traductor-manual select {
+      padding: 8px 12px;
+      border-radius: 30px;
+      border: 1px solid #ddd;
+      background: white;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      min-width: 130px;
+      outline: none;
+    }
+
     @media (max-width: 550px) {
       .whatsapp-float {
         width: 50px;
         height: 50px;
         font-size: 28px;
+      }
+      .traductor-manual {
+        bottom: 90px;
+        right: 15px;
+        padding: 6px 10px;
+      }
+      .traductor-manual select {
+        padding: 6px 10px;
+        font-size: 11px;
+        min-width: 110px;
       }
     }
   </style>
@@ -355,95 +339,30 @@
         });
       }
     });
-  </script>
 
-  <!-- ========== SCRIPT DEL TRADUCTOR LIMPIO ========== -->
-  <script type="text/javascript">
-    // Función que inicializa Google Translate con SOLO 3 idiomas
-    function googleTranslateElementInit() {
-      new google.translate.TranslateElement({
-        pageLanguage: 'es',
-        includedLanguages: 'en,zh-CN',
-        layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
-        autoDisplay: false
-      }, 'google_translate_element');
+    // ========== TRADUCTOR MANUAL ==========
+    const selector = document.getElementById('idiomaSelector');
+    const urlActual = window.location.href;
+    
+    // Guardar y cargar idioma preferido
+    const idiomaGuardado = localStorage.getItem('idiomaPreferidoManual');
+    if (idiomaGuardado) {
+      selector.value = idiomaGuardado;
     }
     
-    // Guardar idioma preferido
-    function guardarIdioma() {
-      setTimeout(function() {
-        var select = document.querySelector('.goog-te-combo');
-        if (select && select.value) {
-          localStorage.setItem('idiomaPreferido', select.value);
-        }
-      }, 500);
-    }
-    
-    // Cargar idioma guardado
-    function cargarIdiomaGuardado() {
-      var idioma = localStorage.getItem('idiomaPreferido');
-      if (idioma) {
-        setTimeout(function() {
-          var select = document.querySelector('.goog-te-combo');
-          if (select && select.value !== idioma) {
-            select.value = idioma;
-            select.dispatchEvent(new Event('change'));
-          }
-        }, 1000);
+    selector.addEventListener('change', function() {
+      const idioma = this.value;
+      localStorage.setItem('idiomaPreferidoManual', idioma);
+      
+      if (idioma === 'es') {
+        // Recargar sin traducción
+        window.location.href = urlActual.split('?')[0];
+      } else {
+        // Usar Google Translate
+        window.location.href = 'https://translate.google.com/translate?hl=' + idioma + '&sl=es&tl=' + idioma + '&u=' + encodeURIComponent(urlActual);
       }
-    }
-    
-    // Eliminar banners molestos después de traducir
-    function limpiarBanners() {
-      setTimeout(function() {
-        var banner = document.querySelector('.goog-te-banner-frame');
-        if (banner) banner.style.display = 'none';
-        
-        var frame = document.querySelector('.goog-te-balloon-frame');
-        if (frame) frame.style.display = 'none';
-        
-        document.body.style.top = '0px';
-        document.body.style.position = 'relative';
-        
-        var tooltips = document.querySelectorAll('[class*="goog-te"]');
-        tooltips.forEach(function(el) {
-          if (el.innerText === 'Original' || el.innerText === 'Idioma original') {
-            el.style.display = 'none';
-          }
-        });
-      }, 100);
-    }
-    
-    // Detectar cambio de idioma
-    document.addEventListener('change', function(e) {
-      if (e.target && e.target.className === 'goog-te-combo') {
-        guardarIdioma();
-        setTimeout(limpiarBanners, 200);
-        setTimeout(limpiarBanners, 500);
-        setTimeout(limpiarBanners, 1000);
-      }
-    });
-    
-    // Limpiar al cargar la página
-    window.addEventListener('load', function() {
-      cargarIdiomaGuardado();
-      limpiarBanners();
-      setTimeout(limpiarBanners, 500);
-      setTimeout(limpiarBanners, 1000);
-    });
-    
-    // Observar cambios en el DOM para limpiar banners dinámicamente
-    var observer = new MutationObserver(function() {
-      limpiarBanners();
-    });
-    
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true
     });
   </script>
-  
-  <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
   <div id="toast" class="toast-message" style="display: none;"></div>
 
