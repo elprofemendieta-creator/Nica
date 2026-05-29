@@ -77,6 +77,7 @@ border-radius:20px;
 padding:5px 12px;
 font-size:0.85rem;
 margin-top:8px;
+cursor:help;
 }
 
 .position-badge i{
@@ -282,13 +283,13 @@ gap:8px;
 backdrop-filter:blur(8px);
 }
 
-@keyframes pulse {
-0%, 100% { opacity: 1; }
-50% { opacity: 0.6; }
+@keyframes pulse{
+0%,100%{opacity:1;}
+50%{opacity:0.6;}
 }
 
 .loading-position{
-animation: pulse 1.5s ease-in-out infinite;
+animation:pulse 1.5s ease-in-out infinite;
 }
 
 @media(max-width:700px){
@@ -296,16 +297,13 @@ animation: pulse 1.5s ease-in-out infinite;
 flex-direction:column;
 text-align:center;
 }
-
 .search-box{
 flex-direction:column;
 }
-
 .friend-item{
 flex-direction:column;
 align-items:flex-start;
 }
-
 .friend-actions{
 width:100%;
 justify-content:flex-end;
@@ -411,7 +409,7 @@ justify-content:flex-end;
 <script type="module">
 import { initializeApp } from "firebase/app";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { getFirestore, collection, query, orderBy, limit, getDocs, where, addDoc, deleteDoc, doc, onSnapshot, updateDoc, arrayUnion, arrayRemove, getDoc } from "firebase/firestore";
+import { getFirestore, collection, query, orderBy, limit, getDocs, where, addDoc, deleteDoc, doc, onSnapshot, updateDoc, arrayUnion, arrayRemove, getDoc, setDoc } from "firebase/firestore";
 
 const firebaseConfig = {
 apiKey: "AIzaSyA6jVICuE17KJcO34gE1brMxqWEfNd3Fy0",
@@ -471,6 +469,47 @@ return data;
 return null;
 }
 
+// Asegurar que el perfil del usuario existe en Firestore
+async function asegurarPerfilUsuario(user){
+try{
+const userRef = doc(db, "usuarios", user.uid);
+const userDoc = await getDoc(userRef);
+if(!userDoc.exists()){
+await setDoc(userRef, {
+uid: user.uid,
+nombre: user.displayName || user.email.split('@')[0],
+email: user.email,
+puntos: 0,
+amigos: [],
+solicitudesEnviadas: [],
+solicitudesRecibidas: [],
+fechaRegistro: Date.now()
+});
+console.log("Perfil creado exitosamente");
+toast("¡Bienvenido a Nica Explorer!");
+} else {
+const userData = userDoc.data();
+if(userData.puntos === undefined){
+await updateDoc(userRef, { puntos: 0 });
+console.log("Campo puntos agregado");
+}
+if(!userData.amigos){
+await updateDoc(userRef, { amigos: [] });
+}
+if(!userData.solicitudesEnviadas){
+await updateDoc(userRef, { solicitudesEnviadas: [] });
+}
+if(!userData.solicitudesRecibidas){
+await updateDoc(userRef, { solicitudesRecibidas: [] });
+}
+}
+return true;
+} catch(error){
+console.error("Error asegurando perfil:", error);
+return false;
+}
+}
+
 // PERFIL
 async function cargarPerfil(user){
 document.getElementById("userDisplayName").innerText = user.displayName || user.email.split('@')[0];
@@ -491,42 +530,63 @@ document.getElementById("userPoints").innerText = data.puntos || 0;
 // Calcular posición global del usuario
 async function calcularPosicionGlobal(uid){
 try{
+const userDoc = await getDoc(doc(db, "usuarios", uid));
+if(!userDoc.exists()){
+document.getElementById("positionText").innerHTML = '📝 Completa tu perfil';
+return null;
+}
+const userData = userDoc.data();
+const puntosUsuario = userData.puntos || 0;
 const q = query(collection(db,"usuarios"), orderBy("puntos","desc"));
 const snap = await getDocs(q);
 let posicion = 0;
-let puntosUsuario = 0;
 let usuariosLista = [];
 snap.forEach((docSnap, index) => {
 const data = docSnap.data();
-usuariosLista.push({uid: docSnap.id, puntos: data.puntos || 0, nombre: data.nombre});
+const puntos = data.puntos || 0;
+usuariosLista.push({
+uid: docSnap.id,
+puntos: puntos,
+nombre: data.nombre || "Usuario"
+});
 if(docSnap.id === uid){
 posicion = index + 1;
-puntosUsuario = data.puntos || 0;
 }
 });
 const positionText = document.getElementById("positionText");
 const totalUsuarios = usuariosLista.length;
 if(posicion > 0){
 let medalIcon = '';
-let positionClass = '';
+let medalEmoji = '';
 if(posicion === 1){
 medalIcon = '<i class="fas fa-crown" style="color:#FFD700;"></i> ';
-positionClass = '🥇';
+medalEmoji = '🥇';
 } else if(posicion === 2){
 medalIcon = '<i class="fas fa-medal" style="color:#C0C0C0;"></i> ';
-positionClass = '🥈';
+medalEmoji = '🥈';
 } else if(posicion === 3){
 medalIcon = '<i class="fas fa-medal" style="color:#CD7F32;"></i> ';
-positionClass = '🥉';
+medalEmoji = '🥉';
 }
-positionText.innerHTML = `${medalIcon}Posición #${posicion} de ${totalUsuarios} ${positionClass}`;
+positionText.innerHTML = `${medalIcon}Posición #${posicion} de ${totalUsuarios} ${medalEmoji}`;
+if(posicion > 1 && usuariosLista[posicion-2]){
+const puntosSiguiente = usuariosLista[posicion-2].puntos;
+const puntosNecesarios = puntosSiguiente - puntosUsuario;
+if(puntosNecesarios > 0){
+positionText.title = `Necesitas ${puntosNecesarios} puntos más para subir al puesto #${posicion-1}`;
+}
+}
 } else {
-positionText.innerHTML = '📊 Posición no disponible';
+if(puntosUsuario === 0){
+positionText.innerHTML = '📊 Sin puntos aún - ¡Explora para ganar puntos!';
+} else {
+positionText.innerHTML = '📊 Subiendo al ranking...';
+}
 }
 return {posicion, puntosUsuario, usuariosLista};
 } catch(error){
 console.error("Error calculando posición:", error);
-document.getElementById("positionText").innerHTML = '⚠️ Error al calcular posición';
+document.getElementById("positionText").innerHTML = '⚠️ Actualizando...';
 return null;
 }
 }
@@ -546,7 +606,7 @@ window.open(`https://wa.me/?text=${encodeURIComponent(url)}`, "_blank");
 };
 }
 
-// RANKING GLOBAL (resaltando al usuario actual)
+// RANKING GLOBAL
 async function cargarRankingGlobal(){
 const q = query(collection(db,"usuarios"), orderBy("puntos","desc"), limit(50));
 const snap = await getDocs(q);
@@ -559,9 +619,9 @@ const isCurrentUser = (docSnap.id === currentUser.uid);
 const rowClass = isCurrentUser ? 'highlight-row' : '';
 body.innerHTML += `
 <tr class="${rowClass}">
-<td>${pos++}</td>
+<td><strong>${pos++}</strong></td>
 <td>${data.nombre || "Usuario"} ${isCurrentUser ? '<i class="fas fa-user-check" style="color:#F57C00; margin-left:5px;"></i>' : ''}</td>
-<td>${data.puntos || 0}</td>
+<td><i class="fas fa-star" style="color:#F9A826;"></i> ${data.puntos || 0}</td>
 </tr>
 `;
 }
@@ -585,7 +645,6 @@ return;
 }
 const amigoRef = doc(db, "usuarios", amigoUid);
 const amigoDoc = await getDoc(amigoRef);
-const amigoData = amigoDoc.data();
 const amigosActuales = currentUserData.amigos || [];
 if(amigosActuales.includes(amigoUid)){
 toast("Ya son amigos");
@@ -694,7 +753,7 @@ const nombre = amigoData?.nombre || solicitud.nombre || "Usuario";
 solicitudesDiv.innerHTML += `
 <div class="friend-item request-item">
 <div>
-<strong>${nombre}</strong>
+<strong><i class="fas fa-user-clock"></i> ${nombre}</strong>
 </div>
 <div class="friend-actions">
 <button class="btn btn-success" onclick="window.aceptarSolicitudModule('${solicitud.uid}', '${nombre.replace(/'/g, "\\'")}')">
@@ -842,11 +901,15 @@ foroMensajes.appendChild(post);
 });
 });
 
-// Escuchar cambios en los puntos del usuario para actualizar posición
+// Escuchar cambios en los puntos del usuario
 function escucharCambiosPuntos(){
 const userRef = doc(db, "usuarios", currentUser.uid);
-onSnapshot(userRef, async () => {
+onSnapshot(userRef, async (docSnap) => {
+if(docSnap.exists()){
+const data = docSnap.data();
+document.getElementById("userPoints").innerText = data.puntos || 0;
 await cargarRankingGlobal();
+}
 });
 }
 
@@ -856,13 +919,14 @@ window.aceptarSolicitudModule = aceptarSolicitud;
 window.rechazarSolicitudModule = rechazarSolicitud;
 window.eliminarAmigoModule = eliminarAmigo;
 
-// LOGIN
+// INICIALIZACIÓN
 onAuthStateChanged(auth, async (user)=>{
 if(!user){
 window.location.href = "index.html";
 return;
 }
 currentUser = user;
+await asegurarPerfilUsuario(user);
 await cargarPerfil(user);
 generarQR();
 await cargarRankingGlobal();
