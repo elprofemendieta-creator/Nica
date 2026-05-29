@@ -330,74 +330,30 @@ data-tab="foro">
 
 </div>
 
-<!-- RANKING -->
+  <!-- Panel Ranking Global -->
+    <div id="rankingPane" class="tab-pane active">
+      <h2><i class="fas fa-chart-line"></i> Top 10 Usuarios</h2>
+      <table class="ranking-table">
+        <thead><tr><th>#</th><th>Usuario</th><th>Puntos</th></tr></thead>
+        <tbody id="rankingBody"></tbody>
+      </table>
+    </div>
 
-<div id="rankingPane"
-class="tab-pane active">
+    <!-- Panel Mis Amigos -->
+    <div id="amigosPane" class="tab-pane">
+      <h2><i class="fas fa-users"></i> Amigos (unilateral)</h2>
+      <div id="amigosList"></div>
+    </div>
 
-<h2>
-<i class="fas fa-chart-line"></i>
-Top Usuarios
-</h2>
-
-<table class="ranking-table">
-
-<thead>
-<tr>
-<th>#</th>
-<th>Usuario</th>
-<th>Puntos</th>
-</tr>
-</thead>
-
-<tbody id="rankingBody"></tbody>
-
-</table>
-
-</div>
-
-<!-- AMIGOS -->
-
-<div id="amigosPane"
-class="tab-pane">
-
-<h2>
-<i class="fas fa-users"></i>
-Mis Amigos
-</h2>
-
-<div id="amigosList"></div>
-
-</div>
-
-<!-- BUSCAR -->
-
-<div id="buscarPane"
-class="tab-pane">
-
-<h2>
-<i class="fas fa-user-plus"></i>
-Buscar usuarios
-</h2>
-
-<div class="search-box">
-
-<input
-type="text"
-id="searchUserInput"
-placeholder="Buscar por nombre o correo...">
-
-<button
-class="btn"
-id="searchUserBtn">
-Buscar
-</button>
-
-</div>
-
-<div id="searchResults"></div>
-
-</div>
+    <!-- Panel Buscar y agregar -->
+    <div id="buscarPane" class="tab-pane">
+      <h2><i class="fas fa-user-plus"></i> Agregar amigo</h2>
+      <div class="search-box">
+        <input type="text" id="searchUserInput" placeholder="Buscar por nombre o email...">
+        <button id="searchUserBtn" class="btn">Buscar</button>
+      </div>
+      <div id="searchResults"></div>
+    </div>
 
 <!-- COMPARTIR -->
 
@@ -536,6 +492,160 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 let currentUser = null;
+
+ // Helper: asegurar que el usuario tenga documento en Firestore
+  async function ensureUserDocument(user) {
+    const usersRef = collection(db, "usuarios");
+    const q = query(usersRef, where("uid", "==", user.uid));
+    const snap = await getDocs(q);
+    if (snap.empty) {
+      // Crear documento con datos de Auth
+      const newDoc = {
+        uid: user.uid,
+        email: user.email,
+        nombre: user.displayName || user.email.split('@')[0],
+        fotoURL: user.photoURL || "",
+        puntos: 0,
+        fechaRegistro: new Date(),
+        sonidosActivos: true
+      };
+      const docRef = await addDoc(usersRef, newDoc);
+      return { id: docRef.id, data: newDoc };
+    } else {
+      const doc = snap.docs[0];
+      return { id: doc.id, data: doc.data() };
+    }
+  }
+
+  // Obtener ranking global top 10
+  async function cargarRanking() {
+    const usersRef = collection(db, "usuarios");
+    const q = query(usersRef, orderBy("puntos", "desc"), limit(10));
+    const snap = await getDocs(q);
+    const rankingBody = document.getElementById("rankingBody");
+    rankingBody.innerHTML = "";
+    let pos = 1;
+    snap.forEach(doc => {
+      const data = doc.data();
+      const row = `<tr>
+        <td>${pos++}</td>
+        <td>${data.nombre || data.email}</td>
+        <td>${data.puntos || 0}</td>
+      </tr>`;
+      rankingBody.innerHTML += row;
+    });
+    // Calcular posición del usuario actual
+    if (currentUser) {
+      const allUsers = await getDocs(query(usersRef, orderBy("puntos", "desc")));
+      let rank = 1;
+      for (const doc of allUsers.docs) {
+        if (doc.data().uid === currentUser.uid) break;
+        rank++;
+      }
+      document.getElementById("userRank").innerText = rank;
+    }
+  }
+
+  // Cargar amigos del usuario actual (lista de usuarios a los que sigue)
+  async function cargarAmigos() {
+    if (!currentUser) return;
+    const amigosRef = collection(db, "amigos");
+    const q = query(amigosRef, where("usuarioId", "==", currentUser.uid));
+    const snap = await getDocs(q);
+    const amigosIds = snap.docs.map(d => d.data().amigoId);
+    if (amigosIds.length === 0) {
+      document.getElementById("amigosList").innerHTML = "<p>No sigues a nadie aún. Agrega amigos en la pestaña 'Agregar Amigo'.</p>";
+      return;
+    }
+    // Obtener datos de esos usuarios
+    const usersRef = collection(db, "usuarios");
+    const amigosData = [];
+    for (const uid of amigosIds) {
+      const qUser = query(usersRef, where("uid", "==", uid));
+      const userSnap = await getDocs(qUser);
+      if (!userSnap.empty) {
+        amigosData.push({ id: userSnap.docs[0].id, data: userSnap.docs[0].data() });
+      }
+    }
+    // Ordenar por puntos
+    amigosData.sort((a,b) => (b.data.puntos || 0) - (a.data.puntos || 0));
+    const container = document.getElementById("amigosList");
+    container.innerHTML = "";
+    amigosData.forEach(amigo => {
+      const div = document.createElement("div");
+      div.className = "friend-item";
+      div.innerHTML = `
+        <div><strong>${amigo.data.nombre || amigo.data.email}</strong><br><small>${amigo.data.puntos || 0} pts</small></div>
+        <button class="btn-outline btn unfollow-btn" data-uid="${amigo.data.uid}" style="padding: 5px 12px;">Dejar de seguir</button>
+      `;
+      container.appendChild(div);
+    });
+    // Eventos para unfollow
+    document.querySelectorAll(".unfollow-btn").forEach(btn => {
+      btn.addEventListener("click", async (e) => {
+        const amigoUid = btn.dataset.uid;
+        const amigosRef = collection(db, "amigos");
+        const qDel = query(amigosRef, where("usuarioId", "==", currentUser.uid), where("amigoId", "==", amigoUid));
+        const snapDel = await getDocs(qDel);
+        snapDel.forEach(async (docSnap) => {
+          await deleteDoc(docSnap.ref);
+        });
+        mostrarToast("Amigo eliminado", false);
+        cargarAmigos();
+      });
+    });
+  }
+
+  // Buscar usuarios por nombre o email (excluye al actual)
+  async function buscarUsuarios(termino) {
+    if (!termino.trim()) {
+      document.getElementById("searchResults").innerHTML = "";
+      return;
+    }
+    const usersRef = collection(db, "usuarios");
+    const qNombre = query(usersRef, where("nombre", ">=", termino), where("nombre", "<=", termino + '\uf8ff'));
+    const qEmail = query(usersRef, where("email", ">=", termino), where("email", "<=", termino + '\uf8ff'));
+    const [snapNombre, snapEmail] = await Promise.all([getDocs(qNombre), getDocs(qEmail)]);
+    const resultados = new Map();
+    snapNombre.forEach(doc => { if (doc.data().uid !== currentUser.uid) resultados.set(doc.id, doc.data()); });
+    snapEmail.forEach(doc => { if (doc.data().uid !== currentUser.uid) resultados.set(doc.id, doc.data()); });
+    
+    const container = document.getElementById("searchResults");
+    if (resultados.size === 0) {
+      container.innerHTML = "<p>No se encontraron usuarios.</p>";
+      return;
+    }
+    container.innerHTML = "";
+    for (let [id, data] of resultados) {
+      // Verificar si ya es amigo
+      const amigosRef = collection(db, "amigos");
+      const qAmigo = query(amigosRef, where("usuarioId", "==", currentUser.uid), where("amigoId", "==", data.uid));
+      const amigoSnap = await getDocs(qAmigo);
+      const yaAmigo = !amigoSnap.empty;
+      const div = document.createElement("div");
+      div.className = "friend-item";
+      div.innerHTML = `
+        <div><strong>${data.nombre || data.email}</strong><br>${data.puntos || 0} pts</div>
+        ${!yaAmigo ? `<button class="btn add-friend-btn" data-uid="${data.uid}" style="padding: 5px 12px;">Seguir</button>` : `<span class="user-badge">✓ Amigo</span>`}
+      `;
+      container.appendChild(div);
+    }
+    // Eventos para seguir
+    document.querySelectorAll(".add-friend-btn").forEach(btn => {
+      btn.addEventListener("click", async (e) => {
+        const amigoUid = btn.dataset.uid;
+        const amigosRef = collection(db, "amigos");
+        await addDoc(amigosRef, {
+          usuarioId: currentUser.uid,
+          amigoId: amigoUid,
+          fecha: new Date()
+        });
+        mostrarToast("Ahora sigues a este usuario", false);
+        buscarUsuarios(termino); // refrescar
+        cargarAmigos();
+      });
+    });
+  }
 
 // TABS
 
