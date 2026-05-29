@@ -1,0 +1,671 @@
+# Comunidad - Nica Explorer (Código Completo)
+
+```html
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Comunidad - Nica Explorer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(12px);
+      border-radius: 2rem;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      border: 1px solid rgba(255,255,255,0.2);
+      color: white;
+    }
+
+    .card h2 {
+      font-size: 1.6rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-left: 4px solid #F57C00;
+      padding-left: 15px;
+    }
+
+    .ranking-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .ranking-table th,
+    .ranking-table td {
+      padding: 12px 8px;
+      text-align: left;
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .ranking-table th {
+      color: #F57C00;
+      font-weight: 600;
+    }
+
+    .user-badge {
+      background: #F57C00;
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 0.8rem;
+      font-weight: bold;
+    }
+
+    .btn {
+      background: linear-gradient(95deg, #F9A826, #F57C00);
+      border: none;
+      padding: 8px 20px;
+      border-radius: 40px;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s;
+      font-size: 0.9rem;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.5);
+    }
+
+    .btn-outline:hover {
+      background: rgba(255,255,255,0.1);
+    }
+
+    .search-box {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 1rem;
+    }
+
+    .search-box input {
+      flex: 1;
+      padding: 12px 18px;
+      border-radius: 40px;
+      border: none;
+      background: rgba(255,255,255,0.15);
+      color: white;
+      outline: none;
+    }
+
+    .search-box input::placeholder {
+      color: rgba(255,255,255,0.6);
+    }
+
+    .friend-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 1rem;
+      margin-bottom: 8px;
+      gap: 15px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+      padding-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: white;
+      padding: 10px 20px;
+      font-size: 1rem;
+      cursor: pointer;
+      border-radius: 40px;
+      transition: 0.2s;
+    }
+
+    .tab-btn.active {
+      background: #F57C00;
+    }
+
+    .tab-pane {
+      display: none;
+    }
+
+    .tab-pane.active {
+      display: block;
+    }
+
+    .profile-header {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .avatar {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: #F57C00;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .stats {
+      flex: 1;
+      color: white;
+    }
+
+    .qr-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+      margin-top: 15px;
+    }
+
+    .back-btn {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(8px);
+      border-radius: 50px;
+      padding: 10px 20px;
+      color: white;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      z-index: 100;
+    }
+
+    .whatsapp-float {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #25D366;
+      width: 55px;
+      height: 55px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
+      color: white;
+      text-decoration: none;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      z-index: 99;
+    }
+
+    textarea {
+      font-family: inherit;
+    }
+
+    @media (max-width: 700px) {
+      .profile-header {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .stats {
+        text-align: center;
+      }
+
+      .friend-item {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="card">
+
+    <div class="profile-header">
+      <div class="avatar" id="avatarContainer">
+        <i class="fas fa-user"></i>
+      </div>
+
+      <div class="stats">
+        <h3 id="userDisplayName">Cargando...</h3>
+        <p><i class="fas fa-star"></i> Puntos: <span id="userPoints">0</span></p>
+        <p><i class="fas fa-trophy"></i> Posición global: <span id="userRank">-</span></p>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="ranking">🏆 Ranking Global</button>
+      <button class="tab-btn" data-tab="amigos">👥 Mis Amigos</button>
+      <button class="tab-btn" data-tab="buscar">🔍 Agregar Amigo</button>
+      <button class="tab-btn" data-tab="compartir">📲 Compartir Perfil</button>
+      <button class="tab-btn" data-tab="foro">💬 Foro</button>
+    </div>
+
+    <div id="rankingPane" class="tab-pane active">
+      <h2><i class="fas fa-chart-line"></i> Top 10 Usuarios</h2>
+
+      <table class="ranking-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Usuario</th>
+            <th>Puntos</th>
+          </tr>
+        </thead>
+
+        <tbody id="rankingBody"></tbody>
+      </table>
+    </div>
+
+    <div id="amigosPane" class="tab-pane">
+      <h2><i class="fas fa-users"></i> Amigos</h2>
+      <div id="amigosList"></div>
+    </div>
+
+    <div id="buscarPane" class="tab-pane">
+      <h2><i class="fas fa-user-plus"></i> Agregar amigo</h2>
+
+      <div class="search-box">
+        <input type="text" id="searchUserInput" placeholder="Buscar por nombre o email...">
+        <button id="searchUserBtn" class="btn">Buscar</button>
+      </div>
+
+      <div id="searchResults"></div>
+    </div>
+
+    <div id="compartirPane" class="tab-pane">
+      <h2><i class="fas fa-qrcode"></i> Compartir mi perfil</h2>
+
+      <div class="qr-container">
+        <div id="qrCode"></div>
+
+        <button id="shareWhatsAppBtn" class="btn">
+          <i class="fab fa-whatsapp"></i>
+          Compartir por WhatsApp
+        </button>
+
+        <button id="copyLinkBtn" class="btn-outline btn">
+          Copiar enlace
+        </button>
+      </div>
+    </div>
+
+    <div id="foroPane" class="tab-pane">
+
+      <h2><i class="fas fa-comments"></i> Foro de la comunidad</h2>
+
+      <div class="card" style="margin-top:15px;">
+
+        <textarea
+          id="foroMensaje"
+          placeholder="Escribe un mensaje..."
+          style="
+            width:100%;
+            min-height:120px;
+            border:none;
+            border-radius:20px;
+            padding:15px;
+            resize:none;
+            background:rgba(255,255,255,0.1);
+            color:white;
+            margin-bottom:15px;
+            outline:none;
+          "
+        ></textarea>
+
+        <input
+          type="file"
+          id="foroImagen"
+          accept="image/*"
+          style="margin-bottom:15px;color:white;"
+        >
+
+        <button id="publicarForoBtn" class="btn">
+          <i class="fas fa-paper-plane"></i>
+          Publicar
+        </button>
+
+      </div>
+
+      <div id="foroPosts" style="margin-top:20px;"></div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<a href="index.html" class="back-btn">
+  <i class="fas fa-arrow-left"></i>
+  Volver al inicio
+</a>
+
+<a href="https://wa.me/50588170531?text=Hola%20Nica%20Explorer" class="whatsapp-float" target="_blank">
+  <i class="fab fa-whatsapp"></i>
+</a>
+
+<script type="importmap">
+{
+  "imports": {
+    "firebase/app": "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js",
+    "firebase/auth": "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js",
+    "firebase/firestore": "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"
+  }
+}
+</script>
+
+<script type="module">
+
+import { initializeApp } from "firebase/app";
+
+import {
+  getAuth,
+  onAuthStateChanged
+} from "firebase/auth";
+
+import {
+  getFirestore,
+  collection,
+  query,
+  orderBy,
+  limit,
+  getDocs,
+  where,
+  addDoc,
+  deleteDoc,
+  doc
+} from "firebase/firestore";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyA6jVICuE17KJcO34gE1brMxqWEfNd3Fy0",
+  authDomain: "mapa-41b00.firebaseapp.com",
+  projectId: "mapa-41b00",
+  storageBucket: "mapa-41b00.firebasestorage.app",
+  messagingSenderId: "535032835400",
+  appId: "1:535032835400:web:68c079cbc3f419eafd177d",
+  measurementId: "G-7R3DSH7PPN"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+let currentUser = null;
+let currentUserData = null;
+
+function mostrarToast(msg, error=false) {
+
+  const toast = document.createElement("div");
+
+  toast.textContent = msg;
+
+  toast.style.position = "fixed";
+  toast.style.bottom = "80px";
+  toast.style.left = "50%";
+  toast.style.transform = "translateX(-50%)";
+  toast.style.background = error ? "#d32f2f" : "#2E7D32";
+  toast.style.color = "white";
+  toast.style.padding = "10px 20px";
+  toast.style.borderRadius = "40px";
+  toast.style.zIndex = "9999";
+
+  document.body.appendChild(toast);
+
+  setTimeout(() => {
+    toast.remove();
+  }, 3000);
+}
+
+function initTabs() {
+
+  const tabs = document.querySelectorAll(".tab-btn");
+  const panes = document.querySelectorAll(".tab-pane");
+
+  tabs.forEach(btn => {
+
+    btn.addEventListener("click", () => {
+
+      tabs.forEach(b => b.classList.remove("active"));
+      panes.forEach(p => p.classList.remove("active"));
+
+      btn.classList.add("active");
+
+      const tabId = btn.dataset.tab;
+
+      document.getElementById(`${tabId}Pane`).classList.add("active");
+
+      if (tabId === "foro") {
+        cargarForo();
+      }
+
+    });
+  });
+}
+
+async function publicarEnForo() {
+
+  const mensaje = document.getElementById("foroMensaje").value.trim();
+
+  const imagenInput = document.getElementById("foroImagen");
+
+  if (!mensaje && !imagenInput.files[0]) {
+    mostrarToast("Escribe algo o agrega una imagen", true);
+    return;
+  }
+
+  let imagenBase64 = "";
+
+  if (imagenInput.files[0]) {
+
+    imagenBase64 = await new Promise((resolve) => {
+
+      const reader = new FileReader();
+
+      reader.onload = () => resolve(reader.result);
+
+      reader.readAsDataURL(imagenInput.files[0]);
+
+    });
+
+  }
+
+  await addDoc(collection(db, "foro"), {
+
+    uid: currentUser.uid,
+    nombre: currentUserData.nombre,
+    fotoURL: currentUser.photoURL || "",
+    mensaje,
+    imagen: imagenBase64,
+    fecha: new Date()
+
+  });
+
+  document.getElementById("foroMensaje").value = "";
+  document.getElementById("foroImagen").value = "";
+
+  mostrarToast("Publicado correctamente");
+
+  cargarForo();
+}
+
+async function cargarForo() {
+
+  const container = document.getElementById("foroPosts");
+
+  container.innerHTML = "<p style='color:white;'>Cargando publicaciones...</p>";
+
+  const q = query(collection(db, "foro"), orderBy("fecha", "desc"));
+
+  const snap = await getDocs(q);
+
+  container.innerHTML = "";
+
+  if (snap.empty) {
+    container.innerHTML = "<p style='color:white;'>No hay publicaciones todavía.</p>";
+    return;
+  }
+
+  snap.forEach(docSnap => {
+
+    const data = docSnap.data();
+
+    const div = document.createElement("div");
+
+    div.className = "card";
+
+    div.innerHTML = `
+
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:15px;">
+
+        <img
+          src="${data.fotoURL || 'https://cdn-icons-png.flaticon.com/512/149/149071.png'}"
+          style="
+            width:55px;
+            height:55px;
+            border-radius:50%;
+            object-fit:cover;
+          "
+        >
+
+        <div>
+          <strong>${data.nombre}</strong><br>
+          <small>${new Date(data.fecha.seconds * 1000).toLocaleString()}</small>
+        </div>
+
+      </div>
+
+      ${
+        data.mensaje
+        ? `<p style="margin-bottom:15px;white-space:pre-wrap;">${data.mensaje}</p>`
+        : ""
+      }
+
+      ${
+        data.imagen
+        ? `
+          <img
+            src="${data.imagen}"
+            style="
+              width:100%;
+              border-radius:20px;
+              margin-top:10px;
+            "
+          >
+        `
+        : ""
+      }
+
+      ${
+        data.uid === currentUser.uid
+        ? `
+          <button
+            class="btn delete-post-btn"
+            data-id="${docSnap.id}"
+            style="margin-top:15px;background:#d32f2f;"
+          >
+            <i class="fas fa-trash"></i>
+            Borrar
+          </button>
+        `
+        : ""
+      }
+
+    `;
+
+    container.appendChild(div);
+
+  });
+
+  document.querySelectorAll(".delete-post-btn").forEach(btn => {
+
+    btn.addEventListener("click", async () => {
+
+      await deleteDoc(doc(db, "foro", btn.dataset.id));
+
+      mostrarToast("Publicación eliminada");
+
+      cargarForo();
+
+    });
+
+  });
+}
+
+document.getElementById("publicarForoBtn").addEventListener("click", publicarEnForo);
+
+onAuthStateChanged(auth, async (user) => {
+
+  if (!user) {
+    window.location.href = "index.html";
+    return;
+  }
+
+  currentUser = user;
+
+  currentUserData = {
+    nombre: user.displayName || user.email,
+    puntos: 0
+  };
+
+  document.getElementById("userDisplayName").innerText = currentUserData.nombre;
+
+  document.getElementById("userPoints").innerText = currentUserData.puntos;
+
+  if (user.photoURL) {
+
+    document.getElementById("avatarContainer").innerHTML = `
+      <img src="${user.photoURL}">
+    `;
+  }
+
+  initTabs();
+
+});
+
+</script>
+
+</body>
+</html>
+```
