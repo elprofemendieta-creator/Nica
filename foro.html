@@ -827,7 +827,6 @@ if(!btn) return;
 
 const friendId = btn.dataset.id;
 
-// seguridad
 if(!currentUser){
 toast("Debes iniciar sesión");
 return;
@@ -838,7 +837,19 @@ toast("No puedes agregarte");
 return;
 }
 
-try{
+// evitar duplicados
+const q = query(
+collection(db,"amigos"),
+where("userId","==",currentUser.uid),
+where("friendId","==",friendId)
+);
+
+const snap = await getDocs(q);
+
+if(!snap.empty){
+toast("Ya es tu amigo");
+return;
+}
 
 await addDoc(collection(db,"amigos"),{
 userId: currentUser.uid,
@@ -847,11 +858,6 @@ fecha: Date.now()
 });
 
 toast("Amigo agregado ✔️");
-
-}catch(error){
-console.error(error);
-toast("Error al agregar amigo");
-}
 
 });
 
@@ -894,7 +900,7 @@ div.innerHTML = `
 <div>
 ⭐ ${data.puntos || 0} pts
 <br><br>
-<button class="btn" data-id="${docSnap.id}">
+<button class="btn" data-id="${data.uid}">
 Agregar amigo
 </button>
 </div>
