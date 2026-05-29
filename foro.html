@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -820,46 +821,27 @@ document.getElementById("searchUserInput");
 const searchResults =
 document.getElementById("searchResults");
 
-searchResults.addEventListener("click", async (e)=>{
+searchBtn.addEventListener("click", async ()=>{
 
-const btn = e.target.closest("button[data-id]");
-if(!btn) return;
+const texto =
+searchInput.value.trim().toLowerCase();
 
-const friendId = btn.dataset.id;
+if(!texto){
 
-if(!currentUser){
-toast("Debes iniciar sesión");
+toast("Escribe un nombre");
+
 return;
+
 }
 
-if(friendId === currentUser.uid){
-toast("No puedes agregarte");
-return;
-}
+searchResults.innerHTML =
+"<p>Buscando usuarios...</p>";
 
-// evitar duplicados
-const q = query(
-collection(db,"amigos"),
-where("userId","==",currentUser.uid),
-where("friendId","==",friendId)
+try{
+
+const snap = await getDocs(
+collection(db,"usuarios")
 );
-
-const snap = await getDocs(q);
-
-if(!snap.empty){
-toast("Ya es tu amigo");
-return;
-}
-
-await addDoc(collection(db,"amigos"),{
-userId: currentUser.uid,
-friendId: friendId,
-fecha: Date.now()
-});
-
-toast("Amigo agregado ✔️");
-
-});
 
 searchResults.innerHTML = "";
 
@@ -899,10 +881,6 @@ div.innerHTML = `
 
 <div>
 ⭐ ${data.puntos || 0} pts
-<br><br>
-<button class="btn" data-id="${data.uid}">
-Agregar amigo
-</button>
 </div>
 `;
 
