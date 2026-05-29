@@ -2,15 +2,19 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>Comunidad - Nica Explorer</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+  <link rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
   <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 
   <style>
+
     *{
       margin:0;
       padding:0;
@@ -22,11 +26,12 @@
       background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
       min-height:100vh;
       padding:20px;
+      color:white;
     }
 
     .container{
       max-width:1200px;
-      margin:0 auto;
+      margin:auto;
     }
 
     .card{
@@ -34,115 +39,15 @@
       backdrop-filter:blur(12px);
       border-radius:2rem;
       padding:1.5rem;
-      margin-bottom:1.5rem;
       border:1px solid rgba(255,255,255,0.2);
-      color:white;
-    }
-
-    .card h2{
-      font-size:1.6rem;
-      margin-bottom:1rem;
-      display:flex;
-      align-items:center;
-      gap:10px;
-      border-left:4px solid #F57C00;
-      padding-left:15px;
-    }
-
-    .ranking-table{
-      width:100%;
-      border-collapse:collapse;
-    }
-
-    .ranking-table th,
-    .ranking-table td{
-      padding:12px 8px;
-      text-align:left;
-      border-bottom:1px solid rgba(255,255,255,0.2);
-    }
-
-    .ranking-table th{
-      color:#F57C00;
-      font-weight:600;
-    }
-
-    .user-badge{
-      background:#F57C00;
-      border-radius:20px;
-      padding:4px 12px;
-      font-size:0.8rem;
-      font-weight:bold;
-    }
-
-    .btn{
-      background:linear-gradient(95deg,#F9A826,#F57C00);
-      border:none;
-      padding:8px 20px;
-      border-radius:40px;
-      color:white;
-      font-weight:600;
-      cursor:pointer;
-      transition:transform 0.2s;
-      font-size:0.9rem;
-    }
-
-    .btn-outline{
-      background:transparent;
-      border:1px solid rgba(255,255,255,0.5);
-    }
-
-    .btn-outline:hover{
-      background:rgba(255,255,255,0.1);
-    }
-
-    .btn:hover{
-      transform:translateY(-2px);
-    }
-
-    .search-box{
-      display:flex;
-      gap:10px;
-      margin-bottom:1rem;
-    }
-
-    .search-box input{
-      flex:1;
-      padding:12px 18px;
-      border-radius:40px;
-      border:none;
-      background:rgba(255,255,255,0.15);
-      color:white;
-      outline:none;
-    }
-
-    .search-box input::placeholder{
-      color:rgba(255,255,255,0.6);
-    }
-
-    .friend-item{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      padding:12px;
-      background:rgba(255,255,255,0.05);
-      border-radius:1rem;
-      margin-bottom:8px;
-    }
-
-    .qr-container{
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      gap:15px;
-      margin-top:15px;
     }
 
     .profile-header{
       display:flex;
       align-items:center;
       gap:20px;
-      flex-wrap:wrap;
       margin-bottom:20px;
+      flex-wrap:wrap;
     }
 
     .avatar{
@@ -160,58 +65,24 @@
       flex:1;
     }
 
-    .back-btn{
-      position:fixed;
-      bottom:20px;
-      left:20px;
-      background:rgba(0,0,0,0.6);
-      backdrop-filter:blur(8px);
-      border-radius:50px;
-      padding:10px 20px;
-      color:white;
-      text-decoration:none;
-      display:flex;
-      align-items:center;
-      gap:8px;
-      z-index:100;
-    }
-
-    .whatsapp-float{
-      position:fixed;
-      bottom:20px;
-      right:20px;
-      background-color:#25D366;
-      width:55px;
-      height:55px;
-      border-radius:50%;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-size:30px;
-      color:white;
-      text-decoration:none;
-      box-shadow:0 4px 12px rgba(0,0,0,0.2);
-      z-index:99;
-    }
-
     .tabs{
       display:flex;
       gap:10px;
       margin-bottom:20px;
+      flex-wrap:wrap;
       border-bottom:1px solid rgba(255,255,255,0.2);
       padding-bottom:10px;
-      flex-wrap:wrap;
     }
 
     .tab-btn{
-      background:transparent;
       border:none;
+      background:transparent;
       color:white;
       padding:10px 20px;
-      font-size:1rem;
-      cursor:pointer;
       border-radius:40px;
+      cursor:pointer;
       transition:0.2s;
+      font-size:1rem;
     }
 
     .tab-btn.active{
@@ -224,6 +95,88 @@
 
     .tab-pane.active{
       display:block;
+    }
+
+    .card h2{
+      font-size:1.5rem;
+      margin-bottom:20px;
+      border-left:4px solid #F57C00;
+      padding-left:12px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+
+    .ranking-table{
+      width:100%;
+      border-collapse:collapse;
+    }
+
+    .ranking-table th,
+    .ranking-table td{
+      padding:12px;
+      border-bottom:1px solid rgba(255,255,255,0.15);
+    }
+
+    .ranking-table th{
+      color:#F57C00;
+    }
+
+    .search-box{
+      display:flex;
+      gap:10px;
+      margin-bottom:20px;
+    }
+
+    .search-box input{
+      flex:1;
+      padding:12px;
+      border:none;
+      border-radius:40px;
+      background:rgba(255,255,255,0.12);
+      color:white;
+      outline:none;
+    }
+
+    .search-box input::placeholder{
+      color:rgba(255,255,255,0.6);
+    }
+
+    .btn{
+      border:none;
+      padding:10px 20px;
+      border-radius:40px;
+      cursor:pointer;
+      font-weight:600;
+      color:white;
+      background:linear-gradient(95deg,#F9A826,#F57C00);
+      transition:0.2s;
+    }
+
+    .btn:hover{
+      transform:translateY(-2px);
+    }
+
+    .btn-outline{
+      background:transparent;
+      border:1px solid rgba(255,255,255,0.4);
+    }
+
+    .friend-item{
+      background:rgba(255,255,255,0.05);
+      padding:12px;
+      border-radius:1rem;
+      margin-bottom:10px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+
+    .qr-container{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:15px;
     }
 
     .foro-post{
@@ -241,24 +194,59 @@
     .foro-post small{
       opacity:0.7;
       display:block;
-      margin-top:5px;
+      margin-top:10px;
     }
 
-    @media (max-width:700px){
+    .delete-post-btn{
+      background:#c62828 !important;
+      padding:5px 12px !important;
+      font-size:0.8rem !important;
+    }
+
+    .back-btn{
+      position:fixed;
+      left:20px;
+      bottom:20px;
+      background:rgba(0,0,0,0.6);
+      color:white;
+      text-decoration:none;
+      padding:10px 20px;
+      border-radius:50px;
+      display:flex;
+      align-items:center;
+      gap:8px;
+      backdrop-filter:blur(8px);
+    }
+
+    .whatsapp-float{
+      position:fixed;
+      right:20px;
+      bottom:20px;
+      width:55px;
+      height:55px;
+      border-radius:50%;
+      background:#25D366;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      color:white;
+      font-size:28px;
+      text-decoration:none;
+    }
+
+    @media(max-width:700px){
 
       .profile-header{
         flex-direction:column;
         text-align:center;
       }
 
-      .stats{
-        text-align:center;
-      }
-
       .search-box{
         flex-direction:column;
       }
+
     }
+
   </style>
 </head>
 
@@ -268,13 +256,17 @@
 
   <div class="card">
 
-    <div class="profile-header" id="profileHeader">
+    <div class="profile-header">
+
       <div class="avatar">
         <i class="fas fa-user"></i>
       </div>
 
       <div class="stats">
-        <h3 id="userDisplayName">Cargando...</h3>
+
+        <h3 id="userDisplayName">
+          Cargando...
+        </h3>
 
         <p>
           <i class="fas fa-star"></i>
@@ -287,23 +279,44 @@
           Posición global:
           <span id="userRank">-</span>
         </p>
+
       </div>
+
     </div>
 
     <div class="tabs">
-      <button class="tab-btn active" data-tab="ranking">🏆 Ranking Global</button>
 
-      <button class="tab-btn" data-tab="amigos">👥 Mis Amigos</button>
+      <button class="tab-btn active"
+      data-tab="ranking">
+        🏆 Ranking
+      </button>
 
-      <button class="tab-btn" data-tab="buscar">🔍 Agregar Amigo</button>
+      <button class="tab-btn"
+      data-tab="amigos">
+        👥 Amigos
+      </button>
 
-      <button class="tab-btn" data-tab="compartir">📲 Compartir Perfil</button>
+      <button class="tab-btn"
+      data-tab="buscar">
+        🔍 Buscar
+      </button>
 
-      <button class="tab-btn" data-tab="foro">🧭 Muro de Consejos</button>
+      <button class="tab-btn"
+      data-tab="compartir">
+        📲 Compartir
+      </button>
+
+      <button class="tab-btn"
+      data-tab="foro">
+        🧭 Muro de Consejos
+      </button>
+
     </div>
 
-    <!-- Ranking -->
-    <div id="rankingPane" class="tab-pane active">
+    <!-- RANKING -->
+
+    <div id="rankingPane"
+    class="tab-pane active">
 
       <h2>
         <i class="fas fa-chart-line"></i>
@@ -323,10 +336,13 @@
         <tbody id="rankingBody"></tbody>
 
       </table>
+
     </div>
 
-    <!-- Amigos -->
-    <div id="amigosPane" class="tab-pane">
+    <!-- AMIGOS -->
+
+    <div id="amigosPane"
+    class="tab-pane">
 
       <h2>
         <i class="fas fa-users"></i>
@@ -334,10 +350,13 @@
       </h2>
 
       <div id="amigosList"></div>
+
     </div>
 
-    <!-- Buscar -->
-    <div id="buscarPane" class="tab-pane">
+    <!-- BUSCAR -->
+
+    <div id="buscarPane"
+    class="tab-pane">
 
       <h2>
         <i class="fas fa-user-plus"></i>
@@ -345,42 +364,59 @@
       </h2>
 
       <div class="search-box">
-        <input type="text" id="searchUserInput" placeholder="Buscar por nombre o email...">
 
-        <button id="searchUserBtn" class="btn">
+        <input
+        type="text"
+        id="searchUserInput"
+        placeholder="Buscar usuario...">
+
+        <button
+        class="btn"
+        id="searchUserBtn">
           Buscar
         </button>
+
       </div>
 
       <div id="searchResults"></div>
+
     </div>
 
-    <!-- Compartir -->
-    <div id="compartirPane" class="tab-pane">
+    <!-- COMPARTIR -->
+
+    <div id="compartirPane"
+    class="tab-pane">
 
       <h2>
         <i class="fas fa-qrcode"></i>
-        Compartir mi perfil
+        Compartir perfil
       </h2>
 
       <div class="qr-container">
 
         <div id="qrCode"></div>
 
-        <button id="shareWhatsAppBtn" class="btn">
+        <button
+        id="shareWhatsAppBtn"
+        class="btn">
           <i class="fab fa-whatsapp"></i>
-          Compartir por WhatsApp
+          Compartir
         </button>
 
-        <button id="copyLinkBtn" class="btn-outline btn">
+        <button
+        id="copyLinkBtn"
+        class="btn btn-outline">
           Copiar enlace
         </button>
 
       </div>
+
     </div>
 
     <!-- FORO -->
-    <div id="foroPane" class="tab-pane">
+
+    <div id="foroPane"
+    class="tab-pane">
 
       <h2>
         <i class="fas fa-comments"></i>
@@ -390,12 +426,13 @@
       <div class="search-box">
 
         <input
-          type="text"
-          id="mensajeForo"
-          placeholder="Pregunta sobre buses, seguridad o consejos..."
-        >
+        type="text"
+        id="mensajeForo"
+        placeholder="Pregunta sobre buses, seguridad o consejos...">
 
-        <button id="publicarForoBtn" class="btn">
+        <button
+        class="btn"
+        id="publicarForoBtn">
           Publicar
         </button>
 
@@ -409,32 +446,44 @@
 
 </div>
 
-<a href="index.html" class="back-btn">
+<a href="index.html"
+class="back-btn">
+
   <i class="fas fa-arrow-left"></i>
+
   Volver
+
 </a>
 
 <a
-  href="https://wa.me/50588170531?text=Hola%20Nica%20Explorer"
-  class="whatsapp-float"
-  target="_blank"
->
+href="https://wa.me/50588170531"
+target="_blank"
+class="whatsapp-float">
+
   <i class="fab fa-whatsapp"></i>
+
 </a>
 
 <script type="importmap">
 {
   "imports": {
-    "firebase/app": "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js",
-    "firebase/auth": "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js",
-    "firebase/firestore": "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"
+    "firebase/app":
+    "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js",
+
+    "firebase/auth":
+    "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js",
+
+    "firebase/firestore":
+    "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"
   }
 }
 </script>
 
 <script type="module">
 
-import { initializeApp } from "firebase/app";
+import {
+  initializeApp
+} from "firebase/app";
 
 import {
   getAuth,
@@ -451,24 +500,25 @@ import {
   where,
   addDoc,
   deleteDoc,
+  doc,
   onSnapshot
 } from "firebase/firestore";
 
 const firebaseConfig = {
 
-  apiKey: "AIzaSyA6jVICuE17KJcO34gE1brMxqWEfNd3Fy0",
+  apiKey:"AIzaSyA6jVICuE17KJcO34gE1brMxqWEfNd3Fy0",
 
-  authDomain: "mapa-41b00.firebaseapp.com",
+  authDomain:"mapa-41b00.firebaseapp.com",
 
-  projectId: "mapa-41b00",
+  projectId:"mapa-41b00",
 
-  storageBucket: "mapa-41b00.firebasestorage.app",
+  storageBucket:"mapa-41b00.firebasestorage.app",
 
-  messagingSenderId: "535032835400",
+  messagingSenderId:"535032835400",
 
-  appId: "1:535032835400:web:68c079cbc3f419eafd177d",
+  appId:"1:535032835400:web:68c079cbc3f419eafd177d",
 
-  measurementId: "G-7R3DSH7PPN"
+  measurementId:"G-7R3DSH7PPN"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -478,13 +528,17 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 let currentUser = null;
+
 let currentUserData = null;
 
 async function ensureUserDocument(user){
 
   const usersRef = collection(db,"usuarios");
 
-  const q = query(usersRef, where("uid","==",user.uid));
+  const q = query(
+    usersRef,
+    where("uid","==",user.uid)
+  );
 
   const snap = await getDocs(q);
 
@@ -496,7 +550,8 @@ async function ensureUserDocument(user){
 
       email:user.email,
 
-      nombre:user.displayName || user.email.split('@')[0],
+      nombre:user.displayName
+      || user.email.split('@')[0],
 
       puntos:0,
 
@@ -513,6 +568,18 @@ async function ensureUserDocument(user){
   }
 }
 
+async function cargarPerfil(){
+
+  document.getElementById("userDisplayName")
+  .innerText =
+  currentUserData.nombre
+  || currentUser.email;
+
+  document.getElementById("userPoints")
+  .innerText =
+  currentUserData.puntos || 0;
+}
+
 async function cargarRanking(){
 
   const usersRef = collection(db,"usuarios");
@@ -525,17 +592,18 @@ async function cargarRanking(){
 
   const snap = await getDocs(q);
 
-  const rankingBody = document.getElementById("rankingBody");
+  const body =
+  document.getElementById("rankingBody");
 
-  rankingBody.innerHTML = "";
+  body.innerHTML = "";
 
   let pos = 1;
 
-  snap.forEach(doc=>{
+  snap.forEach(docu=>{
 
-    const data = doc.data();
+    const data = docu.data();
 
-    rankingBody.innerHTML += `
+    body.innerHTML += `
       <tr>
         <td>${pos++}</td>
         <td>${data.nombre}</td>
@@ -545,27 +613,51 @@ async function cargarRanking(){
   });
 }
 
-async function cargarPerfil(){
+function initTabs(){
 
-  document.getElementById("userDisplayName").innerText =
-    currentUserData.nombre || currentUser.email;
+  const tabs =
+  document.querySelectorAll(".tab-btn");
 
-  document.getElementById("userPoints").innerText =
-    currentUserData.puntos || 0;
+  const panes =
+  document.querySelectorAll(".tab-pane");
+
+  tabs.forEach(btn=>{
+
+    btn.addEventListener("click",()=>{
+
+      const id = btn.dataset.tab;
+
+      tabs.forEach(t=>
+        t.classList.remove("active")
+      );
+
+      panes.forEach(p=>
+        p.classList.remove("active")
+      );
+
+      btn.classList.add("active");
+
+      document
+      .getElementById(`${id}Pane`)
+      .classList.add("active");
+    });
+  });
 }
 
 function mostrarToast(msg,error=false){
 
-  const toast = document.createElement("div");
+  const toast =
+  document.createElement("div");
 
-  toast.textContent = msg;
+  toast.innerText = msg;
 
   toast.style.position = "fixed";
   toast.style.bottom = "90px";
   toast.style.left = "50%";
   toast.style.transform = "translateX(-50%)";
-  toast.style.background = error ? "#d32f2f" : "#2E7D32";
-  toast.style.color = "white";
+  toast.style.background =
+    error ? "#d32f2f" : "#2E7D32";
+
   toast.style.padding = "12px 20px";
   toast.style.borderRadius = "40px";
   toast.style.zIndex = "9999";
@@ -577,34 +669,10 @@ function mostrarToast(msg,error=false){
   },3000);
 }
 
-function initTabs(){
-
-  const tabs = document.querySelectorAll(".tab-btn");
-
-  const panes = document.querySelectorAll(".tab-pane");
-
-  tabs.forEach(btn=>{
-
-    btn.addEventListener("click",()=>{
-
-      const tabId = btn.dataset.tab;
-
-      tabs.forEach(t=>t.classList.remove("active"));
-
-      panes.forEach(p=>p.classList.remove("active"));
-
-      btn.classList.add("active");
-
-      document
-        .getElementById(`${tabId}Pane`)
-        .classList.add("active");
-    });
-  });
-}
-
 async function publicarMensajeForo(){
 
-  const input = document.getElementById("mensajeForo");
+  const input =
+  document.getElementById("mensajeForo");
 
   const texto = input.value.trim();
 
@@ -612,21 +680,26 @@ async function publicarMensajeForo(){
 
   await addDoc(collection(db,"foro"),{
 
-    usuario: currentUserData.nombre || currentUser.email,
+    usuario:
+      currentUserData.nombre
+      || currentUser.email,
 
-    mensaje: texto,
+    uid: currentUser.uid,
 
-    fecha: new Date()
+    mensaje:texto,
+
+    fecha:new Date()
   });
 
   input.value = "";
 
-  mostrarToast("Publicado correctamente");
+  mostrarToast("Mensaje publicado");
 }
 
 function cargarForo(){
 
-  const foroRef = collection(db,"foro");
+  const foroRef =
+  collection(db,"foro");
 
   const q = query(
     foroRef,
@@ -635,69 +708,148 @@ function cargarForo(){
 
   onSnapshot(q,(snapshot)=>{
 
-    const container = document.getElementById("foroMensajes");
+    const container =
+    document.getElementById("foroMensajes");
 
     container.innerHTML = "";
 
-    snapshot.forEach(doc=>{
+    snapshot.forEach((docSnap)=>{
 
-      const data = doc.data();
+      const data = docSnap.data();
 
-      const fecha = data.fecha?.toDate
-        ? data.fecha.toDate().toLocaleString()
-        : "Ahora";
+      const postId = docSnap.id;
 
-      const div = document.createElement("div");
+      const fecha =
+      data.fecha?.toDate
+      ? data.fecha.toDate().toLocaleString()
+      : "Ahora";
+
+      const div =
+      document.createElement("div");
 
       div.className = "foro-post";
 
       div.innerHTML = `
-        <strong>${data.usuario}</strong>
 
-        <p>${data.mensaje}</p>
+        <div style="
+          display:flex;
+          justify-content:space-between;
+          align-items:center;
+          gap:10px;
+        ">
 
-        <small>${fecha}</small>
+          <strong>
+            ${data.usuario}
+          </strong>
+
+          ${
+            data.uid === currentUser.uid
+            ? `
+            <button
+            class="btn delete-post-btn"
+            data-id="${postId}">
+              Eliminar
+            </button>
+            `
+            : ""
+          }
+
+        </div>
+
+        <p style="margin-top:12px;">
+          ${data.mensaje}
+        </p>
+
+        <small>
+          ${fecha}
+        </small>
+
       `;
 
       container.appendChild(div);
+
+      const deleteBtn =
+      div.querySelector(".delete-post-btn");
+
+      if(deleteBtn){
+
+        deleteBtn.addEventListener(
+          "click",
+          async()=>{
+
+            const confirmar =
+            confirm(
+              "¿Eliminar comentario?"
+            );
+
+            if(!confirmar) return;
+
+            await deleteDoc(
+              doc(db,"foro",postId)
+            );
+
+            mostrarToast(
+              "Comentario eliminado"
+            );
+          }
+        );
+      }
+
     });
+
   });
+
 }
 
 document
-  .getElementById("publicarForoBtn")
-  .addEventListener("click",publicarMensajeForo);
+.getElementById("publicarForoBtn")
+.addEventListener(
+  "click",
+  publicarMensajeForo
+);
 
 document
-  .getElementById("mensajeForo")
-  .addEventListener("keypress",(e)=>{
+.getElementById("mensajeForo")
+.addEventListener(
+  "keypress",
+  (e)=>{
 
     if(e.key==="Enter"){
+
       publicarMensajeForo();
+
     }
-});
 
-onAuthStateChanged(auth, async(user)=>{
-
-  if(!user){
-
-    window.location.href = "index.html";
-
-    return;
   }
+);
 
-  currentUser = user;
+onAuthStateChanged(
+  auth,
+  async(user)=>{
 
-  currentUserData = await ensureUserDocument(user);
+    if(!user){
 
-  await cargarPerfil();
+      window.location.href =
+      "index.html";
 
-  await cargarRanking();
+      return;
+    }
 
-  initTabs();
+    currentUser = user;
 
-  cargarForo();
-});
+    currentUserData =
+    await ensureUserDocument(user);
+
+    await cargarPerfil();
+
+    await cargarRanking();
+
+    initTabs();
+
+    cargarForo();
+
+  }
+);
 
 </script>
 
