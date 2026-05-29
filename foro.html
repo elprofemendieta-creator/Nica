@@ -65,6 +65,25 @@ object-fit:cover;
 flex:1;
 }
 
+.stats p{
+margin:5px 0;
+}
+
+.position-badge{
+display:inline-block;
+background:rgba(245,124,0,0.2);
+border:1px solid #F57C00;
+border-radius:20px;
+padding:5px 12px;
+font-size:0.85rem;
+margin-top:8px;
+}
+
+.position-badge i{
+color:#F57C00;
+margin-right:5px;
+}
+
 .tabs{
 display:flex;
 gap:10px;
@@ -120,6 +139,11 @@ border-bottom:1px solid rgba(255,255,255,0.15);
 
 .ranking-table th{
 color:#F57C00;
+}
+
+.ranking-table tr.highlight-row{
+background:rgba(245,124,0,0.2);
+border-left:3px solid #F57C00;
 }
 
 .search-box{
@@ -258,6 +282,15 @@ gap:8px;
 backdrop-filter:blur(8px);
 }
 
+@keyframes pulse {
+0%, 100% { opacity: 1; }
+50% { opacity: 0.6; }
+}
+
+.loading-position{
+animation: pulse 1.5s ease-in-out infinite;
+}
+
 @media(max-width:700px){
 .profile-header{
 flex-direction:column;
@@ -292,6 +325,10 @@ justify-content:flex-end;
 <div class="stats">
 <h3 id="userDisplayName">Cargando...</h3>
 <p><i class="fas fa-star"></i> Puntos: <span id="userPoints">0</span></p>
+<p id="globalPosition" class="position-badge">
+<i class="fas fa-chart-line"></i> 
+<span id="positionText">Calculando posición...</span>
+</p>
 </div>
 </div>
 
@@ -308,7 +345,11 @@ justify-content:flex-end;
 <h2><i class="fas fa-chart-line"></i> Ranking Global</h2>
 <table class="ranking-table">
 <thead>
-<tr><th>#</th><th>Usuario</th><th>Puntos</th></tr>
+<tr>
+<th>#</th>
+<th>Usuario</th>
+<th>Puntos</th>
+</tr>
 </thead>
 <tbody id="rankingBody"></tbody>
 </table>
@@ -447,6 +488,49 @@ document.getElementById("userPoints").innerText = data.puntos || 0;
 }
 }
 
+// Calcular posición global del usuario
+async function calcularPosicionGlobal(uid){
+try{
+const q = query(collection(db,"usuarios"), orderBy("puntos","desc"));
+const snap = await getDocs(q);
+let posicion = 0;
+let puntosUsuario = 0;
+let usuariosLista = [];
+snap.forEach((docSnap, index) => {
+const data = docSnap.data();
+usuariosLista.push({uid: docSnap.id, puntos: data.puntos || 0, nombre: data.nombre});
+if(docSnap.id === uid){
+posicion = index + 1;
+puntosUsuario = data.puntos || 0;
+}
+});
+const positionText = document.getElementById("positionText");
+const totalUsuarios = usuariosLista.length;
+if(posicion > 0){
+let medalIcon = '';
+let positionClass = '';
+if(posicion === 1){
+medalIcon = '<i class="fas fa-crown" style="color:#FFD700;"></i> ';
+positionClass = '🥇';
+} else if(posicion === 2){
+medalIcon = '<i class="fas fa-medal" style="color:#C0C0C0;"></i> ';
+positionClass = '🥈';
+} else if(posicion === 3){
+medalIcon = '<i class="fas fa-medal" style="color:#CD7F32;"></i> ';
+positionClass = '🥉';
+}
+positionText.innerHTML = `${medalIcon}Posición #${posicion} de ${totalUsuarios} ${positionClass}`;
+} else {
+positionText.innerHTML = '📊 Posición no disponible';
+}
+return {posicion, puntosUsuario, usuariosLista};
+} catch(error){
+console.error("Error calculando posición:", error);
+document.getElementById("positionText").innerHTML = '⚠️ Error al calcular posición';
+return null;
+}
+}
+
 // QR
 function generarQR(){
 const qrDiv = document.getElementById("qrCode");
@@ -462,17 +546,26 @@ window.open(`https://wa.me/?text=${encodeURIComponent(url)}`, "_blank");
 };
 }
 
-// RANKING GLOBAL
+// RANKING GLOBAL (resaltando al usuario actual)
 async function cargarRankingGlobal(){
 const q = query(collection(db,"usuarios"), orderBy("puntos","desc"), limit(50));
 const snap = await getDocs(q);
 const body = document.getElementById("rankingBody");
 body.innerHTML = "";
 let pos = 1;
-snap.forEach((docSnap)=>{
+for(const docSnap of snap.docs){
 const data = docSnap.data();
-body.innerHTML += `<tr><td>${pos++}</td><td>${data.nombre || "Usuario"}</td><td>${data.puntos || 0}</td></tr>`;
-});
+const isCurrentUser = (docSnap.id === currentUser.uid);
+const rowClass = isCurrentUser ? 'highlight-row' : '';
+body.innerHTML += `
+<tr class="${rowClass}">
+<td>${pos++}</td>
+<td>${data.nombre || "Usuario"} ${isCurrentUser ? '<i class="fas fa-user-check" style="color:#F57C00; margin-left:5px;"></i>' : ''}</td>
+<td>${data.puntos || 0}</td>
+</tr>
+`;
+}
+await calcularPosicionGlobal(currentUser.uid);
 }
 
 // FUNCIONES DE AMIGOS
@@ -592,7 +685,6 @@ if(!userDoc.exists()) return;
 const userData = userDoc.data();
 const amigosUids = userData.amigos || [];
 const solicitudesRecibidas = userData.solicitudesRecibidas || [];
-// Mostrar solicitudes pendientes
 const solicitudesDiv = document.getElementById("solicitudesPendientes");
 if(solicitudesRecibidas.length > 0){
 solicitudesDiv.innerHTML = `<h3 style="font-size:1.2rem; margin:15px 0 10px 0;"><i class="fas fa-user-plus"></i> Solicitudes Pendientes <span class="badge">${solicitudesRecibidas.length}</span></h3>`;
@@ -617,7 +709,6 @@ solicitudesDiv.innerHTML += `
 } else {
 solicitudesDiv.innerHTML = "";
 }
-// Mostrar lista de amigos
 const amigosDiv = document.getElementById("amigosList");
 if(amigosUids.length > 0){
 amigosDiv.innerHTML = `<h3 style="font-size:1.2rem; margin:15px 0 10px 0;"><i class="fas fa-users"></i> Mis Amigos (${amigosUids.length})</h3>`;
@@ -644,7 +735,7 @@ amigosDiv.innerHTML = '<div class="empty-state"><i class="fas fa-user-friends" s
 }
 }
 
-// BUSCAR USUARIOS (ocultando correos)
+// BUSCAR USUARIOS
 const searchBtn = document.getElementById("searchUserBtn");
 const searchInput = document.getElementById("searchUserInput");
 const searchResults = document.getElementById("searchResults");
@@ -751,7 +842,15 @@ foroMensajes.appendChild(post);
 });
 });
 
-// Exponer funciones al window para usar en onclick
+// Escuchar cambios en los puntos del usuario para actualizar posición
+function escucharCambiosPuntos(){
+const userRef = doc(db, "usuarios", currentUser.uid);
+onSnapshot(userRef, async () => {
+await cargarRankingGlobal();
+});
+}
+
+// Exponer funciones al window
 window.enviarSolicitudModule = enviarSolicitud;
 window.aceptarSolicitudModule = aceptarSolicitud;
 window.rechazarSolicitudModule = rechazarSolicitud;
@@ -766,9 +865,9 @@ return;
 currentUser = user;
 await cargarPerfil(user);
 generarQR();
-cargarRankingGlobal();
+await cargarRankingGlobal();
 cargarAmigos();
-// Escuchar cambios en amigos en tiempo real
+escucharCambiosPuntos();
 onSnapshot(doc(db, "usuarios", user.uid), () => {
 cargarAmigos();
 });
