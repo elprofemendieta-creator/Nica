@@ -1,21 +1,13 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Comunidad - Nica Explorer</title>
-
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
-
 <style>
-
 *{
 margin:0;
 padding:0;
@@ -170,6 +162,14 @@ background:transparent;
 border:1px solid rgba(255,255,255,0.4);
 }
 
+.btn-danger{
+background:linear-gradient(95deg,#c62828,#b71c1c);
+}
+
+.btn-success{
+background:linear-gradient(95deg,#43a047,#2e7d32);
+}
+
 .friend-item{
 background:rgba(255,255,255,0.05);
 padding:12px;
@@ -179,6 +179,22 @@ display:flex;
 justify-content:space-between;
 align-items:center;
 gap:15px;
+flex-wrap:wrap;
+}
+
+.friend-actions{
+display:flex;
+gap:8px;
+}
+
+.friend-actions button{
+padding:6px 12px;
+font-size:0.85rem;
+}
+
+.request-item{
+background:rgba(255,255,255,0.08);
+border-left:4px solid #F57C00;
 }
 
 .qr-container{
@@ -213,6 +229,20 @@ font-size:0.8rem !important;
 margin-top:10px;
 }
 
+.badge{
+background:#F57C00;
+padding:2px 8px;
+border-radius:12px;
+font-size:0.75rem;
+margin-left:8px;
+}
+
+.empty-state{
+text-align:center;
+padding:40px;
+opacity:0.7;
+}
+
 .back-btn{
 position:fixed;
 left:20px;
@@ -229,7 +259,6 @@ backdrop-filter:blur(8px);
 }
 
 @media(max-width:700px){
-
 .profile-header{
 flex-direction:column;
 text-align:center;
@@ -244,693 +273,506 @@ flex-direction:column;
 align-items:flex-start;
 }
 
+.friend-actions{
+width:100%;
+justify-content:flex-end;
 }
-
+}
 </style>
 </head>
-
 <body>
 
 <div class="container">
-
 <div class="card">
-
 <div class="profile-header">
-
 <div class="avatar">
-
-<img
-id="userPhoto"
-src=""
-alt="Foto perfil"
-style="display:none;">
-
-<i
-id="defaultAvatar"
-class="fas fa-user">
-</i>
-
+<img id="userPhoto" src="" alt="Foto perfil" style="display:none;">
+<i id="defaultAvatar" class="fas fa-user"></i>
 </div>
-
 <div class="stats">
-
-<h3 id="userDisplayName">
-Cargando...
-</h3>
-
-<p>
-<i class="fas fa-star"></i>
-Puntos:
-<span id="userPoints">0</span>
-</p>
-
+<h3 id="userDisplayName">Cargando...</h3>
+<p><i class="fas fa-star"></i> Puntos: <span id="userPoints">0</span></p>
 </div>
 </div>
 
 <div class="tabs">
-
-<button class="tab-btn active" data-tab="ranking">
-🏆 Ranking
-</button>
-  
-<button class="tab-btn" data-tab="amigos">
-👥 Amigos
-</button>
-  
-<button class="tab-btn" data-tab="buscar">
-🔍 Buscar
-</button>
-
-<button class="tab-btn" data-tab="compartir">
-📲 Compartir
-</button>
-
-<button class="tab-btn" data-tab="foro">
-🧭 Foro
-</button>
-
+<button class="tab-btn active" data-tab="ranking">🏆 Ranking</button>
+<button class="tab-btn" data-tab="amigos">👥 Amigos</button>
+<button class="tab-btn" data-tab="buscar">🔍 Buscar</button>
+<button class="tab-btn" data-tab="compartir">📲 Compartir</button>
+<button class="tab-btn" data-tab="foro">🧭 Foro</button>
 </div>
 
 <!-- RANKING -->
-
 <div id="rankingPane" class="tab-pane active">
-
-<h2>
-<i class="fas fa-chart-line"></i>
-Ranking Global
-</h2>
-
+<h2><i class="fas fa-chart-line"></i> Ranking Global</h2>
 <table class="ranking-table">
-
 <thead>
-<tr>
-<th>#</th>
-<th>Usuario</th>
-<th>Puntos</th>
-</tr>
+<tr><th>#</th><th>Usuario</th><th>Puntos</th></tr>
 </thead>
-
 <tbody id="rankingBody"></tbody>
-
 </table>
-
 </div>
-  
+
 <!-- AMIGOS -->
-
 <div id="amigosPane" class="tab-pane">
-
-<h2>
-<i class="fas fa-users"></i>
-Mis Amigos
-</h2>
-
-<div id="amigosList">
-
-<div class="friend-item">
-
-<div>
-<strong>No tienes amigos agregados</strong>
-<br>
-<small>Próximamente podrás añadir amigos</small>
+<h2><i class="fas fa-users"></i> Mis Amigos</h2>
+<div id="solicitudesPendientes"></div>
+<div id="amigosList"></div>
 </div>
 
-</div>
-
-</div>
-
-</div>
-  
 <!-- BUSCAR -->
-
 <div id="buscarPane" class="tab-pane">
-
-<h2>
-<i class="fas fa-user-plus"></i>
-Buscar usuarios
-</h2>
-
+<h2><i class="fas fa-user-plus"></i> Buscar usuarios</h2>
 <div class="search-box">
-
-<input
-type="text"
-id="searchUserInput"
-placeholder="Buscar por nombre o correo...">
-
-<button
-class="btn"
-id="searchUserBtn">
-Buscar
-</button>
-
+<input type="text" id="searchUserInput" placeholder="Buscar por nombre...">
+<button class="btn" id="searchUserBtn">Buscar</button>
 </div>
-
 <div id="searchResults"></div>
-
 </div>
 
 <!-- COMPARTIR -->
-
 <div id="compartirPane" class="tab-pane">
-
-<h2>
-<i class="fas fa-qrcode"></i>
-Compartir perfil
-</h2>
-
+<h2><i class="fas fa-qrcode"></i> Compartir perfil</h2>
 <div class="qr-container">
-
 <div id="qrCode"></div>
-
-<button
-id="shareWhatsAppBtn"
-class="btn">
-<i class="fab fa-whatsapp"></i>
-Compartir
-</button>
-
-<button
-id="copyLinkBtn"
-class="btn btn-outline">
-Copiar enlace
-</button>
-
+<button id="shareWhatsAppBtn" class="btn"><i class="fab fa-whatsapp"></i> Compartir</button>
+<button id="copyLinkBtn" class="btn btn-outline">Copiar enlace</button>
 </div>
-
 </div>
 
 <!-- FORO -->
-
 <div id="foroPane" class="tab-pane">
-
-<h2>
-<i class="fas fa-comments"></i>
-Muro de Consejos
-</h2>
-
+<h2><i class="fas fa-comments"></i> Muro de Consejos</h2>
 <div class="search-box">
-
-<input
-type="text"
-id="mensajeForo"
-placeholder="Pregunta sobre buses, seguridad o consejos...">
-
-<button
-class="btn"
-id="publicarForoBtn">
-Publicar
-</button>
-
+<input type="text" id="mensajeForo" placeholder="Pregunta sobre buses, seguridad o consejos...">
+<button class="btn" id="publicarForoBtn">Publicar</button>
 </div>
-
 <div id="foroMensajes"></div>
-
 </div>
-
 </div>
-
 </div>
 
 <a href="index.html" class="back-btn">
-
-<i class="fas fa-arrow-left"></i>
-
-Volver
-
+<i class="fas fa-arrow-left"></i> Volver
 </a>
 
 <script type="importmap">
 {
 "imports": {
-"firebase/app":
-"https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js",
-
-"firebase/auth":
-"https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js",
-
-"firebase/firestore":
-"https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"
+"firebase/app": "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js",
+"firebase/auth": "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js",
+"firebase/firestore": "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"
 }
 }
 </script>
 
 <script type="module">
-
-import {
-initializeApp
-} from "firebase/app";
-
-import {
-getAuth,
-onAuthStateChanged
-} from "firebase/auth";
-
-import {
-getFirestore,
-collection,
-query,
-orderBy,
-limit,
-getDocs,
-where,
-addDoc,
-deleteDoc,
-doc,
-onSnapshot
-} from "firebase/firestore";
+import { initializeApp } from "firebase/app";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getFirestore, collection, query, orderBy, limit, getDocs, where, addDoc, deleteDoc, doc, onSnapshot, updateDoc, arrayUnion, arrayRemove, getDoc } from "firebase/firestore";
 
 const firebaseConfig = {
-
 apiKey: "AIzaSyA6jVICuE17KJcO34gE1brMxqWEfNd3Fy0",
-
 authDomain: "mapa-41b00.firebaseapp.com",
-
 projectId: "mapa-41b00",
-
 storageBucket: "mapa-41b00.firebasestorage.app",
-
 messagingSenderId: "535032835400",
-
 appId: "1:535032835400:web:68c079cbc3f419eafd177d",
-
 measurementId: "G-7R3DSH7PPN"
 };
 
 const app = initializeApp(firebaseConfig);
-
 const auth = getAuth(app);
-
 const db = getFirestore(app);
-
 let currentUser = null;
+let usuariosCache = new Map();
 
 // TABS
-
 const tabs = document.querySelectorAll(".tab-btn");
-
 const panes = document.querySelectorAll(".tab-pane");
-
 tabs.forEach(btn=>{
-
 btn.addEventListener("click",()=>{
-
 const id = btn.dataset.tab;
-
 tabs.forEach(t=>t.classList.remove("active"));
-
 panes.forEach(p=>p.classList.remove("active"));
-
 btn.classList.add("active");
-
-document
-.getElementById(`${id}Pane`)
-.classList.add("active");
-
+document.getElementById(`${id}Pane`).classList.add("active");
 });
-
 });
 
 // TOAST
-
-function toast(msg){
-
+function toast(msg, isError = false){
 const div = document.createElement("div");
-
 div.innerText = msg;
-
 div.style.position = "fixed";
 div.style.bottom = "90px";
 div.style.left = "50%";
 div.style.transform = "translateX(-50%)";
-div.style.background = "#2E7D32";
+div.style.background = isError ? "#c62828" : "#2E7D32";
 div.style.padding = "12px 20px";
 div.style.borderRadius = "40px";
 div.style.zIndex = "9999";
-
+div.style.color = "white";
 document.body.appendChild(div);
+setTimeout(()=> div.remove(), 3000);
+}
 
-setTimeout(()=>{
-div.remove();
-},3000);
-
+// Obtener datos de usuario por UID
+async function getUserData(uid){
+if(usuariosCache.has(uid)) return usuariosCache.get(uid);
+const userDoc = await getDoc(doc(db, "usuarios", uid));
+if(userDoc.exists()){
+const data = userDoc.data();
+usuariosCache.set(uid, data);
+return data;
+}
+return null;
 }
 
 // PERFIL
-
 async function cargarPerfil(user){
-
-document.getElementById(
-"userDisplayName"
-).innerText =
-user.displayName || user.email;
-
+document.getElementById("userDisplayName").innerText = user.displayName || user.email.split('@')[0];
 if(user.photoURL){
-
-const photo =
-document.getElementById("userPhoto");
-
+const photo = document.getElementById("userPhoto");
 photo.src = user.photoURL;
-
 photo.style.display = "block";
-
-document.getElementById(
-"defaultAvatar"
-).style.display = "none";
-
+document.getElementById("defaultAvatar").style.display = "none";
 }
-
-const q = query(
-collection(db,"usuarios"),
-where("uid","==",user.uid)
-);
-
+const q = query(collection(db,"usuarios"), where("uid","==",user.uid));
 const snap = await getDocs(q);
-
 if(!snap.empty){
-
-const data =
-snap.docs[0].data();
-
-document.getElementById(
-"userPoints"
-).innerText =
-data.puntos || 0;
-
+const data = snap.docs[0].data();
+document.getElementById("userPoints").innerText = data.puntos || 0;
 }
-
 }
 
 // QR
-
 function generarQR(){
-
-const qrDiv =
-document.getElementById("qrCode");
-
+const qrDiv = document.getElementById("qrCode");
 qrDiv.innerHTML = "";
-
-const url =
-`${window.location.origin}${window.location.pathname}?user=${currentUser.uid}`;
-
-new QRCode(qrDiv,{
-text:url,
-width:180,
-height:180
-});
-
-document
-.getElementById("copyLinkBtn")
-.onclick = ()=>{
-
+const url = `${window.location.origin}${window.location.pathname}?user=${currentUser.uid}`;
+new QRCode(qrDiv,{ text:url, width:180, height:180 });
+document.getElementById("copyLinkBtn").onclick = ()=>{
 navigator.clipboard.writeText(url);
-
 toast("Enlace copiado");
-
 };
-
-document
-.getElementById("shareWhatsAppBtn")
-.onclick = ()=>{
-
-window.open(
-`https://wa.me/?text=${encodeURIComponent(url)}`,
-"_blank"
-);
-
+document.getElementById("shareWhatsAppBtn").onclick = ()=>{
+window.open(`https://wa.me/?text=${encodeURIComponent(url)}`, "_blank");
 };
-
 }
 
 // RANKING GLOBAL
-
 async function cargarRankingGlobal(){
-
-const q = query(
-collection(db,"usuarios"),
-orderBy("puntos","desc"),
-limit(50)
-);
-
+const q = query(collection(db,"usuarios"), orderBy("puntos","desc"), limit(50));
 const snap = await getDocs(q);
-
-const body =
-document.getElementById("rankingBody");
-
+const body = document.getElementById("rankingBody");
 body.innerHTML = "";
-
 let pos = 1;
-
 snap.forEach((docSnap)=>{
-
 const data = docSnap.data();
-
-body.innerHTML += `
-<tr>
-<td>${pos++}</td>
-<td>${data.nombre || "Usuario"}</td>
-<td>${data.puntos || 0}</td>
-</tr>
-`;
-
+body.innerHTML += `<tr><td>${pos++}</td><td>${data.nombre || "Usuario"}</td><td>${data.puntos || 0}</td></tr>`;
 });
-
 }
 
-// FORO
-
-const foroMensajes =
-document.getElementById("foroMensajes");
-
-const publicarForoBtn =
-document.getElementById("publicarForoBtn");
-
-publicarForoBtn.addEventListener("click", async ()=>{
-
-const input =
-document.getElementById("mensajeForo");
-
-const mensaje = input.value.trim();
-
-if(!mensaje){
-
-toast("Escribe un mensaje");
-
+// FUNCIONES DE AMIGOS
+async function enviarSolicitud(amigoUid, amigoNombre){
+if(amigoUid === currentUser.uid){
+toast("No puedes enviarte solicitud a ti mismo");
 return;
-
 }
-
 try{
-
-await addDoc(
-collection(db,"foro"),
-{
+const currentUserRef = doc(db, "usuarios", currentUser.uid);
+const currentUserDoc = await getDoc(currentUserRef);
+const currentUserData = currentUserDoc.data();
+const solicitudesEnviadas = currentUserData.solicitudesEnviadas || [];
+if(solicitudesEnviadas.includes(amigoUid)){
+toast("Ya enviaste solicitud a este usuario");
+return;
+}
+const amigoRef = doc(db, "usuarios", amigoUid);
+const amigoDoc = await getDoc(amigoRef);
+const amigoData = amigoDoc.data();
+const amigosActuales = currentUserData.amigos || [];
+if(amigosActuales.includes(amigoUid)){
+toast("Ya son amigos");
+return;
+}
+await updateDoc(currentUserRef, {
+solicitudesEnviadas: arrayUnion(amigoUid)
+});
+await updateDoc(amigoRef, {
+solicitudesRecibidas: arrayUnion({
 uid: currentUser.uid,
-nombre:
-currentUser.displayName ||
-currentUser.email,
-mensaje: mensaje,
-fecha: Date.now()
-}
-);
-
-input.value = "";
-
-toast("Mensaje publicado");
-
+nombre: currentUser.displayName || currentUser.email.split('@')[0]
+})
+});
+toast(`Solicitud enviada a ${amigoNombre}`);
+cargarAmigos();
 }catch(error){
-
 console.error(error);
-
-toast("Error al publicar");
-
+toast("Error al enviar solicitud", true);
+}
 }
 
+async function aceptarSolicitud(amigoUid, amigoNombre){
+try{
+const currentUserRef = doc(db, "usuarios", currentUser.uid);
+const currentUserDoc = await getDoc(currentUserRef);
+const currentUserData = currentUserDoc.data();
+const solicitudesRecibidas = currentUserData.solicitudesRecibidas || [];
+const solicitud = solicitudesRecibidas.find(s => s.uid === amigoUid);
+if(!solicitud){
+toast("Solicitud no encontrada");
+return;
+}
+await updateDoc(currentUserRef, {
+solicitudesRecibidas: arrayRemove(solicitud),
+amigos: arrayUnion(amigoUid)
 });
-
-const qForo = query(
-collection(db,"foro"),
-orderBy("fecha","desc")
-);
-
-onSnapshot(qForo,(snapshot)=>{
-
-foroMensajes.innerHTML = "";
-
-snapshot.forEach((docSnap)=>{
-
-const data = docSnap.data();
-
-const post =
-document.createElement("div");
-
-post.className = "foro-post";
-
-const fecha =
-new Date(data.fecha)
-.toLocaleString();
-
-post.innerHTML = `
-<strong>${data.nombre}</strong>
-<p>${data.mensaje}</p>
-<small>${fecha}</small>
-`;
-
-if(data.uid === currentUser.uid){
-
-const btn =
-document.createElement("button");
-
-btn.className =
-"btn delete-post-btn";
-
-btn.innerHTML =
-'<i class="fas fa-trash"></i> Eliminar';
-
-btn.onclick = async ()=>{
-
-if(confirm("¿Eliminar mensaje?")){
-
-await deleteDoc(
-doc(db,"foro",docSnap.id)
-);
-
-toast("Mensaje eliminado");
-
+const amigoRef = doc(db, "usuarios", amigoUid);
+await updateDoc(amigoRef, {
+solicitudesEnviadas: arrayRemove(currentUser.uid),
+amigos: arrayUnion(currentUser.uid)
+});
+toast(`Ahora son amigos con ${amigoNombre}`);
+cargarAmigos();
+}catch(error){
+console.error(error);
+toast("Error al aceptar solicitud", true);
+}
 }
 
-};
-
-post.appendChild(btn);
-
+async function rechazarSolicitud(amigoUid, amigoNombre){
+try{
+const currentUserRef = doc(db, "usuarios", currentUser.uid);
+const currentUserDoc = await getDoc(currentUserRef);
+const currentUserData = currentUserDoc.data();
+const solicitudesRecibidas = currentUserData.solicitudesRecibidas || [];
+const solicitud = solicitudesRecibidas.find(s => s.uid === amigoUid);
+if(solicitud){
+await updateDoc(currentUserRef, {
+solicitudesRecibidas: arrayRemove(solicitud)
+});
+}
+const amigoRef = doc(db, "usuarios", amigoUid);
+await updateDoc(amigoRef, {
+solicitudesEnviadas: arrayRemove(currentUser.uid)
+});
+toast(`Solicitud rechazada`);
+cargarAmigos();
+}catch(error){
+console.error(error);
+toast("Error al rechazar solicitud", true);
+}
 }
 
-foroMensajes.appendChild(post);
-
+async function eliminarAmigo(amigoUid, amigoNombre){
+if(!confirm(`¿Eliminar a ${amigoNombre} de tus amigos?`)) return;
+try{
+const currentUserRef = doc(db, "usuarios", currentUser.uid);
+const amigoRef = doc(db, "usuarios", amigoUid);
+await updateDoc(currentUserRef, {
+amigos: arrayRemove(amigoUid)
 });
-
+await updateDoc(amigoRef, {
+amigos: arrayRemove(currentUser.uid)
 });
+toast(`${amigoNombre} eliminado de tus amigos`);
+cargarAmigos();
+}catch(error){
+console.error(error);
+toast("Error al eliminar amigo", true);
+}
+}
 
-// BUSCAR USUARIOS
+async function cargarAmigos(){
+const userDoc = await getDoc(doc(db, "usuarios", currentUser.uid));
+if(!userDoc.exists()) return;
+const userData = userDoc.data();
+const amigosUids = userData.amigos || [];
+const solicitudesRecibidas = userData.solicitudesRecibidas || [];
+// Mostrar solicitudes pendientes
+const solicitudesDiv = document.getElementById("solicitudesPendientes");
+if(solicitudesRecibidas.length > 0){
+solicitudesDiv.innerHTML = `<h3 style="font-size:1.2rem; margin:15px 0 10px 0;"><i class="fas fa-user-plus"></i> Solicitudes Pendientes <span class="badge">${solicitudesRecibidas.length}</span></h3>`;
+for(const solicitud of solicitudesRecibidas){
+const amigoData = await getUserData(solicitud.uid);
+const nombre = amigoData?.nombre || solicitud.nombre || "Usuario";
+solicitudesDiv.innerHTML += `
+<div class="friend-item request-item">
+<div>
+<strong>${nombre}</strong>
+</div>
+<div class="friend-actions">
+<button class="btn btn-success" onclick="window.aceptarSolicitudModule('${solicitud.uid}', '${nombre.replace(/'/g, "\\'")}')">
+<i class="fas fa-check"></i> Aceptar
+</button>
+<button class="btn btn-danger" onclick="window.rechazarSolicitudModule('${solicitud.uid}', '${nombre.replace(/'/g, "\\'")}')">
+<i class="fas fa-times"></i> Rechazar
+</button>
+</div>
+</div>`;
+}
+} else {
+solicitudesDiv.innerHTML = "";
+}
+// Mostrar lista de amigos
+const amigosDiv = document.getElementById("amigosList");
+if(amigosUids.length > 0){
+amigosDiv.innerHTML = `<h3 style="font-size:1.2rem; margin:15px 0 10px 0;"><i class="fas fa-users"></i> Mis Amigos (${amigosUids.length})</h3>`;
+for(const amigoUid of amigosUids){
+const amigoData = await getUserData(amigoUid);
+const nombre = amigoData?.nombre || "Usuario";
+const puntos = amigoData?.puntos || 0;
+amigosDiv.innerHTML += `
+<div class="friend-item">
+<div>
+<strong><i class="fas fa-user-circle"></i> ${nombre}</strong>
+<br>
+<small><i class="fas fa-star"></i> ${puntos} puntos</small>
+</div>
+<div class="friend-actions">
+<button class="btn btn-danger" onclick="window.eliminarAmigoModule('${amigoUid}', '${nombre.replace(/'/g, "\\'")}')">
+<i class="fas fa-user-minus"></i> Eliminar
+</button>
+</div>
+</div>`;
+}
+} else {
+amigosDiv.innerHTML = '<div class="empty-state"><i class="fas fa-user-friends" style="font-size:3rem; opacity:0.5;"></i><p style="margin-top:10px;">No tienes amigos agregados</p><small>Busca usuarios para enviar solicitudes</small></div>';
+}
+}
 
-const searchBtn =
-document.getElementById("searchUserBtn");
-
-const searchInput =
-document.getElementById("searchUserInput");
-
-const searchResults =
-document.getElementById("searchResults");
+// BUSCAR USUARIOS (ocultando correos)
+const searchBtn = document.getElementById("searchUserBtn");
+const searchInput = document.getElementById("searchUserInput");
+const searchResults = document.getElementById("searchResults");
 
 searchBtn.addEventListener("click", async ()=>{
-
-const texto =
-searchInput.value.trim().toLowerCase();
-
+const texto = searchInput.value.trim().toLowerCase();
 if(!texto){
-
-toast("Escribe un nombre");
-
+toast("Escribe un nombre para buscar");
 return;
-
 }
-
-searchResults.innerHTML =
-"<p>Buscando usuarios...</p>";
-
+searchResults.innerHTML = '<p><i class="fas fa-spinner fa-spin"></i> Buscando...</p>';
 try{
-
-const snap = await getDocs(
-collection(db,"usuarios")
-);
-
+const snap = await getDocs(collection(db,"usuarios"));
 searchResults.innerHTML = "";
-
 let encontrados = 0;
-
-snap.forEach((docSnap)=>{
-
+const currentUserData = await getDoc(doc(db, "usuarios", currentUser.uid));
+const currentAmigos = currentUserData.data()?.amigos || [];
+const currentSolicitudesEnviadas = currentUserData.data()?.solicitudesEnviadas || [];
+for(const docSnap of snap.docs){
 const data = docSnap.data();
-
-const nombre =
-(data.nombre || "")
-.toLowerCase();
-
-const correo =
-(data.email || "")
-.toLowerCase();
-
-if(
-nombre.includes(texto) ||
-correo.includes(texto)
-){
-
+if(data.uid === currentUser.uid) continue;
+const nombre = (data.nombre || "").toLowerCase();
+if(nombre.includes(texto)){
 encontrados++;
-
-const div =
-document.createElement("div");
-
-div.className =
-"friend-item";
-
+const esAmigo = currentAmigos.includes(data.uid);
+const solicitudEnviada = currentSolicitudesEnviadas.includes(data.uid);
+const div = document.createElement("div");
+div.className = "friend-item";
+let boton = '';
+if(esAmigo){
+boton = '<button class="btn btn-danger" disabled style="opacity:0.5;"><i class="fas fa-check"></i> Amigos</button>';
+} else if(solicitudEnviada){
+boton = '<button class="btn btn-outline" disabled style="opacity:0.5;"><i class="fas fa-clock"></i> Solicitud enviada</button>';
+} else {
+boton = `<button class="btn" onclick="window.enviarSolicitudModule('${data.uid}', '${(data.nombre || "Usuario").replace(/'/g, "\\'")}')"><i class="fas fa-user-plus"></i> Enviar solicitud</button>`;
+}
 div.innerHTML = `
 <div>
-<strong>${data.nombre || "Usuario"}</strong>
+<strong><i class="fas fa-user"></i> ${data.nombre || "Usuario"}</strong>
 <br>
-<small>${data.email || "Sin correo"}</small>
+<small><i class="fas fa-star"></i> ${data.puntos || 0} puntos</small>
 </div>
-
-<div>
-⭐ ${data.puntos || 0} pts
-</div>
-`;
-
+<div class="friend-actions">
+${boton}
+</div>`;
 searchResults.appendChild(div);
-
 }
-
-});
-
+}
 if(encontrados === 0){
-
-searchResults.innerHTML =
-"<p>No se encontraron usuarios</p>";
-
+searchResults.innerHTML = '<div class="empty-state"><i class="fas fa-search"></i><p>No se encontraron usuarios</p></div>';
 }
-
 }catch(error){
-
 console.error(error);
-
-toast("Error al buscar");
-
+toast("Error al buscar usuarios", true);
 }
-
 });
+
+// FORO
+const foroMensajes = document.getElementById("foroMensajes");
+const publicarForoBtn = document.getElementById("publicarForoBtn");
+publicarForoBtn.addEventListener("click", async ()=>{
+const input = document.getElementById("mensajeForo");
+const mensaje = input.value.trim();
+if(!mensaje){
+toast("Escribe un mensaje");
+return;
+}
+try{
+await addDoc(collection(db,"foro"),{
+uid: currentUser.uid,
+nombre: currentUser.displayName || currentUser.email.split('@')[0],
+mensaje: mensaje,
+fecha: Date.now()
+});
+input.value = "";
+toast("Mensaje publicado");
+}catch(error){
+console.error(error);
+toast("Error al publicar", true);
+}
+});
+const qForo = query(collection(db,"foro"), orderBy("fecha","desc"));
+onSnapshot(qForo,(snapshot)=>{
+foroMensajes.innerHTML = "";
+snapshot.forEach((docSnap)=>{
+const data = docSnap.data();
+const post = document.createElement("div");
+post.className = "foro-post";
+const fecha = new Date(data.fecha).toLocaleString();
+post.innerHTML = `<strong>${data.nombre}</strong><p>${data.mensaje}</p><small>${fecha}</small>`;
+if(data.uid === currentUser.uid){
+const btn = document.createElement("button");
+btn.className = "btn delete-post-btn";
+btn.innerHTML = '<i class="fas fa-trash"></i> Eliminar';
+btn.onclick = async ()=>{
+if(confirm("¿Eliminar mensaje?")){
+await deleteDoc(doc(db,"foro",docSnap.id));
+toast("Mensaje eliminado");
+}
+};
+post.appendChild(btn);
+}
+foroMensajes.appendChild(post);
+});
+});
+
+// Exponer funciones al window para usar en onclick
+window.enviarSolicitudModule = enviarSolicitud;
+window.aceptarSolicitudModule = aceptarSolicitud;
+window.rechazarSolicitudModule = rechazarSolicitud;
+window.eliminarAmigoModule = eliminarAmigo;
 
 // LOGIN
-
-onAuthStateChanged(auth,(user)=>{
-
+onAuthStateChanged(auth, async (user)=>{
 if(!user){
-
-window.location.href =
-"index.html";
-
+window.location.href = "index.html";
 return;
-
 }
-
 currentUser = user;
-
-cargarPerfil(user);
-
+await cargarPerfil(user);
 generarQR();
-
 cargarRankingGlobal();
-
+cargarAmigos();
+// Escuchar cambios en amigos en tiempo real
+onSnapshot(doc(db, "usuarios", user.uid), () => {
+cargarAmigos();
 });
-
+});
 </script>
-
 </body>
 </html>
