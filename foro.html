@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -59,6 +60,13 @@ display:flex;
 align-items:center;
 justify-content:center;
 font-size:2rem;
+overflow:hidden;
+}
+
+.avatar img{
+width:100%;
+height:100%;
+object-fit:cover;
 }
 
 .stats{
@@ -192,12 +200,6 @@ border-left:4px solid #F57C00;
 color:#F9A826;
 }
 
-.foro-post small{
-opacity:0.7;
-display:block;
-margin-top:10px;
-}
-
 .delete-post-btn{
 background:#c62828 !important;
 padding:5px 12px !important;
@@ -235,6 +237,13 @@ font-size:28px;
 text-decoration:none;
 }
 
+.user-badge{
+background:#2E7D32;
+padding:5px 10px;
+border-radius:20px;
+font-size:0.8rem;
+}
+
 @media(max-width:700px){
 
 .profile-header{
@@ -264,7 +273,7 @@ align-items:flex-start;
 
 <div class="profile-header">
 
-<div class="avatar">
+<div class="avatar" id="avatarBox">
 <i class="fas fa-user"></i>
 </div>
 
@@ -278,6 +287,12 @@ Cargando...
 <i class="fas fa-star"></i>
 Puntos:
 <span id="userPoints">0</span>
+</p>
+
+<p>
+<i class="fas fa-trophy"></i>
+Posición global:
+<span id="userRank">-</span>
 </p>
 
 </div>
@@ -311,30 +326,75 @@ data-tab="foro">
 </button>
 
 </div>
- <!-- Panel Ranking Global -->
-    <div id="rankingPane" class="tab-pane active">
-      <h2><i class="fas fa-chart-line"></i> Top 10 Usuarios</h2>
-      <table class="ranking-table">
-        <thead><tr><th>#</th><th>Usuario</th><th>Puntos</th></tr></thead>
-        <tbody id="rankingBody"></tbody>
-      </table>
-    </div>
-  
-  <!-- Panel Mis Amigos -->
-    <div id="amigosPane" class="tab-pane">
-      <h2><i class="fas fa-users"></i> Amigos (unilateral)</h2>
-      <div id="amigosList"></div>
-    </div>
-  
- <!-- Panel Buscar y agregar -->
-    <div id="buscarPane" class="tab-pane">
-      <h2><i class="fas fa-user-plus"></i> Agregar amigo</h2>
-      <div class="search-box">
-        <input type="text" id="searchUserInput" placeholder="Buscar por nombre o email...">
-        <button id="searchUserBtn" class="btn">Buscar</button>
-      </div>
-      <div id="searchResults"></div>
-    </div>
+
+<!-- RANKING -->
+
+<div id="rankingPane"
+class="tab-pane active">
+
+<h2>
+<i class="fas fa-chart-line"></i>
+Top 10 Usuarios
+</h2>
+
+<table class="ranking-table">
+
+<thead>
+<tr>
+<th>#</th>
+<th>Usuario</th>
+<th>Puntos</th>
+</tr>
+</thead>
+
+<tbody id="rankingBody"></tbody>
+
+</table>
+
+</div>
+
+<!-- AMIGOS -->
+
+<div id="amigosPane"
+class="tab-pane">
+
+<h2>
+<i class="fas fa-users"></i>
+Mis Amigos
+</h2>
+
+<div id="amigosList"></div>
+
+</div>
+
+<!-- BUSCAR -->
+
+<div id="buscarPane"
+class="tab-pane">
+
+<h2>
+<i class="fas fa-user-plus"></i>
+Agregar amigo
+</h2>
+
+<div class="search-box">
+
+<input
+type="text"
+id="searchUserInput"
+placeholder="Buscar por nombre o email...">
+
+<button
+id="searchUserBtn"
+class="btn">
+Buscar
+</button>
+
+</div>
+
+<div id="searchResults"></div>
+
+</div>
 
 <!-- COMPARTIR -->
 
@@ -409,15 +469,6 @@ Volver
 
 </a>
 
-<a
-href="https://wa.me/50588170531"
-target="_blank"
-class="whatsapp-float">
-
-<i class="fab fa-whatsapp"></i>
-
-</a>
-
 <script type="importmap">
 {
 "imports": {
@@ -460,19 +511,18 @@ onSnapshot
 
 const firebaseConfig = {
 
-apiKey: "AIzaSyA6jVICuE17KJcO34gE1brMxqWEfNd3Fy0",
+apiKey: "TU_API_KEY",
 
-authDomain: "mapa-41b00.firebaseapp.com",
+authDomain: "TU_AUTH_DOMAIN",
 
-projectId: "mapa-41b00",
+projectId: "TU_PROJECT_ID",
 
-storageBucket: "mapa-41b00.firebasestorage.app",
+storageBucket: "TU_STORAGE_BUCKET",
 
-messagingSenderId: "535032835400",
+messagingSenderId: "TU_MESSAGING_ID",
 
-appId: "1:535032835400:web:68c079cbc3f419eafd177d",
+appId: "TU_APP_ID"
 
-measurementId: "G-7R3DSH7PPN"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -536,12 +586,40 @@ div.remove();
 
 // PERFIL
 
-function cargarPerfil(user){
+async function cargarPerfil(user){
 
 document.getElementById(
 "userDisplayName"
 ).innerText =
 user.displayName || user.email;
+
+if(user.photoURL){
+
+document.getElementById(
+"avatarBox"
+).innerHTML =
+`<img src="${user.photoURL}">`;
+
+}
+
+const q = query(
+collection(db,"usuarios"),
+where("uid","==",user.uid)
+);
+
+const snap = await getDocs(q);
+
+if(!snap.empty){
+
+const data =
+snap.docs[0].data();
+
+document.getElementById(
+"userPoints"
+).innerText =
+data.puntos || 0;
+
+}
 
 }
 
@@ -590,8 +668,11 @@ window.open(
 
 async function cargarRanking(){
 
+const usersRef =
+collection(db,"usuarios");
+
 const q = query(
-collection(db,"usuarios"),
+usersRef,
 orderBy("puntos","desc"),
 limit(10)
 );
@@ -612,12 +693,42 @@ const data = docSnap.data();
 body.innerHTML += `
 <tr>
 <td>${pos++}</td>
-<td>${data.nombre || "Usuario"}</td>
+<td>${data.nombre || data.email}</td>
 <td>${data.puntos || 0}</td>
 </tr>
 `;
 
 });
+
+if(currentUser){
+
+const allUsers =
+await getDocs(
+query(usersRef,
+orderBy("puntos","desc"))
+);
+
+let rank = 1;
+
+for(const docSnap of allUsers.docs){
+
+if(
+docSnap.data().uid
+===
+currentUser.uid
+){
+break;
+}
+
+rank++;
+
+}
+
+document.getElementById(
+"userRank"
+).innerText = rank;
+
+}
 
 }
 
@@ -625,107 +736,67 @@ body.innerHTML += `
 
 async function cargarAmigos(){
 
-const cont =
-document.getElementById("amigosList");
+if(!currentUser) return;
 
-cont.innerHTML = "";
+const amigosRef =
+collection(db,"amigos");
 
 const q = query(
-collection(db,"amigos"),
-where("usuario","==",currentUser.uid)
+amigosRef,
+where("usuarioId","==",currentUser.uid)
 );
 
 const snap = await getDocs(q);
 
-if(snap.empty){
+const amigosIds =
+snap.docs.map(
+d => d.data().amigoId
+);
 
-cont.innerHTML =
-"<p>No tienes amigos agregados.</p>";
+const container =
+document.getElementById("amigosList");
+
+if(amigosIds.length === 0){
+
+container.innerHTML =
+"<p>No sigues a nadie aún.</p>";
 
 return;
 
 }
 
-snap.forEach((docSnap)=>{
+const usersRef =
+collection(db,"usuarios");
 
-const data = docSnap.data();
+const amigosData = [];
 
-const div =
-document.createElement("div");
+for(const uid of amigosIds){
 
-div.className = "friend-item";
+const qUser = query(
+usersRef,
+where("uid","==",uid)
+);
 
-div.innerHTML = `
+const userSnap =
+await getDocs(qUser);
 
-<div>
+if(!userSnap.empty){
 
-<strong>
-${data.nombre}
-</strong>
+amigosData.push({
 
-<br>
+id:userSnap.docs[0].id,
 
-<small>
-${data.email}
-</small>
-
-</div>
-
-`;
-
-cont.appendChild(div);
+data:userSnap.docs[0].data()
 
 });
 
 }
 
-// BUSCAR
+}
 
-async function buscarUsuarios(){
+container.innerHTML = "";
 
-const texto =
-document
-.getElementById("searchUserInput")
-.value
-.trim()
-.toLowerCase();
-
-const cont =
-document.getElementById("searchResults");
-
-cont.innerHTML = "";
-
-if(!texto) return;
-
-const usuariosRef =
-collection(db,"usuarios");
-
-const snap =
-await getDocs(usuariosRef);
-
-let encontrados = 0;
-
-snap.forEach((docSnap)=>{
-
-const data = docSnap.data();
-
-if(data.uid === currentUser.uid) return;
-
-const nombre =
-(data.nombre || "")
-.toLowerCase();
-
-const email =
-(data.email || "")
-.toLowerCase();
-
-if(
-nombre.includes(texto)
-||
-email.includes(texto)
-){
-
-encontrados++;
+amigosData.forEach((amigo)=>{
 
 const div =
 document.createElement("div");
@@ -737,62 +808,248 @@ div.innerHTML = `
 <div>
 
 <strong>
-${data.nombre || "Usuario"}
+${amigo.data.nombre || amigo.data.email}
 </strong>
 
 <br>
 
 <small>
-${data.email || ""}
+${amigo.data.puntos || 0} pts
 </small>
 
 </div>
 
 <button
-class="btn seguirBtn">
-Seguir
+class="btn-outline btn unfollow-btn"
+data-uid="${amigo.data.uid}">
+Dejar de seguir
 </button>
 
 `;
 
-cont.appendChild(div);
+container.appendChild(div);
 
-const seguirBtn =
-div.querySelector(".seguirBtn");
+});
 
-seguirBtn.onclick = async()=>{
+document
+.querySelectorAll(".unfollow-btn")
+.forEach((btn)=>{
 
-await addDoc(
-collection(db,"amigos"),
-{
+btn.addEventListener(
+"click",
+async()=>{
 
-usuario: currentUser.uid,
+const amigoUid =
+btn.dataset.uid;
 
-amigoUid: data.uid,
+const qDel = query(
+amigosRef,
+where("usuarioId","==",currentUser.uid),
+where("amigoId","==",amigoUid)
+);
 
-nombre: data.nombre,
+const snapDel =
+await getDocs(qDel);
 
-email: data.email
+snapDel.forEach(
+async(docSnap)=>{
+
+await deleteDoc(docSnap.ref);
 
 }
 );
 
-toast("Amigo agregado");
+toast("Amigo eliminado");
 
 cargarAmigos();
 
-};
+}
+);
+
+});
+
+}
+
+// BUSCAR USUARIOS
+
+async function buscarUsuarios(){
+
+const termino =
+document
+.getElementById("searchUserInput")
+.value
+.trim();
+
+const container =
+document.getElementById("searchResults");
+
+if(!termino){
+
+container.innerHTML = "";
+
+return;
+
+}
+
+const usersRef =
+collection(db,"usuarios");
+
+const qNombre = query(
+usersRef,
+where("nombre",">=",termino),
+where("nombre","<=",termino + '\uf8ff')
+);
+
+const qEmail = query(
+usersRef,
+where("email",">=",termino),
+where("email","<=",termino + '\uf8ff')
+);
+
+const [
+snapNombre,
+snapEmail
+] = await Promise.all([
+getDocs(qNombre),
+getDocs(qEmail)
+]);
+
+const resultados =
+new Map();
+
+snapNombre.forEach((docSnap)=>{
+
+if(
+docSnap.data().uid
+!== currentUser.uid
+){
+
+resultados.set(
+docSnap.id,
+docSnap.data()
+);
 
 }
 
 });
 
-if(encontrados === 0){
+snapEmail.forEach((docSnap)=>{
 
-cont.innerHTML =
-"<p>No se encontraron usuarios.</p>";
+if(
+docSnap.data().uid
+!== currentUser.uid
+){
+
+resultados.set(
+docSnap.id,
+docSnap.data()
+);
 
 }
+
+});
+
+container.innerHTML = "";
+
+if(resultados.size === 0){
+
+container.innerHTML =
+"<p>No se encontraron usuarios.</p>";
+
+return;
+
+}
+
+for(const [id,data] of resultados){
+
+const amigosRef =
+collection(db,"amigos");
+
+const qAmigo = query(
+amigosRef,
+where("usuarioId","==",currentUser.uid),
+where("amigoId","==",data.uid)
+);
+
+const amigoSnap =
+await getDocs(qAmigo);
+
+const yaAmigo =
+!amigoSnap.empty;
+
+const div =
+document.createElement("div");
+
+div.className = "friend-item";
+
+div.innerHTML = `
+
+<div>
+
+<strong>
+${data.nombre || data.email}
+</strong>
+
+<br>
+
+${data.puntos || 0} pts
+
+</div>
+
+${
+!yaAmigo
+? `
+<button
+class="btn add-friend-btn"
+data-uid="${data.uid}">
+Seguir
+</button>
+`
+: `
+<span class="user-badge">
+✓ Amigo
+</span>
+`
+}
+
+`;
+
+container.appendChild(div);
+
+}
+
+document
+.querySelectorAll(".add-friend-btn")
+.forEach((btn)=>{
+
+btn.addEventListener(
+"click",
+async()=>{
+
+const amigoUid =
+btn.dataset.uid;
+
+await addDoc(
+collection(db,"amigos"),
+{
+usuarioId:currentUser.uid,
+amigoId:amigoUid,
+fecha:new Date()
+}
+);
+
+toast(
+"Ahora sigues a este usuario"
+);
+
+buscarUsuarios();
+
+cargarAmigos();
+
+}
+);
+
+});
 
 }
 
@@ -803,21 +1060,6 @@ document
 buscarUsuarios
 );
 
-document
-.getElementById("searchUserInput")
-.addEventListener(
-"keypress",
-(e)=>{
-
-if(e.key==="Enter"){
-
-buscarUsuarios();
-
-}
-
-}
-);
-
 // FORO
 
 async function publicarMensaje(){
@@ -825,11 +1067,14 @@ async function publicarMensaje(){
 const input =
 document.getElementById("mensajeForo");
 
-const texto = input.value.trim();
+const texto =
+input.value.trim();
 
 if(!texto) return;
 
-await addDoc(collection(db,"foro"),{
+await addDoc(
+collection(db,"foro"),
+{
 
 usuario:
 currentUser.displayName
@@ -841,7 +1086,8 @@ mensaje:texto,
 
 fecha:new Date()
 
-});
+}
+);
 
 input.value = "";
 
@@ -885,7 +1131,6 @@ div.innerHTML = `
 display:flex;
 justify-content:space-between;
 align-items:center;
-gap:10px;
 ">
 
 <strong>
@@ -896,12 +1141,7 @@ ${
 data.uid === currentUser.uid
 ? `
 <button
-class="btn deleteBtn"
-style="
-background:#c62828;
-padding:5px 12px;
-font-size:0.8rem;
-">
+class="btn delete-post-btn">
 Eliminar
 </button>
 `
@@ -919,17 +1159,20 @@ ${data.mensaje}
 cont.appendChild(div);
 
 const deleteBtn =
-div.querySelector(".deleteBtn");
+div.querySelector(".delete-post-btn");
 
 if(deleteBtn){
 
-deleteBtn.onclick = async()=>{
+deleteBtn.onclick =
+async()=>{
 
 await deleteDoc(
 doc(db,"foro",docSnap.id)
 );
 
-toast("Comentario eliminado");
+toast(
+"Comentario eliminado"
+);
 
 };
 
@@ -943,7 +1186,7 @@ toast("Comentario eliminado");
 
 // LOGIN
 
-onAuthStateChanged(auth,(user)=>{
+onAuthStateChanged(auth,async(user)=>{
 
 if(!user){
 
@@ -958,15 +1201,15 @@ return;
 
 currentUser = user;
 
-cargarPerfil(user);
+await cargarPerfil(user);
 
 generarQR();
 
-cargarRanking();
+await cargarRanking();
+
+await cargarAmigos();
 
 cargarForo();
-
-cargarAmigos();
 
 });
 
@@ -974,3 +1217,4 @@ cargarAmigos();
 
 </body>
 </html>
+```
