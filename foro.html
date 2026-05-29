@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -209,6 +210,7 @@ margin-top:10px;
 background:#c62828 !important;
 padding:5px 12px !important;
 font-size:0.8rem !important;
+margin-top:10px;
 }
 
 .back-btn{
@@ -337,7 +339,7 @@ class="tab-pane active">
 
 <h2>
 <i class="fas fa-chart-line"></i>
-Top Usuarios
+Ranking Global
 </h2>
 
 <table class="ranking-table">
@@ -684,14 +686,14 @@ window.open(
 
 }
 
-// RANKING
+// RANKING GLOBAL
 
-async function cargarRanking(){
+async function cargarRankingGlobal(){
 
 const q = query(
 collection(db,"usuarios"),
 orderBy("puntos","desc"),
-limit(10)
+limit(50)
 );
 
 const snap = await getDocs(q);
@@ -719,6 +721,124 @@ body.innerHTML += `
 
 }
 
+// FORO
+
+const foroMensajes =
+document.getElementById("foroMensajes");
+
+const publicarForoBtn =
+document.getElementById("publicarForoBtn");
+
+// PUBLICAR MENSAJE
+
+publicarForoBtn.addEventListener("click", async ()=>{
+
+const input =
+document.getElementById("mensajeForo");
+
+const mensaje = input.value.trim();
+
+if(!mensaje){
+
+toast("Escribe un mensaje");
+
+return;
+
+}
+
+try{
+
+await addDoc(
+collection(db,"foro"),
+{
+uid: currentUser.uid,
+nombre:
+currentUser.displayName ||
+currentUser.email,
+mensaje: mensaje,
+fecha: Date.now()
+}
+);
+
+input.value = "";
+
+toast("Mensaje publicado");
+
+}catch(error){
+
+console.error(error);
+
+toast("Error al publicar");
+
+}
+
+});
+
+// CARGAR MENSAJES
+
+const qForo = query(
+collection(db,"foro"),
+orderBy("fecha","desc")
+);
+
+onSnapshot(qForo,(snapshot)=>{
+
+foroMensajes.innerHTML = "";
+
+snapshot.forEach((docSnap)=>{
+
+const data = docSnap.data();
+
+const post =
+document.createElement("div");
+
+post.className = "foro-post";
+
+const fecha =
+new Date(data.fecha)
+.toLocaleString();
+
+post.innerHTML = `
+<strong>${data.nombre}</strong>
+<p>${data.mensaje}</p>
+<small>${fecha}</small>
+`;
+
+if(data.uid === currentUser.uid){
+
+const btn =
+document.createElement("button");
+
+btn.className =
+"btn delete-post-btn";
+
+btn.innerHTML =
+'<i class="fas fa-trash"></i> Eliminar';
+
+btn.onclick = async ()=>{
+
+if(confirm("¿Eliminar mensaje?")){
+
+await deleteDoc(
+doc(db,"foro",docSnap.id)
+);
+
+toast("Mensaje eliminado");
+
+}
+
+};
+
+post.appendChild(btn);
+
+}
+
+foroMensajes.appendChild(post);
+
+});
+
+});
+
 // LOGIN
 
 onAuthStateChanged(auth,(user)=>{
@@ -738,7 +858,7 @@ cargarPerfil(user);
 
 generarQR();
 
-cargarRanking();
+cargarRankingGlobal();
 
 });
 
@@ -746,4 +866,4 @@ cargarRanking();
 
 </body>
 </html>
-}
+```
