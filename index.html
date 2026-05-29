@@ -118,7 +118,21 @@
       border-radius: 40px;
       z-index: 1000;
     }
-    
+    .whatsapp-float {
+      position: fixed;
+      bottom: 25px;
+      right: 25px;
+      background-color: #25D366;
+      color: white;
+      width: 55px;
+      height: 55px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
+      text-decoration: none;
+    }
     @keyframes fadeInUp {
       from { opacity: 0; transform: translateY(30px); }
       to { opacity: 1; transform: translateY(0); }
@@ -128,6 +142,46 @@
       h1 { font-size: 2rem; }
       .menu-card { width: 160px; padding: 1rem; }
     }
+  <!-- Botón Traductor Flotante -->
+<a href="https://translate.google.com/translate?sl=es&tl=en&u={{URL}}" 
+   id="btnTraductor"
+   style="position: fixed; bottom: 20px; right: 20px; z-index: 9999; background: linear-gradient(135deg, #4285f4, #34a853); color: white; padding: 12px 16px; border-radius: 30px; text-decoration: none; font-family: Arial; font-weight: bold; box-shadow: 0 4px 12px rgba(0,0,0,0.2); display: flex; align-items: center; gap: 8px;">
+    🌐 Traducir página
+</a>
+
+<script>
+    // Actualizar el enlace con la URL actual
+    const btn = document.getElementById('btnTraductor');
+    const urlActual = encodeURIComponent(window.location.href);
+    btn.href = `https://translate.google.com/translate?sl=es&tl=en&u=${urlActual}`;
+    
+    // Permitir cambiar idioma
+    const idiomas = [
+        { code: 'en', nombre: 'English', bandera: '🇺🇸' },
+        { code: 'fr', nombre: 'Français', bandera: '🇫🇷' },
+        { code: 'de', nombre: 'Deutsch', bandera: '🇩🇪' },
+        { code: 'pt', nombre: 'Português', bandera: '🇵🇹' }
+    ];
+    
+    let currentLang = 0;
+    btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const nextLang = (currentLang + 1) % idiomas.length;
+        const langData = idiomas[nextLang];
+        btn.innerHTML = `${langData.bandera} ${langData.nombre}`;
+        btn.href = `https://translate.google.com/translate?sl=es&tl=${langData.code}&u=${urlActual}`;
+        currentLang = nextLang;
+        window.open(btn.href, '_blank');
+    });
+</script>
+</script>
+
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+<style>
+    .goog-te-banner-frame { display: none !important; }
+    body { top: 0px !important; }
+</style>>
   </style>
 </head>
 <body>
@@ -174,196 +228,153 @@
     </div>
   </div>
 
-  <!-- Botón de WhatsApp flotante -->
-  <div class="whatsapp-container">
-    <div class="whatsapp-tooltip" id="whatsappTooltip">
-      <span>¿Necesitas ayuda? 😊</span>
-    </div>
-    <a href="#" class="whatsapp-float" id="whatsappBtn">
-      <i class="fab fa-whatsapp"></i>
-    </a>
+<!-- Botón de WhatsApp flotante mejorado -->
+<div class="whatsapp-container">
+  <div class="whatsapp-tooltip" id="whatsappTooltip">
+    <span>¿Necesitas ayuda? 😊</span>
   </div>
+  <a href="#" class="whatsapp-float" id="whatsappBtn">
+    <i class="fab fa-whatsapp"></i>
+  </a>
+</div>
 
-  <!-- ========== TRADUCTOR MANUAL (SIEMPRE FUNCIONA) ========== -->
-  <div class="traductor-manual">
-    <select id="idiomaSelector">
-      <option value="es">🇪🇸 Español</option>
-      <option value="en">🇺🇸 English</option>
-      <option value="zh-CN">🇨🇳 中文</option>
-    </select>
-  </div>
+<style>
+.whatsapp-container {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  z-index: 1000;
+}
 
-  <style>
-    .whatsapp-container {
-      position: fixed;
-      bottom: 25px;
-      right: 25px;
-      z-index: 1000;
-    }
+.whatsapp-float {
+  background-color: #25D366;
+  color: white;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  text-decoration: none;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  transition: all 0.3s ease;
+  animation: pulse 2s infinite;
+}
 
-    .whatsapp-float {
-      background-color: #25D366;
-      color: white;
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 32px;
-      text-decoration: none;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-      transition: all 0.3s ease;
-      animation: pulse 2s infinite;
-    }
+.whatsapp-float:hover {
+  transform: scale(1.1);
+  background-color: #128C7E;
+}
 
-    .whatsapp-float:hover {
-      transform: scale(1.1);
-      background-color: #128C7E;
-    }
+.whatsapp-tooltip {
+  position: absolute;
+  bottom: 70px;
+  right: 0;
+  background: white;
+  color: #333;
+  padding: 8px 15px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s;
+}
 
-    .whatsapp-tooltip {
-      position: absolute;
-      bottom: 70px;
-      right: 0;
-      background: white;
-      color: #333;
-      padding: 8px 15px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 500;
-      white-space: nowrap;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      opacity: 0;
-      visibility: hidden;
-      transition: all 0.3s;
-    }
+.whatsapp-container:hover .whatsapp-tooltip {
+  opacity: 1;
+  visibility: visible;
+  bottom: 75px;
+}
 
-    .whatsapp-container:hover .whatsapp-tooltip {
-      opacity: 1;
-      visibility: visible;
-      bottom: 75px;
-    }
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 15px rgba(37, 211, 102, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);
+  }
+}
 
-    @keyframes pulse {
-      0% {
-        box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7);
-      }
-      70% {
-        box-shadow: 0 0 0 15px rgba(37, 211, 102, 0);
-      }
-      100% {
-        box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);
-      }
-    }
+@media (max-width: 550px) {
+  .whatsapp-float {
+    width: 50px;
+    height: 50px;
+    font-size: 28px;
+  }
+}
+</style>
 
-    /* Estilos del traductor manual */
-    .traductor-manual {
-      position: fixed;
-      bottom: 100px;
-      right: 20px;
-      z-index: 9999;
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(10px);
-      padding: 8px 12px;
-      border-radius: 30px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-      transition: all 0.3s ease;
-    }
+<script>
+// Configuración del botón de WhatsApp
+const whatsappConfig = {
+  numero: "50588170531", // Tu número de WhatsApp (sin el símbolo +)
+  mensajes: {
+    default: "¡Hola!%20Estoy%20explorando%20Nicaragua%20con%20Guía%20Pinolero%20y%20tengo%20una%20consulta%20🌟",
+    ayuda: "¡Hola!%20Necesito%20ayuda%20con%20la%20aplicación%20Guía%20Pinolero.%20¿Me%20pueden%20ayudar?",
+    sugerencia: "¡Hola!%20Quiero%20sugerir%20un%20lugar%20turístico%20para%20agregar%20a%20Guía%20Pinolero:%20",
+    error: "¡Hola!%20Estoy%20teniendo%20un%20problema%20técnico%20con%20Guía%20Pinolero:%20"
+  }
+};
 
-    .traductor-manual:hover {
-      transform: scale(1.02);
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-    }
+// Función mejorada para abrir WhatsApp
+function abrirWhatsApp(tipo = 'default') {
+  let mensaje = whatsappConfig.mensajes[tipo] || whatsappConfig.mensajes.default;
+  
+  // Si el usuario está logueado, agregar su nombre al mensaje
+  const userName = document.getElementById('userName')?.innerText;
+  if (userName && userName !== '') {
+    mensaje = `Hola,%20soy%20${encodeURIComponent(userName)}.%20${mensaje}`;
+  }
+  
+  const url = `https://wa.me/${whatsappConfig.numero}?text=${mensaje}`;
+  window.open(url, '_blank');
+}
 
-    .traductor-manual select {
-      padding: 8px 12px;
-      border-radius: 30px;
-      border: 1px solid #ddd;
-      background: white;
-      cursor: pointer;
-      font-family: 'Inter', sans-serif;
-      font-size: 13px;
-      font-weight: 500;
-      min-width: 130px;
-      outline: none;
-    }
-
-    @media (max-width: 550px) {
-      .whatsapp-float {
-        width: 50px;
-        height: 50px;
-        font-size: 28px;
-      }
-      .traductor-manual {
-        bottom: 90px;
-        right: 15px;
-        padding: 6px 10px;
-      }
-      .traductor-manual select {
-        padding: 6px 10px;
-        font-size: 11px;
-        min-width: 110px;
-      }
-    }
-  </style>
-
-  <script>
-    // Configuración del botón de WhatsApp
-    const whatsappConfig = {
-      numero: "50588170531",
-      mensajes: {
-        default: "¡Hola!%20Estoy%20explorando%20Nicaragua%20con%20Guía%20Pinolero%20y%20tengo%20una%20consulta%20🌟",
-        ayuda: "¡Hola!%20Necesito%20ayuda%20con%20la%20aplicación%20Guía%20Pinolero.%20¿Me%20pueden%20ayudar?",
-        sugerencia: "¡Hola!%20Quiero%20sugerir%20un%20lugar%20turístico%20para%20agregar%20a%20Guía%20Pinolero:%20",
-        error: "¡Hola!%20Estoy%20teniendo%20un%20problema%20técnico%20con%20Guía%20Pinolero:%20"
-      }
-    };
-
-    function abrirWhatsApp(tipo = 'default') {
-      let mensaje = whatsappConfig.mensajes[tipo] || whatsappConfig.mensajes.default;
-      const userName = document.getElementById('userName')?.innerText;
-      if (userName && userName !== '') {
-        mensaje = `Hola,%20soy%20${encodeURIComponent(userName)}.%20${mensaje}`;
-      }
-      const url = `https://wa.me/${whatsappConfig.numero}?text=${mensaje}`;
-      window.open(url, '_blank');
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-      const whatsappBtn = document.getElementById('whatsappBtn');
-      if (whatsappBtn) {
-        whatsappBtn.addEventListener('click', (e) => {
-          e.preventDefault();
-          abrirWhatsApp('default');
-        });
-      }
+// Configurar el botón de WhatsApp
+document.addEventListener('DOMContentLoaded', () => {
+  const whatsappBtn = document.getElementById('whatsappBtn');
+  
+  if (whatsappBtn) {
+    whatsappBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      abrirWhatsApp('default');
     });
-
-    // ========== TRADUCTOR MANUAL ==========
-    const selector = document.getElementById('idiomaSelector');
-    const urlActual = window.location.href;
+  }
+  
+  // Opcional: Menú contextual al hacer click derecho
+  whatsappBtn?.addEventListener('contextmenu', (e) => {
+    e.preventDefault();
+    const opcion = prompt(
+      "¿Sobre qué quieres contactarnos?\n" +
+      "1 - Ayuda técnica\n" +
+      "2 - Sugerir lugar\n" +
+      "3 - Reportar error\n" +
+      "4 - Consulta general"
+    );
     
-    // Guardar y cargar idioma preferido
-    const idiomaGuardado = localStorage.getItem('idiomaPreferidoManual');
-    if (idiomaGuardado) {
-      selector.value = idiomaGuardado;
+    switch(opcion) {
+      case '1':
+        abrirWhatsApp('ayuda');
+        break;
+      case '2':
+        abrirWhatsApp('sugerencia');
+        break;
+      case '3':
+        abrirWhatsApp('error');
+        break;
+      default:
+        abrirWhatsApp('default');
     }
-    
-    selector.addEventListener('change', function() {
-      const idioma = this.value;
-      localStorage.setItem('idiomaPreferidoManual', idioma);
-      
-      if (idioma === 'es') {
-        // Recargar sin traducción
-        window.location.href = urlActual.split('?')[0];
-      } else {
-        // Usar Google Translate
-        window.location.href = 'https://translate.google.com/translate?hl=' + idioma + '&sl=es&tl=' + idioma + '&u=' + encodeURIComponent(urlActual);
-      }
-    });
-  </script>
-
+  });
+});
+</script>
   <div id="toast" class="toast-message" style="display: none;"></div>
 
   <script type="importmap">
@@ -396,6 +407,7 @@
     const db = getFirestore(app);
     const provider = new GoogleAuthProvider();
 
+    // Elementos
     const authCard = document.getElementById('authCard');
     const menuSection = document.getElementById('menuSection');
     const userNameSpan = document.getElementById('userName');
@@ -410,6 +422,7 @@
       setTimeout(() => { toastDiv.style.display = 'none'; }, 3000);
     }
 
+    // Guardar usuario en Firestore (si no existe)
     async function guardarUsuarioEnFirestore(user) {
       const userRef = doc(db, 'usuarios', user.uid);
       const userSnap = await getDoc(userRef);
@@ -434,12 +447,14 @@
         menuSection.style.display = 'block';
         const displayName = user.displayName || user.email.split('@')[0];
         userNameSpan.textContent = displayName;
+        // Guardar perfil en Firestore si es nuevo
         guardarUsuarioEnFirestore(user);
       } else {
         authCard.style.display = 'block';
         menuSection.style.display = 'none';
         loginFormDiv.style.display = 'block';
         registerFormDiv.style.display = 'none';
+        // Limpiar campos
         document.getElementById('loginEmail').value = '';
         document.getElementById('loginPassword').value = '';
         document.getElementById('regEmail').value = '';
@@ -451,6 +466,7 @@
       updateUI(user);
     });
 
+    // Login email/pass
     document.getElementById('doLoginBtn').addEventListener('click', async () => {
       const email = document.getElementById('loginEmail').value.trim();
       const password = document.getElementById('loginPassword').value;
@@ -466,6 +482,7 @@
       }
     });
 
+    // Registro
     document.getElementById('doRegisterBtn').addEventListener('click', async () => {
       const email = document.getElementById('regEmail').value.trim();
       const password = document.getElementById('regPassword').value;
@@ -473,6 +490,7 @@
       if (password.length < 6) return showToast('La contraseña debe tener al menos 6 caracteres', true);
       try {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        // Guardar inmediatamente en Firestore
         await guardarUsuarioEnFirestore(userCredential.user);
         showToast('Registro exitoso. ¡Ya puedes explorar!');
       } catch (error) {
@@ -482,6 +500,7 @@
       }
     });
 
+    // Google
     document.getElementById('googleLoginBtn').addEventListener('click', async () => {
       try {
         const result = await signInWithPopup(auth, provider);
@@ -492,6 +511,7 @@
       }
     });
 
+    // Cambiar formularios
     document.getElementById('showRegisterBtn').addEventListener('click', () => {
       loginFormDiv.style.display = 'none';
       registerFormDiv.style.display = 'block';
@@ -501,6 +521,7 @@
       loginFormDiv.style.display = 'block';
     });
 
+    // Cerrar sesión
     document.getElementById('logoutBtn').addEventListener('click', async () => {
       await signOut(auth);
       showToast('Sesión cerrada');
