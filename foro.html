@@ -859,17 +859,54 @@ document.createElement("div");
 div.className =
 "friend-item";
 
+```js id="q8dh9s"
 div.innerHTML = `
 <div>
 <strong>${data.nombre || "Usuario"}</strong>
 <br>
-<small>${data.email || "Sin correo"}</small>
+<small>⭐ ${data.puntos || 0} puntos</small>
 </div>
 
-<div>
-⭐ ${data.puntos || 0} pts
-</div>
+<button class="btn seguir-btn">
+Seguir
+</button>
 `;
+
+const seguirBtn =
+div.querySelector(".seguir-btn");
+
+seguirBtn.onclick = async ()=>{
+
+try{
+
+await addDoc(
+collection(db,"seguidores"),
+{
+seguidorUid: currentUser.uid,
+seguidorNombre:
+currentUser.displayName || currentUser.email,
+
+seguidoUid: data.uid,
+seguidoNombre: data.nombre || "Usuario",
+
+fecha: Date.now()
+}
+);
+
+seguirBtn.innerText = "Siguiendo";
+seguirBtn.disabled = true;
+
+toast("Ahora sigues a " + (data.nombre || "Usuario"));
+
+}catch(error){
+
+console.error(error);
+
+toast("Error al seguir");
+
+}
+
+};
 
 searchResults.appendChild(div);
 
