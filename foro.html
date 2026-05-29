@@ -51,21 +51,14 @@ flex-wrap:wrap;
 }
 
 .avatar{
-width:80px;
-height:80px;
+width:70px;
+height:70px;
 border-radius:50%;
 background:#F57C00;
 display:flex;
 align-items:center;
 justify-content:center;
 font-size:2rem;
-overflow:hidden;
-}
-
-.avatar img{
-width:100%;
-height:100%;
-object-fit:cover;
 }
 
 .stats{
@@ -272,18 +265,7 @@ align-items:flex-start;
 <div class="profile-header">
 
 <div class="avatar">
-
-<img
-id="userPhoto"
-src=""
-alt="Foto perfil"
-style="display:none;">
-
-<i
-id="defaultAvatar"
-class="fas fa-user">
-</i>
-
+<i class="fas fa-user"></i>
 </div>
 
 <div class="stats">
@@ -329,7 +311,76 @@ data-tab="foro">
 </button>
 
 </div>
-  
+
+<!-- RANKING -->
+
+<div id="rankingPane"
+class="tab-pane active">
+
+<h2>
+<i class="fas fa-chart-line"></i>
+Top Usuarios
+</h2>
+
+<table class="ranking-table">
+
+<thead>
+<tr>
+<th>#</th>
+<th>Usuario</th>
+<th>Puntos</th>
+</tr>
+</thead>
+
+<tbody id="rankingBody"></tbody>
+
+</table>
+
+</div>
+
+<!-- AMIGOS -->
+
+<div id="amigosPane"
+class="tab-pane">
+
+<h2>
+<i class="fas fa-users"></i>
+Mis Amigos
+</h2>
+
+<div id="amigosList"></div>
+
+</div>
+
+<!-- BUSCAR -->
+
+<div id="buscarPane"
+class="tab-pane">
+
+<h2>
+<i class="fas fa-user-plus"></i>
+Buscar usuarios
+</h2>
+
+<div class="search-box">
+
+<input
+type="text"
+id="searchUserInput"
+placeholder="Buscar por nombre o correo...">
+
+<button
+class="btn"
+id="searchUserBtn">
+Buscar
+</button>
+
+</div>
+
+<div id="searchResults"></div>
+
+</div>
+
 <!-- COMPARTIR -->
 
 <div id="compartirPane"
@@ -360,7 +411,7 @@ Copiar enlace
 </div>
 
 </div>
-  
+
 <!-- FORO -->
 
 <div id="foroPane"
@@ -400,6 +451,15 @@ class="back-btn">
 <i class="fas fa-arrow-left"></i>
 
 Volver
+
+</a>
+
+<a
+href="https://wa.me/50588170531"
+target="_blank"
+class="whatsapp-float">
+
+<i class="fab fa-whatsapp"></i>
 
 </a>
 
@@ -521,56 +581,12 @@ div.remove();
 
 // PERFIL
 
-async function cargarPerfil(user){
+function cargarPerfil(user){
 
 document.getElementById(
 "userDisplayName"
 ).innerText =
 user.displayName || user.email;
-
-// FOTO
-
-if(user.photoURL){
-
-const photo =
-document.getElementById("userPhoto");
-
-photo.src = user.photoURL;
-
-photo.style.display = "block";
-
-document.getElementById(
-"defaultAvatar"
-).style.display = "none";
-
-}
-
-// PUNTOS
-
-const q = query(
-collection(db,"usuarios"),
-where("uid","==",user.uid)
-);
-
-const snap = await getDocs(q);
-
-if(!snap.empty){
-
-const data =
-snap.docs[0].data();
-
-document.getElementById(
-"userPoints"
-).innerText =
-data.puntos || 0;
-
-}else{
-
-document.getElementById(
-"userPoints"
-).innerText = 0;
-
-}
 
 }
 
@@ -650,11 +666,333 @@ body.innerHTML += `
 
 }
 
+// AMIGOS
+
+async function cargarAmigos(){
+
+const cont =
+document.getElementById("amigosList");
+
+cont.innerHTML = "";
+
+const q = query(
+collection(db,"amigos"),
+where("usuario","==",currentUser.uid)
+);
+
+const snap = await getDocs(q);
+
+if(snap.empty){
+
+cont.innerHTML =
+"<p>No tienes amigos agregados.</p>";
+
+return;
+
+}
+
+snap.forEach((docSnap)=>{
+
+const data = docSnap.data();
+
+const div =
+document.createElement("div");
+
+div.className = "friend-item";
+
+div.innerHTML = `
+
+<div>
+
+<strong>
+${data.nombre}
+</strong>
+
+<br>
+
+<small>
+${data.email}
+</small>
+
+</div>
+
+`;
+
+cont.appendChild(div);
+
+});
+
+}
+
+// BUSCAR
+
+async function buscarUsuarios(){
+
+const texto =
+document
+.getElementById("searchUserInput")
+.value
+.trim()
+.toLowerCase();
+
+const cont =
+document.getElementById("searchResults");
+
+cont.innerHTML = "";
+
+if(!texto) return;
+
+const usuariosRef =
+collection(db,"usuarios");
+
+const snap =
+await getDocs(usuariosRef);
+
+let encontrados = 0;
+
+snap.forEach((docSnap)=>{
+
+const data = docSnap.data();
+
+if(data.uid === currentUser.uid) return;
+
+const nombre =
+(data.nombre || "")
+.toLowerCase();
+
+const email =
+(data.email || "")
+.toLowerCase();
+
+if(
+nombre.includes(texto)
+||
+email.includes(texto)
+){
+
+encontrados++;
+
+const div =
+document.createElement("div");
+
+div.className = "friend-item";
+
+div.innerHTML = `
+
+<div>
+
+<strong>
+${data.nombre || "Usuario"}
+</strong>
+
+<br>
+
+<small>
+${data.email || ""}
+</small>
+
+</div>
+
+<button
+class="btn seguirBtn">
+Seguir
+</button>
+
+`;
+
+cont.appendChild(div);
+
+const seguirBtn =
+div.querySelector(".seguirBtn");
+
+seguirBtn.onclick = async()=>{
+
+await addDoc(
+collection(db,"amigos"),
+{
+
+usuario: currentUser.uid,
+
+amigoUid: data.uid,
+
+nombre: data.nombre,
+
+email: data.email
+
+}
+);
+
+toast("Amigo agregado");
+
+cargarAmigos();
+
+};
+
+}
+
+});
+
+if(encontrados === 0){
+
+cont.innerHTML =
+"<p>No se encontraron usuarios.</p>";
+
+}
+
+}
+
+document
+.getElementById("searchUserBtn")
+.addEventListener(
+"click",
+buscarUsuarios
+);
+
+document
+.getElementById("searchUserInput")
+.addEventListener(
+"keypress",
+(e)=>{
+
+if(e.key==="Enter"){
+
+buscarUsuarios();
+
+}
+
+}
+);
+
+// FORO
+
+async function publicarMensaje(){
+
+const input =
+document.getElementById("mensajeForo");
+
+const texto = input.value.trim();
+
+if(!texto) return;
+
+await addDoc(collection(db,"foro"),{
+
+usuario:
+currentUser.displayName
+|| currentUser.email,
+
+uid: currentUser.uid,
+
+mensaje:texto,
+
+fecha:new Date()
+
+});
+
+input.value = "";
+
+toast("Publicado");
+
+}
+
+document
+.getElementById("publicarForoBtn")
+.addEventListener(
+"click",
+publicarMensaje
+);
+
+function cargarForo(){
+
+const q = query(
+collection(db,"foro"),
+orderBy("fecha","desc")
+);
+
+onSnapshot(q,(snapshot)=>{
+
+const cont =
+document.getElementById("foroMensajes");
+
+cont.innerHTML = "";
+
+snapshot.forEach((docSnap)=>{
+
+const data = docSnap.data();
+
+const div =
+document.createElement("div");
+
+div.className = "foro-post";
+
+div.innerHTML = `
+
+<div style="
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:10px;
+">
+
+<strong>
+${data.usuario}
+</strong>
+
+${
+data.uid === currentUser.uid
+? `
+<button
+class="btn deleteBtn"
+style="
+background:#c62828;
+padding:5px 12px;
+font-size:0.8rem;
+">
+Eliminar
+</button>
+`
+: ""
+}
+
+</div>
+
+<p style="margin-top:10px;">
+${data.mensaje}
+</p>
+
+`;
+
+cont.appendChild(div);
+
+const deleteBtn =
+div.querySelector(".deleteBtn");
+
+if(deleteBtn){
+
+deleteBtn.onclick = async()=>{
+
+await deleteDoc(
+doc(db,"foro",docSnap.id)
+);
+
+toast("Comentario eliminado");
+
+};
+
+}
+
+});
+
+});
+
+}
+
 // LOGIN
 
 onAuthStateChanged(auth,(user)=>{
 
 if(!user){
+
+alert("Debes iniciar sesión");
 
 window.location.href =
 "index.html";
@@ -670,6 +1008,10 @@ cargarPerfil(user);
 generarQR();
 
 cargarRanking();
+
+cargarForo();
+
+cargarAmigos();
 
 });
 
