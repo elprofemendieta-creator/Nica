@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -227,22 +228,6 @@ gap:8px;
 backdrop-filter:blur(8px);
 }
 
-.whatsapp-float{
-position:fixed;
-right:20px;
-bottom:20px;
-width:55px;
-height:55px;
-border-radius:50%;
-background:#25D366;
-display:flex;
-justify-content:center;
-align-items:center;
-color:white;
-font-size:28px;
-text-decoration:none;
-}
-
 @media(max-width:700px){
 
 .profile-header{
@@ -304,28 +289,19 @@ Puntos:
 
 <div class="tabs">
 
-<button class="tab-btn active"
-data-tab="ranking">
+<button class="tab-btn active" data-tab="ranking">
 🏆 Ranking
 </button>
 
-<button class="tab-btn"
-data-tab="amigos">
-👥 Amigos
-</button>
-
-<button class="tab-btn"
-data-tab="buscar">
+<button class="tab-btn" data-tab="buscar">
 🔍 Buscar
 </button>
 
-<button class="tab-btn"
-data-tab="compartir">
+<button class="tab-btn" data-tab="compartir">
 📲 Compartir
 </button>
 
-<button class="tab-btn"
-data-tab="foro">
+<button class="tab-btn" data-tab="foro">
 🧭 Foro
 </button>
 
@@ -333,8 +309,7 @@ data-tab="foro">
 
 <!-- RANKING -->
 
-<div id="rankingPane"
-class="tab-pane active">
+<div id="rankingPane" class="tab-pane active">
 
 <h2>
 <i class="fas fa-chart-line"></i>
@@ -357,24 +332,9 @@ Ranking Global
 
 </div>
 
-<!-- AMIGOS -->
-
-<div id="amigosPane"
-class="tab-pane">
-
-<h2>
-<i class="fas fa-users"></i>
-Mis Amigos
-</h2>
-
-<div id="amigosList"></div>
-
-</div>
-
 <!-- BUSCAR -->
 
-<div id="buscarPane"
-class="tab-pane">
+<div id="buscarPane" class="tab-pane">
 
 <h2>
 <i class="fas fa-user-plus"></i>
@@ -402,8 +362,7 @@ Buscar
 
 <!-- COMPARTIR -->
 
-<div id="compartirPane"
-class="tab-pane">
+<div id="compartirPane" class="tab-pane">
 
 <h2>
 <i class="fas fa-qrcode"></i>
@@ -433,8 +392,7 @@ Copiar enlace
 
 <!-- FORO -->
 
-<div id="foroPane"
-class="tab-pane">
+<div id="foroPane" class="tab-pane">
 
 <h2>
 <i class="fas fa-comments"></i>
@@ -464,8 +422,7 @@ Publicar
 
 </div>
 
-<a href="index.html"
-class="back-btn">
+<a href="index.html" class="back-btn">
 
 <i class="fas fa-arrow-left"></i>
 
@@ -598,8 +555,6 @@ document.getElementById(
 ).innerText =
 user.displayName || user.email;
 
-// FOTO
-
 if(user.photoURL){
 
 const photo =
@@ -614,8 +569,6 @@ document.getElementById(
 ).style.display = "none";
 
 }
-
-// PUNTOS
 
 const q = query(
 collection(db,"usuarios"),
@@ -633,12 +586,6 @@ document.getElementById(
 "userPoints"
 ).innerText =
 data.puntos || 0;
-
-}else{
-
-document.getElementById(
-"userPoints"
-).innerText = 0;
 
 }
 
@@ -728,8 +675,6 @@ document.getElementById("foroMensajes");
 const publicarForoBtn =
 document.getElementById("publicarForoBtn");
 
-// PUBLICAR MENSAJE
-
 publicarForoBtn.addEventListener("click", async ()=>{
 
 const input =
@@ -772,8 +717,6 @@ toast("Error al publicar");
 }
 
 });
-
-// CARGAR MENSAJES
 
 const qForo = query(
 collection(db,"foro"),
@@ -838,6 +781,103 @@ foroMensajes.appendChild(post);
 
 });
 
+// BUSCAR USUARIOS
+
+const searchBtn =
+document.getElementById("searchUserBtn");
+
+const searchInput =
+document.getElementById("searchUserInput");
+
+const searchResults =
+document.getElementById("searchResults");
+
+searchBtn.addEventListener("click", async ()=>{
+
+const texto =
+searchInput.value.trim().toLowerCase();
+
+if(!texto){
+
+toast("Escribe un nombre");
+
+return;
+
+}
+
+searchResults.innerHTML =
+"<p>Buscando usuarios...</p>";
+
+try{
+
+const snap = await getDocs(
+collection(db,"usuarios")
+);
+
+searchResults.innerHTML = "";
+
+let encontrados = 0;
+
+snap.forEach((docSnap)=>{
+
+const data = docSnap.data();
+
+const nombre =
+(data.nombre || "")
+.toLowerCase();
+
+const correo =
+(data.email || "")
+.toLowerCase();
+
+if(
+nombre.includes(texto) ||
+correo.includes(texto)
+){
+
+encontrados++;
+
+const div =
+document.createElement("div");
+
+div.className =
+"friend-item";
+
+div.innerHTML = `
+<div>
+<strong>${data.nombre || "Usuario"}</strong>
+<br>
+<small>${data.email || "Sin correo"}</small>
+</div>
+
+<div>
+⭐ ${data.puntos || 0} pts
+</div>
+`;
+
+searchResults.appendChild(div);
+
+}
+
+});
+
+if(encontrados === 0){
+
+searchResults.innerHTML =
+"<p>No se encontraron usuarios</p>";
+
+}
+
+}catch(error){
+
+console.error(error);
+
+toast("Error al buscar");
+
+}
+
+});
+
 // LOGIN
 
 onAuthStateChanged(auth,(user)=>{
@@ -865,3 +905,4 @@ cargarRankingGlobal();
 
 </body>
 </html>
+```
