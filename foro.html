@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -291,11 +292,7 @@ Puntos:
 <button class="tab-btn active" data-tab="ranking">
 🏆 Ranking
 </button>
-  
-<button class="tab-btn" data-tab="amigos">
-👥 Amigos
-</button>
-  
+
 <button class="tab-btn" data-tab="buscar">
 🔍 Buscar
 </button>
@@ -334,19 +331,6 @@ Ranking Global
 </table>
 
 </div>
- <!-- AMIGOS -->
-  <div id="amigosPane" class="tab-pane">
- <h2>
- <i class="fas fa-users"></i>
- Mis Amigos
- </h2> <div id="amigosList"> 
-   
-<div class="friend-item"> <div> <strong>No tienes amigos agregados
-</strong> <br> <small>Próximamente podrás añadir amigos</small> 
-</div> 
-</div> 
- </div>
-  </div>
 
 <!-- BUSCAR -->
 
@@ -859,54 +843,17 @@ document.createElement("div");
 div.className =
 "friend-item";
 
-```js id="q8dh9s"
 div.innerHTML = `
 <div>
 <strong>${data.nombre || "Usuario"}</strong>
 <br>
-<small>⭐ ${data.puntos || 0} puntos</small>
+<small>${data.email || "Sin correo"}</small>
 </div>
 
-<button class="btn seguir-btn">
-Seguir
-</button>
+<div>
+⭐ ${data.puntos || 0} pts
+</div>
 `;
-
-const seguirBtn =
-div.querySelector(".seguir-btn");
-
-seguirBtn.onclick = async ()=>{
-
-try{
-
-await addDoc(
-collection(db,"seguidores"),
-{
-seguidorUid: currentUser.uid,
-seguidorNombre:
-currentUser.displayName || currentUser.email,
-
-seguidoUid: data.uid,
-seguidoNombre: data.nombre || "Usuario",
-
-fecha: Date.now()
-}
-);
-
-seguirBtn.innerText = "Siguiendo";
-seguirBtn.disabled = true;
-
-toast("Ahora sigues a " + (data.nombre || "Usuario"));
-
-}catch(error){
-
-console.error(error);
-
-toast("Error al seguir");
-
-}
-
-};
 
 searchResults.appendChild(div);
 
@@ -958,3 +905,4 @@ cargarRankingGlobal();
 
 </body>
 </html>
+```
