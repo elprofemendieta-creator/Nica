@@ -1,457 +1,456 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Comunidad - Nica Explorer</title>
+<title>Comunidad - Nica Explorer</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
-  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 
-  <style>
+<style>
 
-    *{
-      margin:0;
-      padding:0;
-      box-sizing:border-box;
-    }
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
 
-    body{
-      font-family:'Inter',sans-serif;
-      background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
-      min-height:100vh;
-      padding:20px;
-      color:white;
-    }
+body{
+  font-family:'Inter',sans-serif;
+  background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+  min-height:100vh;
+  padding:20px;
+  color:white;
+}
 
-    .container{
-      max-width:1200px;
-      margin:auto;
-    }
+.container{
+  max-width:1200px;
+  margin:auto;
+}
 
-    .card{
-      background:rgba(255,255,255,0.1);
-      backdrop-filter:blur(12px);
-      border-radius:2rem;
-      padding:1.5rem;
-      border:1px solid rgba(255,255,255,0.2);
-    }
+.card{
+  background:rgba(255,255,255,0.1);
+  backdrop-filter:blur(12px);
+  border-radius:2rem;
+  padding:1.5rem;
+  border:1px solid rgba(255,255,255,0.2);
+}
 
-    .profile-header{
-      display:flex;
-      align-items:center;
-      gap:20px;
-      margin-bottom:20px;
-      flex-wrap:wrap;
-    }
+.profile-header{
+  display:flex;
+  align-items:center;
+  gap:20px;
+  margin-bottom:20px;
+  flex-wrap:wrap;
+}
 
-    .avatar{
-      width:70px;
-      height:70px;
-      border-radius:50%;
-      background:#F57C00;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-size:2rem;
-    }
+.avatar{
+  width:70px;
+  height:70px;
+  border-radius:50%;
+  background:#F57C00;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:2rem;
+}
 
-    .stats{
-      flex:1;
-    }
+.stats{
+  flex:1;
+}
 
-    .tabs{
-      display:flex;
-      gap:10px;
-      margin-bottom:20px;
-      flex-wrap:wrap;
-      border-bottom:1px solid rgba(255,255,255,0.2);
-      padding-bottom:10px;
-    }
+.tabs{
+  display:flex;
+  gap:10px;
+  margin-bottom:20px;
+  flex-wrap:wrap;
+  border-bottom:1px solid rgba(255,255,255,0.2);
+  padding-bottom:10px;
+}
 
-    .tab-btn{
-      border:none;
-      background:transparent;
-      color:white;
-      padding:10px 20px;
-      border-radius:40px;
-      cursor:pointer;
-      transition:0.2s;
-      font-size:1rem;
-    }
+.tab-btn{
+  border:none;
+  background:transparent;
+  color:white;
+  padding:10px 20px;
+  border-radius:40px;
+  cursor:pointer;
+  transition:0.2s;
+  font-size:1rem;
+}
 
-    .tab-btn.active{
-      background:#F57C00;
-    }
+.tab-btn.active{
+  background:#F57C00;
+}
 
-    .tab-pane{
-      display:none;
-    }
+.tab-pane{
+  display:none;
+}
 
-    .tab-pane.active{
-      display:block;
-    }
+.tab-pane.active{
+  display:block;
+}
 
-    .card h2{
-      font-size:1.5rem;
-      margin-bottom:20px;
-      border-left:4px solid #F57C00;
-      padding-left:12px;
-      display:flex;
-      align-items:center;
-      gap:10px;
-    }
+.card h2{
+  font-size:1.5rem;
+  margin-bottom:20px;
+  border-left:4px solid #F57C00;
+  padding-left:12px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
 
-    .ranking-table{
-      width:100%;
-      border-collapse:collapse;
-    }
+.ranking-table{
+  width:100%;
+  border-collapse:collapse;
+}
 
-    .ranking-table th,
-    .ranking-table td{
-      padding:12px;
-      border-bottom:1px solid rgba(255,255,255,0.15);
-    }
+.ranking-table th,
+.ranking-table td{
+  padding:12px;
+  border-bottom:1px solid rgba(255,255,255,0.15);
+}
 
-    .ranking-table th{
-      color:#F57C00;
-    }
+.ranking-table th{
+  color:#F57C00;
+}
 
-    .search-box{
-      display:flex;
-      gap:10px;
-      margin-bottom:20px;
-    }
+.search-box{
+  display:flex;
+  gap:10px;
+  margin-bottom:20px;
+}
 
-    .search-box input{
-      flex:1;
-      padding:12px;
-      border:none;
-      border-radius:40px;
-      background:rgba(255,255,255,0.12);
-      color:white;
-      outline:none;
-    }
+.search-box input{
+  flex:1;
+  padding:12px;
+  border:none;
+  border-radius:40px;
+  background:rgba(255,255,255,0.12);
+  color:white;
+  outline:none;
+}
 
-    .search-box input::placeholder{
-      color:rgba(255,255,255,0.6);
-    }
+.search-box input::placeholder{
+  color:rgba(255,255,255,0.6);
+}
 
-    .btn{
-      border:none;
-      padding:10px 20px;
-      border-radius:40px;
-      cursor:pointer;
-      font-weight:600;
-      color:white;
-      background:linear-gradient(95deg,#F9A826,#F57C00);
-      transition:0.2s;
-    }
+.btn{
+  border:none;
+  padding:10px 20px;
+  border-radius:40px;
+  cursor:pointer;
+  font-weight:600;
+  color:white;
+  background:linear-gradient(95deg,#F9A826,#F57C00);
+  transition:0.2s;
+}
 
-    .btn:hover{
-      transform:translateY(-2px);
-    }
+.btn:hover{
+  transform:translateY(-2px);
+}
 
-    .btn-outline{
-      background:transparent;
-      border:1px solid rgba(255,255,255,0.4);
-    }
+.btn-outline{
+  background:transparent;
+  border:1px solid rgba(255,255,255,0.4);
+}
 
-    .friend-item{
-      background:rgba(255,255,255,0.05);
-      padding:12px;
-      border-radius:1rem;
-      margin-bottom:10px;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-    }
+.friend-item{
+  background:rgba(255,255,255,0.05);
+  padding:12px;
+  border-radius:1rem;
+  margin-bottom:10px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
 
-    .qr-container{
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      gap:15px;
-    }
+.qr-container{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:15px;
+}
 
-    .foro-post{
-      background:rgba(255,255,255,0.08);
-      padding:15px;
-      border-radius:1rem;
-      margin-bottom:12px;
-      border-left:4px solid #F57C00;
-    }
+.foro-post{
+  background:rgba(255,255,255,0.08);
+  padding:15px;
+  border-radius:1rem;
+  margin-bottom:12px;
+  border-left:4px solid #F57C00;
+}
 
-    .foro-post strong{
-      color:#F9A826;
-    }
+.foro-post strong{
+  color:#F9A826;
+}
 
-    .foro-post small{
-      opacity:0.7;
-      display:block;
-      margin-top:10px;
-    }
+.foro-post small{
+  opacity:0.7;
+  display:block;
+  margin-top:10px;
+}
 
-    .delete-post-btn{
-      background:#c62828 !important;
-      padding:5px 12px !important;
-      font-size:0.8rem !important;
-    }
+.delete-post-btn{
+  background:#c62828 !important;
+  padding:5px 12px !important;
+  font-size:0.8rem !important;
+}
 
-    .back-btn{
-      position:fixed;
-      left:20px;
-      bottom:20px;
-      background:rgba(0,0,0,0.6);
-      color:white;
-      text-decoration:none;
-      padding:10px 20px;
-      border-radius:50px;
-      display:flex;
-      align-items:center;
-      gap:8px;
-      backdrop-filter:blur(8px);
-    }
+.back-btn{
+  position:fixed;
+  left:20px;
+  bottom:20px;
+  background:rgba(0,0,0,0.6);
+  color:white;
+  text-decoration:none;
+  padding:10px 20px;
+  border-radius:50px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  backdrop-filter:blur(8px);
+}
 
-    .whatsapp-float{
-      position:fixed;
-      right:20px;
-      bottom:20px;
-      width:55px;
-      height:55px;
-      border-radius:50%;
-      background:#25D366;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      color:white;
-      font-size:28px;
-      text-decoration:none;
-    }
+.whatsapp-float{
+  position:fixed;
+  right:20px;
+  bottom:20px;
+  width:55px;
+  height:55px;
+  border-radius:50%;
+  background:#25D366;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  color:white;
+  font-size:28px;
+  text-decoration:none;
+}
 
-    @media(max-width:700px){
+@media(max-width:700px){
 
-      .profile-header{
-        flex-direction:column;
-        text-align:center;
-      }
+  .profile-header{
+    flex-direction:column;
+    text-align:center;
+  }
 
-      .search-box{
-        flex-direction:column;
-      }
+  .search-box{
+    flex-direction:column;
+  }
 
-    }
+}
 
-  </style>
+</style>
 </head>
 
 <body>
 
 <div class="container">
 
-  <div class="card">
+<div class="card">
 
-    <div class="profile-header">
+<div class="profile-header">
 
-      <div class="avatar">
-        <i class="fas fa-user"></i>
-      </div>
+<div class="avatar">
+<i class="fas fa-user"></i>
+</div>
 
-      <div class="stats">
+<div class="stats">
 
-        <h3 id="userDisplayName">
-          Cargando...
-        </h3>
+<h3 id="userDisplayName">
+Cargando...
+</h3>
 
-        <p>
-          <i class="fas fa-star"></i>
-          Puntos:
-          <span id="userPoints">0</span>
-        </p>
+<p>
+<i class="fas fa-star"></i>
+Puntos:
+<span id="userPoints">0</span>
+</p>
 
-        <p>
-          <i class="fas fa-trophy"></i>
-          Posición global:
-          <span id="userRank">-</span>
-        </p>
+<p>
+<i class="fas fa-trophy"></i>
+Posición global:
+<span id="userRank">-</span>
+</p>
 
-      </div>
+</div>
+</div>
 
-    </div>
+<div class="tabs">
 
-    <div class="tabs">
+<button class="tab-btn active"
+data-tab="ranking">
+🏆 Ranking
+</button>
 
-      <button class="tab-btn active"
-      data-tab="ranking">
-        🏆 Ranking
-      </button>
+<button class="tab-btn"
+data-tab="amigos">
+👥 Amigos
+</button>
 
-      <button class="tab-btn"
-      data-tab="amigos">
-        👥 Amigos
-      </button>
+<button class="tab-btn"
+data-tab="buscar">
+🔍 Buscar
+</button>
 
-      <button class="tab-btn"
-      data-tab="buscar">
-        🔍 Buscar
-      </button>
+<button class="tab-btn"
+data-tab="compartir">
+📲 Compartir
+</button>
 
-      <button class="tab-btn"
-      data-tab="compartir">
-        📲 Compartir
-      </button>
+<button class="tab-btn"
+data-tab="foro">
+🧭 Muro de Consejos
+</button>
 
-      <button class="tab-btn"
-      data-tab="foro">
-        🧭 Muro de Consejos
-      </button>
+</div>
 
-    </div>
+<!-- RANKING -->
 
-    <!-- RANKING -->
+<div id="rankingPane"
+class="tab-pane active">
 
-    <div id="rankingPane"
-    class="tab-pane active">
+<h2>
+<i class="fas fa-chart-line"></i>
+Top 10 Usuarios
+</h2>
 
-      <h2>
-        <i class="fas fa-chart-line"></i>
-        Top 10 Usuarios
-      </h2>
+<table class="ranking-table">
 
-      <table class="ranking-table">
+<thead>
+<tr>
+<th>#</th>
+<th>Usuario</th>
+<th>Puntos</th>
+</tr>
+</thead>
 
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Usuario</th>
-            <th>Puntos</th>
-          </tr>
-        </thead>
+<tbody id="rankingBody"></tbody>
 
-        <tbody id="rankingBody"></tbody>
+</table>
 
-      </table>
+</div>
 
-    </div>
+<!-- AMIGOS -->
 
-    <!-- AMIGOS -->
+<div id="amigosPane"
+class="tab-pane">
 
-    <div id="amigosPane"
-    class="tab-pane">
+<h2>
+<i class="fas fa-users"></i>
+Amigos
+</h2>
 
-      <h2>
-        <i class="fas fa-users"></i>
-        Amigos
-      </h2>
+<div id="amigosList"></div>
 
-      <div id="amigosList"></div>
+</div>
 
-    </div>
+<!-- BUSCAR -->
 
-    <!-- BUSCAR -->
+<div id="buscarPane"
+class="tab-pane">
 
-    <div id="buscarPane"
-    class="tab-pane">
+<h2>
+<i class="fas fa-user-plus"></i>
+Agregar amigo
+</h2>
 
-      <h2>
-        <i class="fas fa-user-plus"></i>
-        Agregar amigo
-      </h2>
+<div class="search-box">
 
-      <div class="search-box">
+<input
+type="text"
+id="searchUserInput"
+placeholder="Buscar usuario...">
 
-        <input
-        type="text"
-        id="searchUserInput"
-        placeholder="Buscar usuario...">
+<button
+class="btn"
+id="searchUserBtn">
+Buscar
+</button>
 
-        <button
-        class="btn"
-        id="searchUserBtn">
-          Buscar
-        </button>
+</div>
 
-      </div>
+<div id="searchResults"></div>
 
-      <div id="searchResults"></div>
+</div>
 
-    </div>
+<!-- COMPARTIR -->
 
-    <!-- COMPARTIR -->
+<div id="compartirPane"
+class="tab-pane">
 
-    <div id="compartirPane"
-    class="tab-pane">
+<h2>
+<i class="fas fa-qrcode"></i>
+Compartir perfil
+</h2>
 
-      <h2>
-        <i class="fas fa-qrcode"></i>
-        Compartir perfil
-      </h2>
+<div class="qr-container">
 
-      <div class="qr-container">
+<div id="qrCode"></div>
 
-        <div id="qrCode"></div>
+<button
+id="shareWhatsAppBtn"
+class="btn">
+<i class="fab fa-whatsapp"></i>
+Compartir
+</button>
 
-        <button
-        id="shareWhatsAppBtn"
-        class="btn">
-          <i class="fab fa-whatsapp"></i>
-          Compartir
-        </button>
+<button
+id="copyLinkBtn"
+class="btn btn-outline">
+Copiar enlace
+</button>
 
-        <button
-        id="copyLinkBtn"
-        class="btn btn-outline">
-          Copiar enlace
-        </button>
+</div>
 
-      </div>
+</div>
 
-    </div>
+<!-- FORO -->
 
-    <!-- FORO -->
+<div id="foroPane"
+class="tab-pane">
 
-    <div id="foroPane"
-    class="tab-pane">
+<h2>
+<i class="fas fa-comments"></i>
+Muro de Consejos
+</h2>
 
-      <h2>
-        <i class="fas fa-comments"></i>
-        Muro de Consejos
-      </h2>
+<div class="search-box">
 
-      <div class="search-box">
+<input
+type="text"
+id="mensajeForo"
+placeholder="Pregunta sobre buses, seguridad o consejos...">
 
-        <input
-        type="text"
-        id="mensajeForo"
-        placeholder="Pregunta sobre buses, seguridad o consejos...">
+<button
+class="btn"
+id="publicarForoBtn">
+Publicar
+</button>
 
-        <button
-        class="btn"
-        id="publicarForoBtn">
-          Publicar
-        </button>
+</div>
 
-      </div>
+<div id="foroMensajes"></div>
 
-      <div id="foroMensajes"></div>
+</div>
 
-    </div>
-
-  </div>
+</div>
 
 </div>
 
 <a href="index.html"
 class="back-btn">
 
-  <i class="fas fa-arrow-left"></i>
+<i class="fas fa-arrow-left"></i>
 
-  Volver
+Volver
 
 </a>
 
@@ -460,7 +459,7 @@ href="https://wa.me/50588170531"
 target="_blank"
 class="whatsapp-float">
 
-  <i class="fab fa-whatsapp"></i>
+<i class="fab fa-whatsapp"></i>
 
 </a>
 
@@ -482,43 +481,42 @@ class="whatsapp-float">
 <script type="module">
 
 import {
-  initializeApp
+initializeApp
 } from "firebase/app";
 
 import {
-  getAuth,
-  onAuthStateChanged
+getAuth,
+onAuthStateChanged
 } from "firebase/auth";
 
 import {
-  getFirestore,
-  collection,
-  query,
-  orderBy,
-  limit,
-  getDocs,
-  where,
-  addDoc,
-  deleteDoc,
-  doc,
-  onSnapshot
+getFirestore,
+collection,
+query,
+orderBy,
+limit,
+getDocs,
+where,
+addDoc,
+deleteDoc,
+doc,
+onSnapshot
 } from "firebase/firestore";
 
 const firebaseConfig = {
 
-  apiKey:"AIzaSyA6jVICuE17KJcO34gE1brMxqWEfNd3Fy0",
+apiKey:"TU_API_KEY",
 
-  authDomain:"mapa-41b00.firebaseapp.com",
+authDomain:"TU_AUTH_DOMAIN",
 
-  projectId:"mapa-41b00",
+projectId:"TU_PROJECT_ID",
 
-  storageBucket:"mapa-41b00.firebasestorage.app",
+storageBucket:"TU_STORAGE_BUCKET",
 
-  messagingSenderId:"535032835400",
+messagingSenderId:"TU_MESSAGING_SENDER_ID",
 
-  appId:"1:535032835400:web:68c079cbc3f419eafd177d",
+appId:"TU_APP_ID"
 
-  measurementId:"G-7R3DSH7PPN"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -533,322 +531,381 @@ let currentUserData = null;
 
 async function ensureUserDocument(user){
 
-  const usersRef = collection(db,"usuarios");
+const usersRef = collection(db,"usuarios");
 
-  const q = query(
-    usersRef,
-    where("uid","==",user.uid)
-  );
+const q = query(
+usersRef,
+where("uid","==",user.uid)
+);
 
-  const snap = await getDocs(q);
+const snap = await getDocs(q);
 
-  if(snap.empty){
+if(snap.empty){
 
-    const nuevo = {
+const nuevo = {
 
-      uid:user.uid,
+uid:user.uid,
 
-      email:user.email,
+email:user.email,
 
-      nombre:user.displayName
-      || user.email.split('@')[0],
+nombre:user.displayName
+|| user.email.split('@')[0],
 
-      puntos:0,
+puntos:0,
 
-      fechaRegistro:new Date()
-    };
+fechaRegistro:new Date()
+};
 
-    await addDoc(usersRef,nuevo);
+await addDoc(usersRef,nuevo);
 
-    return nuevo;
+return nuevo;
 
-  } else {
+}else{
 
-    return snap.docs[0].data();
-  }
+return snap.docs[0].data();
+
+}
+
 }
 
 async function cargarPerfil(){
 
-  document.getElementById("userDisplayName")
-  .innerText =
-  currentUserData.nombre
-  || currentUser.email;
+document.getElementById("userDisplayName")
+.innerText =
+currentUserData.nombre
+|| currentUser.email;
 
-  document.getElementById("userPoints")
-  .innerText =
-  currentUserData.puntos || 0;
+document.getElementById("userPoints")
+.innerText =
+currentUserData.puntos || 0;
+
 }
 
 async function cargarRanking(){
 
-  const usersRef = collection(db,"usuarios");
+const usersRef = collection(db,"usuarios");
 
-  const q = query(
-    usersRef,
-    orderBy("puntos","desc"),
-    limit(10)
-  );
+const q = query(
+usersRef,
+orderBy("puntos","desc"),
+limit(10)
+);
 
-  const snap = await getDocs(q);
+const snap = await getDocs(q);
 
-  const body =
-  document.getElementById("rankingBody");
+const body =
+document.getElementById("rankingBody");
 
-  body.innerHTML = "";
+body.innerHTML = "";
 
-  let pos = 1;
+let pos = 1;
 
-  snap.forEach(docu=>{
+snap.forEach(docu=>{
 
-    const data = docu.data();
+const data = docu.data();
 
-    body.innerHTML += `
-      <tr>
-        <td>${pos++}</td>
-        <td>${data.nombre}</td>
-        <td>${data.puntos || 0}</td>
-      </tr>
-    `;
-  });
+body.innerHTML += `
+<tr>
+<td>${pos++}</td>
+<td>${data.nombre}</td>
+<td>${data.puntos || 0}</td>
+</tr>
+`;
+
+});
+
 }
 
 function initTabs(){
 
-  const tabs =
-  document.querySelectorAll(".tab-btn");
+const tabs =
+document.querySelectorAll(".tab-btn");
 
-  const panes =
-  document.querySelectorAll(".tab-pane");
+const panes =
+document.querySelectorAll(".tab-pane");
 
-  tabs.forEach(btn=>{
+tabs.forEach(btn=>{
 
-    btn.addEventListener("click",()=>{
+btn.addEventListener("click",()=>{
 
-      const id = btn.dataset.tab;
+const id = btn.dataset.tab;
 
-      tabs.forEach(t=>
-        t.classList.remove("active")
-      );
+tabs.forEach(t=>
+t.classList.remove("active")
+);
 
-      panes.forEach(p=>
-        p.classList.remove("active")
-      );
+panes.forEach(p=>
+p.classList.remove("active")
+);
 
-      btn.classList.add("active");
+btn.classList.add("active");
 
-      document
-      .getElementById(`${id}Pane`)
-      .classList.add("active");
-    });
-  });
+document
+.getElementById(`${id}Pane`)
+.classList.add("active");
+
+});
+
+});
+
 }
 
 function mostrarToast(msg,error=false){
 
-  const toast =
-  document.createElement("div");
+const toast =
+document.createElement("div");
 
-  toast.innerText = msg;
+toast.innerText = msg;
 
-  toast.style.position = "fixed";
-  toast.style.bottom = "90px";
-  toast.style.left = "50%";
-  toast.style.transform = "translateX(-50%)";
-  toast.style.background =
-    error ? "#d32f2f" : "#2E7D32";
+toast.style.position = "fixed";
+toast.style.bottom = "90px";
+toast.style.left = "50%";
+toast.style.transform = "translateX(-50%)";
+toast.style.background =
+error ? "#d32f2f" : "#2E7D32";
 
-  toast.style.padding = "12px 20px";
-  toast.style.borderRadius = "40px";
-  toast.style.zIndex = "9999";
+toast.style.padding = "12px 20px";
+toast.style.borderRadius = "40px";
+toast.style.zIndex = "9999";
 
-  document.body.appendChild(toast);
+document.body.appendChild(toast);
 
-  setTimeout(()=>{
-    toast.remove();
-  },3000);
+setTimeout(()=>{
+toast.remove();
+},3000);
+
+}
+
+function generarQR(){
+
+if(!currentUser) return;
+
+const qrDiv =
+document.getElementById("qrCode");
+
+qrDiv.innerHTML = "";
+
+const url =
+`${window.location.origin}${window.location.pathname}?agregar=${currentUser.uid}`;
+
+new QRCode(qrDiv,{
+text:url,
+width:180,
+height:180
+});
+
+document
+.getElementById("shareWhatsAppBtn")
+.onclick = ()=>{
+
+const texto =
+`¡Sígueme en Nica Explorer! ${url}`;
+
+window.open(
+`https://wa.me/?text=${encodeURIComponent(texto)}`,
+"_blank"
+);
+
+};
+
+document
+.getElementById("copyLinkBtn")
+.onclick = ()=>{
+
+navigator.clipboard.writeText(url);
+
+mostrarToast("Enlace copiado");
+
+};
+
 }
 
 async function publicarMensajeForo(){
 
-  const input =
-  document.getElementById("mensajeForo");
+const input =
+document.getElementById("mensajeForo");
 
-  const texto = input.value.trim();
+const texto = input.value.trim();
 
-  if(!texto) return;
+if(!texto) return;
 
-  await addDoc(collection(db,"foro"),{
+await addDoc(collection(db,"foro"),{
 
-    usuario:
-      currentUserData.nombre
-      || currentUser.email,
+usuario:
+currentUserData.nombre
+|| currentUser.email,
 
-    uid: currentUser.uid,
+uid: currentUser.uid,
 
-    mensaje:texto,
+mensaje:texto,
 
-    fecha:new Date()
-  });
+fecha:new Date()
 
-  input.value = "";
+});
 
-  mostrarToast("Mensaje publicado");
+input.value = "";
+
+mostrarToast("Mensaje publicado");
+
 }
 
 function cargarForo(){
 
-  const foroRef =
-  collection(db,"foro");
+const foroRef =
+collection(db,"foro");
 
-  const q = query(
-    foroRef,
-    orderBy("fecha","desc")
-  );
+const q = query(
+foroRef,
+orderBy("fecha","desc")
+);
 
-  onSnapshot(q,(snapshot)=>{
+onSnapshot(q,(snapshot)=>{
 
-    const container =
-    document.getElementById("foroMensajes");
+const container =
+document.getElementById("foroMensajes");
 
-    container.innerHTML = "";
+container.innerHTML = "";
 
-    snapshot.forEach((docSnap)=>{
+snapshot.forEach((docSnap)=>{
 
-      const data = docSnap.data();
+const data = docSnap.data();
 
-      const postId = docSnap.id;
+const postId = docSnap.id;
 
-      const fecha =
-      data.fecha?.toDate
-      ? data.fecha.toDate().toLocaleString()
-      : "Ahora";
+const fecha =
+data.fecha?.toDate
+? data.fecha.toDate().toLocaleString()
+: "Ahora";
 
-      const div =
-      document.createElement("div");
+const div =
+document.createElement("div");
 
-      div.className = "foro-post";
+div.className = "foro-post";
 
-      div.innerHTML = `
+div.innerHTML = `
 
-        <div style="
-          display:flex;
-          justify-content:space-between;
-          align-items:center;
-          gap:10px;
-        ">
+<div style="
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:10px;
+">
 
-          <strong>
-            ${data.usuario}
-          </strong>
+<strong>
+${data.usuario}
+</strong>
 
-          ${
-            data.uid === currentUser.uid
-            ? `
-            <button
-            class="btn delete-post-btn"
-            data-id="${postId}">
-              Eliminar
-            </button>
-            `
-            : ""
-          }
+${
+data.uid === currentUser.uid
+? `
+<button
+class="btn delete-post-btn"
+data-id="${postId}">
+Eliminar
+</button>
+`
+: ""
+}
 
-        </div>
+</div>
 
-        <p style="margin-top:12px;">
-          ${data.mensaje}
-        </p>
+<p style="margin-top:12px;">
+${data.mensaje}
+</p>
 
-        <small>
-          ${fecha}
-        </small>
+<small>
+${fecha}
+</small>
 
-      `;
+`;
 
-      container.appendChild(div);
+container.appendChild(div);
 
-      const deleteBtn =
-      div.querySelector(".delete-post-btn");
+const deleteBtn =
+div.querySelector(".delete-post-btn");
 
-      if(deleteBtn){
+if(deleteBtn){
 
-        deleteBtn.addEventListener(
-          "click",
-          async()=>{
+deleteBtn.addEventListener(
+"click",
+async()=>{
 
-            const confirmar =
-            confirm(
-              "¿Eliminar comentario?"
-            );
+const confirmar =
+confirm(
+"¿Eliminar comentario?"
+);
 
-            if(!confirmar) return;
+if(!confirmar) return;
 
-            await deleteDoc(
-              doc(db,"foro",postId)
-            );
+await deleteDoc(
+doc(db,"foro",postId)
+);
 
-            mostrarToast(
-              "Comentario eliminado"
-            );
-          }
-        );
-      }
+mostrarToast(
+"Comentario eliminado"
+);
 
-    });
+}
+);
 
-  });
+}
+
+});
+
+});
 
 }
 
 document
 .getElementById("publicarForoBtn")
 .addEventListener(
-  "click",
-  publicarMensajeForo
+"click",
+publicarMensajeForo
 );
 
 document
 .getElementById("mensajeForo")
 .addEventListener(
-  "keypress",
-  (e)=>{
+"keypress",
+(e)=>{
 
-    if(e.key==="Enter"){
+if(e.key==="Enter"){
 
-      publicarMensajeForo();
+publicarMensajeForo();
 
-    }
+}
 
-  }
+}
 );
 
 onAuthStateChanged(
-  auth,
-  async(user)=>{
+auth,
+async(user)=>{
 
-    if(!user){
+if(!user){
 
-      window.location.href =
-      "index.html";
+window.location.href =
+"index.html";
 
-      return;
-    }
+return;
+}
 
-    currentUser = user;
+currentUser = user;
 
-    currentUserData =
-    await ensureUserDocument(user);
+currentUserData =
+await ensureUserDocument(user);
 
-    await cargarPerfil();
+await cargarPerfil();
 
-    await cargarRanking();
+await cargarRanking();
 
-    initTabs();
+initTabs();
 
-    cargarForo();
+cargarForo();
 
-  }
+generarQR();
+
+}
 );
 
 </script>
