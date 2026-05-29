@@ -1185,18 +1185,31 @@ toast(
 
 // LOGIN
 
-onAuthStateChanged(auth,async(user)=>{
+let authReady = false;
+
+onAuthStateChanged(auth, async(user)=>{
+
+if(authReady && !user){
+return;
+}
 
 if(!user){
 
-alert("Debes iniciar sesión");
+setTimeout(()=>{
 
-window.location.href =
-"index.html";
+if(!auth.currentUser){
+
+console.log("Sin sesión");
+
+}
+
+},1500);
 
 return;
 
 }
+
+authReady = true;
 
 currentUser = user;
 
