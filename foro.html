@@ -630,22 +630,6 @@ let currentUser = null;
       `;
       container.appendChild(div);
     }
-    // Eventos para seguir
-    document.querySelectorAll(".add-friend-btn").forEach(btn => {
-      btn.addEventListener("click", async (e) => {
-        const amigoUid = btn.dataset.uid;
-        const amigosRef = collection(db, "amigos");
-        await addDoc(amigosRef, {
-          usuarioId: currentUser.uid,
-          amigoId: amigoUid,
-          fecha: new Date()
-        });
-        mostrarToast("Ahora sigues a este usuario", false);
-        buscarUsuarios(termino); // refrescar
-        cargarAmigos();
-      });
-    });
-  }
 
 // TABS
 
