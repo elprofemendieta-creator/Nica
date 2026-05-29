@@ -820,27 +820,40 @@ document.getElementById("searchUserInput");
 const searchResults =
 document.getElementById("searchResults");
 
-searchBtn.addEventListener("click", async ()=>{
+searchResults.addEventListener("click", async (e)=>{
 
-const texto =
-searchInput.value.trim().toLowerCase();
+const btn = e.target.closest("button[data-id]");
+if(!btn) return;
 
-if(!texto){
+const friendId = btn.dataset.id;
 
-toast("Escribe un nombre");
-
+// seguridad
+if(!currentUser){
+toast("Debes iniciar sesión");
 return;
-
 }
 
-searchResults.innerHTML =
-"<p>Buscando usuarios...</p>";
+if(friendId === currentUser.uid){
+toast("No puedes agregarte");
+return;
+}
 
 try{
 
-const snap = await getDocs(
-collection(db,"usuarios")
-);
+await addDoc(collection(db,"amigos"),{
+userId: currentUser.uid,
+friendId: friendId,
+fecha: Date.now()
+});
+
+toast("Amigo agregado ✔️");
+
+}catch(error){
+console.error(error);
+toast("Error al agregar amigo");
+}
+
+});
 
 searchResults.innerHTML = "";
 
