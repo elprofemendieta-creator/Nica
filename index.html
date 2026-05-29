@@ -142,17 +142,38 @@
       h1 { font-size: 2rem; }
       .menu-card { width: 160px; padding: 1rem; }
     }
-   <!-- Widget traductor - Versión garantizada -->
-<div id="google_translate_element" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999; background: white; padding: 10px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.2);"></div>
+  <!-- Botón Traductor Flotante -->
+<a href="https://translate.google.com/translate?sl=es&tl=en&u={{URL}}" 
+   id="btnTraductor"
+   style="position: fixed; bottom: 20px; right: 20px; z-index: 9999; background: linear-gradient(135deg, #4285f4, #34a853); color: white; padding: 12px 16px; border-radius: 30px; text-decoration: none; font-family: Arial; font-weight: bold; box-shadow: 0 4px 12px rgba(0,0,0,0.2); display: flex; align-items: center; gap: 8px;">
+    🌐 Traducir página
+</a>
 
-<script type="text/javascript">
-    function googleTranslateElementInit() {
-        new google.translate.TranslateElement({
-            pageLanguage: 'es',
-            includedLanguages: 'en,fr,de,pt,it',
-            layout: google.translate.TranslateElement.InlineLayout.SIMPLE
-        }, 'google_translate_element');
-    }
+<script>
+    // Actualizar el enlace con la URL actual
+    const btn = document.getElementById('btnTraductor');
+    const urlActual = encodeURIComponent(window.location.href);
+    btn.href = `https://translate.google.com/translate?sl=es&tl=en&u=${urlActual}`;
+    
+    // Permitir cambiar idioma
+    const idiomas = [
+        { code: 'en', nombre: 'English', bandera: '🇺🇸' },
+        { code: 'fr', nombre: 'Français', bandera: '🇫🇷' },
+        { code: 'de', nombre: 'Deutsch', bandera: '🇩🇪' },
+        { code: 'pt', nombre: 'Português', bandera: '🇵🇹' }
+    ];
+    
+    let currentLang = 0;
+    btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const nextLang = (currentLang + 1) % idiomas.length;
+        const langData = idiomas[nextLang];
+        btn.innerHTML = `${langData.bandera} ${langData.nombre}`;
+        btn.href = `https://translate.google.com/translate?sl=es&tl=${langData.code}&u=${urlActual}`;
+        currentLang = nextLang;
+        window.open(btn.href, '_blank');
+    });
+</script>
 </script>
 
 <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
