@@ -311,75 +311,30 @@ data-tab="foro">
 </button>
 
 </div>
-
-<!-- RANKING -->
-
-<div id="rankingPane"
-class="tab-pane active">
-
-<h2>
-<i class="fas fa-chart-line"></i>
-Top Usuarios
-</h2>
-
-<table class="ranking-table">
-
-<thead>
-<tr>
-<th>#</th>
-<th>Usuario</th>
-<th>Puntos</th>
-</tr>
-</thead>
-
-<tbody id="rankingBody"></tbody>
-
-</table>
-
-</div>
-
-<!-- AMIGOS -->
-
-<div id="amigosPane"
-class="tab-pane">
-
-<h2>
-<i class="fas fa-users"></i>
-Mis Amigos
-</h2>
-
-<div id="amigosList"></div>
-
-</div>
-
-<!-- BUSCAR -->
-
-<div id="buscarPane"
-class="tab-pane">
-
-<h2>
-<i class="fas fa-user-plus"></i>
-Buscar usuarios
-</h2>
-
-<div class="search-box">
-
-<input
-type="text"
-id="searchUserInput"
-placeholder="Buscar por nombre o correo...">
-
-<button
-class="btn"
-id="searchUserBtn">
-Buscar
-</button>
-
-</div>
-
-<div id="searchResults"></div>
-
-</div>
+ <!-- Panel Ranking Global -->
+    <div id="rankingPane" class="tab-pane active">
+      <h2><i class="fas fa-chart-line"></i> Top 10 Usuarios</h2>
+      <table class="ranking-table">
+        <thead><tr><th>#</th><th>Usuario</th><th>Puntos</th></tr></thead>
+        <tbody id="rankingBody"></tbody>
+      </table>
+    </div>
+  
+  <!-- Panel Mis Amigos -->
+    <div id="amigosPane" class="tab-pane">
+      <h2><i class="fas fa-users"></i> Amigos (unilateral)</h2>
+      <div id="amigosList"></div>
+    </div>
+  
+ <!-- Panel Buscar y agregar -->
+    <div id="buscarPane" class="tab-pane">
+      <h2><i class="fas fa-user-plus"></i> Agregar amigo</h2>
+      <div class="search-box">
+        <input type="text" id="searchUserInput" placeholder="Buscar por nombre o email...">
+        <button id="searchUserBtn" class="btn">Buscar</button>
+      </div>
+      <div id="searchResults"></div>
+    </div>
 
 <!-- COMPARTIR -->
 
