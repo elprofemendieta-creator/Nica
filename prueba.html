@@ -118,21 +118,6 @@
       border-radius: 40px;
       z-index: 1000;
     }
-    .whatsapp-float {
-      position: fixed;
-      bottom: 25px;
-      right: 25px;
-      background-color: #25D366;
-      color: white;
-      width: 55px;
-      height: 55px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 30px;
-      text-decoration: none;
-    }
     @keyframes fadeInUp {
       from { opacity: 0; transform: translateY(30px); }
       to { opacity: 1; transform: translateY(0); }
@@ -188,12 +173,7 @@
     </div>
   </div>
 
-  <!-- Botón Traductor Flotante -->
-  <a href="#" id="btnTraductor" style="position: fixed; bottom: 20px; left: 20px; z-index: 9999; background: linear-gradient(135deg, #4285f4, #34a853); color: white; padding: 10px 14px; border-radius: 30px; text-decoration: none; font-family: Arial; font-weight: bold; font-size: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); display: flex; align-items: center; gap: 6px;">
-    🌐 Traducir
-  </a>
-
-  <!-- Botón de WhatsApp flotante mejorado -->
+  <!-- Botón de WhatsApp flotante -->
   <div class="whatsapp-container">
     <div class="whatsapp-tooltip" id="whatsappTooltip">
       <span>¿Necesitas ayuda? 😊</span>
@@ -444,30 +424,6 @@
       whatsappBtn.addEventListener('click', (e) => {
         e.preventDefault();
         abrirWhatsApp('default');
-      });
-    }
-
-    // Traductor
-    const btnTraductor = document.getElementById('btnTraductor');
-    const urlActual = encodeURIComponent(window.location.href);
-    const idiomas = [
-      { code: 'en', nombre: 'English', bandera: '🇺🇸' },
-      { code: 'fr', nombre: 'Français', bandera: '🇫🇷' },
-      { code: 'de', nombre: 'Deutsch', bandera: '🇩🇪' },
-      { code: 'pt', nombre: 'Português', bandera: '🇵🇹' }
-    ];
-    let currentLang = 0;
-    
-    if (btnTraductor) {
-      btnTraductor.href = `https://translate.google.com/translate?sl=es&tl=en&u=${urlActual}`;
-      btnTraductor.addEventListener('click', function(e) {
-        e.preventDefault();
-        const nextLang = (currentLang + 1) % idiomas.length;
-        const langData = idiomas[nextLang];
-        btnTraductor.innerHTML = `${langData.bandera} ${langData.nombre}`;
-        btnTraductor.href = `https://translate.google.com/translate?sl=es&tl=${langData.code}&u=${urlActual}`;
-        currentLang = nextLang;
-        window.open(btnTraductor.href, '_blank');
       });
     }
   </script>
