@@ -16,6 +16,7 @@
       background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
       position: relative;
       overflow-x: hidden;
+      top: 0px !important;
     }
     .wave-bg {
       position: fixed;
@@ -119,55 +120,58 @@
       z-index: 1000;
     }
     
-    /* Estilos del traductor */
+    /* Estilos del traductor - Limpio sin mensajes */
     .google-translate-widget {
       position: fixed;
       bottom: 100px;
       right: 20px;
       z-index: 9999;
-      background: rgba(255, 255, 255, 0.95);
-      padding: 8px 12px;
-      border-radius: 30px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-      backdrop-filter: blur(8px);
-      font-size: 13px;
-      transition: all 0.3s ease;
+      background: transparent;
+      padding: 0;
     }
     
-    .google-translate-widget:hover {
-      transform: scale(1.05);
-      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-    }
-    
-    .goog-te-combo {
-      padding: 6px 12px;
-      border-radius: 20px;
-      border: 1px solid #ddd;
-      background: white;
-      cursor: pointer;
-      font-size: 12px;
-      outline: none;
-    }
-    
-    .goog-te-banner-frame {
+    /* Ocultar elementos no deseados del traductor */
+    .goog-te-gadget span,
+    .goog-te-gadget a,
+    .goog-te-gadget img {
       display: none !important;
     }
     
-    body {
-      top: 0px !important;
+    .goog-te-banner-frame,
+    .goog-te-balloon-frame,
+    .goog-te-spinner-pos {
+      display: none !important;
     }
     
-    /* Ajuste para que no se superponga con WhatsApp */
-    @media (max-width: 550px) {
-      .google-translate-widget {
-        bottom: 90px;
-        right: 15px;
-        padding: 5px 10px;
-      }
-      .goog-te-combo {
-        font-size: 11px;
-        padding: 4px 8px;
-      }
+    .goog-te-banner {
+      display: none !important;
+    }
+    
+    .skiptranslate iframe,
+    .skiptranslate div {
+      display: none !important;
+    }
+    
+    /* Estilo solo para el selector */
+    .goog-te-combo {
+      padding: 10px 15px;
+      border-radius: 30px;
+      border: 1px solid rgba(255,255,255,0.3);
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      cursor: pointer;
+      font-size: 13px;
+      outline: none;
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      min-width: 140px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+    }
+    
+    .goog-te-combo:hover {
+      transform: scale(1.02);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.15);
     }
     
     @keyframes fadeInUp {
@@ -178,6 +182,15 @@
       .glass-card { padding: 1.5rem; }
       h1 { font-size: 2rem; }
       .menu-card { width: 160px; padding: 1rem; }
+      .google-translate-widget {
+        bottom: 90px;
+        right: 15px;
+      }
+      .goog-te-combo {
+        padding: 7px 12px;
+        font-size: 11px;
+        min-width: 120px;
+      }
     }
   </style>
 </head>
@@ -225,174 +238,212 @@
     </div>
   </div>
 
-<!-- Botón de WhatsApp flotante -->
-<div class="whatsapp-container">
-  <div class="whatsapp-tooltip" id="whatsappTooltip">
-    <span>¿Necesitas ayuda? 😊</span>
+  <!-- Botón de WhatsApp flotante -->
+  <div class="whatsapp-container">
+    <div class="whatsapp-tooltip" id="whatsappTooltip">
+      <span>¿Necesitas ayuda? 😊</span>
+    </div>
+    <a href="#" class="whatsapp-float" id="whatsappBtn">
+      <i class="fab fa-whatsapp"></i>
+    </a>
   </div>
-  <a href="#" class="whatsapp-float" id="whatsappBtn">
-    <i class="fab fa-whatsapp"></i>
-  </a>
-</div>
 
-<!-- ========== WIDGET TRADUCTOR DE GOOGLE ========== -->
-<div id="google_translate_element" class="google-translate-widget"></div>
+  <!-- ========== WIDGET TRADUCTOR LIMPIO (SIN MENSAJES DE GOOGLE) ========== -->
+  <div id="google_translate_element" class="google-translate-widget"></div>
 
-<style>
-.whatsapp-container {
-  position: fixed;
-  bottom: 25px;
-  right: 25px;
-  z-index: 1000;
-}
+  <style>
+    .whatsapp-container {
+      position: fixed;
+      bottom: 25px;
+      right: 25px;
+      z-index: 1000;
+    }
 
-.whatsapp-float {
-  background-color: #25D366;
-  color: white;
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 32px;
-  text-decoration: none;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-  transition: all 0.3s ease;
-  animation: pulse 2s infinite;
-}
+    .whatsapp-float {
+      background-color: #25D366;
+      color: white;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      text-decoration: none;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      transition: all 0.3s ease;
+      animation: pulse 2s infinite;
+    }
 
-.whatsapp-float:hover {
-  transform: scale(1.1);
-  background-color: #128C7E;
-}
+    .whatsapp-float:hover {
+      transform: scale(1.1);
+      background-color: #128C7E;
+    }
 
-.whatsapp-tooltip {
-  position: absolute;
-  bottom: 70px;
-  right: 0;
-  background: white;
-  color: #333;
-  padding: 8px 15px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 500;
-  white-space: nowrap;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-  opacity: 0;
-  visibility: hidden;
-  transition: all 0.3s;
-}
+    .whatsapp-tooltip {
+      position: absolute;
+      bottom: 70px;
+      right: 0;
+      background: white;
+      color: #333;
+      padding: 8px 15px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+      white-space: nowrap;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s;
+    }
 
-.whatsapp-container:hover .whatsapp-tooltip {
-  opacity: 1;
-  visibility: visible;
-  bottom: 75px;
-}
+    .whatsapp-container:hover .whatsapp-tooltip {
+      opacity: 1;
+      visibility: visible;
+      bottom: 75px;
+    }
 
-@keyframes pulse {
-  0% {
-    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7);
-  }
-  70% {
-    box-shadow: 0 0 0 15px rgba(37, 211, 102, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);
-  }
-}
-
-@media (max-width: 550px) {
-  .whatsapp-float {
-    width: 50px;
-    height: 50px;
-    font-size: 28px;
-  }
-}
-</style>
-
-<script>
-// Configuración del botón de WhatsApp
-const whatsappConfig = {
-  numero: "50588170531",
-  mensajes: {
-    default: "¡Hola!%20Estoy%20explorando%20Nicaragua%20con%20Guía%20Pinolero%20y%20tengo%20una%20consulta%20🌟",
-    ayuda: "¡Hola!%20Necesito%20ayuda%20con%20la%20aplicación%20Guía%20Pinolero.%20¿Me%20pueden%20ayudar?",
-    sugerencia: "¡Hola!%20Quiero%20sugerir%20un%20lugar%20turístico%20para%20agregar%20a%20Guía%20Pinolero:%20",
-    error: "¡Hola!%20Estoy%20teniendo%20un%20problema%20técnico%20con%20Guía%20Pinolero:%20"
-  }
-};
-
-function abrirWhatsApp(tipo = 'default') {
-  let mensaje = whatsappConfig.mensajes[tipo] || whatsappConfig.mensajes.default;
-  const userName = document.getElementById('userName')?.innerText;
-  if (userName && userName !== '') {
-    mensaje = `Hola,%20soy%20${encodeURIComponent(userName)}.%20${mensaje}`;
-  }
-  const url = `https://wa.me/${whatsappConfig.numero}?text=${mensaje}`;
-  window.open(url, '_blank');
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-  const whatsappBtn = document.getElementById('whatsappBtn');
-  if (whatsappBtn) {
-    whatsappBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      abrirWhatsApp('default');
-    });
-  }
-});
-</script>
-
-<!-- ========== SCRIPT DEL TRADUCTOR ========== -->
-<script type="text/javascript">
-  // Función que inicializa Google Translate
-    function googleTranslateElementInit() {
-    new google.translate.TranslateElement({
-      pageLanguage: 'es',
-      includedLanguages: 'en,zh-CN',
-      layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
-      autoDisplay: false
-    }, 'google_translate_element');
-  }
-  
-  // Guardar idioma preferido
-  function guardarIdioma() {
-    setTimeout(function() {
-      var select = document.querySelector('.goog-te-combo');
-      if (select && select.value) {
-        localStorage.setItem('idiomaPreferido', select.value);
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7);
       }
-    }, 500);
-  }
-  
-  // Cargar idioma guardado
-  function cargarIdiomaGuardado() {
-    var idioma = localStorage.getItem('idiomaPreferido');
-    if (idioma) {
+      70% {
+        box-shadow: 0 0 0 15px rgba(37, 211, 102, 0);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);
+      }
+    }
+
+    @media (max-width: 550px) {
+      .whatsapp-float {
+        width: 50px;
+        height: 50px;
+        font-size: 28px;
+      }
+    }
+  </style>
+
+  <script>
+    // Configuración del botón de WhatsApp
+    const whatsappConfig = {
+      numero: "50588170531",
+      mensajes: {
+        default: "¡Hola!%20Estoy%20explorando%20Nicaragua%20con%20Guía%20Pinolero%20y%20tengo%20una%20consulta%20🌟",
+        ayuda: "¡Hola!%20Necesito%20ayuda%20con%20la%20aplicación%20Guía%20Pinolero.%20¿Me%20pueden%20ayudar?",
+        sugerencia: "¡Hola!%20Quiero%20sugerir%20un%20lugar%20turístico%20para%20agregar%20a%20Guía%20Pinolero:%20",
+        error: "¡Hola!%20Estoy%20teniendo%20un%20problema%20técnico%20con%20Guía%20Pinolero:%20"
+      }
+    };
+
+    function abrirWhatsApp(tipo = 'default') {
+      let mensaje = whatsappConfig.mensajes[tipo] || whatsappConfig.mensajes.default;
+      const userName = document.getElementById('userName')?.innerText;
+      if (userName && userName !== '') {
+        mensaje = `Hola,%20soy%20${encodeURIComponent(userName)}.%20${mensaje}`;
+      }
+      const url = `https://wa.me/${whatsappConfig.numero}?text=${mensaje}`;
+      window.open(url, '_blank');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const whatsappBtn = document.getElementById('whatsappBtn');
+      if (whatsappBtn) {
+        whatsappBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          abrirWhatsApp('default');
+        });
+      }
+    });
+  </script>
+
+  <!-- ========== SCRIPT DEL TRADUCTOR LIMPIO ========== -->
+  <script type="text/javascript">
+    // Función que inicializa Google Translate con SOLO 3 idiomas
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({
+        pageLanguage: 'es',
+        includedLanguages: 'en,zh-CN',
+        layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+        autoDisplay: false
+      }, 'google_translate_element');
+    }
+    
+    // Guardar idioma preferido
+    function guardarIdioma() {
       setTimeout(function() {
         var select = document.querySelector('.goog-te-combo');
-        if (select && select.value !== idioma) {
-          select.value = idioma;
-          select.dispatchEvent(new Event('change'));
+        if (select && select.value) {
+          localStorage.setItem('idiomaPreferido', select.value);
         }
-      }, 1000);
+      }, 500);
     }
-  }
-  
-  // Detectar cambio de idioma
-  document.addEventListener('change', function(e) {
-    if (e.target && e.target.className === 'goog-te-combo') {
-      guardarIdioma();
+    
+    // Cargar idioma guardado
+    function cargarIdiomaGuardado() {
+      var idioma = localStorage.getItem('idiomaPreferido');
+      if (idioma) {
+        setTimeout(function() {
+          var select = document.querySelector('.goog-te-combo');
+          if (select && select.value !== idioma) {
+            select.value = idioma;
+            select.dispatchEvent(new Event('change'));
+          }
+        }, 1000);
+      }
     }
-  });
+    
+    // Eliminar banners molestos después de traducir
+    function limpiarBanners() {
+      setTimeout(function() {
+        var banner = document.querySelector('.goog-te-banner-frame');
+        if (banner) banner.style.display = 'none';
+        
+        var frame = document.querySelector('.goog-te-balloon-frame');
+        if (frame) frame.style.display = 'none';
+        
+        document.body.style.top = '0px';
+        document.body.style.position = 'relative';
+        
+        var tooltips = document.querySelectorAll('[class*="goog-te"]');
+        tooltips.forEach(function(el) {
+          if (el.innerText === 'Original' || el.innerText === 'Idioma original') {
+            el.style.display = 'none';
+          }
+        });
+      }, 100);
+    }
+    
+    // Detectar cambio de idioma
+    document.addEventListener('change', function(e) {
+      if (e.target && e.target.className === 'goog-te-combo') {
+        guardarIdioma();
+        setTimeout(limpiarBanners, 200);
+        setTimeout(limpiarBanners, 500);
+        setTimeout(limpiarBanners, 1000);
+      }
+    });
+    
+    // Limpiar al cargar la página
+    window.addEventListener('load', function() {
+      cargarIdiomaGuardado();
+      limpiarBanners();
+      setTimeout(limpiarBanners, 500);
+      setTimeout(limpiarBanners, 1000);
+    });
+    
+    // Observar cambios en el DOM para limpiar banners dinámicamente
+    var observer = new MutationObserver(function() {
+      limpiarBanners();
+    });
+    
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
+  </script>
   
-  // Cargar al iniciar
-  window.addEventListener('load', function() {
-    cargarIdiomaGuardado();
-  });
-</script>
-<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+  <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
   <div id="toast" class="toast-message" style="display: none;"></div>
 
