@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Tisey - La Estanzuela</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+scroll-behavior:smooth;
+}
+
+body{
+background:#001b16;
+overflow-x:hidden;
+}
+
+/* NAVBAR */
+
+nav{
+width:100%;
+background:#00110d;
+padding:18px 10px;
+position:sticky;
+top:0;
+z-index:1000;
+overflow-x:auto;
+white-space:nowrap;
+}
+
+nav ul{
+display:flex;
+justify-content:center;
+gap:30px;
+list-style:none;
+min-width:max-content;
+}
+
+nav ul li a{
+color:white;
+text-decoration:none;
+font-size:20px;
+font-weight:600;
+transition:0.3s;
+}
+
+nav ul li a:hover{
+color:#9fe3b9;
+}
+
+/* HERO */
+
+.hero{
+padding:60px 20px 40px;
+text-align:center;
+}
+
+.hero h1{
+font-size:78px;
+line-height:1.1;
+font-weight:800;
+color:#9fe3b9;
+margin-bottom:25px;
+}
+
+.hero p{
+color:white;
+font-size:20px;
+max-width:850px;
+margin:auto;
+line-height:1.8;
+}
+
+.hero img{
+width:92%;
+max-width:950px;
+height:430px;
+object-fit:cover;
+border-radius:35px;
+margin-top:40px;
+box-shadow:0 10px 30px rgba(0,0,0,0.4);
+}
+
+/* CARDS */
+
+.cards{
+padding:20px 20px 100px;
+display:flex;
+flex-direction:column;
+gap:35px;
+align-items:center;
+}
+
+.card{
+background:#3a7757;
+width:92%;
+max-width:900px;
+padding:40px;
+border-radius:35px;
+box-shadow:0 10px 25px rgba(0,0,0,0.3);
+transition:0.4s;
+}
+
+.card:hover{
+transform:translateY(-5px);
+}
+
+.card h2{
+color:white;
+font-size:36px;
+margin-bottom:20px;
+text-align:center;
+}
+
+.card p{
+color:white;
+font-size:20px;
+line-height:1.9;
+text-align:center;
+}
+
+/* BOTON */
+
+.btn{
+display:block;
+width:fit-content;
+margin:35px auto 0;
+background:#9fe3b9;
+color:#002118;
+padding:16px 35px;
+border-radius:50px;
+font-size:18px;
+font-weight:700;
+text-decoration:none;
+transition:0.3s;
+}
+
+.btn:hover{
+transform:scale(1.05);
+}
+
+/* GALERIA */
+
+.galeria{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+gap:25px;
+padding:0 20px 100px;
+}
+
+.galeria img{
+width:100%;
+height:260px;
+object-fit:cover;
+border-radius:30px;
+transition:0.4s;
+}
+
+.galeria img:hover{
+transform:scale(1.03);
+}
+
+/* RESPONSIVE */
+
+@media(max-width:768px){
+
+.hero h1{
+font-size:58px;
+}
+
+.hero p{
+font-size:17px;
+}
+
+.hero img{
+height:280px;
+}
+
+.card{
+padding:30px 20px;
+}
+
+.card h2{
+font-size:30px;
+}
+
+.card p{
+font-size:17px;
+}
+
+nav ul li a{
+font-size:18px;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<nav>
+
+<ul>
+<li><a href="#">Historia</a></li>
+<li><a href="#">Cultura</a></li>
+<li><a href="#">Gastronomía</a></li>
+<li><a href="#">Galería</a></li>
+<li><a href="#">Turismo</a></li>
+</ul>
+
+</nav>
+
+<section class="hero">
+
+<h1>Tisey -<br>La Estanzuela</h1>
+
+<p>
+La Reserva Natural Tisey - La Estanzuela es uno de los destinos
+más impresionantes de Estelí. Rodeada de montañas, bosques y aire fresco,
+ofrece experiencias únicas de senderismo, ecoturismo y aventura natural.
+</p>
+
+<img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=2070&auto=format&fit=crop">
+
+</section>
+
+<section class="cards">
+
+<div class="card">
+
+<h2>Reserva Natural</h2>
+
+<p>
+Tisey protege bosques de pino, senderos ecológicos y una gran diversidad
+de flora y fauna característica del norte de Nicaragua.
+</p>
+
+</div>
+
+<div class="card">
+
+<h2>Salto La Estanzuela</h2>
+
+<p>
+Dentro de la reserva se encuentra la famosa cascada La Estanzuela,
+uno de los atractivos turísticos más visitados de Estelí.
+</p>
+
+</div>
+
+<div class="card">
+
+<h2>Turismo de Aventura</h2>
+
+<p>
+Ideal para caminatas, observación de aves, fotografía y actividades
+de turismo rural entre paisajes montañosos.
+</p>
+
+<a href="https://www.google.com/maps/search/Tisey+La+Estanzuela+Esteli+Nicaragua/"
+target="_blank"
+class="btn">
+
+Cómo llegar
+
+</a>
+
+</div>
+
+</section>
+
+<section class="galeria">
+
+<img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=2070&auto=format&fit=crop">
+
+<img src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=2070&auto=format&fit=crop">
+
+<img src="https://images.unsplash.com/photo-1472396961693-142e6e269027?q=80&w=2070&auto=format&fit=crop">
+
+</section>
+
+</body>
+</html>
