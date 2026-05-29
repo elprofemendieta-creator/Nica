@@ -906,6 +906,215 @@ toast("Error al buscar");
 }
 
 });
+```html
+<script>
+
+// =========================
+// BUSCAR USUARIOS
+// =========================
+
+const searchBtn =
+document.getElementById("searchUserBtn");
+
+const searchInput =
+document.getElementById("searchUserInput");
+
+const searchResults =
+document.getElementById("searchResults");
+
+const amigosList =
+document.getElementById("amigosList");
+
+// BUSCAR PERSONAS
+
+searchBtn.addEventListener("click", async ()=>{
+
+const texto =
+searchInput.value.trim().toLowerCase();
+
+if(!texto){
+
+toast("Escribe un nombre");
+
+return;
+
+}
+
+searchResults.innerHTML =
+"<p>Buscando usuarios...</p>";
+
+try{
+
+const snap = await getDocs(
+collection(db,"usuarios")
+);
+
+searchResults.innerHTML = "";
+
+let encontrados = 0;
+
+snap.forEach((docSnap)=>{
+
+const data = docSnap.data();
+
+const nombre =
+(data.nombre || "")
+.toLowerCase();
+
+if(nombre.includes(texto)){
+
+encontrados++;
+
+const div =
+document.createElement("div");
+
+div.className =
+"friend-item";
+
+div.innerHTML = `
+<div>
+<strong>${data.nombre || "Usuario"}</strong>
+<br>
+<small>⭐ ${data.puntos || 0} puntos</small>
+</div>
+
+<div style="display:flex; gap:10px; flex-wrap:wrap;">
+
+<button class="btn agregar-btn">
+Agregar
+</button>
+
+<button class="btn seguir-btn">
+Seguir
+</button>
+
+</div>
+`;
+
+
+// =========================
+// AGREGAR AMIGO
+// =========================
+
+const agregarBtn =
+div.querySelector(".agregar-btn");
+
+agregarBtn.onclick = ()=>{
+
+const amigo =
+document.createElement("div");
+
+amigo.className =
+"friend-item";
+
+amigo.innerHTML = `
+<div>
+<strong>${data.nombre || "Usuario"}</strong>
+<br>
+<small>⭐ ${data.puntos || 0} puntos</small>
+</div>
+
+<button class="btn delete-post-btn">
+Eliminar
+</button>
+`;
+
+const eliminarBtn =
+amigo.querySelector(".delete-post-btn");
+
+eliminarBtn.onclick = ()=>{
+
+amigo.remove();
+
+toast("Amigo eliminado");
+
+};
+
+amigosList.appendChild(amigo);
+
+agregarBtn.innerText =
+"Agregado";
+
+agregarBtn.disabled = true;
+
+toast(
+(data.nombre || "Usuario") +
+" agregado a amigos"
+);
+
+};
+
+
+// =========================
+// SEGUIR PERSONA
+// =========================
+
+const seguirBtn =
+div.querySelector(".seguir-btn");
+
+seguirBtn.onclick = async ()=>{
+
+try{
+
+await addDoc(
+collection(db,"seguidores"),
+{
+seguidorUid: currentUser.uid,
+seguidorNombre:
+currentUser.displayName || currentUser.email,
+
+seguidoUid: data.uid,
+seguidoNombre:
+data.nombre || "Usuario",
+
+fecha: Date.now()
+}
+);
+
+seguirBtn.innerText =
+"Siguiendo";
+
+seguirBtn.disabled = true;
+
+toast(
+"Ahora sigues a " +
+(data.nombre || "Usuario")
+);
+
+}catch(error){
+
+console.error(error);
+
+toast("Error al seguir");
+
+}
+
+};
+
+searchResults.appendChild(div);
+
+}
+
+});
+
+if(encontrados === 0){
+
+searchResults.innerHTML =
+"<p>No se encontraron usuarios</p>";
+
+}
+
+}catch(error){
+
+console.error(error);
+
+toast("Error al buscar");
+
+}
+
+});
+
+</script>
 
 // LOGIN
 
@@ -934,4 +1143,3 @@ cargarRankingGlobal();
 
 </body>
 </html>
-```
