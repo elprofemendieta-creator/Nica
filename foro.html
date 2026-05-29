@@ -217,6 +217,7 @@
       <button class="tab-btn" data-tab="amigos">👥 Mis Amigos</button>
       <button class="tab-btn" data-tab="buscar">🔍 Agregar Amigo</button>
       <button class="tab-btn" data-tab="compartir">📲 Compartir Perfil</button>
+      <button class="tab-btn" data-tab="foro">💬 Foro</button>
     </div>
 
     <!-- Panel Ranking Global -->
@@ -253,6 +254,43 @@
         <button id="copyLinkBtn" class="btn-outline btn">Copiar enlace</button>
       </div>
     </div>
+    
+    <!-- PANEL FORO -->
+<div id="foroPane" class="tab-pane">
+  <h2><i class="fas fa-comments"></i> Foro de la comunidad</h2>
+
+  <div class="card" style="margin-top:15px;">
+
+    <textarea
+      id="foroMensaje"
+      placeholder="Escribe un mensaje..."
+      style="
+        width:100%;
+        min-height:120px;
+        border:none;
+        border-radius:20px;
+        padding:15px;
+        resize:none;
+        background:rgba(255,255,255,0.1);
+        color:white;
+        margin-bottom:15px;
+        outline:none;
+      "
+    ></textarea>
+    <input
+      type="file"
+      id="foroImagen"
+      accept="image/*"
+      style="margin-bottom:15px;color:white;"
+    >
+    <button id="publicarForoBtn" class="btn">
+      <i class="fas fa-paper-plane"></i>
+      Publicar
+    </button>
+  </div>
+  <div id="foroPosts" style="margin-top:20px;"></div>
+</div>
+    
   </div>
 </div>
 
@@ -511,6 +549,7 @@
         document.getElementById(`${tabId}Pane`).classList.add("active");
         if (tabId === "amigos") cargarAmigos();
         if (tabId === "compartir") generarQR();
+        if (tabId === "foro") cargarForo();
       });
     });
   }
@@ -540,6 +579,79 @@
   document.getElementById("searchUserInput").addEventListener("keypress", (e) => {
     if (e.key === "Enter") buscarUsuarios(e.target.value);
   });
+// ===========================
+          "
+        >
+
+        <div>
+          <strong>${data.nombre}</strong><br>
+          <small>${new Date(data.fecha.seconds * 1000).toLocaleString()}</small>
+        </div>
+
+      </div>
+
+      ${
+        data.mensaje
+        ? `<p style="margin-bottom:15px;white-space:pre-wrap;">${data.mensaje}</p>`
+        : ""
+      }
+
+      ${
+        data.imagen
+        ? `
+          <img
+            src="${data.imagen}"
+            style="
+              width:100%;
+              border-radius:20px;
+              margin-top:10px;
+            "
+          >
+        `
+        : ""
+      }
+
+      ${
+        data.uid === currentUser.uid
+        ? `
+          <button
+            class="btn delete-post-btn"
+            data-id="${docSnap.id}"
+            style="
+              margin-top:15px;
+              background:#d32f2f;
+            "
+          >
+            <i class="fas fa-trash"></i>
+            Borrar
+          </button>
+        `
+        : ""
+      }
+
+    `;
+
+    container.appendChild(div);
+
+  });
+
+  document.querySelectorAll(".delete-post-btn").forEach(btn => {
+
+    btn.addEventListener("click", async () => {
+
+      await deleteDoc(doc(db, "foro", btn.dataset.id));
+
+      mostrarToast("Publicación eliminada", false);
+
+      cargarForo();
+
+    });
+
+  });
+
+}
+
+document.getElementById("publicarForoBtn").addEventListener("click", publicarEnForo);
 
   // Inicialización con autenticación
   onAuthStateChanged(auth, async (user) => {
