@@ -189,7 +189,153 @@
     </div>
   </div>
 
-  <a href="https://wa.me/50588170531?text=Hola%20quiero%20consultar%20sobre%20Nica%20Explorer" class="whatsapp-float" target="_blank"><i class="fab fa-whatsapp"></i></a>
+<!-- Botón de WhatsApp flotante mejorado -->
+<div class="whatsapp-container">
+  <div class="whatsapp-tooltip" id="whatsappTooltip">
+    <span>¿Necesitas ayuda? 😊</span>
+  </div>
+  <a href="#" class="whatsapp-float" id="whatsappBtn">
+    <i class="fab fa-whatsapp"></i>
+  </a>
+</div>
+
+<style>
+.whatsapp-container {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  z-index: 1000;
+}
+
+.whatsapp-float {
+  background-color: #25D366;
+  color: white;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  text-decoration: none;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  transition: all 0.3s ease;
+  animation: pulse 2s infinite;
+}
+
+.whatsapp-float:hover {
+  transform: scale(1.1);
+  background-color: #128C7E;
+}
+
+.whatsapp-tooltip {
+  position: absolute;
+  bottom: 70px;
+  right: 0;
+  background: white;
+  color: #333;
+  padding: 8px 15px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s;
+}
+
+.whatsapp-container:hover .whatsapp-tooltip {
+  opacity: 1;
+  visibility: visible;
+  bottom: 75px;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 15px rgba(37, 211, 102, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);
+  }
+}
+
+@media (max-width: 550px) {
+  .whatsapp-float {
+    width: 50px;
+    height: 50px;
+    font-size: 28px;
+  }
+}
+</style>
+
+<script>
+// Configuración del botón de WhatsApp
+const whatsappConfig = {
+  numero: "50588170531", // Tu número de WhatsApp (sin el símbolo +)
+  mensajes: {
+    default: "¡Hola!%20Estoy%20explorando%20Nicaragua%20con%20Guía%20Pinolero%20y%20tengo%20una%20consulta%20🌟",
+    ayuda: "¡Hola!%20Necesito%20ayuda%20con%20la%20aplicación%20Guía%20Pinolero.%20¿Me%20pueden%20ayudar?",
+    sugerencia: "¡Hola!%20Quiero%20sugerir%20un%20lugar%20turístico%20para%20agregar%20a%20Guía%20Pinolero:%20",
+    error: "¡Hola!%20Estoy%20teniendo%20un%20problema%20técnico%20con%20Guía%20Pinolero:%20"
+  }
+};
+
+// Función mejorada para abrir WhatsApp
+function abrirWhatsApp(tipo = 'default') {
+  let mensaje = whatsappConfig.mensajes[tipo] || whatsappConfig.mensajes.default;
+  
+  // Si el usuario está logueado, agregar su nombre al mensaje
+  const userName = document.getElementById('userName')?.innerText;
+  if (userName && userName !== '') {
+    mensaje = `Hola,%20soy%20${encodeURIComponent(userName)}.%20${mensaje}`;
+  }
+  
+  const url = `https://wa.me/${whatsappConfig.numero}?text=${mensaje}`;
+  window.open(url, '_blank');
+}
+
+// Configurar el botón de WhatsApp
+document.addEventListener('DOMContentLoaded', () => {
+  const whatsappBtn = document.getElementById('whatsappBtn');
+  
+  if (whatsappBtn) {
+    whatsappBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      abrirWhatsApp('default');
+    });
+  }
+  
+  // Opcional: Menú contextual al hacer click derecho
+  whatsappBtn?.addEventListener('contextmenu', (e) => {
+    e.preventDefault();
+    const opcion = prompt(
+      "¿Sobre qué quieres contactarnos?\n" +
+      "1 - Ayuda técnica\n" +
+      "2 - Sugerir lugar\n" +
+      "3 - Reportar error\n" +
+      "4 - Consulta general"
+    );
+    
+    switch(opcion) {
+      case '1':
+        abrirWhatsApp('ayuda');
+        break;
+      case '2':
+        abrirWhatsApp('sugerencia');
+        break;
+      case '3':
+        abrirWhatsApp('error');
+        break;
+      default:
+        abrirWhatsApp('default');
+    }
+  });
+});
+</script>
   <div id="toast" class="toast-message" style="display: none;"></div>
 
   <script type="importmap">
