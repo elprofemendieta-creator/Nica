@@ -527,7 +527,7 @@ document.getElementById("userPoints").innerText = data.puntos || 0;
 }
 }
 
-// Calcular posición global del usuario
+// Calcular posición global del usuario - VERSIÓN CORREGIDA
 async function calcularPosicionGlobal(uid){
 try{
 const userDoc = await getDoc(doc(db, "usuarios", uid));
@@ -535,32 +535,45 @@ if(!userDoc.exists()){
 document.getElementById("positionText").innerHTML = '📝 Completa tu perfil';
 return null;
 }
+
 const userData = userDoc.data();
 const puntosUsuario = userData.puntos || 0;
+
+// Obtener todos los usuarios ordenados por puntos
 const q = query(collection(db,"usuarios"), orderBy("puntos","desc"));
 const snap = await getDocs(q);
+
 let posicion = 0;
-let usuariosLista = [];
-snap.forEach((docSnap, index) => {
+let totalUsuarios = 0;
+let usuariosArray = [];
+
+snap.forEach((docSnap) => {
+totalUsuarios++;
 const data = docSnap.data();
-const puntos = data.puntos || 0;
-usuariosLista.push({
+usuariosArray.push({
 uid: docSnap.id,
-puntos: puntos,
+puntos: data.puntos || 0,
 nombre: data.nombre || "Usuario"
 });
-if(docSnap.id === uid){
-posicion = index + 1;
-}
 });
+
+// Buscar la posición del usuario actual
+for(let i = 0; i < usuariosArray.length; i++){
+if(usuariosArray[i].uid === uid){
+posicion = i + 1;
+break;
+}
+}
+
 const positionText = document.getElementById("positionText");
-const totalUsuarios = usuariosLista.length;
+
 if(posicion > 0){
 let medalIcon = '';
 let medalEmoji = '';
+
 if(posicion === 1){
 medalIcon = '<i class="fas fa-crown" style="color:#FFD700;"></i> ';
-medalEmoji = '🥇';
+medalEmoji = '🥇 👑';
 } else if(posicion === 2){
 medalIcon = '<i class="fas fa-medal" style="color:#C0C0C0;"></i> ';
 medalEmoji = '🥈';
@@ -568,25 +581,39 @@ medalEmoji = '🥈';
 medalIcon = '<i class="fas fa-medal" style="color:#CD7F32;"></i> ';
 medalEmoji = '🥉';
 }
+
 positionText.innerHTML = `${medalIcon}Posición #${posicion} de ${totalUsuarios} ${medalEmoji}`;
-if(posicion > 1 && usuariosLista[posicion-2]){
-const puntosSiguiente = usuariosLista[posicion-2].puntos;
+
+// Mostrar tooltip con información útil
+if(posicion > 1 && usuariosArray[posicion-2]){
+const puntosSiguiente = usuariosArray[posicion-2].puntos;
 const puntosNecesarios = puntosSiguiente - puntosUsuario;
 if(puntosNecesarios > 0){
-positionText.title = `Necesitas ${puntosNecesarios} puntos más para subir al puesto #${posicion-1}`;
+positionText.title = `✨ Necesitas ${puntosNecesarios} puntos más para superar a "${usuariosArray[posicion-2].nombre}" y llegar al puesto #${posicion-1}`;
+} else {
+positionText.title = `🎉 ¡Vas muy bien! Sigue así`;
 }
+} else if(posicion === 1){
+positionText.title = `🏆 ¡Eres el #1! Increíble trabajo`;
+} else {
+positionText.title = `📈 Sigue acumulando puntos para subir en el ranking`;
 }
 } else {
+// No encontró la posición - mostrar mensaje apropiado
 if(puntosUsuario === 0){
-positionText.innerHTML = '📊 Sin puntos aún - ¡Explora para ganar puntos!';
+positionText.innerHTML = '🌟 0 puntos - ¡Empieza a explorar Nicaragua!';
+positionText.title = 'Completa actividades y visita lugares para ganar puntos';
 } else {
-positionText.innerHTML = '📊 Subiendo al ranking...';
+positionText.innerHTML = `📈 ${puntosUsuario} puntos - Subiendo en el ranking...`;
+positionText.title = 'Sigue así, pronto aparecerás en el ranking';
 }
 }
-return {posicion, puntosUsuario, usuariosLista};
+
+return {posicion, puntosUsuario, totalUsuarios};
+
 } catch(error){
-console.error("Error calculando posición:", error);
-document.getElementById("positionText").innerHTML = '⚠️ Actualizando...';
+console.error("Error detallado calculando posición:", error);
+document.getElementById("positionText").innerHTML = '🔄 Actualizando ranking...';
 return null;
 }
 }
@@ -608,24 +635,44 @@ window.open(`https://wa.me/?text=${encodeURIComponent(url)}`, "_blank");
 
 // RANKING GLOBAL
 async function cargarRankingGlobal(){
+try{
 const q = query(collection(db,"usuarios"), orderBy("puntos","desc"), limit(50));
 const snap = await getDocs(q);
 const body = document.getElementById("rankingBody");
 body.innerHTML = "";
 let pos = 1;
+
 for(const docSnap of snap.docs){
 const data = docSnap.data();
 const isCurrentUser = (docSnap.id === currentUser.uid);
 const rowClass = isCurrentUser ? 'highlight-row' : '';
+const puntosMostrar = data.puntos || 0;
+
+let medalIcon = '';
+if(pos === 1) medalIcon = '🥇 ';
+else if(pos === 2) medalIcon = '🥈 ';
+else if(pos === 3) medalIcon = '🥉 ';
+
 body.innerHTML += `
 <tr class="${rowClass}">
-<td><strong>${pos++}</strong></td>
+<td><strong>${medalIcon}${pos}</strong></td>
 <td>${data.nombre || "Usuario"} ${isCurrentUser ? '<i class="fas fa-user-check" style="color:#F57C00; margin-left:5px;"></i>' : ''}</td>
-<td><i class="fas fa-star" style="color:#F9A826;"></i> ${data.puntos || 0}</td>
+<td><i class="fas fa-star" style="color:#F9A826;"></i> ${puntosMostrar}</td>
 </tr>
 `;
+pos++;
 }
+
+// Si hay menos de 50 usuarios, mostrar mensaje
+if(pos === 1){
+body.innerHTML = '<tr><td colspan="3" style="text-align:center;">No hay usuarios registrados aún</td></tr>';
+}
+
 await calcularPosicionGlobal(currentUser.uid);
+} catch(error){
+console.error("Error cargando ranking:", error);
+document.getElementById("rankingBody").innerHTML = '<tr><td colspan="3" style="text-align:center;">Error al cargar ranking</td></tr>';
+}
 }
 
 // FUNCIONES DE AMIGOS
