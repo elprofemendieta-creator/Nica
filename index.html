@@ -142,7 +142,25 @@
       h1 { font-size: 2rem; }
       .menu-card { width: 160px; padding: 1rem; }
     }
-   <script src="registrar-sw.js"></script>
+   <!-- Widget traductor - Versión garantizada -->
+<div id="google_translate_element" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999; background: white; padding: 10px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.2);"></div>
+
+<script type="text/javascript">
+    function googleTranslateElementInit() {
+        new google.translate.TranslateElement({
+            pageLanguage: 'es',
+            includedLanguages: 'en,fr,de,pt,it',
+            layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+        }, 'google_translate_element');
+    }
+</script>
+
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+<style>
+    .goog-te-banner-frame { display: none !important; }
+    body { top: 0px !important; }
+</style>>
   </style>
 </head>
 <body>
