@@ -141,7 +141,7 @@ body.dark .card {
 
 .card img {
     width: 100%;
-    height: 220px;
+    height: 180px;
     object-fit: cover;
 }
 
@@ -152,25 +152,6 @@ body.dark .card {
 .card-content h3 {
     color: #0891b2;
     margin-bottom: 10px;
-}
-
-.gallery {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
-}
-
-.gallery img {
-    width: 100%;
-    height: 250px;
-    object-fit: cover;
-    border-radius: 20px;
-    transition: transform 0.3s;
-    cursor: pointer;
-}
-
-.gallery img:hover {
-    transform: scale(1.02);
 }
 
 .clima-reloj-container {
@@ -299,7 +280,7 @@ body.dark .ciudad-clima {
         <ul>
             <li><a href="#inicio">Inicio</a></li>
             <li><a href="#tradiciones">Tradiciones</a></li>
-            <li><a href="#galeria">Galería</a></li>
+            <li><a href="#festividades">Festividades</a></li>
             <li><a href="#clima">Clima</a></li>
         </ul>
     </nav>
@@ -327,7 +308,7 @@ body.dark .ciudad-clima {
                      onerror="this.src='https://picsum.photos/id/29/600/400'">
                 <div class="card-content">
                     <h3>🎵 Música y Danza</h3>
-                    <p>El Palo de Mayo es la expresión cultural más emblemática de Bluefields. Esta danza afrocaribeña, acompañada de tambores y cantos en inglés criollo, se celebra durante todo el mes de mayo. También destacamos el ritmo del "fry fry" y la influencia del reggae y calipso.</p>
+                    <p>El Palo de Mayo es la expresión cultural más emblemática de Bluefields. Esta danza afrocaribeña, acompañada de tambores y cantos en inglés criollo, se celebra durante todo el mes de mayo.</p>
                 </div>
             </div>
             <div class="card">
@@ -336,7 +317,7 @@ body.dark .ciudad-clima {
                      onerror="this.src='https://picsum.photos/id/127/600/400'">
                 <div class="card-content">
                     <h3>🗣️ Idioma Criollo</h3>
-                    <p>En Bluefields se habla el "kriol" o inglés criollo nicaragüense, una lengua derivada del inglés con influencias africanas, miskitas y españolas. Además, el miskito, mayangna y rama son lenguas originarias de la Costa Caribe.</p>
+                    <p>En Bluefields se habla el "kriol" o inglés criollo nicaragüense, una lengua derivada del inglés con influencias africanas, miskitas y españolas.</p>
                 </div>
             </div>
             <div class="card">
@@ -345,14 +326,14 @@ body.dark .ciudad-clima {
                      onerror="this.src='https://picsum.photos/id/124/600/400'">
                 <div class="card-content">
                     <h3>🍛 Gastronomía y Creencias</h3>
-                    <p>El rondón, pan de coco y el crab soup son platillos típicos. En el ámbito espiritual, persisten tradiciones como el "cure" (curaciones con hierbas) y la influencia de la religión morava, que tiene una fuerte presencia en la región.</p>
+                    <p>El rondón, pan de coco y el crab soup son platillos típicos. Persisten tradiciones como el "cure" (curaciones con hierbas) y la religión morava.</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- SECCIÓN FESTIVIDADES -->
-    <section id="festividades" style="padding-top: 0;">
+    <section id="festividades">
         <div class="title">
             <h2>🎉 Festividades Caribeñas</h2>
         </div>
@@ -363,7 +344,7 @@ body.dark .ciudad-clima {
                      onerror="this.src='https://picsum.photos/id/169/600/400'">
                 <div class="card-content">
                     <h3>🌺 Palo de Mayo (Mayo)</h3>
-                    <p>La fiesta más importante de Bluefields. Durante todo el mes de mayo, se realizan danzas, desfiles, conciertos y la tradicional "cortezón" donde se corta un árbol decorado como ofrenda a la fertilidad.</p>
+                    <p>La fiesta más importante de Bluefields. Durante todo el mes de mayo, se realizan danzas, desfiles y la tradicional "cortezón".</p>
                 </div>
             </div>
             <div class="card">
@@ -372,7 +353,7 @@ body.dark .ciudad-clima {
                      onerror="this.src='https://picsum.photos/id/127/600/400'">
                 <div class="card-content">
                     <h3>🎊 Carnaval (Octubre)</h3>
-                    <p>En octubre se celebra el carnaval de la Costa Caribe, con comparsas, disfraces coloridos y música por las calles de Bluefields. Es una muestra de la identidad multicultural de la región.</p>
+                    <p>En octubre se celebra el carnaval de la Costa Caribe, con comparsas, disfraces coloridos y música por las calles de Bluefields.</p>
                 </div>
             </div>
             <div class="card">
@@ -381,30 +362,9 @@ body.dark .ciudad-clima {
                      onerror="this.src='https://picsum.photos/id/23/600/400'">
                 <div class="card-content">
                     <h3>⛪ Semana Santa Morava</h3>
-                    <p>La Iglesia Morava tiene una fuerte influencia en la Costa Caribe. Durante Semana Santa, se realizan procesiones, cantos y ceremonias especiales que mezclan tradiciones moravas con costumbres afrocaribeñas.</p>
+                    <p>La Iglesia Morava tiene una fuerte influencia. Durante Semana Santa se realizan procesiones y cantos que mezclan tradiciones moravas con costumbres afrocaribeñas.</p>
                 </div>
             </div>
-        </div>
-    </section>
-
-    <!-- SECCIÓN GALERÍA -->
-    <section id="galeria">
-        <div class="title">
-            <h2>📸 Galería Cultural</h2>
-        </div>
-        <div class="gallery">
-            <img src="https://images.pexels.com/photos/1047588/pexels-photo-1047588.jpeg?auto=compress&cs=tinysrgb&w=600" 
-                 alt="Danza Palo de Mayo"
-                 onerror="this.src='https://picsum.photos/id/29/600/400'">
-            <img src="https://images.pexels.com/photos/1785250/pexels-photo-1785250.jpeg?auto=compress&cs=tinysrgb&w=600" 
-                 alt="Tambores caribeños"
-                 onerror="this.src='https://picsum.photos/id/38/600/400'">
-            <img src="https://images.pexels.com/photos/1769341/pexels-photo-1769341.jpeg?auto=compress&cs=tinysrgb&w=600" 
-                 alt="Desfile Palo de Mayo"
-                 onerror="this.src='https://picsum.photos/id/96/600/400'">
-            <img src="https://images.pexels.com/photos/1482121/pexels-photo-1482121.jpeg?auto=compress&cs=tinysrgb&w=600" 
-                 alt="Carnaval Bluefields"
-                 onerror="this.src='https://picsum.photos/id/15/600/400'">
         </div>
     </section>
 
@@ -424,23 +384,22 @@ body.dark .ciudad-clima {
                     sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox">
                 </iframe>
                 <p class="ciudad-clima">
-                    📍 Bluefields · Costa Caribe Sur, Nicaragua · Temperatura promedio: 24-30°C · Humedad alta
+                    📍 Bluefields · Costa Caribe Sur · 24-30°C · Mejor época: Mayo (Palo de Mayo)
                 </p>
-                <p style="font-size:12px; margin-top:5px;">🌺 Clima tropical · Mejor época para visitar: mayo (Palo de Mayo) o febrero-marzo (seca)</p>
             </div>
             <div class="reloj-widget">
                 <h3><i class="far fa-clock"></i> Hora Local</h3>
                 <div class="clock" id="clock">--:--:--</div>
-                <p style="margin-top:15px;">🇳🇮 Bluefields, Costa Caribe Sur (GMT-6)<br>⏰ Misma zona horaria que Managua</p>
+                <p style="margin-top:15px;">🇳🇮 Bluefields · Costa Caribe Sur (GMT-6)</p>
             </div>
         </div>
     </section>
 
     <footer>
         <h2>Descubre la Cultura Caribeña</h2>
-        <p>🎵 Palo de Mayo · 🗣️ Kriol · 🍛 Rondón · 🎊 Carnaval · ⛪ Tradición Morava</p>
+        <p>🎵 Palo de Mayo · 🗣️ Kriol · 🍛 Rondón · 🎊 Carnaval · ⛪ Morava</p>
         <a class="map-btn" href="https://www.google.com/maps/place/Bluefields,+Nicaragua/" target="_blank">
-            📍 Explorar Bluefields - RACCS
+            📍 Explorar Bluefields
         </a>
     </footer>
 
