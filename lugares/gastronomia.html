@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Selvas Tropicales - Costa Caribe Norte, Nicaragua</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: #eefcff;
+    overflow-x: hidden;
+    transition: .5s;
+}
+
+body.dark {
+    background: #08131d;
+    color: white;
+}
+
+nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 50px;
+    background: rgba(0, 0, 0, .45);
+    backdrop-filter: blur(12px);
+    z-index: 999;
+}
+
+.logo {
+    font-size: 28px;
+    font-weight: 700;
+    color: white;
+}
+
+nav ul {
+    display: flex;
+    gap: 25px;
+    list-style: none;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    transition: 0.3s;
+}
+
+nav ul li a:hover {
+    color: #06b6d4;
+}
+
+.hero {
+    height: 100vh;
+    background: linear-gradient(rgba(0, 0, 0, .5), rgba(0, 0, 0, .7)),
+        url('https://upload.wikimedia.org/wikipedia/commons/0/02/Rio_San_Juan_Nicaragua.jpg');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+}
+
+.hero-content h1 {
+    font-size: 65px;
+}
+
+.hero-content p {
+    font-size: 24px;
+    margin-top: 20px;
+}
+
+.hero button {
+    margin-top: 30px;
+    padding: 15px 35px;
+    border: none;
+    border-radius: 50px;
+    background: linear-gradient(45deg, #0891b2, #06b6d4);
+    color: white;
+    cursor: pointer;
+    font-size: 18px;
+    transition: transform 0.3s;
+}
+
+.hero button:hover {
+    transform: scale(1.05);
+}
+
+section {
+    padding: 100px 10%;
+}
+
+.title {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.title h2 {
+    font-size: 45px;
+    color: #0891b2;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+}
+
+.card {
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, .1);
+    transition: transform 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+body.dark .card {
+    background: #1e293b;
+}
+
+.card img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+}
+
+.card-content {
+    padding: 20px;
+}
+
+.card-content h3 {
+    color: #0891b2;
+    margin-bottom: 10px;
+}
+
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.gallery img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 20px;
+    transition: transform 0.3s;
+    cursor: pointer;
+}
+
+.gallery img:hover {
+    transform: scale(1.02);
+}
+
+.clima-reloj-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    justify-content: center;
+    align-items: stretch;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.clima-widget,
+.reloj-widget {
+    flex: 1;
+    min-width: 280px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
+    border-radius: 32px;
+    padding: 25px 20px;
+    text-align: center;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    transition: 0.3s;
+}
+
+body.dark .clima-widget,
+body.dark .reloj-widget {
+    background: rgba(30, 41, 59, 0.5);
+}
+
+.reloj-widget h3 {
+    color: #0891b2;
+    font-size: 24px;
+    margin-bottom: 15px;
+}
+
+.clock {
+    font-size: 52px;
+    font-weight: bold;
+    font-family: monospace;
+    letter-spacing: 3px;
+    background: #0f172a;
+    display: inline-block;
+    padding: 15px 30px;
+    border-radius: 60px;
+    color: #06b6d4;
+    box-shadow: 0 0 15px rgba(6, 182, 212, 0.3);
+}
+
+body.dark .clock {
+    background: #000000aa;
+    color: #2dd4bf;
+}
+
+.clima-iframe {
+    width: 100%;
+    border-radius: 24px;
+    border: none;
+    background: white;
+    height: 350px;
+}
+
+body.dark .clima-iframe {
+    background: #1e293b;
+}
+
+.dark-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    border: none;
+    border-radius: 50%;
+    background: #111827;
+    color: white;
+    font-size: 22px;
+    cursor: pointer;
+    z-index: 1000;
+    transition: 0.3s;
+}
+
+.dark-btn:hover {
+    transform: scale(1.1);
+}
+
+footer {
+    background: #0f172a;
+    color: white;
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.map-btn {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 15px 30px;
+    border-radius: 50px;
+    background: linear-gradient(45deg, #0891b2, #06b6d4);
+    color: white;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.map-btn:hover {
+    transform: scale(1.05);
+}
+
+.ciudad-clima {
+    font-size: 14px;
+    color: #0891b2;
+    margin-top: 10px;
+    font-weight: 600;
+}
+
+body.dark .ciudad-clima {
+    color: #2dd4bf;
+}
+</style>
+</head>
+
+<body>
+
+    <nav>
+        <div class="logo">🌿 Selvas Caribe Norte</div>
+        <ul>
+            <li><a href="#inicio">Inicio</a></li>
+            <li><a href="#ecosistemas">Ecosistemas</a></li>
+            <li><a href="#gastronomia">Gastronomía</a></li>
+            <li><a href="#galeria">Galería</a></li>
+            <li><a href="#clima">Clima</a></li>
+        </ul>
+    </nav>
+
+    <section class="hero" id="inicio">
+        <div class="hero-content">
+            <h1>Selvas Tropicales</h1>
+            <p>Costa Caribe Norte, Nicaragua 🌴</p>
+            <button onclick="document.querySelector('#ecosistemas').scrollIntoView({behavior:'smooth'})">
+                Explorar
+            </button>
+        </div>
+    </section>
+
+    <section id="ecosistemas">
+        <div class="title">
+            <h2>Ecosistemas y Biodiversidad</h2>
+        </div>
+        <div class="cards">
+            <div class="card">
+                <img src="https://www.overflightstock.com/contents/artists/nature-picture-library/0346-0807-2315-0544.jpg" 
+                     alt="Selva tropical baja - Reserva Indio Maíz, Nicaragua"
+                     onerror="this.src='https://picsum.photos/id/104/600/400'">
+                <div class="card-content">
+                    <h3>🌳 Selva Tropical Lowland</h3>
+                    <p>La selva tropical de tierras bajas de la Costa Caribe Norte alberga árboles centenarios de caoba, ceiba y palmeras. La Reserva de Biosfera Indio Maíz es uno de los bosques mejor conservados de Centroamérica.</p>
+                </div>
+            </div>
+            <div class="card">
+                <img src="https://picsum.photos/id/127/600/400" 
+                     alt="Manglares y humedales de la Costa Caribe"
+                     onerror="this.src='https://picsum.photos/id/127/600/400'">
+                <div class="card-content">
+                    <h3>🌊 Manglares y Humedales</h3>
+                    <p>Laguna de Bismuna-Raya protege un extenso sistema de lagunas costeras, manglares y humedales. Este ecosistema es vital para aves acuáticas y la pesca tradicional del pueblo Miskito.</p>
+                </div>
+            </div>
+            <div class="card">
+                <img src="https://images.pexels.com/photos/792381/pexels-photo-792381.jpeg?auto=compress&cs=tinysrgb&w=600" 
+                     alt="Fauna del Caribe Nicaragüense">
+                <div class="card-content">
+                    <h3>🦜 Fauna Exuberante</h3>
+                    <p>Jaguares, monos aulladores, perezosos, tapires y guacamayas rojas habitan estas selvas. La región es un hotspot de biodiversidad con cientos de especies endémicas del Caribe.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- NUEVA SECCIÓN: GASTRONOMÍA CARIBEÑA -->
+    <section id="gastronomia">
+        <div class="title">
+            <h2>🍛 Gastronomía Caribeña</h2>
+            <p style="margin-top: 10px; color: #555;">Sabores del mar, la selva y la tradición miskita</p>
+        </div>
+        <div class="cards">
+            <div class="card">
+                <img src="https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=600" 
+                     alt="Rondón - Sopa tradicional caribeña"
+                     onerror="this.src='https://picsum.photos/id/124/600/400'">
+                <div class="card-content">
+                    <h3>🥥 Rondón</h3>
+                    <p>El plato más emblemático de la Costa Caribe. Sopa espesa hecha con leche de coco, pescado o carne, yuca, plátano verde, malanga y ñame. Cocinado a fuego lento con especias locales.</p>
+                </div>
+            </div>
+            <div class="card">
+                <img src="https://images.pexels.com/photos/699953/pexels-photo-699953.jpeg?auto=compress&cs=tinysrgb&w=600" 
+                     alt="Pescado frito con tostones"
+                     onerror="this.src='https://picsum.photos/id/23/600/400'">
+                <div class="card-content">
+                    <h3>🐟 Pescado a la Tip</h3>
+                    <p>Pescado fresco (pargo, robalo o carite) frito o asado, acompañado de tostones, ensalada de repollo y plátano maduro. Sazonado con ajo, cebolla y pimiento caribeño.</p>
+                </div>
+            </div>
+            <div class="card">
+                <img src="https://images.pexels.com/photos/2067401/pexels-photo-2067401.jpeg?auto=compress&cs=tinysrgb&w=600" 
+                     alt="Bebida de cacao con canela"
+                     onerror="this.src='https://picsum.photos/id/265/600/400'">
+                <div class="card-content">
+                    <h3>🍫 Cacao y Bebidas</h3>
+                    <p>La Costa Caribe es productora de cacao fino. Disfruta de la "tasha" (bebida de cacao fermentado), el "wabul" (bebida de maíz) y el tradicional té de jengibre con miel.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="galeria">
+        <div class="title">
+            <h2>Galería de la Costa Caribe Norte</h2>
+        </div>
+        <div class="gallery">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/0/02/Rio_San_Juan_Nicaragua.jpg" 
+                 alt="Río San Juan - frontera natural entre Nicaragua y Costa Rica"
+                 onerror="this.src='https://picsum.photos/id/104/600/400'">
+            <img src="https://www.overflightstock.com/contents/artists/nature-picture-library/0346-0807-2315-0544.jpg" 
+                 alt="Vista aérea de la Reserva Indio Maíz - selva tropical del sureste de Nicaragua"
+                 onerror="this.src='https://picsum.photos/id/38/600/400'">
+            <img src="https://picsum.photos/id/96/600/400" 
+                 alt="Ríos y caños de la Costa Caribe Norte"
+                 onerror="this.src='https://picsum.photos/id/96/600/400'">
+            <img src="https://picsum.photos/id/15/600/400" 
+                 alt="Selva espesa del departamento de Río San Juan"
+                 onerror="this.src='https://picsum.photos/id/15/600/400'">
+        </div>
+    </section>
+
+    <section id="clima">
+        <div class="title">
+            <h2>Clima y Hora en la Costa Caribe Norte</h2>
+        </div>
+        <div class="clima-reloj-container">
+            <div class="clima-widget">
+                <h3><i class="fas fa-cloud-sun-rain"></i> Clima Tropical - Puerto Cabezas (Bilwi)</h3>
+                <iframe class="clima-iframe" 
+                    src="https://www.meteoblue.com/en/weather/widget/daily/puerto-cabezas_nicaragua_3617505?geoloc=fixed&nocurrent=0&noforecast=0&days=4&tempunit=CENTIGRADE&windunit=KILOMETER_PER_HOUR&layout=image" 
+                    frameborder="0" 
+                    scrolling="NO"
+                    allowtransparency="true"
+                    sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox">
+                </iframe>
+                <p class="ciudad-clima">
+                    📍 Puerto Cabezas (Bilwi) · Costa Caribe Norte, Nicaragua · Temperatura promedio: 26-30°C · Humedad alta
+                </p>
+                <p style="font-size:12px; margin-top:5px;">🌡️ Datos meteorológicos en tiempo real de la región selvática caribeña</p>
+            </div>
+            <div class="reloj-widget">
+                <h3><i class="far fa-clock"></i> Hora Local</h3>
+                <div class="clock" id="clock">--:--:--</div>
+                <p style="margin-top:15px;">🇳🇮 Costa Caribe Norte, Nicaragua (GMT-6)<br>⏰ Misma zona horaria que Managua</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <h2>Descubre las Selvas de la Costa Caribe Norte</h2>
+        <p>Biodiversidad · Gastronomía Caribeña · Aventura · Conservación · Cultura Miskita</p>
+        <a class="map-btn" href="https://www.google.com/maps/place/Regi%C3%B3n+Aut%C3%B3noma+de+la+Costa+Caribe+Norte,+Nicaragua/" target="_blank">
+            📍 Explorar RACCN - Nicaragua
+        </a>
+    </footer>
+
+    <button class="dark-btn" onclick="toggleDarkMode()">
+        <i class="fas fa-moon"></i>
+    </button>
+
+    <script>
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark');
+        }
+
+        function updateClock() {
+            const now = new Date();
+            document.getElementById("clock").innerHTML = now.toLocaleTimeString('es-NI', {
+                hour12: true,
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+    </script>
+</body>
+</html>
