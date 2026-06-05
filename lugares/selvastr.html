@@ -4,157 +4,175 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Selvas Tropicales - Costa Caribe Norte</title>
+<title>Selvas Tropicales - Costa Caribe Norte, Nicaragua</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
 <style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-scroll-behavior:smooth;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
 }
 
-body{
-font-family:'Poppins',sans-serif;
-background:#eefcff;
-overflow-x:hidden;
-transition:.5s;
+body {
+    font-family: 'Poppins', sans-serif;
+    background: #eefcff;
+    overflow-x: hidden;
+    transition: .5s;
 }
 
-body.dark{
-background:#08131d;
-color:white;
+body.dark {
+    background: #08131d;
+    color: white;
 }
 
-nav{
-position:fixed;
-top:0;
-width:100%;
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:18px 50px;
-background:rgba(0,0,0,.35);
-backdrop-filter:blur(12px);
-z-index:999;
+nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 50px;
+    background: rgba(0, 0, 0, .45);
+    backdrop-filter: blur(12px);
+    z-index: 999;
 }
 
-.logo{
-font-size:28px;
-font-weight:700;
-color:white;
+.logo {
+    font-size: 28px;
+    font-weight: 700;
+    color: white;
 }
 
-nav ul{
-display:flex;
-gap:25px;
-list-style:none;
+nav ul {
+    display: flex;
+    gap: 25px;
+    list-style: none;
 }
 
-nav ul li a{
-color:white;
-text-decoration:none;
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    transition: 0.3s;
 }
 
-.hero{
-height:100vh;
-background:
-linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.7)),
-url('https://images.unsplash.com/photo-1542404774-3c5cb4b3c9b0?q=80&w=2072&auto=format&fit=crop');
-
-background-size:cover;
-background-position:center;
-display:flex;
-justify-content:center;
-align-items:center;
-text-align:center;
-color:white;
+nav ul li a:hover {
+    color: #06b6d4;
 }
 
-.hero-content h1{
-font-size:65px;
+.hero {
+    height: 100vh;
+    background: linear-gradient(rgba(0, 0, 0, .5), rgba(0, 0, 0, .7)),
+        url('https://upload.wikimedia.org/wikipedia/commons/0/02/Rio_San_Juan_Nicaragua.jpg');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
 }
 
-.hero-content p{
-font-size:24px;
-margin-top:20px;
+.hero-content h1 {
+    font-size: 65px;
 }
 
-.hero button{
-margin-top:30px;
-padding:15px 35px;
-border:none;
-border-radius:50px;
-background:linear-gradient(45deg,#0891b2,#06b6d4);
-color:white;
-cursor:pointer;
-font-size:18px;
+.hero-content p {
+    font-size: 24px;
+    margin-top: 20px;
 }
 
-section{
-padding:100px 10%;
+.hero button {
+    margin-top: 30px;
+    padding: 15px 35px;
+    border: none;
+    border-radius: 50px;
+    background: linear-gradient(45deg, #0891b2, #06b6d4);
+    color: white;
+    cursor: pointer;
+    font-size: 18px;
+    transition: transform 0.3s;
 }
 
-.title{
-text-align:center;
-margin-bottom:50px;
+.hero button:hover {
+    transform: scale(1.05);
 }
 
-.title h2{
-font-size:45px;
-color:#0891b2;
+section {
+    padding: 100px 10%;
 }
 
-.cards{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-gap:30px;
+.title {
+    text-align: center;
+    margin-bottom: 50px;
 }
 
-.card{
-background:white;
-border-radius:20px;
-overflow:hidden;
-box-shadow:0 10px 25px rgba(0,0,0,.1);
+.title h2 {
+    font-size: 45px;
+    color: #0891b2;
 }
 
-body.dark .card{
-background:#1e293b;
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
 }
 
-.card img{
-width:100%;
-height:220px;
-object-fit:cover;
+.card {
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, .1);
+    transition: transform 0.3s;
 }
 
-.card-content{
-padding:20px;
+.card:hover {
+    transform: translateY(-5px);
 }
 
-.card-content h3{
-color:#0891b2;
-margin-bottom:10px;
+body.dark .card {
+    background: #1e293b;
 }
 
-.gallery{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-gap:20px;
+.card img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
 }
 
-.gallery img{
-width:100%;
-height:250px;
-object-fit:cover;
-border-radius:20px;
+.card-content {
+    padding: 20px;
 }
 
-/* Estilos para el clima y el reloj */
+.card-content h3 {
+    color: #0891b2;
+    margin-bottom: 10px;
+}
+
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.gallery img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 20px;
+    transition: transform 0.3s;
+    cursor: pointer;
+}
+
+.gallery img:hover {
+    transform: scale(1.02);
+}
+
 .clima-reloj-container {
     display: flex;
     flex-wrap: wrap;
@@ -165,21 +183,22 @@ border-radius:20px;
     margin: 0 auto;
 }
 
-.clima-widget, .reloj-widget {
+.clima-widget,
+.reloj-widget {
     flex: 1;
     min-width: 280px;
-    background: rgba(255,255,255,0.15);
+    background: rgba(255, 255, 255, 0.15);
     backdrop-filter: blur(8px);
     border-radius: 32px;
     padding: 25px 20px;
     text-align: center;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
     transition: 0.3s;
 }
 
 body.dark .clima-widget,
 body.dark .reloj-widget {
-    background: rgba(30,41,59,0.5);
+    background: rgba(30, 41, 59, 0.5);
 }
 
 .reloj-widget h3 {
@@ -198,7 +217,7 @@ body.dark .reloj-widget {
     padding: 15px 30px;
     border-radius: 60px;
     color: #06b6d4;
-    box-shadow: 0 0 15px rgba(6,182,212,0.3);
+    box-shadow: 0 0 15px rgba(6, 182, 212, 0.3);
 }
 
 body.dark .clock {
@@ -206,7 +225,6 @@ body.dark .clock {
     color: #2dd4bf;
 }
 
-/* Ajustes para iframe del clima */
 .clima-iframe {
     width: 100%;
     border-radius: 24px;
@@ -219,139 +237,178 @@ body.dark .clima-iframe {
     background: #1e293b;
 }
 
-.dark-btn{
-position:fixed;
-bottom:20px;
-right:20px;
-width:60px;
-height:60px;
-border:none;
-border-radius:50%;
-background:#111827;
-color:white;
-font-size:22px;
-cursor:pointer;
-z-index: 1000;
+.dark-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    border: none;
+    border-radius: 50%;
+    background: #111827;
+    color: white;
+    font-size: 22px;
+    cursor: pointer;
+    z-index: 1000;
+    transition: 0.3s;
 }
 
-footer{
-background:#0f172a;
-color:white;
-text-align:center;
-padding:60px 20px;
+.dark-btn:hover {
+    transform: scale(1.1);
 }
 
-.map-btn{
-display:inline-block;
-margin-top:20px;
-padding:15px 30px;
-border-radius:50px;
-background:linear-gradient(45deg,#0891b2,#06b6d4);
-color:white;
-text-decoration:none;
+footer {
+    background: #0f172a;
+    color: white;
+    text-align: center;
+    padding: 60px 20px;
 }
 
+.map-btn {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 15px 30px;
+    border-radius: 50px;
+    background: linear-gradient(45deg, #0891b2, #06b6d4);
+    color: white;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.map-btn:hover {
+    transform: scale(1.05);
+}
 </style>
 </head>
 
 <body>
 
-<nav>
-<div class="logo">🌿 Selvas Caribe</div>
-<ul>
-<li><a href="#inicio">Inicio</a></li>
-<li><a href="#ecosistemas">Ecosistemas</a></li>
-<li><a href="#galeria">Galería</a></li>
-<li><a href="#clima">Clima</a></li>
-</ul>
-</nav>
+    <nav>
+        <div class="logo">🌿 Selvas Caribe Norte</div>
+        <ul>
+            <li><a href="#inicio">Inicio</a></li>
+            <li><a href="#ecosistemas">Ecosistemas</a></li>
+            <li><a href="#galeria">Galería</a></li>
+            <li><a href="#clima">Clima</a></li>
+        </ul>
+    </nav>
 
-<section class="hero" id="inicio">
-<div class="hero-content">
-<h1>Selvas Tropicales</h1>
-<p>Biodiversidad, aventura y vida en la Costa Caribe Norte</p>
-<button onclick="document.querySelector('#ecosistemas').scrollIntoView({behavior:'smooth'})">Explorar</button>
-</div>
-</section>
+    <section class="hero" id="inicio">
+        <div class="hero-content">
+            <h1>Selvas Tropicales</h1>
+            <p>Costa Caribe Norte, Nicaragua 🌴</p>
+            <button onclick="document.querySelector('#ecosistemas').scrollIntoView({behavior:'smooth'})">
+                Explorar
+            </button>
+        </div>
+    </section>
 
-<section id="ecosistemas">
-<div class="title"><h2>Ecosistemas y Biodiversidad</h2></div>
-<div class="cards">
-<div class="card">
-<img src="https://images.unsplash.com/photo-1542404774-3c5cb4b3c9b0?q=80&w=2072&auto=format&fit=crop">
-<div class="card-content"><h3>Flora Exuberante</h3><p>Árboles milenarios, helechos gigantes, orquídeas y plantas medicinales que albergan una biodiversidad única.</p></div>
-</div>
-<div class="card">
-<img src="https://images.unsplash.com/photo-1564769625945-6f4d8e3e6f8e?q=80&w=2070&auto=format&fit=crop">
-<div class="card-content"><h3>Fauna Silvestre</h3><p>Jaguares, monos aulladores, perezosos, guacamayas y cientos de especies endémicas del Caribe.</p></div>
-</div>
-<div class="card">
-<img src="https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?q=80&w=2072&auto=format&fit=crop">
-<div class="card-content"><h3>Ríos y Humedales</h3><p>Caños, lagunas y ríos cristalinos que nutren la selva y son hogar de manatíes y caimanes.</p></div>
-</div>
-</div>
-</section>
+    <section id="ecosistemas">
+        <div class="title">
+            <h2>Ecosistemas y Biodiversidad</h2>
+        </div>
+        <div class="cards">
+            <div class="card">
+                <img src="https://www.overflightstock.com/contents/artists/nature-picture-library/0346-0807-2315-0544.jpg" 
+                     alt="Selva tropical baja - Reserva Indio Maíz, Nicaragua"
+                     onerror="this.src='https://picsum.photos/id/104/600/400'">
+                <div class="card-content">
+                    <h3>🌳 Selva Tropical Lowland</h3>
+                    <p>La selva tropical de tierras bajas de la Costa Caribe Norte alberga árboles centenarios de caoba, ceiba y palmeras. La Reserva de Biosfera Indio Maíz es uno de los bosques mejor conservados de Centroamérica [citation:7].</p>
+                </div>
+            </div>
+            <div class="card">
+                <img src="https://picsum.photos/id/127/600/400" 
+                     alt="Manglares y humedales de la Costa Caribe"
+                     onerror="this.src='https://picsum.photos/id/127/600/400'">
+                <div class="card-content">
+                    <h3>🌊 Manglares y Humedales</h3>
+                    <p>Laguna de Bismuna-Raya protege un extenso sistema de lagunas costeras, manglares y humedales. Este ecosistema es vital para aves acuáticas y la pesca tradicional del pueblo Miskito [citation:5].</p>
+                </div>
+            </div>
+            <div class="card">
+                <img src="https://images.pexels.com/photos/792381/pexels-photo-792381.jpeg?auto=compress&cs=tinysrgb&w=600" 
+                     alt="Fauna del Caribe Nicaragüense">
+                <div class="card-content">
+                    <h3>🦜 Fauna Exuberante</h3>
+                    <p>Jaguares, monos aulladores, perezosos, tapires y guacamayas rojas habitan estas selvas. La región es un hotspot de biodiversidad con cientos de especies endémicas del Caribe.</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<section id="galeria">
-<div class="title"><h2>Galería Selvática</h2></div>
-<div class="gallery">
-<img src="https://images.unsplash.com/photo-1542404774-3c5cb4b3c9b0?q=80&w=2072&auto=format&fit=crop">
-<img src="https://images.unsplash.com/photo-1564769625945-6f4d8e3e6f8e?q=80&w=2070&auto=format&fit=crop">
-<img src="https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?q=80&w=2072&auto=format&fit=crop">
-<img src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?q=80&w=2074&auto=format&fit=crop">
-</div>
-</section>
+    <section id="galeria">
+        <div class="title">
+            <h2>Galería de la Costa Caribe Norte</h2>
+        </div>
+        <div class="gallery">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/0/02/Rio_San_Juan_Nicaragua.jpg" 
+                 alt="Río San Juan - frontera natural entre Nicaragua y Costa Rica [citation:1]"
+                 onerror="this.src='https://picsum.photos/id/104/600/400'">
+            <img src="https://www.overflightstock.com/contents/artists/nature-picture-library/0346-0807-2315-0544.jpg" 
+                 alt="Vista aérea de la Reserva Indio Maíz - selva tropical del sureste de Nicaragua [citation:7]"
+                 onerror="this.src='https://picsum.photos/id/38/600/400'">
+            <img src="https://picsum.photos/id/96/600/400" 
+                 alt="Ríos y caños de la Costa Caribe Norte"
+                 onerror="this.src='https://picsum.photos/id/96/600/400'">
+            <img src="https://picsum.photos/id/15/600/400" 
+                 alt="Selva espesa del departamento de Río San Juan"
+                 onerror="this.src='https://picsum.photos/id/15/600/400'">
+        </div>
+    </section>
 
-<!-- SECCIÓN CLIMA + RELOJ (ambos juntos) -->
-<section id="clima">
-<div class="title"><h2>Clima y Hora en la Costa Caribe Norte</h2></div>
-<div class="clima-reloj-container">
+    <section id="clima">
+        <div class="title">
+            <h2>Clima y Hora en la Costa Caribe Norte</h2>
+        </div>
+        <div class="clima-reloj-container">
+            <div class="clima-widget">
+                <h3><i class="fas fa-cloud-sun-rain"></i> Clima Tropical</h3>
+                <iframe class="clima-iframe" 
+                    src="https://www.meteoblue.com/en/weather/widget/daily/puerto-cabezas_nicaragua_3617505?geoloc=fixed&nocurrent=0&noforecast=0&days=4&tempunit=CENTIGRADE&windunit=KILOMETER_PER_HOUR&layout=image" 
+                    frameborder="0" 
+                    scrolling="NO"
+                    allowtransparency="true"
+                    sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox">
+                </iframe>
+                <p style="font-size:12px; margin-top:8px;">🌡️ Temperatura · Humedad · Pronóstico 4 días</p>
+            </div>
+            <div class="reloj-widget">
+                <h3><i class="far fa-clock"></i> Hora Local</h3>
+                <div class="clock" id="clock">--:--:--</div>
+                <p style="margin-top:15px;">🇳🇮 Costa Caribe Norte, Nicaragua (GMT-6)</p>
+            </div>
+        </div>
+    </section>
 
-    <!-- WIDGET DEL CLIMA (iframe confiable) -->
-    <div class="clima-widget">
-        <h3><i class="fas fa-cloud-sun-rain"></i> Clima Tropical</h3>
-        <iframe class="clima-iframe" 
-            src="https://www.meteoblue.com/en/weather/widget/daily/puerto-cabezas_nicaragua_3617505?geoloc=fixed&nocurrent=0&noforecast=0&days=4&tempunit=CENTIGRADE&windunit=KILOMETER_PER_HOUR&layout=image" 
-            frameborder="0" 
-            scrolling="NO"
-            allowtransparency="true"
-            sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox">
-        </iframe>
-        <p style="font-size:12px; margin-top:8px;">🌡️ Temperatura · Humedad · Pronóstico 4 días</p>
-    </div>
+    <footer>
+        <h2>Descubre las Selvas de la Costa Caribe Norte</h2>
+        <p>Biodiversidad · Aventura · Conservación · Cultura Miskita</p>
+        <a class="map-btn" href="https://www.google.com/maps/place/Regi%C3%B3n+Aut%C3%B3noma+de+la+Costa+Caribe+Norte,+Nicaragua/" target="_blank">
+            📍 Explorar RACCN - Nicaragua
+        </a>
+    </footer>
 
-    <!-- RELOJ DIGITAL -->
-    <div class="reloj-widget">
-        <h3><i class="far fa-clock"></i> Hora Local</h3>
-        <div class="clock" id="clock">--:--:--</div>
-        <p style="margin-top:15px;">🇳🇮 Costa Caribe Norte (GMT-6)</p>
-    </div>
+    <button class="dark-btn" onclick="toggleDarkMode()">
+        <i class="fas fa-moon"></i>
+    </button>
 
-</div>
-</section>
+    <script>
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark');
+        }
 
-<footer>
-<h2>Descubre las Selvas Tropicales</h2>
-<p>Biodiversidad • Aventura • Conservación • Caribe Nicaragüense</p>
-<a class="map-btn" href="https://www.google.com/maps/search/Bosawas+Reserve+Nicaragua/" target="_blank">📍 Explorar Reserva Bosawás</a>
-</footer>
-
-<button class="dark-btn" onclick="toggleDarkMode()">
-<i class="fas fa-moon"></i>
-</button>
-
-<script>
-function toggleDarkMode(){
-    document.body.classList.toggle('dark');
-}
-
-function updateClock(){
-    const now = new Date();
-    document.getElementById("clock").innerHTML = now.toLocaleTimeString();
-}
-setInterval(updateClock, 1000);
-updateClock();
-</script>
-
+        function updateClock() {
+            const now = new Date();
+            document.getElementById("clock").innerHTML = now.toLocaleTimeString('es-NI', {
+                hour12: true,
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+    </script>
 </body>
 </html>
