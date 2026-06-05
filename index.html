@@ -3,34 +3,60 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>Guía Pinolero - Autenticación</title>
+  <title>Guía Pinolero - Descubre Nicaragua</title>
   
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
+    
     body {
       font-family: 'Inter', sans-serif;
       min-height: 100vh;
-      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      background: linear-gradient(145deg, #0a2a1f 0%, #1a4a2a 50%, #0d331f 100%);
       position: relative;
       overflow-x: hidden;
     }
+    
+    /* Patrón decorativo */
+    body::before {
+      content: "🌋🌿🦎🌊🌴🍃";
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      font-size: 80px;
+      opacity: 0.04;
+      pointer-events: none;
+      white-space: pre;
+      text-align: center;
+      letter-spacing: 20px;
+      z-index: 0;
+    }
+    
+    /* Ondas decorativas */
     .wave-bg {
       position: fixed;
       bottom: 0;
       left: 0;
       width: 100%;
-      height: 100%;
+      height: 280px;
       z-index: 0;
-      opacity: 0.2;
+      opacity: 0.15;
       pointer-events: none;
     }
+    
+    .wave-bg svg {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+    }
+    
     .container {
       position: relative;
       z-index: 2;
-      max-width: 1200px;
+      max-width: 1300px;
       margin: 0 auto;
       padding: 2rem 1.5rem;
       min-height: 100vh;
@@ -39,344 +65,449 @@
       justify-content: center;
       align-items: center;
     }
+    
+    /* Glassmorphism premium */
     .glass-card {
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(12px);
-      border-radius: 2rem;
-      padding: 2rem 1.8rem;
-      box-shadow: 0 25px 45px rgba(0, 0, 0, 0.2);
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(16px);
+      border-radius: 2.5rem;
+      padding: 2.5rem 2rem;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255,255,255,0.1);
+      border: 1px solid rgba(255, 255, 255, 0.25);
       width: 100%;
-      max-width: 500px;
+      max-width: 480px;
       text-align: center;
+      transition: transform 0.3s ease;
     }
-    .mascota img { width: 90px; margin-bottom: 1rem; }
+    
+    .glass-card:hover {
+      transform: translateY(-5px);
+    }
+    
+    /* Mascota animada */
+    .mascota {
+      margin-bottom: 1rem;
+    }
+    
+    .mascota img {
+      width: 90px;
+      filter: drop-shadow(0 8px 20px rgba(0,0,0,0.2));
+      animation: float 3s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+    
     h1 {
-      font-size: 2.5rem;
-      background: linear-gradient(135deg, #FFE259, #FFA751);
+      font-size: 2.8rem;
+      background: linear-gradient(135deg, #FFE259, #FFA751, #FFD54F);
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 0.5rem;
     }
-    .subtitle { color: rgba(255,255,255,0.9); margin-bottom: 2rem; }
+    
+    .subtitle {
+      color: rgba(255,255,255,0.9);
+      margin-bottom: 2rem;
+      font-size: 0.95rem;
+    }
+    
+    /* Inputs elegantes */
+    .input-group {
+      margin-bottom: 1rem;
+      text-align: left;
+    }
+    
+    .input-group input {
+      width: 100%;
+      padding: 14px 18px;
+      border-radius: 50px;
+      border: none;
+      background: rgba(255,255,255,0.12);
+      color: white;
+      font-size: 0.95rem;
+      outline: none;
+      transition: all 0.2s;
+      font-weight: 400;
+    }
+    
+    .input-group input:focus {
+      background: rgba(255,255,255,0.2);
+      box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.3);
+    }
+    
+    .input-group input::placeholder {
+      color: rgba(255,255,255,0.55);
+    }
+    
+    /* Botones premium */
     .btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 10px;
-      padding: 12px 24px;
+      padding: 14px 24px;
       border-radius: 60px;
       font-weight: 600;
       cursor: pointer;
       width: 100%;
-      font-size: 1rem;
+      font-size: 0.95rem;
       margin-bottom: 12px;
       border: none;
+      transition: all 0.2s ease;
     }
-    .btn-primary { background: linear-gradient(95deg, #F9A826, #F57C00); color: white; }
-    .btn-google { background: white; color: #444; border: 1px solid #ddd; }
-    .btn-outline { background: transparent; border: 1px solid rgba(255,255,255,0.5); color: white; }
-    .input-group { margin-bottom: 1rem; text-align: left; }
-    .input-group input {
-      width: 100%;
-      padding: 14px 18px;
-      border-radius: 40px;
-      border: none;
-      background: rgba(255,255,255,0.15);
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #F9A826, #F57C00);
       color: white;
-      font-size: 0.95rem;
-      outline: none;
+      box-shadow: 0 8px 20px rgba(245, 124, 0, 0.3);
     }
-    .input-group input::placeholder { color: rgba(255,255,255,0.6); }
-    .divider { display: flex; align-items: center; text-align: center; color: rgba(255,255,255,0.5); margin: 1.2rem 0; }
-    .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid rgba(255,255,255,0.2); }
-    .divider span { margin: 0 10px; }
-    .menu-section { display: none; margin-top: 2rem; width: 100%; animation: fadeInUp 0.6s ease; }
-    .menu-section h2 { color: white; text-align: center; margin-bottom: 1.5rem; }
-    .menu-buttons { display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5rem; }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 25px rgba(245, 124, 0, 0.4);
+    }
+    
+    .btn-google {
+      background: rgba(255,255,255,0.95);
+      color: #444;
+      border: 1px solid rgba(255,255,255,0.3);
+    }
+    
+    .btn-google:hover {
+      background: white;
+      transform: translateY(-2px);
+    }
+    
+    .btn-outline {
+      background: transparent;
+      border: 1.5px solid rgba(255,255,255,0.5);
+      color: white;
+    }
+    
+    .btn-outline:hover {
+      background: rgba(255,255,255,0.1);
+      border-color: rgba(255,255,255,0.8);
+    }
+    
+    .divider {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      color: rgba(255,255,255,0.5);
+      margin: 1.2rem 0;
+    }
+    
+    .divider::before,
+    .divider::after {
+      content: '';
+      flex: 1;
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+    }
+    
+    .divider span {
+      margin: 0 10px;
+      font-size: 0.8rem;
+    }
+    
+    /* Menú principal (post-login) */
+    .menu-section {
+      display: none;
+      width: 100%;
+      animation: fadeInUp 0.6s ease;
+    }
+    
+    .menu-section h2 {
+      color: white;
+      text-align: center;
+      margin-bottom: 2rem;
+      font-size: 1.8rem;
+      font-weight: 600;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    
+    .menu-section h2 span {
+      background: linear-gradient(135deg, #FFE259, #FFA751);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    
+    .menu-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
     .menu-card {
-      background: rgba(255,255,255,0.15);
-      backdrop-filter: blur(8px);
-      border-radius: 1.5rem;
-      padding: 1.5rem;
-      width: 200px;
+      background: linear-gradient(145deg, rgba(255,255,255,0.12), rgba(255,255,255,0.06));
+      backdrop-filter: blur(12px);
+      border-radius: 1.8rem;
+      padding: 1.8rem 1rem;
+      width: 190px;
       text-align: center;
       text-decoration: none;
       color: white;
-      transition: 0.3s;
+      transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+      border: 1px solid rgba(255,255,255,0.15);
     }
-    .menu-card:hover { transform: translateY(-8px); background: rgba(255,255,255,0.25); }
-    .menu-card span { font-size: 3rem; display: block; margin-bottom: 0.5rem; }
+    
+    .menu-card:hover {
+      transform: translateY(-10px);
+      background: linear-gradient(145deg, rgba(255,255,255,0.2), rgba(255,255,255,0.1));
+      border-color: rgba(255, 193, 7, 0.5);
+      box-shadow: 0 20px 35px -12px rgba(0,0,0,0.3);
+    }
+    
+    .menu-card span {
+      font-size: 3rem;
+      display: block;
+      margin-bottom: 0.8rem;
+    }
+    
+    .menu-card h3 {
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+    
+    /* Botón cerrar sesión */
+    .logout-wrapper {
+      text-align: center;
+      margin-top: 1rem;
+    }
+    
+    #logoutBtn {
+      width: auto;
+      padding: 10px 30px;
+      background: rgba(220, 53, 69, 0.2);
+      border-color: rgba(220, 53, 69, 0.5);
+    }
+    
+    #logoutBtn:hover {
+      background: rgba(220, 53, 69, 0.4);
+      border-color: #dc3545;
+    }
+    
+    /* Toast notificaciones */
     .toast-message {
       position: fixed;
-      bottom: 20px;
+      bottom: 100px;
       left: 50%;
       transform: translateX(-50%);
-      background: rgba(0,0,0,0.8);
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(8px);
       color: white;
-      padding: 10px 20px;
-      border-radius: 40px;
+      padding: 12px 24px;
+      border-radius: 60px;
       z-index: 1000;
+      font-weight: 500;
+      font-size: 0.9rem;
+      white-space: nowrap;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     }
-    .whatsapp-float {
+    
+    /* WhatsApp flotante mejorado */
+    .whatsapp-container {
       position: fixed;
       bottom: 25px;
       right: 25px;
-      background-color: #25D366;
+      z-index: 1000;
+    }
+    
+    .whatsapp-float {
+      background: linear-gradient(135deg, #25D366, #128C7E);
       color: white;
-      width: 55px;
-      height: 55px;
+      width: 60px;
+      height: 60px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 30px;
+      font-size: 32px;
       text-decoration: none;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+      transition: all 0.3s ease;
+      animation: pulse 2s infinite;
     }
+    
+    .whatsapp-float:hover {
+      transform: scale(1.1);
+      background: linear-gradient(135deg, #128C7E, #075E54);
+    }
+    
+    .whatsapp-tooltip {
+      position: absolute;
+      bottom: 70px;
+      right: 0;
+      background: white;
+      color: #1a4a2a;
+      padding: 8px 16px;
+      border-radius: 30px;
+      font-size: 12px;
+      font-weight: 600;
+      white-space: nowrap;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s;
+    }
+    
+    .whatsapp-container:hover .whatsapp-tooltip {
+      opacity: 1;
+      visibility: visible;
+      bottom: 75px;
+    }
+    
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.6); }
+      70% { box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+    }
+    
+    /* Animaciones */
     @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
-    @media (max-width: 550px) {
-      .glass-card { padding: 1.5rem; }
+    
+    /* Responsive */
+    @media (max-width: 680px) {
+      .container { padding: 1rem; }
+      .glass-card { padding: 1.8rem 1.2rem; max-width: 95%; }
       h1 { font-size: 2rem; }
-      .menu-card { width: 160px; padding: 1rem; }
+      .menu-section h2 { font-size: 1.3rem; }
+      .menu-card { width: 155px; padding: 1.2rem 0.8rem; }
+      .menu-card span { font-size: 2.2rem; }
+      .toast-message { white-space: normal; text-align: center; max-width: 85%; }
+      .whatsapp-float { width: 50px; height: 50px; font-size: 28px; }
     }
-  <!-- Botón Traductor Flotante -->
-<a href="https://translate.google.com/translate?sl=es&tl=en&u={{URL}}" 
-   id="btnTraductor"
-   style="position: fixed; bottom: 20px; right: 20px; z-index: 9999; background: linear-gradient(135deg, #4285f4, #34a853); color: white; padding: 12px 16px; border-radius: 30px; text-decoration: none; font-family: Arial; font-weight: bold; box-shadow: 0 4px 12px rgba(0,0,0,0.2); display: flex; align-items: center; gap: 8px;">
-    🌐 Traducir página
-</a>
-
-<script>
-    // Actualizar el enlace con la URL actual
-    const btn = document.getElementById('btnTraductor');
-    const urlActual = encodeURIComponent(window.location.href);
-    btn.href = `https://translate.google.com/translate?sl=es&tl=en&u=${urlActual}`;
     
-    // Permitir cambiar idioma
-    const idiomas = [
-        { code: 'en', nombre: 'English', bandera: '🇺🇸' },
-        { code: 'fr', nombre: 'Français', bandera: '🇫🇷' },
-        { code: 'de', nombre: 'Deutsch', bandera: '🇩🇪' },
-        { code: 'pt', nombre: 'Português', bandera: '🇵🇹' }
-    ];
-    
-    let currentLang = 0;
-    btn.addEventListener('click', function(e) {
-        e.preventDefault();
-        const nextLang = (currentLang + 1) % idiomas.length;
-        const langData = idiomas[nextLang];
-        btn.innerHTML = `${langData.bandera} ${langData.nombre}`;
-        btn.href = `https://translate.google.com/translate?sl=es&tl=${langData.code}&u=${urlActual}`;
-        currentLang = nextLang;
-        window.open(btn.href, '_blank');
-    });
-</script>
-</script>
-
-<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-
-<style>
-    .goog-te-banner-frame { display: none !important; }
-    body { top: 0px !important; }
-</style>>
+    @media (max-width: 480px) {
+      .menu-buttons { gap: 1rem; }
+      .menu-card { width: calc(50% - 0.5rem); min-width: 140px; }
+    }
   </style>
 </head>
 <body>
+  <!-- Ondas decorativas -->
   <div class="wave-bg">
     <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
-      <path fill="rgba(255,255,255,0.1)" d="M0,192L48,197.3C96,203,192,213,288,208C384,203,480,181,576,176C672,171,768,181,864,197.3C960,213,1056,235,1152,224C1248,213,1344,171,1392,149.3L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+      <path fill="rgba(255,255,255,0.08)" d="M0,192L48,197.3C96,203,192,213,288,208C384,203,480,181,576,176C672,171,768,181,864,197.3C960,213,1056,235,1152,224C1248,213,1344,171,1392,149.3L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+      <path fill="rgba(255,255,255,0.05)" d="M0,224L48,218.7C96,213,192,203,288,208C384,213,480,235,576,240C672,245,768,235,864,218.7C960,203,1056,181,1152,176C1248,171,1344,181,1392,186.7L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
     </svg>
   </div>
 
   <div class="container">
+    <!-- Tarjeta de autenticación -->
     <div id="authCard" class="glass-card">
-      <div class="mascota"><img src="https://cdn-icons-png.flaticon.com/512/4712/4712109.png" alt="Mascota" /></div>
+      <div class="mascota">
+        <img src="https://cdn-icons-png.flaticon.com/512/4712/4712109.png" alt="Mascota Pinolero" />
+      </div>
       <h1>Guía Pinolero</h1>
-      <p class="subtitle">Explora Nicaragua jugando y descubriendo lugares increíbles 🌋🌊</p>
+      <p class="subtitle">🌋 Explora Nicaragua jugando y descubriendo lugares increíbles 🌊</p>
+      
       <div id="authForms">
+        <!-- Login Form -->
         <div id="loginForm">
-          <div class="input-group"><input type="email" id="loginEmail" placeholder="Correo electrónico" /></div>
-          <div class="input-group"><input type="password" id="loginPassword" placeholder="Contraseña" /></div>
-          <button id="doLoginBtn" class="btn btn-primary">Iniciar sesión</button>
-          <button id="googleLoginBtn" class="btn btn-google"><i class="fab fa-google"></i> Continuar con Google</button>
+          <div class="input-group">
+            <input type="email" id="loginEmail" placeholder="📧 Correo electrónico" />
+          </div>
+          <div class="input-group">
+            <input type="password" id="loginPassword" placeholder="🔒 Contraseña" />
+          </div>
+          <button id="doLoginBtn" class="btn btn-primary">
+            <i class="fas fa-sign-in-alt"></i> Iniciar sesión
+          </button>
+          <button id="googleLoginBtn" class="btn btn-google">
+            <i class="fab fa-google"></i> Continuar con Google
+          </button>
           <div class="divider"><span>o</span></div>
-          <button id="showRegisterBtn" class="btn btn-outline">Crear cuenta nueva</button>
+          <button id="showRegisterBtn" class="btn btn-outline">
+            ✨ Crear cuenta nueva
+          </button>
         </div>
-        <div id="registerForm" style="display:none;">
-          <div class="input-group"><input type="email" id="regEmail" placeholder="Correo electrónico" /></div>
-          <div class="input-group"><input type="password" id="regPassword" placeholder="Contraseña" /></div>
-          <button id="doRegisterBtn" class="btn btn-primary">Registrarse</button>
-          <button id="backToLoginBtn" class="btn btn-outline">← Volver al inicio</button>
-        </div>
-      </div>
-    </div>
         
-    <div id="menuSection" class="menu-section">
-      <h2>¡Bienvenido, <span id="userName"></span>! ¿Qué deseas explorar?</h2>
-      <div class="menu-buttons">
-        <a href="../juegos/juegos.html" class="menu-card"><span>🎮</span><h3>Juegos Turísticos</h3></a>
-        <a href="mapa.html" class="menu-card"><span>🗺️</span><h3>Mapa Interactivo</h3></a>
-        <a href="../lugares/lugares.html" class="menu-card"><span>🧭</span><h3>Lugares</h3></a>
-        <a href="comunidad.html" class="menu-card"><span>👩🏾‍🤝‍🧑🏻</span><h3>Comunidad</h3></a>
-        <a href="https://nicaguia.base44.app" class="menu-card"><span>🔍</span><h3>Escanea y aprende</h3></a>
-         <a href="temporal.html" class="menu-card"><span>🏬🛒</span><h3>Comercios afiliados</h3></a>
+        <!-- Register Form -->
+        <div id="registerForm" style="display:none;">
+          <div class="input-group">
+            <input type="email" id="regEmail" placeholder="📧 Correo electrónico" />
+          </div>
+          <div class="input-group">
+            <input type="password" id="regPassword" placeholder="🔒 Contraseña (mínimo 6 caracteres)" />
+          </div>
+          <button id="doRegisterBtn" class="btn btn-primary">
+            <i class="fas fa-user-plus"></i> Registrarse
+          </button>
+          <button id="backToLoginBtn" class="btn btn-outline">
+            ← Volver al inicio
+          </button>
+        </div>
       </div>
-      <div style="margin-top: 2rem;"><button id="logoutBtn" class="btn btn-outline" style="width: auto; padding: 8px 20px;">Cerrar sesión</button></div>
+    </div>
+    
+    <!-- Menú principal después del login -->
+    <div id="menuSection" class="menu-section">
+      <h2>¡Bienvenido, <span id="userName"></span>! <br> ¿Qué deseas explorar?</h2>
+      <div class="menu-buttons">
+        <a href="../juegos/juegos.html" class="menu-card">
+          <span>🎮</span>
+          <h3>Juegos Turísticos</h3>
+        </a>
+        <a href="mapa.html" class="menu-card">
+          <span>🗺️</span>
+          <h3>Mapa Interactivo</h3>
+        </a>
+        <a href="../lugares/lugares.html" class="menu-card">
+          <span>🧭</span>
+          <h3>Lugares</h3>
+        </a>
+        <a href="comunidad.html" class="menu-card">
+          <span>👩🏾‍🤝‍🧑🏻</span>
+          <h3>Comunidad</h3>
+        </a>
+        <a href="https://nicaguia.base44.app" class="menu-card">
+          <span>🔍</span>
+          <h3>Escanea y aprende</h3>
+        </a>
+        <a href="temporal.html" class="menu-card">
+          <span>🏬🛒</span>
+          <h3>Comercios afiliados</h3>
+        </a>
+      </div>
+      <div class="logout-wrapper">
+        <button id="logoutBtn" class="btn btn-outline">
+          <i class="fas fa-sign-out-alt"></i> Cerrar sesión
+        </button>
+      </div>
     </div>
   </div>
 
-<!-- Botón de WhatsApp flotante mejorado -->
-<div class="whatsapp-container">
-  <div class="whatsapp-tooltip" id="whatsappTooltip">
-    <span>¿Necesitas ayuda? 😊</span>
+  <!-- Botón de WhatsApp flotante -->
+  <div class="whatsapp-container">
+    <div class="whatsapp-tooltip">
+      <span>¿Necesitas ayuda? 😊</span>
+    </div>
+    <a href="#" class="whatsapp-float" id="whatsappBtn">
+      <i class="fab fa-whatsapp"></i>
+    </a>
   </div>
-  <a href="#" class="whatsapp-float" id="whatsappBtn">
-    <i class="fab fa-whatsapp"></i>
-  </a>
-</div>
 
-<style>
-.whatsapp-container {
-  position: fixed;
-  bottom: 25px;
-  right: 25px;
-  z-index: 1000;
-}
-
-.whatsapp-float {
-  background-color: #25D366;
-  color: white;
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 32px;
-  text-decoration: none;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-  transition: all 0.3s ease;
-  animation: pulse 2s infinite;
-}
-
-.whatsapp-float:hover {
-  transform: scale(1.1);
-  background-color: #128C7E;
-}
-
-.whatsapp-tooltip {
-  position: absolute;
-  bottom: 70px;
-  right: 0;
-  background: white;
-  color: #333;
-  padding: 8px 15px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 500;
-  white-space: nowrap;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-  opacity: 0;
-  visibility: hidden;
-  transition: all 0.3s;
-}
-
-.whatsapp-container:hover .whatsapp-tooltip {
-  opacity: 1;
-  visibility: visible;
-  bottom: 75px;
-}
-
-@keyframes pulse {
-  0% {
-    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7);
-  }
-  70% {
-    box-shadow: 0 0 0 15px rgba(37, 211, 102, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);
-  }
-}
-
-@media (max-width: 550px) {
-  .whatsapp-float {
-    width: 50px;
-    height: 50px;
-    font-size: 28px;
-  }
-}
-</style>
-
-<script>
-// Configuración del botón de WhatsApp
-const whatsappConfig = {
-  numero: "50588170531", // Tu número de WhatsApp (sin el símbolo +)
-  mensajes: {
-    default: "¡Hola!%20Estoy%20explorando%20Nicaragua%20con%20Guía%20Pinolero%20y%20tengo%20una%20consulta%20🌟",
-    ayuda: "¡Hola!%20Necesito%20ayuda%20con%20la%20aplicación%20Guía%20Pinolero.%20¿Me%20pueden%20ayudar?",
-    sugerencia: "¡Hola!%20Quiero%20sugerir%20un%20lugar%20turístico%20para%20agregar%20a%20Guía%20Pinolero:%20",
-    error: "¡Hola!%20Estoy%20teniendo%20un%20problema%20técnico%20con%20Guía%20Pinolero:%20"
-  }
-};
-
-// Función mejorada para abrir WhatsApp
-function abrirWhatsApp(tipo = 'default') {
-  let mensaje = whatsappConfig.mensajes[tipo] || whatsappConfig.mensajes.default;
-  
-  // Si el usuario está logueado, agregar su nombre al mensaje
-  const userName = document.getElementById('userName')?.innerText;
-  if (userName && userName !== '') {
-    mensaje = `Hola,%20soy%20${encodeURIComponent(userName)}.%20${mensaje}`;
-  }
-  
-  const url = `https://wa.me/${whatsappConfig.numero}?text=${mensaje}`;
-  window.open(url, '_blank');
-}
-
-// Configurar el botón de WhatsApp
-document.addEventListener('DOMContentLoaded', () => {
-  const whatsappBtn = document.getElementById('whatsappBtn');
-  
-  if (whatsappBtn) {
-    whatsappBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      abrirWhatsApp('default');
-    });
-  }
-  
-  // Opcional: Menú contextual al hacer click derecho
-  whatsappBtn?.addEventListener('contextmenu', (e) => {
-    e.preventDefault();
-    const opcion = prompt(
-      "¿Sobre qué quieres contactarnos?\n" +
-      "1 - Ayuda técnica\n" +
-      "2 - Sugerir lugar\n" +
-      "3 - Reportar error\n" +
-      "4 - Consulta general"
-    );
-    
-    switch(opcion) {
-      case '1':
-        abrirWhatsApp('ayuda');
-        break;
-      case '2':
-        abrirWhatsApp('sugerencia');
-        break;
-      case '3':
-        abrirWhatsApp('error');
-        break;
-      default:
-        abrirWhatsApp('default');
-    }
-  });
-});
-</script>
   <div id="toast" class="toast-message" style="display: none;"></div>
 
+  <!-- Firebase Import Map -->
   <script type="importmap">
     {
       "imports": {
@@ -407,7 +538,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const db = getFirestore(app);
     const provider = new GoogleAuthProvider();
 
-    // Elementos
+    // Elementos DOM
     const authCard = document.getElementById('authCard');
     const menuSection = document.getElementById('menuSection');
     const userNameSpan = document.getElementById('userName');
@@ -418,11 +549,10 @@ document.addEventListener('DOMContentLoaded', () => {
     function showToast(msg, isError = false) {
       toastDiv.textContent = msg;
       toastDiv.style.display = 'block';
-      toastDiv.style.background = isError ? 'rgba(220,53,69,0.9)' : 'rgba(0,0,0,0.8)';
+      toastDiv.style.background = isError ? 'rgba(220,53,69,0.95)' : 'rgba(0,0,0,0.85)';
       setTimeout(() => { toastDiv.style.display = 'none'; }, 3000);
     }
 
-    // Guardar usuario en Firestore (si no existe)
     async function guardarUsuarioEnFirestore(user) {
       const userRef = doc(db, 'usuarios', user.uid);
       const userSnap = await getDoc(userRef);
@@ -447,14 +577,12 @@ document.addEventListener('DOMContentLoaded', () => {
         menuSection.style.display = 'block';
         const displayName = user.displayName || user.email.split('@')[0];
         userNameSpan.textContent = displayName;
-        // Guardar perfil en Firestore si es nuevo
         guardarUsuarioEnFirestore(user);
       } else {
         authCard.style.display = 'block';
         menuSection.style.display = 'none';
         loginFormDiv.style.display = 'block';
         registerFormDiv.style.display = 'none';
-        // Limpiar campos
         document.getElementById('loginEmail').value = '';
         document.getElementById('loginPassword').value = '';
         document.getElementById('regEmail').value = '';
@@ -466,18 +594,19 @@ document.addEventListener('DOMContentLoaded', () => {
       updateUI(user);
     });
 
-    // Login email/pass
+    // Login con email/contraseña
     document.getElementById('doLoginBtn').addEventListener('click', async () => {
       const email = document.getElementById('loginEmail').value.trim();
       const password = document.getElementById('loginPassword').value;
-      if (!email || !password) return showToast('Completa todos los campos', true);
+      if (!email || !password) return showToast('📝 Completa todos los campos', true);
       try {
         await signInWithEmailAndPassword(auth, email, password);
-        showToast('¡Bienvenido de vuelta!');
+        showToast('✅ ¡Bienvenido de vuelta!');
       } catch (error) {
         let msg = error.message;
-        if (msg.includes('user-not-found')) msg = 'Usuario no registrado';
-        else if (msg.includes('wrong-password')) msg = 'Contraseña incorrecta';
+        if (msg.includes('user-not-found')) msg = '❌ Usuario no registrado';
+        else if (msg.includes('wrong-password')) msg = '❌ Contraseña incorrecta';
+        else msg = '❌ Error al iniciar sesión';
         showToast(msg, true);
       }
     });
@@ -486,16 +615,16 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('doRegisterBtn').addEventListener('click', async () => {
       const email = document.getElementById('regEmail').value.trim();
       const password = document.getElementById('regPassword').value;
-      if (!email || !password) return showToast('Completa todos los campos', true);
-      if (password.length < 6) return showToast('La contraseña debe tener al menos 6 caracteres', true);
+      if (!email || !password) return showToast('📝 Completa todos los campos', true);
+      if (password.length < 6) return showToast('🔒 La contraseña debe tener al menos 6 caracteres', true);
       try {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        // Guardar inmediatamente en Firestore
         await guardarUsuarioEnFirestore(userCredential.user);
-        showToast('Registro exitoso. ¡Ya puedes explorar!');
+        showToast('🎉 ¡Registro exitoso! Ya puedes explorar Nicaragua');
       } catch (error) {
         let msg = error.message;
-        if (msg.includes('email-already-in-use')) msg = 'El correo ya está registrado';
+        if (msg.includes('email-already-in-use')) msg = '📧 El correo ya está registrado';
+        else msg = '❌ Error al registrarse';
         showToast(msg, true);
       }
     });
@@ -505,13 +634,13 @@ document.addEventListener('DOMContentLoaded', () => {
       try {
         const result = await signInWithPopup(auth, provider);
         await guardarUsuarioEnFirestore(result.user);
-        showToast('Inicio con Google correcto');
+        showToast('✅ Inicio con Google correcto');
       } catch (error) {
-        showToast('Error con Google: ' + error.message, true);
+        showToast('❌ Error con Google: ' + error.message, true);
       }
     });
 
-    // Cambiar formularios
+    // Cambiar entre formularios
     document.getElementById('showRegisterBtn').addEventListener('click', () => {
       loginFormDiv.style.display = 'none';
       registerFormDiv.style.display = 'block';
@@ -524,7 +653,33 @@ document.addEventListener('DOMContentLoaded', () => {
     // Cerrar sesión
     document.getElementById('logoutBtn').addEventListener('click', async () => {
       await signOut(auth);
-      showToast('Sesión cerrada');
+      showToast('👋 Sesión cerrada');
+    });
+
+    // Configuración de WhatsApp
+    const whatsappConfig = {
+      numero: "50588170531",
+      mensajes: {
+        default: "¡Hola!%20Estoy%20explorando%20Nicaragua%20con%20Guía%20Pinolero%20y%20tengo%20una%20consulta%20🌟",
+        ayuda: "¡Hola!%20Necesito%20ayuda%20con%20la%20aplicación%20Guía%20Pinolero.%20¿Me%20pueden%20ayudar?",
+        sugerencia: "¡Hola!%20Quiero%20sugerir%20un%20lugar%20turístico%20para%20agregar%20a%20Guía%20Pinolero:%20",
+        error: "¡Hola!%20Estoy%20teniendo%20un%20problema%20técnico%20con%20Guía%20Pinolero:%20"
+      }
+    };
+
+    function abrirWhatsApp(tipo = 'default') {
+      let mensaje = whatsappConfig.mensajes[tipo] || whatsappConfig.mensajes.default;
+      const userName = document.getElementById('userName')?.innerText;
+      if (userName && userName !== '') {
+        mensaje = `Hola,%20soy%20${encodeURIComponent(userName)}.%20${mensaje}`;
+      }
+      const url = `https://wa.me/${whatsappConfig.numero}?text=${mensaje}`;
+      window.open(url, '_blank');
+    }
+
+    document.getElementById('whatsappBtn').addEventListener('click', (e) => {
+      e.preventDefault();
+      abrirWhatsApp('default');
     });
   </script>
 </body>
