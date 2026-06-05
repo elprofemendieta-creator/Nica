@@ -154,11 +154,19 @@ object-fit:cover;
 border-radius:20px;
 }
 
-.clock{
-font-size:45px;
-text-align:center;
-color:#0891b2;
-font-weight:bold;
+/* Estilos para el widget del clima */
+.clima-widget {
+    max-width: 500px;
+    margin: 0 auto;
+    background: rgba(255,255,255,0.1);
+    border-radius: 24px;
+    padding: 15px;
+    backdrop-filter: blur(4px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+body.dark .clima-widget {
+    background: rgba(30,41,59,0.3);
 }
 
 .dark-btn{
@@ -173,6 +181,7 @@ background:#111827;
 color:white;
 font-size:22px;
 cursor:pointer;
+z-index: 1000;
 }
 
 footer{
@@ -299,14 +308,43 @@ Platos típicos elaborados con coco, pescado, mariscos, yuca y otros productos l
 
 </section>
 
+<!-- SECCIÓN CLIMA: reemplazo del reloj por el widget del clima -->
 <section id="clima">
 
 <div class="title">
-<h2>Hora Actual</h2>
+<h2>Clima en el Caribe Norte</h2>
 </div>
 
-<div class="clock" id="clock">
-00:00:00
+<div class="clima-widget">
+    <!-- Widget del clima - weatherwidget.io para Puerto Cabezas, Nicaragua -->
+    <a class="weatherwidget-io" 
+       href="https://forecast7.com/es/14d03n83d39/puerto-cabezas/" 
+       data-label_1="PUERTO CABEZAS" 
+       data-label_2="CLIMA ACTUAL" 
+       data-theme="original" 
+       data-basecolor="#ffffff" 
+       data-accent="#0891b2" 
+       data-highcolor="#f97316" 
+       data-lowcolor="#1e293b" 
+       data-suncolor="#fbbf24" 
+       data-mooncolor="#334155" 
+       data-cloudcolor="#94a3b8" 
+       data-raincolor="#3b82f6" 
+       data-snowcolor="#e2e8f0">
+        Cargando información del clima...
+    </a>
+    <script>
+        // Script oficial del widget de clima
+        !function(d,s,id){
+            var js,fjs=d.getElementsByTagName(s)[0];
+            if(!d.getElementById(id)){
+                js=d.createElement(s);
+                js.id=id;
+                js.src='https://weatherwidget.io/js/widget.min.js';
+                fjs.parentNode.insertBefore(js,fjs);
+            }
+        }(document,'script','weatherwidget-io-js');
+    </script>
 </div>
 
 </section>
@@ -339,16 +377,8 @@ function toggleDarkMode(){
 document.body.classList.toggle('dark');
 }
 
-function updateClock(){
-
-const now = new Date();
-
-document.getElementById("clock").innerHTML =
-now.toLocaleTimeString();
-
-}
-
-setInterval(updateClock,1000);
+// NOTA: El script del reloj ha sido eliminado
+// porque ahora mostramos el widget del clima
 
 </script>
 
