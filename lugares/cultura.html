@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Cultura Miskita - Caribe Norte de Nicaragua</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+scroll-behavior:smooth;
+}
+
+body{
+font-family:'Poppins',sans-serif;
+background:#eefcff;
+overflow-x:hidden;
+transition:.5s;
+}
+
+body.dark{
+background:#08131d;
+color:white;
+}
+
+nav{
+position:fixed;
+top:0;
+width:100%;
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:18px 50px;
+background:rgba(0,0,0,.35);
+backdrop-filter:blur(12px);
+z-index:999;
+}
+
+.logo{
+font-size:28px;
+font-weight:700;
+color:white;
+}
+
+nav ul{
+display:flex;
+gap:25px;
+list-style:none;
+}
+
+nav ul li a{
+color:white;
+text-decoration:none;
+}
+
+.hero{
+height:100vh;
+background:
+linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.7)),
+url('https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=2070&auto=format&fit=crop');
+
+background-size:cover;
+background-position:center;
+display:flex;
+justify-content:center;
+align-items:center;
+text-align:center;
+color:white;
+}
+
+.hero-content h1{
+font-size:75px;
+}
+
+.hero-content p{
+font-size:24px;
+margin-top:20px;
+}
+
+.hero button{
+margin-top:30px;
+padding:15px 35px;
+border:none;
+border-radius:50px;
+background:linear-gradient(45deg,#0891b2,#06b6d4);
+color:white;
+cursor:pointer;
+font-size:18px;
+}
+
+section{
+padding:100px 10%;
+}
+
+.title{
+text-align:center;
+margin-bottom:50px;
+}
+
+.title h2{
+font-size:45px;
+color:#0891b2;
+}
+
+.cards{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+gap:30px;
+}
+
+.card{
+background:white;
+border-radius:20px;
+overflow:hidden;
+box-shadow:0 10px 25px rgba(0,0,0,.1);
+}
+
+body.dark .card{
+background:#1e293b;
+}
+
+.card img{
+width:100%;
+height:220px;
+object-fit:cover;
+}
+
+.card-content{
+padding:20px;
+}
+
+.card-content h3{
+color:#0891b2;
+margin-bottom:10px;
+}
+
+.gallery{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:20px;
+}
+
+.gallery img{
+width:100%;
+height:250px;
+object-fit:cover;
+border-radius:20px;
+}
+
+.clock{
+font-size:45px;
+text-align:center;
+color:#0891b2;
+font-weight:bold;
+}
+
+.dark-btn{
+position:fixed;
+bottom:20px;
+right:20px;
+width:60px;
+height:60px;
+border:none;
+border-radius:50%;
+background:#111827;
+color:white;
+font-size:22px;
+cursor:pointer;
+}
+
+footer{
+background:#0f172a;
+color:white;
+text-align:center;
+padding:60px 20px;
+}
+
+.map-btn{
+display:inline-block;
+margin-top:20px;
+padding:15px 30px;
+border-radius:50px;
+background:linear-gradient(45deg,#0891b2,#06b6d4);
+color:white;
+text-decoration:none;
+}
+
+</style>
+</head>
+
+<body>
+
+<nav>
+
+<div class="logo">Cultura Miskita</div>
+
+<ul>
+<li><a href="#inicio">Inicio</a></li>
+<li><a href="#tradiciones">Tradiciones</a></li>
+<li><a href="#galeria">Galería</a></li>
+<li><a href="#clima">Clima</a></li>
+</ul>
+
+</nav>
+
+<section class="hero" id="inicio">
+
+<div class="hero-content">
+
+<h1>Cultura Miskita</h1>
+
+<p>
+Tradición, identidad y herencia del Caribe Norte de Nicaragua
+</p>
+
+<button onclick="document.querySelector('#tradiciones').scrollIntoView({behavior:'smooth'})">
+Explorar
+</button>
+
+</div>
+
+</section>
+
+<section id="tradiciones">
+
+<div class="title">
+<h2>Tradiciones Miskitas</h2>
+</div>
+
+<div class="cards">
+
+<div class="card">
+
+<img src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=2070&auto=format&fit=crop">
+
+<div class="card-content">
+<h3>Pueblo Miskito</h3>
+<p>
+Uno de los pueblos indígenas más representativos del Caribe nicaragüense, conservando su lengua y costumbres ancestrales.
+</p>
+</div>
+
+</div>
+
+<div class="card">
+
+<img src="https://images.unsplash.com/photo-1516280440614-37939bbacd81?q=80&w=2070&auto=format&fit=crop">
+
+<div class="card-content">
+<h3>Música y Danza</h3>
+<p>
+La música tradicional y los bailes forman parte esencial de las celebraciones culturales miskitas.
+</p>
+</div>
+
+</div>
+
+<div class="card">
+
+<img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=2070&auto=format&fit=crop">
+
+<div class="card-content">
+<h3>Gastronomía</h3>
+<p>
+Platos típicos elaborados con coco, pescado, mariscos, yuca y otros productos locales.
+</p>
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<section id="galeria">
+
+<div class="title">
+<h2>Galería Cultural</h2>
+</div>
+
+<div class="gallery">
+
+<img src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=2070&auto=format&fit=crop">
+
+<img src="https://images.unsplash.com/photo-1516280440614-37939bbacd81?q=80&w=2070&auto=format&fit=crop">
+
+<img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=2070&auto=format&fit=crop">
+
+<img src="https://images.unsplash.com/photo-1517457373958-b7bdd4587205?q=80&w=2070&auto=format&fit=crop">
+
+</div>
+
+</section>
+
+<section id="clima">
+
+<div class="title">
+<h2>Hora Actual</h2>
+</div>
+
+<div class="clock" id="clock">
+00:00:00
+</div>
+
+</section>
+
+<footer>
+
+<h2>Descubre la Cultura Miskita</h2>
+
+<p>
+Historia • Tradiciones • Gastronomía • Identidad Caribeña
+</p>
+
+<a class="map-btn"
+href="https://www.google.com/maps/search/Bilwi+Puerto+Cabezas+Nicaragua/"
+target="_blank">
+
+📍 Visitar Bilwi
+
+</a>
+
+</footer>
+
+<button class="dark-btn" onclick="toggleDarkMode()">
+<i class="fas fa-moon"></i>
+</button>
+
+<script>
+
+function toggleDarkMode(){
+document.body.classList.toggle('dark');
+}
+
+function updateClock(){
+
+const now = new Date();
+
+document.getElementById("clock").innerHTML =
+now.toLocaleTimeString();
+
+}
+
+setInterval(updateClock,1000);
+
+</script>
+
+</body>
+</html>
