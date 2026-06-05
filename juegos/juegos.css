@@ -23,13 +23,14 @@
   --color-memoria: #e71d36;
   --color-palabra: #011627;
   --color-laberinto: #7209b7;
+  --color-varios: #9c27b0;
 }
 
 body {
   font-family: var(--font-body);
-  background-color: var(--bg-light);
-  background-image: radial-gradient(#bae6fd 0.5px, transparent 0.5px);
-  background-size: 24px 24px;
+  background: linear-gradient(145deg, #e8f8f5 0%, #f0fdfa 100%);
+  background-image: radial-gradient(#bae6fd 0.8px, transparent 0.8px);
+  background-size: 30px 30px;
   color: #334155;
   margin: 0;
   padding: 0;
@@ -37,19 +38,44 @@ body {
   flex-direction: column;
   align-items: center;
   min-height: 100vh;
+  position: relative;
+}
+
+/* Decoración flotante de fondo */
+body::before {
+  content: "🎮🧠🎡🃏🔤🌋🧩";
+  position: fixed;
+  bottom: 20px;
+  right: 10px;
+  font-size: 50px;
+  opacity: 0.04;
+  pointer-events: none;
+  z-index: 0;
+}
+
+body::after {
+  content: "🇳🇮";
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  font-size: 80px;
+  opacity: 0.03;
+  pointer-events: none;
+  z-index: 0;
 }
 
 /* ==========================================================================
-   2. BARRA SUPERIOR - MÓVIL AMIGABLE
+   2. BARRA SUPERIOR MEJORADA
    ========================================================================== */
 .topbar {
   width: 100%;
-  background: var(--white);
-  padding: 1rem;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 1rem 1.5rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 4px 15px rgba(2, 128, 144, 0.1);
+  box-shadow: 0 4px 20px rgba(2, 128, 144, 0.15);
   position: sticky;
   top: 0;
   z-index: 100;
@@ -59,83 +85,145 @@ body {
 
 .topbar h1 {
   font-family: var(--font-title);
-  font-size: 1.4rem; /* Tamaño base legible */
-  color: var(--secondary-color);
+  font-size: 1.5rem;
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
   margin: 0;
   line-height: 1.2;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.topbar h1::before {
+  content: "🦎";
+  font-size: 1.8rem;
+  background: none;
+  -webkit-background-clip: unset;
+  background-clip: unset;
+  color: var(--primary-color);
 }
 
 .volver {
   text-decoration: none;
   font-family: var(--font-title);
-  color: var(--primary-color);
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  color: white;
   font-weight: 600;
-  padding: 0.6rem 1.2rem;
-  border-radius: 40px;
-  background: #e0f2fe;
-  transition: all 0.2s;
+  padding: 0.7rem 1.3rem;
+  border-radius: 50px;
+  transition: all 0.3s ease;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  font-size: 1rem;
+  gap: 8px;
+  font-size: 0.95rem;
   min-height: 48px;
+  box-shadow: 0 4px 10px rgba(0, 168, 150, 0.3);
+}
+
+.volver:hover {
+  transform: translateX(-3px);
+  box-shadow: 0 6px 15px rgba(0, 168, 150, 0.4);
 }
 
 /* ==========================================================================
-   3. CONTENEDOR DE JUEGOS - UNA SOLA COLUMNA EN MÓVIL
+   3. CONTENEDOR DE JUEGOS - RESPONSIVE
    ========================================================================== */
 .games-container {
   display: grid;
-  grid-template-columns: 1fr; /* FUERZA UNA COLUMNA en todos los móviles */
+  grid-template-columns: 1fr;
   gap: 1.5rem;
   width: 90%;
-  max-width: 1100px;
-  padding: 1.5rem 0;
+  max-width: 1200px;
+  padding: 2rem 0;
   margin: 0 auto;
+  position: relative;
+  z-index: 1;
 }
 
-/* Para pantallas grandes (tablet horizontal y escritorio) permitimos más columnas */
 @media (min-width: 768px) {
   .games-container {
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1.8rem;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
   }
 }
 
-/* Para escritorio grande (≥ 1200px) mantenemos el ancho máximo */
-@media (min-width: 1200px) {
+@media (min-width: 1024px) {
   .games-container {
-    max-width: 1200px;
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
 .game-card {
   background: var(--white);
-  padding: 1.5rem;
-  border-radius: 28px;
+  padding: 1.8rem 1.5rem;
+  border-radius: 32px;
   text-align: center;
-  border: 2px solid #e2e8f0;
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  box-shadow: 0 6px 0 #e2e8f0;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 168, 150, 0.2);
+  position: relative;
+  overflow: hidden;
 }
 
+.game-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.game-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 35px -12px rgba(0, 168, 150, 0.3);
+  border-color: var(--primary-color);
+}
+
+.game-card:hover::before {
+  opacity: 1;
+}
+
+/* Colores específicos por juego */
+.game-card:nth-child(1):hover { border-color: var(--color-trivia); }
+.game-card:nth-child(2):hover { border-color: var(--color-ruleta); }
+.game-card:nth-child(3):hover { border-color: var(--color-memoria); }
+.game-card:nth-child(4):hover { border-color: var(--color-palabra); }
+.game-card:nth-child(5):hover { border-color: var(--color-laberinto); }
+.game-card:nth-child(6):hover { border-color: var(--color-varios); }
+
 .game-card .emoji {
-  font-size: 3.5rem; /* Tamaño grande y visible */
-  margin-bottom: 0.8rem;
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+  transition: transform 0.2s;
+}
+
+.game-card:hover .emoji {
+  transform: scale(1.05);
 }
 
 .game-card h2 {
   font-family: var(--font-title);
-  font-size: 1.6rem;
-  color: var(--secondary-color);
+  font-size: 1.5rem;
+  background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
   margin-bottom: 0.6rem;
 }
 
 .game-card p {
-  font-size: 1rem;
+  font-size: 0.9rem;
   color: #64748b;
   margin-bottom: 1.2rem;
   line-height: 1.4;
@@ -143,42 +231,62 @@ body {
 
 .game-card button {
   font-family: var(--font-title);
-  background: var(--secondary-color);
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
   color: white;
   border: none;
   padding: 0.9rem;
   border-radius: 60px;
-  font-size: 1.1rem;
+  font-size: 1rem;
   cursor: pointer;
   width: 100%;
   min-height: 52px;
   font-weight: 600;
-  touch-action: manipulation;
+  transition: all 0.2s;
+  box-shadow: 0 4px 10px rgba(0, 168, 150, 0.2);
+}
+
+.game-card button:hover {
+  transform: scale(1.02);
+  box-shadow: 0 6px 15px rgba(0, 168, 150, 0.3);
+}
+
+.boton {
+  text-decoration: none;
+  color: white;
+  display: block;
+  width: 100%;
 }
 
 /* ==========================================================================
-   4. ÁREA DE JUEGO - RESPONSIVE
+   4. ÁREA DE JUEGO MEJORADA
    ========================================================================== */
 .play-area {
   width: 90%;
   max-width: 1100px;
   background: var(--white);
   margin: 1rem auto 2rem auto;
-  padding: 1.5rem;
+  padding: 2rem;
   border-radius: 32px;
-  border: 3px dashed #cbd5e1;
+  border: 2px solid rgba(0, 168, 150, 0.3);
   text-align: center;
-  min-height: 300px;
+  min-height: 250px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  background: linear-gradient(145deg, var(--white), #f8fffc);
 }
 
 #gameTitle {
   font-family: var(--font-title);
   font-size: 1.8rem;
-  color: var(--accent-color);
+  background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
   margin-bottom: 1rem;
 }
 
@@ -186,77 +294,130 @@ body {
   font-size: 1rem;
   color: #475569;
   width: 100%;
-  line-height: 1.5;
+  line-height: 1.6;
+}
+
+#gameContent p {
+  font-size: 1rem;
 }
 
 /* ==========================================================================
-   5. MEDIA QUERIES ESPECÍFICAS PARA PANTALLAS MUY PEQUEÑAS
+   5. MEDIA QUERIES ESPECÍFICAS
    ========================================================================== */
-@media (max-width: 480px) {
+@media (max-width: 768px) {
   .topbar {
     flex-direction: column;
     text-align: center;
     padding: 0.8rem;
   }
+  
   .topbar h1 {
     font-size: 1.2rem;
   }
-  .games-container {
-    width: 95%;
-    gap: 1rem;
-    padding: 1rem 0;
+  
+  .topbar h1::before {
+    font-size: 1.5rem;
   }
+  
+  .games-container {
+    width: 92%;
+    gap: 1rem;
+    padding: 1.5rem 0;
+  }
+  
   .game-card {
     padding: 1.2rem;
   }
+  
   .game-card .emoji {
-    font-size: 2.8rem;
+    font-size: 3rem;
   }
+  
   .game-card h2 {
     font-size: 1.3rem;
   }
+  
   .game-card p {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
   }
+  
   .game-card button {
-    font-size: 1rem;
+    font-size: 0.9rem;
     padding: 0.8rem;
     min-height: 48px;
   }
+  
   .play-area {
-    width: 95%;
-    padding: 1rem;
-    min-height: 250px;
+    width: 92%;
+    padding: 1.2rem;
+    min-height: 200px;
   }
+  
   #gameTitle {
-    font-size: 1.4rem;
-  }
-  #gameContent {
-    font-size: 0.9rem;
+    font-size: 1.3rem;
   }
 }
 
-/* Para dispositivos en orientación horizontal (evitar que se vean dos columnas) */
-@media (max-width: 768px) and (orientation: landscape) {
+@media (max-width: 480px) {
   .games-container {
-    grid-template-columns: 1fr; /* Sigue siendo una columna */
-    gap: 1rem;
+    width: 95%;
+    gap: 0.8rem;
   }
+  
   .game-card {
     padding: 1rem;
   }
+  
   .game-card .emoji {
     font-size: 2.5rem;
   }
+  
   .game-card h2 {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
+  }
+  
+  .game-card p {
+    font-size: 0.8rem;
+  }
+  
+  .play-area {
+    padding: 1rem;
+  }
+  
+  #gameTitle {
+    font-size: 1.1rem;
+  }
+  
+  #gameContent p {
+    font-size: 0.85rem;
+  }
+}
+
+/* Orientación horizontal en móvil */
+@media (max-width: 768px) and (orientation: landscape) {
+  .games-container {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+  
+  .game-card {
+    padding: 0.8rem;
+  }
+  
+  .game-card .emoji {
+    font-size: 2rem;
+  }
+  
+  .play-area {
+    min-height: 180px;
   }
 }
 
 /* Ajustes táctiles globales */
 button, 
 .volver,
-.game-card button {
+.game-card button,
+.boton {
   touch-action: manipulation;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
@@ -269,4 +430,21 @@ input, textarea, select {
 img, canvas, iframe {
   max-width: 100%;
   height: auto;
+}
+
+/* Animación de carga suave */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.games-container,
+.play-area {
+  animation: fadeIn 0.5s ease-out;
 }
