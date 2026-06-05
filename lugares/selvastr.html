@@ -230,7 +230,7 @@ body.dark .clock {
     border-radius: 24px;
     border: none;
     background: white;
-    height: 320px;
+    height: 350px;
 }
 
 body.dark .clima-iframe {
@@ -278,6 +278,17 @@ footer {
 .map-btn:hover {
     transform: scale(1.05);
 }
+
+.ciudad-clima {
+    font-size: 14px;
+    color: #0891b2;
+    margin-top: 10px;
+    font-weight: 600;
+}
+
+body.dark .ciudad-clima {
+    color: #2dd4bf;
+}
 </style>
 </head>
 
@@ -314,7 +325,7 @@ footer {
                      onerror="this.src='https://picsum.photos/id/104/600/400'">
                 <div class="card-content">
                     <h3>🌳 Selva Tropical Lowland</h3>
-                    <p>La selva tropical de tierras bajas de la Costa Caribe Norte alberga árboles centenarios de caoba, ceiba y palmeras. La Reserva de Biosfera Indio Maíz es uno de los bosques mejor conservados de Centroamérica [citation:7].</p>
+                    <p>La selva tropical de tierras bajas de la Costa Caribe Norte alberga árboles centenarios de caoba, ceiba y palmeras. La Reserva de Biosfera Indio Maíz es uno de los bosques mejor conservados de Centroamérica.</p>
                 </div>
             </div>
             <div class="card">
@@ -323,7 +334,7 @@ footer {
                      onerror="this.src='https://picsum.photos/id/127/600/400'">
                 <div class="card-content">
                     <h3>🌊 Manglares y Humedales</h3>
-                    <p>Laguna de Bismuna-Raya protege un extenso sistema de lagunas costeras, manglares y humedales. Este ecosistema es vital para aves acuáticas y la pesca tradicional del pueblo Miskito [citation:5].</p>
+                    <p>Laguna de Bismuna-Raya protege un extenso sistema de lagunas costeras, manglares y humedales. Este ecosistema es vital para aves acuáticas y la pesca tradicional del pueblo Miskito.</p>
                 </div>
             </div>
             <div class="card">
@@ -343,10 +354,10 @@ footer {
         </div>
         <div class="gallery">
             <img src="https://upload.wikimedia.org/wikipedia/commons/0/02/Rio_San_Juan_Nicaragua.jpg" 
-                 alt="Río San Juan - frontera natural entre Nicaragua y Costa Rica [citation:1]"
+                 alt="Río San Juan - frontera natural entre Nicaragua y Costa Rica"
                  onerror="this.src='https://picsum.photos/id/104/600/400'">
             <img src="https://www.overflightstock.com/contents/artists/nature-picture-library/0346-0807-2315-0544.jpg" 
-                 alt="Vista aérea de la Reserva Indio Maíz - selva tropical del sureste de Nicaragua [citation:7]"
+                 alt="Vista aérea de la Reserva Indio Maíz - selva tropical del sureste de Nicaragua"
                  onerror="this.src='https://picsum.photos/id/38/600/400'">
             <img src="https://picsum.photos/id/96/600/400" 
                  alt="Ríos y caños de la Costa Caribe Norte"
@@ -363,7 +374,8 @@ footer {
         </div>
         <div class="clima-reloj-container">
             <div class="clima-widget">
-                <h3><i class="fas fa-cloud-sun-rain"></i> Clima Tropical</h3>
+                <h3><i class="fas fa-cloud-sun-rain"></i> Clima Tropical - Puerto Cabezas (Bilwi)</h3>
+                <!-- CLIMA REAL DE LA COSTA CARIBE NORTE - PUERTO CABEZAS, NO LA CAPITAL -->
                 <iframe class="clima-iframe" 
                     src="https://www.meteoblue.com/en/weather/widget/daily/puerto-cabezas_nicaragua_3617505?geoloc=fixed&nocurrent=0&noforecast=0&days=4&tempunit=CENTIGRADE&windunit=KILOMETER_PER_HOUR&layout=image" 
                     frameborder="0" 
@@ -371,12 +383,15 @@ footer {
                     allowtransparency="true"
                     sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox">
                 </iframe>
-                <p style="font-size:12px; margin-top:8px;">🌡️ Temperatura · Humedad · Pronóstico 4 días</p>
+                <p class="ciudad-clima">
+                    📍 Puerto Cabezas (Bilwi) · Costa Caribe Norte, Nicaragua · Temperatura promedio: 26-30°C · Humedad alta
+                </p>
+                <p style="font-size:12px; margin-top:5px;">🌡️ Datos meteorológicos en tiempo real de la región selvática caribeña</p>
             </div>
             <div class="reloj-widget">
                 <h3><i class="far fa-clock"></i> Hora Local</h3>
                 <div class="clock" id="clock">--:--:--</div>
-                <p style="margin-top:15px;">🇳🇮 Costa Caribe Norte, Nicaragua (GMT-6)</p>
+                <p style="margin-top:15px;">🇳🇮 Costa Caribe Norte, Nicaragua (GMT-6)<br>⏰ Misma zona horaria que Managua</p>
             </div>
         </div>
     </section>
