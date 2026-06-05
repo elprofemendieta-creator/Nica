@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Playas del Caribe Sur - Bluefields, Nicaragua</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: #eefcff;
+    overflow-x: hidden;
+    transition: .5s;
+}
+
+body.dark {
+    background: #08131d;
+    color: white;
+}
+
+nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 50px;
+    background: rgba(0, 0, 0, .45);
+    backdrop-filter: blur(12px);
+    z-index: 999;
+}
+
+.logo {
+    font-size: 28px;
+    font-weight: 700;
+    color: white;
+}
+
+nav ul {
+    display: flex;
+    gap: 25px;
+    list-style: none;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    transition: 0.3s;
+}
+
+nav ul li a:hover {
+    color: #06b6d4;
+}
+
+.hero {
+    height: 100vh;
+    background: linear-gradient(rgba(0, 0, 0, .5), rgba(0, 0, 0, .7)),
+        url('https://images.pexels.com/photos/753626/pexels-photo-753626.jpeg?auto=compress&cs=tinysrgb&w=1600');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+}
+
+.hero-content h1 {
+    font-size: 65px;
+}
+
+.hero-content p {
+    font-size: 24px;
+    margin-top: 20px;
+}
+
+.hero button {
+    margin-top: 30px;
+    padding: 15px 35px;
+    border: none;
+    border-radius: 50px;
+    background: linear-gradient(45deg, #0891b2, #06b6d4);
+    color: white;
+    cursor: pointer;
+    font-size: 18px;
+    transition: transform 0.3s;
+}
+
+.hero button:hover {
+    transform: scale(1.05);
+}
+
+section {
+    padding: 100px 10%;
+}
+
+.title {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.title h2 {
+    font-size: 45px;
+    color: #0891b2;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+}
+
+.card {
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, .1);
+    transition: transform 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+body.dark .card {
+    background: #1e293b;
+}
+
+.card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+.card-content {
+    padding: 20px;
+}
+
+.card-content h3 {
+    color: #0891b2;
+    margin-bottom: 10px;
+}
+
+.clima-reloj-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    justify-content: center;
+    align-items: stretch;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.clima-widget,
+.reloj-widget {
+    flex: 1;
+    min-width: 280px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
+    border-radius: 32px;
+    padding: 25px 20px;
+    text-align: center;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    transition: 0.3s;
+}
+
+body.dark .clima-widget,
+body.dark .reloj-widget {
+    background: rgba(30, 41, 59, 0.5);
+}
+
+.reloj-widget h3 {
+    color: #0891b2;
+    font-size: 24px;
+    margin-bottom: 15px;
+}
+
+.clock {
+    font-size: 52px;
+    font-weight: bold;
+    font-family: monospace;
+    letter-spacing: 3px;
+    background: #0f172a;
+    display: inline-block;
+    padding: 15px 30px;
+    border-radius: 60px;
+    color: #06b6d4;
+    box-shadow: 0 0 15px rgba(6, 182, 212, 0.3);
+}
+
+body.dark .clock {
+    background: #000000aa;
+    color: #2dd4bf;
+}
+
+.clima-iframe {
+    width: 100%;
+    border-radius: 24px;
+    border: none;
+    background: white;
+    height: 350px;
+}
+
+body.dark .clima-iframe {
+    background: #1e293b;
+}
+
+.dark-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    border: none;
+    border-radius: 50%;
+    background: #111827;
+    color: white;
+    font-size: 22px;
+    cursor: pointer;
+    z-index: 1000;
+    transition: 0.3s;
+}
+
+.dark-btn:hover {
+    transform: scale(1.1);
+}
+
+footer {
+    background: #0f172a;
+    color: white;
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.map-btn {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 15px 30px;
+    border-radius: 50px;
+    background: linear-gradient(45deg, #0891b2, #06b6d4);
+    color: white;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.map-btn:hover {
+    transform: scale(1.05);
+}
+
+.ciudad-clima {
+    font-size: 14px;
+    color: #0891b2;
+    margin-top: 10px;
+    font-weight: 600;
+}
+
+body.dark .ciudad-clima {
+    color: #2dd4bf;
+}
+</style>
+</head>
+
+<body>
+
+    <nav>
+        <div class="logo">🏖️ Playas del Caribe Sur</div>
+        <ul>
+            <li><a href="#inicio">Inicio</a></li>
+            <li><a href="#playas">Playas</a></li>
+            <li><a href="#actividades">Actividades</a></li>
+            <li><a href="#clima">Clima</a></li>
+        </ul>
+    </nav>
+
+    <section class="hero" id="inicio">
+        <div class="hero-content">
+            <h1>Playas del Caribe Sur</h1>
+            <p>Bluefields · Costa Caribe Sur, Nicaragua 🌊</p>
+            <button onclick="document.querySelector('#playas').scrollIntoView({behavior:'smooth'})">
+                Explorar
+            </button>
+        </div>
+    </section>
+
+    <!-- SECCIÓN PLAYAS -->
+    <section id="playas">
+        <div class="title">
+            <h2>🏝️ Playas del Caribe Sur</h2>
+            <p style="margin-top: 10px; color: #555;">Aguas turquesas, arena blanca y oleaje caribeño</p>
+        </div>
+        <div class="cards">
+            <div class="card">
+                <img src="https://images.pexels.com/photos/753626/pexels-photo-753626.jpeg?auto=compress&cs=tinysrgb&w=600" 
+                     alt="Playa Bluff - Bluefields"
+                     onerror="this.src='https://picsum.photos/id/103/600/400'">
+                <div class="card-content">
+                    <h3>🏖️ Playa Bluff (El Bluff)</h3>
+                    <p>La playa más famosa de Bluefields. Ubicada en una península que protege la entrada a la bahía, se extiende por kilómetros de arena dorada. Ideal para surfistas por sus fuertes olas.</p>
+                </div>
+            </div>
+            <div class="card">
+                <img src="https://images.pexels.com/photos/2150347/pexels-photo-2150347.jpeg?auto=compress&cs=tinysrgb&w=600" 
+                     alt="Cayos Perlas"
+                     onerror="this.src='https://picsum.photos/id/128/600/400'">
+                <div class="card-content">
+                    <h3>🐚 Cayos Perlas (Pearl Cays)</h3>
+                    <p>Archipiélago de pequeñas islas frente a la costa de Bluefields. Playas de arena blanca, aguas turquesas y arrecifes de coral. Perfecto para snorkel y buceo.</p>
+                </div>
+            </div>
+            <div class="card">
+                <img src="https://images.pexels.com/photos/2606024/pexels-photo-2606024.jpeg?auto=compress&cs=tinysrgb&w=600" 
+                     alt="Playas de Laguna de Perlas"
+                     onerror="this.src='https://picsum.photos/id/111/600/400'">
+                <div class="card-content">
+                    <h3>🌊 Laguna de Perlas</h3>
+                    <p>Ubicada al norte de Bluefields, esta laguna costera ofrece playas tranquilas de aguas cristalinas. Ideal para nadar, kayak y observar aves en sus manglares.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN ACTIVIDADES -->
+    <section id="actividades">
+        <div class="title">
+            <h2>🏄 Actividades en las Playas</h2>
+        </div>
+        <div class="cards">
+            <div class="card">
+                <img src="https://images.pexels.com/photos/4916549/pexels-photo-4916549.jpeg?auto=compress&cs=tinysrgb&w=600" 
+                     alt="Surf en Playa Bluff"
+                     onerror="this.src='https://picsum.photos/id/13/600/400'">
+                <div class="card-content">
+                    <h3>🏄 Surf</h3>
+                    <p>Playa Bluff tiene excelentes olas para surfistas de nivel intermedio y avanzado. La mejor época es de diciembre a abril.</p>
+                </div>
+            </div>
+            <div class="card">
+                <img src="https://images.pexels.com/photos/3551003/pexels-photo-3551003.jpeg?auto=compress&cs=tinysrgb&w=600" 
+                     alt="Snorkel en Cayos Perlas"
+                     onerror="this.src='https://picsum.photos/id/91/600/400'">
+                <div class="card-content">
+                    <h3>🤿 Snorkel y Buceo</h3>
+                    <p>Los Cayos Perlas tienen arrecifes de coral con una gran variedad de peces tropicales y tortugas marinas.</p>
+                </div>
+            </div>
+            <div class="card">
+                <img src="https://images.pexels.com/photos/457882/pexels-photo-457882.jpeg?auto=compress&cs=tinysrgb&w=600" 
+                     alt="Avistamiento de tortugas"
+                     onerror="this.src='https://picsum.photos/id/128/600/400'">
+                <div class="card-content">
+                    <h3>🐢 Avistamiento de Tortugas</h3>
+                    <p>Entre julio y diciembre, las tortugas marinas llegan a las playas de la región para anidar. Programas de conservación disponibles.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN CLIMA + RELOJ -->
+    <section id="clima">
+        <div class="title">
+            <h2>Clima y Hora en Bluefields</h2>
+        </div>
+        <div class="clima-reloj-container">
+            <div class="clima-widget">
+                <h3><i class="fas fa-cloud-sun-rain"></i> Clima Tropical</h3>
+                <iframe class="clima-iframe" 
+                    src="https://www.meteoblue.com/en/weather/widget/daily/bluefields_nicaragua_3620680?geoloc=fixed&nocurrent=0&noforecast=0&days=4&tempunit=CENTIGRADE&windunit=KILOMETER_PER_HOUR&layout=image" 
+                    frameborder="0" 
+                    scrolling="NO"
+                    allowtransparency="true"
+                    sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox">
+                </iframe>
+                <p class="ciudad-clima">
+                    📍 Bluefields · Costa Caribe Sur · 24-30°C · Mejor época para playa: diciembre-abril (seca)
+                </p>
+            </div>
+            <div class="reloj-widget">
+                <h3><i class="far fa-clock"></i> Hora Local</h3>
+                <div class="clock" id="clock">--:--:--</div>
+                <p style="margin-top:15px;">🇳🇮 Bluefields · Costa Caribe Sur (GMT-6)</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <h2>Descubre las Playas del Caribe Sur</h2>
+        <p>🏖️ Playa Bluff · 🐚 Cayos Perlas · 🌊 Laguna de Perlas · 🏄 Surf · 🐢 Tortugas</p>
+        <a class="map-btn" href="https://www.google.com/maps/place/Bluefields,+Nicaragua/" target="_blank">
+            📍 Explorar Bluefields
+        </a>
+    </footer>
+
+    <button class="dark-btn" onclick="toggleDarkMode()">
+        <i class="fas fa-moon"></i>
+    </button>
+
+    <script>
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark');
+        }
+
+        function updateClock() {
+            const now = new Date();
+            document.getElementById("clock").innerHTML = now.toLocaleTimeString('es-NI', {
+                hour12: true,
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+    </script>
+</body>
+</html>
