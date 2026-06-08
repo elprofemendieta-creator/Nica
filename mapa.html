@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
-  <title>Mapa Turístico - Nica Explorer</title>
+  <title>Guía Pinolera | Nicaragua Turismo</title>
   
   <!-- Leaflet CSS/JS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -29,7 +29,6 @@
     body {
       font-family: 'Poppins', sans-serif;
       background: #F5F5F0;
-      overflow: hidden;
       transition: background 0.3s;
     }
     .app-container {
@@ -39,6 +38,7 @@
       width: 100%;
       overflow: hidden;
     }
+    /* Header */
     .app-header {
       background: white;
       padding: 8px 16px;
@@ -102,105 +102,123 @@
       padding: 4px 12px;
       font-size: 12px;
     }
-    .gps-btn.active {
-      background: #4CAF50;
-      color: white;
-      animation: pulse 1s infinite;
-    }
-    @keyframes pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.1); }
-      100% { transform: scale(1); }
-    }
-    .main-content {
+    /* Tabs */
+    .tabs {
       display: flex;
-      flex: 1;
-      min-height: 0;
-      overflow: hidden;
-    }
-    .sidebar {
-      width: 300px;
       background: white;
-      padding: 16px;
-      overflow-y: auto;
+      border-bottom: 2px solid #eee;
+      padding: 0 16px;
+      gap: 20px;
       flex-shrink: 0;
-      transition: background 0.3s;
     }
-    .map-container {
+    .tab-btn {
+      background: none;
+      border: none;
+      padding: 12px 0;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      color: #777;
+      transition: 0.2s;
+      border-bottom: 3px solid transparent;
+    }
+    .tab-btn.active {
+      color: #F57C00;
+      border-bottom-color: #F57C00;
+    }
+    .tab-content {
       flex: 1;
-      position: relative;
-      background: #ccc;
+      overflow-y: auto;
+      padding: 16px;
+      background: #F5F5F0;
     }
-    #map {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 1;
+    .hidden-tab {
+      display: none;
     }
-    .search-box {
-      display: flex;
-      align-items: center;
-      background: #f5f5f5;
-      border-radius: 30px;
-      padding: 8px 15px;
+    /* Libreta (filtros y cards) */
+    .filtros-container {
+      background: white;
+      border-radius: 20px;
+      padding: 15px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    .filtro-group {
       margin-bottom: 15px;
     }
-    .search-box i {
-      color: #F57C00;
-      margin-right: 8px;
+    .filtro-group label {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 8px;
+      color: #2E7D32;
     }
-    .search-box input {
-      flex: 1;
-      border: none;
-      background: transparent;
-      outline: none;
+    .select-custom {
+      width: 100%;
+      padding: 10px;
+      border-radius: 30px;
+      border: 1px solid #ddd;
+      background: #f9f9f9;
     }
-    .categorias-container {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 20px;
-    }
-    .categoria-filtro {
-      background: #f0f0f0;
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 12px;
-      cursor: pointer;
-    }
-    .categoria-filtro.active, .categoria-filtro:hover {
-      background: #F57C00;
-      color: white;
-    }
-    .places-list {
-      max-height: 300px;
-      overflow-y: auto;
+    .places-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
     }
     .place-card {
-      background: #f9f9f9;
-      border-radius: 12px;
-      padding: 10px;
-      margin-bottom: 10px;
+      background: white;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transition: transform 0.2s;
       cursor: pointer;
     }
-    .place-card-header {
-      display: flex;
-      gap: 10px;
+    .place-card:hover {
+      transform: translateY(-4px);
     }
-    .place-card-header img {
-      width: 50px;
-      height: 50px;
-      border-radius: 8px;
+    .place-card img {
+      width: 100%;
+      height: 160px;
       object-fit: cover;
     }
-    .place-info h4 {
-      font-size: 14px;
+    .place-info-card {
+      padding: 12px;
     }
-    .place-categoria {
-      font-size: 11px;
-      color: #F57C00;
+    .place-info-card h4 {
+      font-size: 18px;
+      margin-bottom: 4px;
+    }
+    .place-badge {
+      display: inline-block;
+      background: #F57C10;
+      color: white;
+      border-radius: 30px;
+      padding: 4px 12px;
+      font-size: 12px;
+      margin: 6px 0;
+    }
+    .explore-btn {
+      background: #2E7D32;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 30px;
+      width: 100%;
+      margin-top: 10px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    /* Mapa */
+    .map-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      min-height: 500px;
+      border-radius: 20px;
+      overflow: hidden;
+    }
+    #map {
+      height: 100%;
+      width: 100%;
     }
     .layer-control {
       position: absolute;
@@ -226,6 +244,45 @@
       background: #F57C00;
       color: white;
     }
+    /* Pasaporte */
+    .pasaporte-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .pasaporte-item {
+      background: white;
+      border-radius: 20px;
+      padding: 16px;
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .pasaporte-img {
+      width: 80px;
+      height: 80px;
+      border-radius: 16px;
+      object-fit: cover;
+    }
+    .pasaporte-info {
+      flex: 1;
+    }
+    .visits-count {
+      background: #F57C00;
+      color: white;
+      border-radius: 30px;
+      padding: 4px 12px;
+      font-size: 12px;
+      display: inline-block;
+    }
+    .user-review {
+      background: #f0f0f0;
+      padding: 8px;
+      border-radius: 12px;
+      margin-top: 8px;
+    }
+    /* modales */
     .modal {
       display: none;
       position: fixed;
@@ -309,107 +366,91 @@
       box-shadow: 0 2px 10px rgba(0,0,0,0.2);
       z-index: 99;
     }
-    @media (max-width: 768px) {
-      .sidebar {
-        width: 100%;
-        max-height: 35%;
-        order: 2;
-      }
-      .map-container {
-        order: 1;
-        flex: 2;
-      }
-      .user-points {
-        font-size: 12px;
-        padding: 3px 8px;
-      }
-    }
-    body.dark-mode {
+    .dark-mode {
       background: #1a1a2e;
     }
-    body.dark-mode .app-header, body.dark-mode .sidebar, body.dark-mode .modal-content, body.dark-mode .place-card, body.dark-mode .toast {
+    .dark-mode .app-header, .dark-mode .tabs, .dark-mode .filtros-container, .dark-mode .place-card, .dark-mode .pasaporte-item, .dark-mode .modal-content {
       background: #2d2d44;
       color: white;
     }
-    body.dark-mode .search-box, body.dark-mode .categoria-filtro {
-      background: #3d3d5c;
-      color: white;
+    .dark-mode .tab-btn {
+      color: #ccc;
     }
-    body.dark-mode .layer-control, body.dark-mode .layer-btn {
-      background: #2d2d44;
-      color: white;
+    .dark-mode .tab-btn.active {
+      color: #F57C00;
     }
- .map-container {
-    flex: 1;
-    position: relative;
-    height: calc(90vh - 70px);
-    min-height: 400px; /* Fuerza altura mínima */
-}
-
-#map {
-  height: 80vh; 
-  width: 100%;
-}
-
-/* Ajustes para móvil */
-@media (max-width: 768px) {
-    .sidebar {
-        width: 100%;
-        height: auto;
-        max-height: 300px;
-        order: 2;
+    @media (max-width: 768px) {
+      .map-container {
+        height: 70vh;
+      }
     }
-    .map-container {
-        height: 10vh; /* Altura relativa en móvil */
-        min-height: 200px;
-        order: 1;
-    }
-    #map {
-  height: 50vh; 
-  width: 100%;
-}
-    .main-content {
-        flex-direction: column;
-    }
-    
   </style>
 </head>
 <body>
 <div class="app-container">
   <header class="app-header">
-    <div class="logo"><i class="fas fa-map-marked-alt"></i><h2>Nicaragua Turismo</h2></div>
+    <div class="logo"><i class="fas fa-map-marked-alt"></i><h2>Guía Pinolera</h2></div>
     <div class="header-controls">
       <div id="userPointsDisplay" class="user-points" style="display:none;"><i class="fas fa-star"></i> <span id="pointsValue">0</span></div>
       <button id="gpsBtn" class="icon-btn gps-btn" style="display:none;"><i class="fas fa-satellite-dish"></i></button>
-      <button id="communityBtn" class="icon-btn" title="Comunidad"><i class="fas fa-users"></i></button>
       <button id="userBtn" class="icon-btn"><i class="fas fa-user-circle"></i></button>
       <button id="darkModeBtn" class="icon-btn"><i class="fas fa-moon"></i></button>
       <button id="adminLoginBtn" class="admin-login-btn"><i class="fas fa-user-shield"></i> Admin</button>
       <div id="adminPanelHeader" class="admin-panel-header hidden" style="display:none;"><span><i class="fas fa-crown"></i> Admin</span><button id="logoutAdminBtn" class="icon-btn"><i class="fas fa-sign-out-alt"></i></button></div>
     </div>
   </header>
-  <div class="main-content">
-    <aside class="sidebar">
-      <div class="search-box"><i class="fas fa-search"></i><input type="text" id="searchInput" placeholder="Buscar lugar..."></div>
-      <div class="filter-group"><label><i class="fas fa-tags"></i> Categorías:</label><div id="categoriasFiltro" class="categorias-container"></div></div>
-      <div class="places-list-container"><h3><i class="fas fa-map-pin"></i> Lugares</h3><div id="placesList" class="places-list"></div></div>
-      <div id="adminAddBtn" class="admin-add-btn hidden" style="display:none;"><button id="addPlaceBtn"><i class="fas fa-plus-circle"></i> Añadir lugar</button></div>
-    </aside>
-    <div class="map-container"><div id="map"></div><div id="layerControl" class="layer-control"><button class="layer-btn active" data-layer="calles"><i class="fas fa-road"></i></button><button class="layer-btn" data-layer="satelite"><i class="fas fa-satellite"></i></button><button class="layer-btn" data-layer="relieve"><i class="fas fa-mountain"></i></button><button id="geolocationBtn" class="layer-btn"><i class="fas fa-location-dot"></i></button></div></div>
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="libreta"><i class="fas fa-book"></i> Libreta</button>
+    <button class="tab-btn" data-tab="mapa"><i class="fas fa-map"></i> Mapa</button>
+    <button class="tab-btn" data-tab="pasaporte"><i class="fas fa-passport"></i> Pasaporte</button>
+  </div>
+  <div id="libretaTab" class="tab-content">
+    <div class="filtros-container">
+      <div class="filtro-group">
+        <label><i class="fas fa-city"></i> Ciudad / Localidad</label>
+        <select id="filtroCiudad" class="select-custom">
+          <option value="todas">Todas las ciudades</option>
+        </select>
+      </div>
+      <div class="filtro-group">
+        <label><i class="fas fa-route"></i> Tipo de Ruta</label>
+        <select id="filtroTipoCamino" class="select-custom">
+          <option value="todos">Todos</option>
+          <option value="Educativo">Ruta Educativa (Turismo/Historia)</option>
+          <option value="Comercial">Ruta Comercial (Gastronomía/Economía Local)</option>
+        </select>
+      </div>
+    </div>
+    <div id="lugaresGrid" class="places-grid">
+      <!-- cards dinámicas -->
+    </div>
+  </div>
+  <div id="mapaTab" class="tab-content hidden-tab">
+    <div class="map-container">
+      <div id="map"></div>
+      <div id="layerControl" class="layer-control">
+        <button class="layer-btn active" data-layer="calles"><i class="fas fa-road"></i></button>
+        <button class="layer-btn" data-layer="satelite"><i class="fas fa-satellite"></i></button>
+        <button id="geolocationBtn" class="layer-btn"><i class="fas fa-location-dot"></i></button>
+      </div>
+    </div>
+  </div>
+  <div id="pasaporteTab" class="tab-content hidden-tab">
+    <div id="pasaporteList" class="pasaporte-list">
+      <!-- historial de conquistas -->
+    </div>
   </div>
 </div>
 
 <!-- Modales -->
 <div id="adminModal" class="modal"><div class="modal-content"><div class="modal-header"><h3>Acceso Admin</h3><button class="close-modal">&times;</button></div><form id="adminLoginForm"><div class="form-group"><label>Contraseña</label><input type="password" id="adminPassword" required></div><button type="submit" class="submit-btn">Entrar</button></form></div></div>
-<div id="lugarModal" class="modal"><div class="modal-content"><div class="modal-header"><h3 id="modalTitle">Añadir Lugar</h3><button class="close-modal">&times;</button></div><form id="lugarForm"><input type="hidden" id="lugarId"><div class="form-group"><label>Nombre</label><input type="text" id="lugarNombre" required></div><div class="form-row" style="display:flex;gap:10px;padding:0 15px;"><div class="form-group" style="flex:1"><label>Lat</label><input type="number" step="any" id="lugarLat" required></div><div class="form-group" style="flex:1"><label>Lng</label><input type="number" step="any" id="lugarLng" required></div></div><div class="form-group"><label>URL</label><input type="text" id="lugarUrl" placeholder="enlace.html"></div><div class="form-group"><label>Imagen URL</label><input type="text" id="lugarImagen"></div><div class="form-group"><label>Categoría</label><input type="text" id="lugarCategoria"></div><button type="submit" class="submit-btn">Guardar</button></form></div></div>
+<div id="lugarModal" class="modal"><div class="modal-content"><div class="modal-header"><h3 id="modalTitle">Añadir Lugar</h3><button class="close-modal">&times;</button></div><form id="lugarForm"><input type="hidden" id="lugarId"><div class="form-group"><label>Nombre</label><input type="text" id="lugarNombre" required></div><div style="display:flex;gap:10px;padding:0 15px;"><div class="form-group" style="flex:1"><label>Lat</label><input type="number" step="any" id="lugarLat" required></div><div class="form-group" style="flex:1"><label>Lng</label><input type="number" step="any" id="lugarLng" required></div></div><div class="form-group"><label>Ciudad *</label><input type="text" id="lugarCiudad" placeholder="Ej. Diriamba" required></div><div class="form-group"><label>Tipo de Camino *</label><select id="lugarTipoCamino" required><option value="Educativo">Ruta Educativa</option><option value="Comercial">Ruta Comercial</option></select></div><div class="form-group"><label>URL (enlace)</label><input type="text" id="lugarUrl" placeholder="https://..."></div><div class="form-group"><label>Imagen URL</label><input type="text" id="lugarImagen"></div><div class="form-group"><label>Categoría (opcional)</label><input type="text" id="lugarCategoria"></div><button type="submit" class="submit-btn">Guardar</button></form></div></div>
 <div id="userModal" class="modal"><div class="modal-content"><div class="modal-header"><h3>Iniciar Sesión</h3><button class="close-modal">&times;</button></div><div id="userModalBody"></div></div></div>
 <div id="profileModal" class="modal"><div class="modal-content"><div class="modal-header"><h3>Mi Perfil</h3><button class="close-modal">&times;</button></div><div id="profileBody"></div></div></div>
 <div id="comentarioModal" class="modal"><div class="modal-content"><div class="modal-header"><h3>Comentar lugar</h3><button class="close-modal">&times;</button></div><div id="comentarioBody"></div></div></div>
-
 <div id="toastContainer" class="toast-container"></div>
-<a href="https://wa.me/50588170531?text=Hola%20Nica%20Explorer" class="whatsapp-float" target="_blank"><i class="fab fa-whatsapp"></i></a>
+<a href="https://wa.me/50588170531?text=Hola%20Guía%20Pinolera" class="whatsapp-float" target="_blank"><i class="fab fa-whatsapp"></i></a>
 
-<!-- Firebase SDK -->
 <script type="importmap">
   {
     "imports": {
@@ -423,7 +464,7 @@
 <script type="module">
   import { initializeApp } from "firebase/app";
   import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
-  import { getFirestore, collection, onSnapshot, addDoc, updateDoc, deleteDoc, doc, getDocs, query, where, orderBy, limit, getDoc, setDoc, Timestamp } from "firebase/firestore";
+  import { getFirestore, collection, onSnapshot, addDoc, updateDoc, deleteDoc, doc, getDocs, query, where, getDoc, Timestamp } from "firebase/firestore";
 
   const firebaseConfig = {
     apiKey: "AIzaSyA6jVICuE17KJcO34gE1brMxqWEfNd3Fy0",
@@ -440,95 +481,125 @@
   const db = getFirestore(app);
   const provider = new GoogleAuthProvider();
 
-  // Exponer helpers para funciones globales
-  window.db = db;
-  window.auth = auth;
-
-  // ========== VARIABLES GLOBALES ==========
+  // Variables globales
   let map, markerCluster, currentLayers = {}, allPlaces = [], isAdmin = false;
   let currentUser = null, userDocId = null, userPointsTotal = 0;
   let gpsActive = false, watchId = null;
   let ultimaRecompensaPorLugar = {};
-  let manualVisitsToday = 0;
-  let lastManualDate = null;
+  let activeTab = 'libreta';
+  let selectedPlaceToCenter = null;
 
-  // DOM elements
+  // DOM
   const darkModeBtn = document.getElementById('darkModeBtn');
   const adminLoginBtn = document.getElementById('adminLoginBtn');
   const adminPanelHeader = document.getElementById('adminPanelHeader');
   const logoutAdminBtn = document.getElementById('logoutAdminBtn');
   const adminModal = document.getElementById('adminModal');
   const lugarModal = document.getElementById('lugarModal');
-  const searchInput = document.getElementById('searchInput');
-  const categoriasFiltro = document.getElementById('categoriasFiltro');
-  const placesList = document.getElementById('placesList');
-  const adminAddBtn = document.getElementById('adminAddBtn');
-  const addPlaceBtn = document.getElementById('addPlaceBtn');
-  const lugarForm = document.getElementById('lugarForm');
-  const modalTitle = document.getElementById('modalTitle');
-  const geolocationBtn = document.getElementById('geolocationBtn');
+  const placesGrid = document.getElementById('lugaresGrid');
+  const filtroCiudad = document.getElementById('filtroCiudad');
+  const filtroTipoCamino = document.getElementById('filtroTipoCamino');
   const userBtn = document.getElementById('userBtn');
-  const userModal = document.getElementById('userModal');
-  const profileModal = document.getElementById('profileModal');
   const gpsBtn = document.getElementById('gpsBtn');
   const pointsSpan = document.getElementById('pointsValue');
   const userPointsDisplay = document.getElementById('userPointsDisplay');
-  const communityBtn = document.getElementById('communityBtn');
+  const pasaporteList = document.getElementById('pasaporteList');
 
-  function mostrarToast(mensaje, tipo = 'info') {
+  function mostrarToast(msg, tipo='info') {
     const container = document.getElementById('toastContainer');
     const toast = document.createElement('div');
     toast.className = 'toast';
-    toast.innerHTML = `<i class="fas ${tipo==='error'?'fa-exclamation-circle':'fa-check-circle'}"></i> ${mensaje}`;
+    toast.innerHTML = `<i class="fas ${tipo==='error'?'fa-exclamation-circle':'fa-check-circle'}"></i> ${msg}`;
     container.appendChild(toast);
     setTimeout(() => toast.remove(), 3000);
   }
 
-  // ========== FIRESTORE: LUGARES ==========
+  // ========== FIRESTORE: LUGARES (tiempo real) ==========
   let unsubscribePlaces = null;
   function cargarLugaresFirestore() {
+    if(unsubscribePlaces) unsubscribePlaces();
     const colRef = collection(db, 'lugares');
     unsubscribePlaces = onSnapshot(colRef, (snapshot) => {
       allPlaces = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      actualizarCategoriasUnicas();
-      actualizarMarcadores();
-      actualizarListaLugares();
-      if (allPlaces.length === 0) mostrarToast("No hay lugares. Admin puede añadir.", "info");
-    }, (error) => mostrarToast("Error Firestore: "+error.message, "error"));
+      actualizarFiltrosCiudad();
+      actualizarLibreta();
+      if(map && markerCluster) actualizarMarcadoresMapa();
+    }, error => mostrarToast("Error Firestore: "+error.message, "error"));
   }
 
-  async function agregarLugarFirestore(lugarData) {
-    try {
-      await addDoc(collection(db, 'lugares'), lugarData);
-      mostrarToast("Lugar añadido", "success");
-    } catch(e) { mostrarToast("Error: "+e.message, "error"); }
+  function actualizarFiltrosCiudad() {
+    const ciudades = [...new Set(allPlaces.map(p => p.ciudad).filter(c => c && c.trim() !== ''))];
+    const currentVal = filtroCiudad.value;
+    filtroCiudad.innerHTML = '<option value="todas">Todas las ciudades</option>' + ciudades.map(c => `<option value="${c}">${c}</option>`).join('');
+    if(currentVal && ciudades.includes(currentVal)) filtroCiudad.value = currentVal;
+    else filtroCiudad.value = 'todas';
   }
-  async function actualizarLugarFirestore(id, lugarData) {
-    try {
-      await updateDoc(doc(db, 'lugares', id), lugarData);
-      mostrarToast("Actualizado", "success");
-    } catch(e) { mostrarToast("Error: "+e.message, "error"); }
+
+  function getFiltros() {
+    const ciudad = filtroCiudad.value;
+    const tipo = filtroTipoCamino.value;
+    return { ciudad, tipo };
   }
-  async function eliminarLugarFirestore(id) {
-    try {
-      await deleteDoc(doc(db, 'lugares', id));
-      mostrarToast("Eliminado", "info");
-    } catch(e) { mostrarToast("Error: "+e.message, "error"); }
+
+  function actualizarLibreta() {
+    const { ciudad, tipo } = getFiltros();
+    let filtered = [...allPlaces];
+    if(ciudad !== 'todas') filtered = filtered.filter(p => p.ciudad === ciudad);
+    if(tipo !== 'todos') filtered = filtered.filter(p => p.tipoCamino === tipo);
+    if(filtered.length === 0) { placesGrid.innerHTML = '<div style="padding:20px;text-align:center;">No hay lugares con esos filtros</div>'; return; }
+    placesGrid.innerHTML = filtered.map(place => `
+      <div class="place-card" data-id="${place.id}">
+        <img src="${place.imagen || 'https://via.placeholder.com/300x160?text=Sin+imagen'}" onerror="this.src='https://via.placeholder.com/300x160?text=Imagen+no+disponible'">
+        <div class="place-info-card">
+          <h4>${place.nombre}</h4>
+          <div class="place-badge">${place.ciudad || 'Sin ciudad'} • ${place.tipoCamino === 'Educativo' ? '📚 Educativo' : '🍽️ Comercial'}</div>
+          <button class="explore-btn" data-id="${place.id}" data-lat="${place.lat}" data-lng="${place.lng}"><i class="fas fa-compass"></i> Explorar</button>
+          ${isAdmin ? `<button class="explore-btn" style="background:#666; margin-top:5px;" data-edit="${place.id}">✏️ Editar</button>` : ''}
+        </div>
+      </div>
+    `).join('');
+    // Eventos explorar
+    document.querySelectorAll('.explore-btn[data-id]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const id = btn.dataset.id;
+        const place = allPlaces.find(p => p.id === id);
+        if(place) {
+          document.querySelector('.tab-btn[data-tab="mapa"]').click();
+          setTimeout(() => {
+            if(map) {
+              map.setView([place.lat, place.lng], 15);
+              // Abrir popup automático
+              markerCluster.eachLayer(layer => {
+                if(layer.getLatLng().lat === place.lat && layer.getLatLng().lng === place.lng) {
+                  layer.openPopup();
+                }
+              });
+            }
+          }, 300);
+        }
+      });
+      if(isAdmin && btn.dataset.edit) {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const id = btn.dataset.edit;
+          const p = allPlaces.find(p => p.id === id);
+          if(p) editarLugarAdmin(p.id);
+        });
+      }
+    });
   }
 
   // ========== MAPA ==========
   function initMap() {
     const mapDiv = document.getElementById('map');
-    if (!mapDiv) return;
-    if (map) map.remove();
+    if(!mapDiv) return;
+    if(map) map.remove();
     map = L.map('map').setView([12.8654, -85.2072], 8);
     currentLayers.calles = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { attribution: '&copy; OpenStreetMap' }).addTo(map);
     currentLayers.satelite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { attribution: 'Esri' });
-    currentLayers.relieve = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', { attribution: 'OpenTopoMap' });
     markerCluster = L.markerClusterGroup();
     map.addLayer(markerCluster);
-    setTimeout(() => map.invalidateSize(true), 200);
-    window.addEventListener('resize', () => map && map.invalidateSize(true));
     document.querySelectorAll('.layer-btn[data-layer]').forEach(btn => {
       btn.addEventListener('click', () => {
         const layer = btn.dataset.layer;
@@ -538,123 +609,87 @@
         btn.classList.add('active');
       });
     });
-    map.on('click', (e) => {
-      if (isAdmin) abrirFormularioNuevo(e.latlng.lat, e.latlng.lng);
-      else mostrarToast("Solo admin puede añadir", "error");
-    });
+    geolocationBtn.onclick = () => {
+      if(navigator.geolocation) navigator.geolocation.getCurrentPosition(pos=>map.setView([pos.coords.latitude,pos.coords.longitude],13), ()=>mostrarToast("Error ubicación","error"));
+    };
+    if(isAdmin) {
+      map.on('click', (e) => abrirFormularioNuevo(e.latlng.lat, e.latlng.lng));
+    }
+    actualizarMarcadoresMapa();
   }
 
-  function actualizarMarcadores() {
-    if (!markerCluster) return;
+  async function actualizarMarcadoresMapa() {
+    if(!markerCluster) return;
     markerCluster.clearLayers();
-    const filtroCat = obtenerFiltroActual();
-    const busqueda = searchInput.value.toLowerCase();
-    const filtered = allPlaces.filter(p => (filtroCat==='todos' || p.categoria===filtroCat) && p.nombre.toLowerCase().includes(busqueda));
-    for (let place of filtered) {
-      const popupContent = document.createElement('div');
-      popupContent.innerHTML = `<b>${place.nombre}</b><br>${place.imagen?`<img src="${place.imagen}" style="width:100%;border-radius:8px;max-width:200px;">`:''}<a href="${place.url||'#'}" target="_blank" style="display:block;background:#F57C00;color:white;padding:5px;border-radius:5px;text-align:center;">🔗 Visitar</a>`;
-      if (isAdmin) {
-        const btnEditar = document.createElement('button'); btnEditar.innerText='✏️ Editar'; btnEditar.onclick=()=>editarLugar(place.id);
-        const btnEliminar = document.createElement('button'); btnEliminar.innerText='🗑️ Eliminar'; btnEliminar.onclick=()=>eliminarLugar(place.id);
-        popupContent.appendChild(btnEditar); popupContent.appendChild(btnEliminar);
+    for(let place of allPlaces) {
+      const popupDiv = document.createElement('div');
+      popupDiv.innerHTML = `<b>${place.nombre}</b><br>${place.imagen?`<img src="${place.imagen}" style="width:100%;border-radius:8px;max-width:180px;">` : ''}<br><a href="${place.url||'#'}" target="_blank">🔗 Visitar</a>`;
+      const checkBtn = document.createElement('button');
+      checkBtn.innerHTML = '<i class="fas fa-map-marker-check"></i> Hacer Check-in aquí';
+      checkBtn.style.display = 'block';
+      checkBtn.style.margin = '5px 0';
+      checkBtn.style.background = '#F57C00';
+      checkBtn.style.color = 'white';
+      checkBtn.style.border = 'none';
+      checkBtn.style.padding = '6px';
+      checkBtn.style.borderRadius = '20px';
+      checkBtn.onclick = () => realizarCheckin(place.id, place.nombre);
+      popupDiv.appendChild(checkBtn);
+      
+      // Botón comentar (solo si ya tiene visita)
+      if(currentUser) {
+        const yaVisito = await verificarSiYaVisito(currentUser.uid, place.id);
+        if(yaVisito) {
+          const commentBtn = document.createElement('button');
+          commentBtn.innerHTML = '<i class="fas fa-star"></i> Comentar / Puntuar';
+          commentBtn.style.display = 'block';
+          commentBtn.style.marginTop = '5px';
+          commentBtn.style.background = '#2E7D32';
+          commentBtn.onclick = () => abrirComentario(place.id, place.nombre);
+          popupDiv.appendChild(commentBtn);
+        }
       }
-      if (currentUser) {
-        // Botón marcar manual (sin puntos) si no ha visitado antes (GPS o manual)
-        (async () => {
-          const yaVisito = await verificarSiYaVisito(currentUser.uid, place.id);
-          if (!yaVisito) {
-            const btnManual = document.createElement('button');
-            btnManual.innerHTML = '<i class="fas fa-hand-pointer"></i> Marcar visitado (sin puntos)';
-            btnManual.style.display='block'; btnManual.style.marginTop='5px'; btnManual.style.background='#666';
-            btnManual.onclick = () => marcarManual(place.id, place.nombre);
-            popupContent.appendChild(btnManual);
-          }
-          // Botón comentar si ya tiene visita
-          const tieneVisita = await verificarSiYaVisito(currentUser.uid, place.id);
-          if (tieneVisita) {
-            const btnComentar = document.createElement('button');
-            btnComentar.innerHTML = '<i class="fas fa-star"></i> Comentar / Puntuar';
-            btnComentar.style.display='block'; btnComentar.style.marginTop='5px'; btnComentar.style.background='#2E7D32';
-            btnComentar.onclick = () => abrirComentario(place.id, place.nombre);
-            popupContent.appendChild(btnComentar);
-          }
-        })();
+      if(isAdmin) {
+        const editBtn = document.createElement('button'); editBtn.innerText='✏️ Editar'; editBtn.onclick=()=>editarLugarAdmin(place.id);
+        const delBtn = document.createElement('button'); delBtn.innerText='🗑️ Eliminar'; delBtn.onclick=()=>eliminarLugarFirestore(place.id);
+        popupDiv.appendChild(editBtn); popupDiv.appendChild(delBtn);
       }
-      const marker = L.marker([place.lat, place.lng]).bindPopup(popupContent);
+      const marker = L.marker([place.lat, place.lng]).bindPopup(popupDiv);
       markerCluster.addLayer(marker);
     }
   }
 
-  function actualizarListaLugares() {
-    const filtroCat = obtenerFiltroActual();
-    const busqueda = searchInput.value.toLowerCase();
-    let filtered = allPlaces.filter(p => (filtroCat==='todos' || p.categoria===filtroCat) && p.nombre.toLowerCase().includes(busqueda));
-    if (!filtered.length) { placesList.innerHTML = '<div style="padding:20px;text-align:center;">No hay lugares</div>'; return; }
-    placesList.innerHTML = filtered.map(place => `
-      <div class="place-card" onclick="centrarMapa(${place.lat}, ${place.lng})">
-        <div class="place-card-header">
-          ${place.imagen?`<img src="${place.imagen}">`:'<div style="width:50px;background:#e0e0e0;border-radius:10px;display:flex;align-items:center;justify-content:center;"><i class="fas fa-map-marker-alt"></i></div>'}
-          <div class="place-info"><h4>${place.nombre}</h4><div class="place-categoria">${place.categoria||'sin categoría'}</div>${isAdmin?`<div><button class="edit-btn" onclick="event.stopPropagation(); editarLugar('${place.id}')">Editar</button> <button class="delete-btn" onclick="event.stopPropagation(); eliminarLugar('${place.id}')">Eliminar</button></div>`:''}</div>
-        </div>
-      </div>
-    `).join('');
+  async function realizarCheckin(lugarId, lugarNombre) {
+    if(!currentUser) { mostrarToast("Inicia sesión para hacer check-in","error"); return; }
+    if(!navigator.geolocation) { mostrarToast("GPS no soportado","error"); return; }
+    navigator.geolocation.getCurrentPosition(async (pos) => {
+      const place = allPlaces.find(p => p.id === lugarId);
+      if(!place) return;
+      const dist = calcularDistancia(pos.coords.latitude, pos.coords.longitude, place.lat, place.lng);
+      if(dist > 50) { mostrarToast(`Estás demasiado lejos (${Math.round(dist)}m). Acércate al lugar.`,"error"); return; }
+      const yaVisito = await verificarSiYaVisito(currentUser.uid, lugarId);
+      const puntos = yaVisito ? 2 : 10;
+      await registrarVisita(currentUser.uid, lugarId, puntos, 'gps');
+      await sumarPuntos(puntos, `Check-in en ${lugarNombre}`, lugarId);
+      mostrarToast(`✅ Check-in exitoso! +${puntos} puntos`, "success");
+      actualizarMarcadoresMapa();
+      if(!yaVisito && currentUser) actualizarPasaporte(); // refrescar pasaporte
+    }, () => mostrarToast("No se pudo obtener tu ubicación","error"));
   }
 
-  window.centrarMapa = (lat,lng) => map && map.setView([lat,lng],14);
-  function obtenerFiltroActual() { const a = document.querySelector('.categoria-filtro.active'); return a ? a.dataset.cat : 'todos'; }
-  function actualizarCategoriasUnicas() {
-    const cats = [...new Set(allPlaces.map(p=>p.categoria).filter(c=>c))];
-    categoriasFiltro.innerHTML = '<div class="categoria-filtro active" data-cat="todos">Todos</div>'+cats.map(c=>`<div class="categoria-filtro" data-cat="${c}">${c}</div>`).join('');
-    document.querySelectorAll('.categoria-filtro').forEach(el=>el.addEventListener('click',function(){document.querySelectorAll('.categoria-filtro').forEach(c=>c.classList.remove('active'));this.classList.add('active');actualizarMarcadores();actualizarListaLugares();}));
+  function calcularDistancia(lat1,lon1,lat2,lon2){
+    const R=6371e3; const φ1=lat1*Math.PI/180, φ2=lat2*Math.PI/180; const Δφ=(lat2-lat1)*Math.PI/180, Δλ=(lon2-lon1)*Math.PI/180;
+    const a=Math.sin(Δφ/2)**2+Math.cos(φ1)*Math.cos(φ2)*Math.sin(Δλ/2)**2; return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
   }
 
-  // ========== ADMIN CRUD ==========
-  const ADMIN_PASSWORD = "Diriamba2026";
-  function entrarModoAdmin() { isAdmin=true; adminLoginBtn.classList.add('hidden'); adminPanelHeader.style.display='flex'; adminAddBtn.style.display='block'; mostrarToast("Admin activado","success"); actualizarMarcadores(); actualizarListaLugares(); }
-  function salirModoAdmin() { isAdmin=false; adminLoginBtn.classList.remove('hidden'); adminPanelHeader.style.display='none'; adminAddBtn.style.display='none'; mostrarToast("Admin desactivado","info"); actualizarMarcadores(); actualizarListaLugares(); }
-  adminLoginBtn.onclick = () => adminModal.style.display='flex';
-  document.getElementById('adminLoginForm').addEventListener('submit',(e)=>{e.preventDefault(); if(document.getElementById('adminPassword').value===ADMIN_PASSWORD){adminModal.style.display='none';entrarModoAdmin();}else mostrarToast("Contraseña incorrecta","error"); document.getElementById('adminPassword').value='';});
-  logoutAdminBtn.onclick = salirModoAdmin;
-  function abrirFormularioNuevo(lat,lng) { modalTitle.innerText='Añadir Lugar'; document.getElementById('lugarId').value=''; document.getElementById('lugarNombre').value=''; document.getElementById('lugarLat').value=lat.toFixed(6); document.getElementById('lugarLng').value=lng.toFixed(6); document.getElementById('lugarUrl').value=''; document.getElementById('lugarImagen').value=''; document.getElementById('lugarCategoria').value=''; lugarModal.style.display='flex'; }
-  window.editarLugar = (id) => { const p = allPlaces.find(p=>p.id===id); if(!p) return; modalTitle.innerText='Editar Lugar'; document.getElementById('lugarId').value=p.id; document.getElementById('lugarNombre').value=p.nombre; document.getElementById('lugarLat').value=p.lat; document.getElementById('lugarLng').value=p.lng; document.getElementById('lugarUrl').value=p.url||''; document.getElementById('lugarImagen').value=p.imagen||''; document.getElementById('lugarCategoria').value=p.categoria||''; lugarModal.style.display='flex'; };
-  window.eliminarLugar = (id) => { if(confirm('¿Eliminar?')) eliminarLugarFirestore(id); };
-  lugarForm.addEventListener('submit', async(e) => { e.preventDefault(); const id=document.getElementById('lugarId').value; const nombre=document.getElementById('lugarNombre').value.trim(); const lat=parseFloat(document.getElementById('lugarLat').value); const lng=parseFloat(document.getElementById('lugarLng').value); const url=document.getElementById('lugarUrl').value.trim(); const imagen=document.getElementById('lugarImagen').value.trim(); const categoria=document.getElementById('lugarCategoria').value.trim(); if(!nombre||isNaN(lat)||isNaN(lng)){mostrarToast("Campos requeridos","error");return;} const data={nombre,lat,lng,url,imagen,categoria}; if(id) await actualizarLugarFirestore(id,data); else await agregarLugarFirestore(data); lugarModal.style.display='none'; });
-  addPlaceBtn.onclick = () => { if(map) abrirFormularioNuevo(map.getCenter().lat, map.getCenter().lng); else abrirFormularioNuevo(12.8654,-85.2072); };
-  searchInput.addEventListener('input',()=>{actualizarMarcadores();actualizarListaLugares();});
-  geolocationBtn.onclick = () => { if(navigator.geolocation) navigator.geolocation.getCurrentPosition(pos=>map.setView([pos.coords.latitude,pos.coords.longitude],13), ()=>mostrarToast("Error ubicación","error")); else mostrarToast("No soportado","error"); };
-
-  // ========== USUARIO Y PUNTOS ==========
-  async function cargarPuntosUsuario() {
-    if(!currentUser) return;
-    const q = query(collection(db, 'usuarios'), where('uid', '==', currentUser.uid));
+  async function verificarSiYaVisito(uid, lugarId) {
+    const q = query(collection(db, 'visitas'), where('usuarioId', '==', uid), where('lugarId', '==', lugarId));
     const snap = await getDocs(q);
-    if(!snap.empty){
-      const docu = snap.docs[0];
-      userDocId = docu.id;
-      userPointsTotal = docu.data().puntos || 0;
-      pointsSpan.innerText = userPointsTotal;
-    } else {
-      const newDoc = await addDoc(collection(db, 'usuarios'), {
-        uid: currentUser.uid,
-        email: currentUser.email,
-        nombre: currentUser.displayName || currentUser.email,
-        fotoURL: currentUser.photoURL || '',
-        puntos: 0,
-        fechaRegistro: new Date(),
-        sonidosActivos: true,
-        manualVisitsToday: 0,
-        lastManualDate: null
-      });
-      userDocId = newDoc.id;
-      userPointsTotal = 0;
-      pointsSpan.innerText = '0';
-    }
-    // Cargar contador manual diario
-    const userDocSnap = await getDoc(doc(db, 'usuarios', userDocId));
-    const data = userDocSnap.data();
-    const hoy = new Date().toDateString();
-    if(data.lastManualDate === hoy) manualVisitsToday = data.manualVisitsToday || 0;
-    else manualVisitsToday = 0;
+    return !snap.empty;
+  }
+
+  async function registrarVisita(uid, lugarId, puntos, tipo) {
+    await addDoc(collection(db, 'visitas'), { usuarioId: uid, lugarId, fecha: new Date(), puntos, tipo });
   }
 
   async function sumarPuntos(cantidad, motivo, lugarId=null) {
@@ -666,225 +701,142 @@
     mostrarToast(`+${cantidad} puntos (${motivo})`, "success");
   }
 
-  async function verificarSiYaVisito(uid, lugarId) {
-    const q = query(collection(db, 'visitas'), where('usuarioId', '==', uid), where('lugarId', '==', lugarId));
-    const snap = await getDocs(q);
-    return !snap.empty;
-  }
-
-  async function registrarVisita(uid, lugarId, puntos, tipo) {
-    await addDoc(collection(db, 'visitas'), {
-      usuarioId: uid,
-      lugarId: lugarId,
-      fecha: new Date(),
-      puntos: puntos,
-      tipo: tipo
+  // ========== PASAPORTE ==========
+  async function actualizarPasaporte() {
+    if(!currentUser) { pasaporteList.innerHTML = '<div style="padding:20px;text-align:center;">Inicia sesión para ver tu pasaporte</div>'; return; }
+    const visitsSnap = await getDocs(query(collection(db, 'visitas'), where('usuarioId', '==', currentUser.uid)));
+    const visitasMap = new Map(); // lugarId -> { count, lastDate }
+    visitsSnap.forEach(doc => {
+      const data = doc.data();
+      const lugarId = data.lugarId;
+      if(!visitasMap.has(lugarId)) visitasMap.set(lugarId, { count: 0 });
+      visitasMap.get(lugarId).count++;
     });
+    const comentariosSnap = await getDocs(query(collection(db, 'comentarios'), where('usuarioId', '==', currentUser.uid)));
+    const comentariosMap = new Map();
+    comentariosSnap.forEach(doc => { const c = doc.data(); comentariosMap.set(c.lugarId, { texto: c.texto, estrellas: c.estrellas }); });
+    
+    if(visitasMap.size === 0) { pasaporteList.innerHTML = '<div style="padding:20px;text-align:center;">Aún no has visitado ningún lugar. ¡Explora!</div>'; return; }
+    let html = '';
+    for(let [lugarId, data] of visitasMap.entries()) {
+      const lugar = allPlaces.find(p => p.id === lugarId);
+      if(!lugar) continue;
+      const comentario = comentariosMap.get(lugarId);
+      html += `
+        <div class="pasaporte-item">
+          <img class="pasaporte-img" src="${lugar.imagen || 'https://via.placeholder.com/80'}" onerror="this.src='https://via.placeholder.com/80'">
+          <div class="pasaporte-info">
+            <h4>${lugar.nombre}</h4>
+            <div><span class="visits-count">Visitas: ${data.count}</span>  |  ${lugar.ciudad} • ${lugar.tipoCamino === 'Educativo' ? 'Educativo' : 'Comercial'}</div>
+            ${comentario ? `<div class="user-review"><i class="fas fa-comment"></i> "${comentario.texto}"<br>${'⭐'.repeat(comentario.estrellas)}</div>` : '<div class="user-review"><i class="fas fa-edit"></i> Sin reseña aún</div>'}
+          </div>
+        </div>
+      `;
+    }
+    pasaporteList.innerHTML = html;
   }
 
-  // Marcado manual (sin puntos, límite diario 5)
-  async function marcarManual(lugarId, lugarNombre) {
-    if(!currentUser) { mostrarToast("Inicia sesión","error"); return; }
-    const ya = await verificarSiYaVisito(currentUser.uid, lugarId);
-    if(ya) { mostrarToast("Ya has visitado este lugar antes","error"); return; }
-    // Verificar límite diario
-    const userRef = doc(db, 'usuarios', userDocId);
-    const userSnap = await getDoc(userRef);
-    let manualCount = userSnap.data().manualVisitsToday || 0;
-    let lastDate = userSnap.data().lastManualDate;
-    const hoy = new Date().toDateString();
-    if(lastDate !== hoy) manualCount = 0;
-    if(manualCount >= 5) { mostrarToast("Límite diario de marcados manuales alcanzado (5)","error"); return; }
-    // Registrar visita manual (0 puntos)
-    await registrarVisita(currentUser.uid, lugarId, 0, 'manual');
-    await updateDoc(userRef, { manualVisitsToday: manualCount+1, lastManualDate: hoy });
-    mostrarToast(`Has registrado ${lugarNombre} en tu lista (sin puntos)`, "success");
-    actualizarMarcadores(); // para que desaparezca botón manual
-  }
+  // ========== ADMIN CRUD ==========
+  const ADMIN_PASSWORD = "Diriamba2026";
+  function entrarModoAdmin() { isAdmin=true; adminLoginBtn.style.display='none'; adminPanelHeader.style.display='flex'; mostrarToast("Admin activado","success"); if(map) map.on('click', onMapClick); actualizarLibreta(); actualizarMarcadoresMapa(); }
+  function salirModoAdmin() { isAdmin=false; adminLoginBtn.style.display='flex'; adminPanelHeader.style.display='none'; if(map) map.off('click'); actualizarLibreta(); actualizarMarcadoresMapa(); }
+  function onMapClick(e) { if(isAdmin) abrirFormularioNuevo(e.latlng.lat, e.latlng.lng); }
+  adminLoginBtn.onclick = () => adminModal.style.display='flex';
+  document.getElementById('adminLoginForm').addEventListener('submit',(e)=>{e.preventDefault(); if(document.getElementById('adminPassword').value===ADMIN_PASSWORD){adminModal.style.display='none';entrarModoAdmin();}else mostrarToast("Contraseña incorrecta","error");});
+  logoutAdminBtn.onclick = salirModoAdmin;
+  function abrirFormularioNuevo(lat,lng) { document.getElementById('modalTitle').innerText='Añadir Lugar'; document.getElementById('lugarId').value=''; document.getElementById('lugarNombre').value=''; document.getElementById('lugarLat').value=lat.toFixed(6); document.getElementById('lugarLng').value=lng.toFixed(6); document.getElementById('lugarCiudad').value=''; document.getElementById('lugarTipoCamino').value='Educativo'; document.getElementById('lugarUrl').value=''; document.getElementById('lugarImagen').value=''; document.getElementById('lugarCategoria').value=''; lugarModal.style.display='flex'; }
+  function editarLugarAdmin(id) { const p=allPlaces.find(p=>p.id===id); if(!p) return; document.getElementById('modalTitle').innerText='Editar Lugar'; document.getElementById('lugarId').value=p.id; document.getElementById('lugarNombre').value=p.nombre; document.getElementById('lugarLat').value=p.lat; document.getElementById('lugarLng').value=p.lng; document.getElementById('lugarCiudad').value=p.ciudad||''; document.getElementById('lugarTipoCamino').value=p.tipoCamino||'Educativo'; document.getElementById('lugarUrl').value=p.url||''; document.getElementById('lugarImagen').value=p.imagen||''; document.getElementById('lugarCategoria').value=p.categoria||''; lugarModal.style.display='flex'; }
+  window.eliminarLugarFirestore = async (id) => { if(confirm('¿Eliminar lugar?')) await deleteDoc(doc(db,'lugares',id)); };
+  document.getElementById('lugarForm').addEventListener('submit', async(e) => {
+    e.preventDefault(); const id=document.getElementById('lugarId').value; const nombre=document.getElementById('lugarNombre').value.trim(); const lat=parseFloat(document.getElementById('lugarLat').value); const lng=parseFloat(document.getElementById('lugarLng').value); const ciudad=document.getElementById('lugarCiudad').value.trim(); const tipoCamino=document.getElementById('lugarTipoCamino').value; const url=document.getElementById('lugarUrl').value.trim(); const imagen=document.getElementById('lugarImagen').value.trim(); const categoria=document.getElementById('lugarCategoria').value.trim();
+    if(!nombre || isNaN(lat) || isNaN(lng) || !ciudad) { mostrarToast("Complete nombre, coordenadas y ciudad","error"); return; }
+    const data = { nombre, lat, lng, ciudad, tipoCamino, url, imagen, categoria };
+    if(id) await updateDoc(doc(db,'lugares',id), data);
+    else await addDoc(collection(db,'lugares'), data);
+    lugarModal.style.display='none';
+  });
 
-  // ========== COMENTARIOS Y ESTRELLAS ==========
+  // ========== COMENTARIOS ==========
   async function abrirComentario(lugarId, lugarNombre) {
     if(!currentUser) return;
     const yaVisito = await verificarSiYaVisito(currentUser.uid, lugarId);
-    if(!yaVisito) { mostrarToast("Debes visitar el lugar para comentar","error"); return; }
-    // Buscar comentario existente del usuario
-    const q = query(collection(db, 'comentarios'), where('usuarioId','==',currentUser.uid), where('lugarId','==',lugarId));
+    if(!yaVisito) { mostrarToast("Primero haz check-in para comentar","error"); return; }
+    const q = query(collection(db,'comentarios'), where('usuarioId','==',currentUser.uid), where('lugarId','==',lugarId));
     const snap = await getDocs(q);
-    let comentarioExistente = null;
-    if(!snap.empty) comentarioExistente = snap.docs[0];
+    let existente = null;
+    if(!snap.empty) existente = snap.docs[0];
     const modalBody = document.getElementById('comentarioBody');
-    modalBody.innerHTML = `
-      <div style="padding:15px;">
-        <h4>${lugarNombre}</h4>
-        <div class="form-group"><label>Puntuación (1-5 estrellas)</label><select id="estrellas">${[1,2,3,4,5].map(s=>`<option value="${s}" ${comentarioExistente && comentarioExistente.data().estrellas==s?'selected':''}>${'⭐'.repeat(s)}</option>`).join('')}</select></div>
-        <div class="form-group"><label>Comentario</label><textarea id="comentarioTexto" rows="3">${comentarioExistente?comentarioExistente.data().texto:''}</textarea></div>
-        <button id="guardarComentarioBtn" class="submit-btn">Guardar comentario</button>
-        ${comentarioExistente?'<button id="eliminarComentarioBtn" class="submit-btn" style="background:#d32f2f;">Eliminar comentario</button>':''}
-      </div>
-    `;
+    modalBody.innerHTML = `<div style="padding:15px;"><h4>${lugarNombre}</h4>
+      <div class="form-group"><label>Puntuación (1-5)</label><select id="estrellas">${[1,2,3,4,5].map(s=>`<option value="${s}" ${existente && existente.data().estrellas==s?'selected':''}>${'⭐'.repeat(s)}</option>`).join('')}</select></div>
+      <div class="form-group"><label>Comentario</label><textarea id="comentarioTexto" rows="3">${existente?existente.data().texto:''}</textarea></div>
+      <button id="guardarComentarioBtn" class="submit-btn">Guardar comentario</button>${existente?'<button id="eliminarComentarioBtn" class="submit-btn" style="background:#d32f2f;">Eliminar</button>':''}</div>`;
     document.getElementById('guardarComentarioBtn').onclick = async () => {
       const estrellas = parseInt(document.getElementById('estrellas').value);
       const texto = document.getElementById('comentarioTexto').value.trim();
-      if(!texto) { mostrarToast("Escribe un comentario","error"); return; }
-      if(comentarioExistente){
-        await updateDoc(doc(db, 'comentarios', comentarioExistente.id), { texto, estrellas, editado: true });
-        mostrarToast("Comentario actualizado","success");
-      } else {
-        await addDoc(collection(db, 'comentarios'), {
-          usuarioId: currentUser.uid,
-          lugarId: lugarId,
-          texto: texto,
-          estrellas: estrellas,
-          fecha: new Date(),
-          editado: false
-        });
-        await sumarPuntos(2, `Comentario en ${lugarNombre}`, lugarId);
+      if(!texto){ mostrarToast("Escribe un comentario","error"); return; }
+      if(existente) await updateDoc(doc(db,'comentarios',existente.id), { texto, estrellas, editado: true });
+      else {
+        await addDoc(collection(db,'comentarios'), { usuarioId: currentUser.uid, lugarId, texto, estrellas, fecha: new Date(), editado: false });
+        await sumarPuntos(5, `Comentario en ${lugarNombre}`, lugarId);
+        await sumarPuntos(2, `Valoración en ${lugarNombre}`, lugarId);
       }
       document.getElementById('comentarioModal').style.display='none';
+      if(currentUser) actualizarPasaporte();
     };
-    if(comentarioExistente){
-      document.getElementById('eliminarComentarioBtn').onclick = async () => {
-        if(confirm("¿Eliminar comentario?")){
-          await deleteDoc(doc(db, 'comentarios', comentarioExistente.id));
-          mostrarToast("Comentario eliminado","info");
-          document.getElementById('comentarioModal').style.display='none';
-        }
-      };
-    }
+    if(existente) document.getElementById('eliminarComentarioBtn').onclick = async()=>{ await deleteDoc(doc(db,'comentarios',existente.id)); mostrarToast("Comentario eliminado","info"); document.getElementById('comentarioModal').style.display='none'; actualizarPasaporte(); };
     document.getElementById('comentarioModal').style.display='flex';
   }
 
-  // ========== GPS Y PUNTOS AUTOMÁTICOS ==========
-  function toggleGPS() {
-    if(!currentUser){ mostrarToast("Inicia sesión","error"); return; }
-    if(gpsActive){
-      if(watchId) navigator.geolocation.clearWatch(watchId);
-      gpsActive=false; gpsBtn.classList.remove('active'); mostrarToast("GPS desactivado","info");
-    } else {
-      if(!navigator.geolocation){ mostrarToast("No soportado","error"); return; }
-      navigator.geolocation.getCurrentPosition(()=>{
-        gpsActive=true; gpsBtn.classList.add('active'); mostrarToast("GPS activado. Acércate a lugares (≤50m)","success");
-        watchId = navigator.geolocation.watchPosition(procesarUbicacion, errorGPS, {enableHighAccuracy:true, maximumAge:10000, timeout:15000});
-      }, ()=>mostrarToast("Permiso denegado","error"));
-    }
-  }
-  function errorGPS(err){ console.error(err); mostrarToast("Error GPS: "+err.message,"error"); }
-  function calcularDistancia(lat1,lon1,lat2,lon2){
-    const R=6371e3; const φ1=lat1*Math.PI/180, φ2=lat2*Math.PI/180; const Δφ=(lat2-lat1)*Math.PI/180, Δλ=(lon2-lon1)*Math.PI/180;
-    const a=Math.sin(Δφ/2)**2+Math.cos(φ1)*Math.cos(φ2)*Math.sin(Δλ/2)**2; const c=2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a)); return R*c;
-  }
-  async function procesarUbicacion(pos){
+  // ========== USUARIO Y AUTENTICACIÓN ==========
+  async function cargarPuntosUsuario() {
     if(!currentUser) return;
-    const lat=pos.coords.latitude, lng=pos.coords.longitude;
-    for(let place of allPlaces){
-      const dist = calcularDistancia(lat,lng,place.lat,place.lng);
-      if(dist<=50){
-        const ahora=Date.now();
-        if(ultimaRecompensaPorLugar[place.id] && (ahora-ultimaRecompensaPorLugar[place.id])<60000) continue;
-        const yaVisito = await verificarSiYaVisito(currentUser.uid, place.id);
-        const puntos = yaVisito ? 2 : 10;
-        await registrarVisita(currentUser.uid, place.id, puntos, 'gps');
-        await sumarPuntos(puntos, `Visita GPS a ${place.nombre}`, place.id);
-        ultimaRecompensaPorLugar[place.id]=ahora;
-        mostrarToast(`¡${place.nombre}! +${puntos} puntos`,"success");
-        if(localStorage.getItem('sonidos')!=='false') new Audio('https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3').play().catch(e=>console.log);
-        actualizarMarcadores();
-      }
-    }
+    const q = query(collection(db,'usuarios'), where('uid','==',currentUser.uid));
+    const snap = await getDocs(q);
+    if(!snap.empty){ userDocId = snap.docs[0].id; userPointsTotal = snap.docs[0].data().puntos||0; pointsSpan.innerText = userPointsTotal; }
+    else { const ref = await addDoc(collection(db,'usuarios'), { uid:currentUser.uid, email:currentUser.email, nombre:currentUser.displayName||currentUser.email, puntos:0 }); userDocId = ref.id; userPointsTotal=0; pointsSpan.innerText='0'; }
   }
-
-  // ========== UI Y AUTENTICACIÓN ==========
   function actualizarUIUsuario(){
-    if(currentUser){
-      userPointsDisplay.style.display='flex'; gpsBtn.style.display='flex';
-      userBtn.innerHTML='<i class="fas fa-user-check"></i>';
-      cargarPuntosUsuario();
-    } else {
-      userPointsDisplay.style.display='none'; gpsBtn.style.display='none';
-      userBtn.innerHTML='<i class="fas fa-user-circle"></i>';
-      if(gpsActive) toggleGPS();
-    }
+    if(currentUser){ userPointsDisplay.style.display='flex'; gpsBtn.style.display='flex'; userBtn.innerHTML='<i class="fas fa-user-check"></i>'; cargarPuntosUsuario(); actualizarPasaporte(); }
+    else { userPointsDisplay.style.display='none'; gpsBtn.style.display='none'; userBtn.innerHTML='<i class="fas fa-user-circle"></i>'; if(gpsActive && watchId) navigator.geolocation.clearWatch(watchId); gpsActive=false; pasaporteList.innerHTML = '<div>Inicia sesión para ver tu pasaporte</div>'; }
   }
   function mostrarModalUsuario(){
     if(currentUser){
-      document.getElementById('profileBody').innerHTML = `
-        <div style="text-align:center;padding:15px;">
-          <img src="${currentUser.photoURL||'https://via.placeholder.com/80'}" style="width:80px;border-radius:50%;"><h4>${currentUser.displayName||currentUser.email}</h4>
-          <p>Puntos totales: ${userPointsTotal}</p>
-          <hr><label><input type="checkbox" id="sonidosCheck" ${localStorage.getItem('sonidos')!=='false'?'checked':''}> Activar sonidos</label><br>
-          <button id="cerrarSesionBtn" class="submit-btn" style="background:#d32f2f;">Cerrar sesión</button>
-          <button id="eliminarCuentaBtn" class="submit-btn" style="background:#666;">Eliminar cuenta</button>
-        </div>
-      `;
-      document.getElementById('sonidosCheck').addEventListener('change',(e)=>localStorage.setItem('sonidos',e.target.checked));
+      document.getElementById('profileBody').innerHTML = `<div style="text-align:center;padding:15px;"><img src="${currentUser.photoURL||'https://via.placeholder.com/80'}" style="width:80px;border-radius:50%;"><h4>${currentUser.displayName||currentUser.email}</h4><p>Puntos: ${userPointsTotal}</p><button id="cerrarSesionBtn" class="submit-btn" style="background:#d32f2f;">Cerrar sesión</button><button id="eliminarCuentaBtn" class="submit-btn" style="background:#666;">Eliminar cuenta</button></div>`;
       document.getElementById('cerrarSesionBtn').onclick = async()=>{ await signOut(auth); location.reload(); };
-      document.getElementById('eliminarCuentaBtn').onclick = eliminarCuenta;
+      document.getElementById('eliminarCuentaBtn').onclick = async () => { if(confirm("¿Eliminar cuenta?")){ await currentUser.delete(); await signOut(auth); location.reload(); } };
       profileModal.style.display='flex';
     } else {
-      document.getElementById('userModalBody').innerHTML = `
-        <div style="padding:20px;">
-          <button id="googleLoginBtn" class="submit-btn" style="background:#4285F4;">Google</button><hr>
-          <input type="email" id="loginEmail" placeholder="Email" style="width:100%;margin-bottom:10px;"><input type="password" id="loginPassword" placeholder="Contraseña" style="width:100%;margin-bottom:10px;">
-          <button id="emailLoginBtn" class="submit-btn">Iniciar sesión</button>
-          <button id="emailRegistroBtn" class="submit-btn" style="background:#2E7D32;">Registrarse</button>
-        </div>
-      `;
-      document.getElementById('googleLoginBtn').onclick = ()=> signInWithPopup(auth, provider).then(()=>location.reload());
+      document.getElementById('userModalBody').innerHTML = `<div style="padding:20px;"><button id="googleLoginBtn" class="submit-btn" style="background:#4285F4;">Google</button><hr><input type="email" id="loginEmail" placeholder="Email"><input type="password" id="loginPassword" placeholder="Contraseña"><button id="emailLoginBtn" class="submit-btn">Iniciar sesión</button><button id="emailRegistroBtn" class="submit-btn" style="background:#2E7D32;">Registrarse</button></div>`;
+      document.getElementById('googleLoginBtn').onclick = ()=> signInWithPopup(auth,provider).then(()=>location.reload());
       document.getElementById('emailLoginBtn').onclick = ()=>{ const email=document.getElementById('loginEmail').value, pass=document.getElementById('loginPassword').value; signInWithEmailAndPassword(auth,email,pass).then(()=>location.reload()); };
       document.getElementById('emailRegistroBtn').onclick = ()=>{ const email=document.getElementById('loginEmail').value, pass=document.getElementById('loginPassword').value; createUserWithEmailAndPassword(auth,email,pass).then(()=>location.reload()); };
       userModal.style.display='flex';
     }
   }
-  async function eliminarCuenta(){
-    if(confirm("¿Eliminar cuenta y todos los datos?")){
-      const uid = currentUser.uid;
-      const colecciones = ['usuarios','visitas','comentarios','amigos','progreso_juegos'];
-      for(let col of colecciones){
-        const q = query(collection(db, col), where('usuarioId','==',uid));
-        const snap = await getDocs(q);
-        snap.forEach(async(docSnap)=> await deleteDoc(docSnap.ref));
-      }
-      await currentUser.delete();
-      await signOut(auth);
-      location.reload();
-    }
-  }
-
-  // Modo oscuro
-  function initDarkMode(){
-    const isDark = localStorage.getItem('darkMode')==='true';
-    if(isDark) document.body.classList.add('dark-mode');
-    darkModeBtn.innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
-    darkModeBtn.onclick = ()=>{
-      document.body.classList.toggle('dark-mode');
-      const dark = document.body.classList.contains('dark-mode');
-      localStorage.setItem('darkMode', dark);
-      darkModeBtn.innerHTML = dark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
-    };
-  }
-
-  // Cerrar modales
-  document.querySelectorAll('.close-modal').forEach(btn => btn.onclick = function(){ this.closest('.modal').style.display='none'; });
-
-  // Botón comunidad
-  communityBtn.onclick = () => { window.location.href = 'comunidad.html'; };
-
-  // Inicialización
-  onAuthStateChanged(auth, (user) => {
-    currentUser = user;
-    actualizarUIUsuario();
-    if(user) cargarPuntosUsuario();
-  });
-  gpsBtn.onclick = toggleGPS;
+  gpsBtn.onclick = () => { if(!currentUser) mostrarToast("Inicia sesión","error"); else { if(gpsActive){ if(watchId) navigator.geolocation.clearWatch(watchId); gpsActive=false; gpsBtn.classList.remove('active'); mostrarToast("GPS desactivado","info"); } else { navigator.geolocation.getCurrentPosition(()=>{ gpsActive=true; gpsBtn.classList.add('active'); watchId = navigator.geolocation.watchPosition(async (pos)=>{ for(let place of allPlaces){ const dist = calcularDistancia(pos.coords.latitude,pos.coords.longitude,place.lat,place.lng); if(dist<=50 && (!ultimaRecompensaPorLugar[place.id] || Date.now()-ultimaRecompensaPorLugar[place.id]>60000)){ const ya = await verificarSiYaVisito(currentUser.uid, place.id); const pts = ya?2:10; await registrarVisita(currentUser.uid,place.id,pts,'gps'); await sumarPuntos(pts,`GPS ${place.nombre}`,place.id); ultimaRecompensaPorLugar[place.id]=Date.now(); actualizarMarcadoresMapa(); actualizarPasaporte(); } } }, ()=>mostrarToast("Error GPS","error"), {enableHighAccuracy:true}); }, ()=>mostrarToast("Permiso denegado","error")); } } };
   userBtn.onclick = mostrarModalUsuario;
-
-  function init(){
-    initDarkMode();
-    initMap();
-    cargarLugaresFirestore();
-  }
-  window.addEventListener('load', () => { if(map) map.invalidateSize(true); });
-  init();
+  onAuthStateChanged(auth, (user) => { currentUser = user; actualizarUIUsuario(); if(map && markerCluster) actualizarMarcadoresMapa(); });
+  // tabs
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const tab = btn.dataset.tab;
+      document.getElementById('libretaTab').classList.add('hidden-tab');
+      document.getElementById('mapaTab').classList.add('hidden-tab');
+      document.getElementById('pasaporteTab').classList.add('hidden-tab');
+      if(tab === 'libreta') document.getElementById('libretaTab').classList.remove('hidden-tab');
+      if(tab === 'mapa') { document.getElementById('mapaTab').classList.remove('hidden-tab'); if(map) setTimeout(()=> map.invalidateSize(), 100); else initMap(); }
+      if(tab === 'pasaporte') { document.getElementById('pasaporteTab').classList.remove('hidden-tab'); actualizarPasaporte(); }
+    });
+  });
+  filtroCiudad.addEventListener('change', () => actualizarLibreta());
+  filtroTipoCamino.addEventListener('change', () => actualizarLibreta());
+  darkModeBtn.onclick = () => { document.body.classList.toggle('dark-mode'); localStorage.setItem('darkMode', document.body.classList.contains('dark-mode')); darkModeBtn.innerHTML = document.body.classList.contains('dark-mode') ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>'; };
+  if(localStorage.getItem('darkMode') === 'true') document.body.classList.add('dark-mode');
+  document.querySelectorAll('.close-modal').forEach(btn => btn.onclick = () => btn.closest('.modal').style.display='none');
+  cargarLugaresFirestore();
+  initMap();
 </script>
 </body>
 </html>
