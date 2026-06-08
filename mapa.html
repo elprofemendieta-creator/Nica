@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
   <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
-  <!-- Font Awesome 6 (gratis) -->
+  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -23,27 +23,14 @@
       padding: 0;
       box-sizing: border-box;
     }
-
-    /* ===== PALETA DE COLORES NICARAGUA ===== */
-    :root {
-      --azul-colonial: #1E3A5F;      /* azul profundo, identidad */
-      --terracota: #C75C2E;          /* tono tierra cálido */
-      --verde-pinolero: #2E7D32;     /* verde esperanza */
-      --arena-clara: #F5F2E8;        /* fondo suave */
-      --blanco-puro: #FFFFFF;
-      --gris-elegante: #4A4A4A;
-      --sombra-suave: 0 8px 20px rgba(0, 0, 0, 0.12);
-      --transition-base: all 0.3s ease;
+    html, body {
+      height: 100%;
     }
-
     body {
       font-family: 'Poppins', sans-serif;
-      background: var(--arena-clara);
+      background: #F5F5F0;
       transition: background 0.3s;
-      overflow: hidden;
-      height: 100vh;
     }
-
     .app-container {
       display: flex;
       flex-direction: column;
@@ -51,240 +38,183 @@
       width: 100%;
       overflow: hidden;
     }
-
-    /* HEADER moderno */
+    /* Header */
     .app-header {
-      background: var(--blanco-puro);
-      padding: 8px 20px;
+      background: white;
+      padding: 8px 16px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 10px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      gap: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
       z-index: 100;
       flex-shrink: 0;
     }
-
     .logo {
       display: flex;
       align-items: center;
       gap: 8px;
     }
     .logo i {
-      font-size: 28px;
-      color: var(--terracota);
+      font-size: 24px;
+      color: #F57C00;
     }
     .logo h2 {
-      font-size: 1.3rem;
-      color: var(--azul-colonial);
-      font-weight: 600;
+      font-size: 18px;
+      color: #2E7D32;
     }
-
     .header-controls {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 8px;
       flex-wrap: wrap;
     }
-
     .user-points {
-      background: var(--terracota);
+      background: #F57C00;
       color: white;
-      padding: 5px 14px;
-      border-radius: 40px;
+      padding: 5px 12px;
+      border-radius: 30px;
       font-size: 14px;
       font-weight: bold;
       display: flex;
       align-items: center;
-      gap: 6px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      gap: 5px;
     }
-
     .icon-btn, .admin-login-btn {
       background: none;
       border: none;
-      font-size: 1.2rem;
+      font-size: 18px;
       cursor: pointer;
-      padding: 8px;
+      padding: 6px;
       border-radius: 50%;
-      transition: var(--transition-base);
-      color: var(--gris-elegante);
+      transition: 0.3s;
+      color: #666;
     }
-    .icon-btn:hover {
-      background: rgba(30, 58, 95, 0.1);
-      color: var(--azul-colonial);
-      transform: scale(1.05);
+    .icon-btn:hover, .admin-login-btn:hover {
+      background: #f0f0f0;
+      color: #F57C00;
     }
     .admin-login-btn {
-      background: var(--azul-colonial);
+      background: #2E7D32;
       color: white;
-      border-radius: 40px;
-      padding: 6px 16px;
-      font-size: 0.75rem;
-      font-weight: 500;
+      border-radius: 30px;
+      padding: 4px 12px;
+      font-size: 12px;
     }
-    .admin-login-btn:hover {
-      background: #0F2B44;
-      transform: translateY(-2px);
-    }
-
-    /* TABS MENU (con iconos y diseño cohesivo) */
+    /* Tabs */
     .tabs {
       display: flex;
       background: white;
-      padding: 0 20px;
-      gap: 28px;
-      border-bottom: 2px solid #E5E0D5;
+      border-bottom: 2px solid #eee;
+      padding: 0 16px;
+      gap: 20px;
       flex-shrink: 0;
     }
     .tab-btn {
       background: none;
       border: none;
-      padding: 14px 0 10px 0;
-      font-size: 1rem;
+      padding: 12px 0;
+      font-size: 16px;
       font-weight: 600;
       cursor: pointer;
-      color: #6B6B6B;
-      transition: var(--transition-base);
+      color: #777;
+      transition: 0.2s;
       border-bottom: 3px solid transparent;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .tab-btn i {
-      font-size: 1.2rem;
     }
     .tab-btn.active {
-      color: var(--terracota);
-      border-bottom-color: var(--terracota);
+      color: #F57C00;
+      border-bottom-color: #F57C00;
     }
-    .tab-btn:hover:not(.active) {
-      color: var(--azul-colonial);
-      transform: translateY(-2px);
-    }
-
-    /* Contenido de pestañas */
     .tab-content {
       flex: 1;
       overflow-y: auto;
-      padding: 16px 20px;
-      background: var(--arena-clara);
+      padding: 16px;
+      background: #F5F5F0;
     }
     .hidden-tab {
       display: none;
     }
-
-    /* FILTROS: flexbox armonioso y responsive */
+    /* Libreta (filtros y cards) */
     .filtros-container {
       background: white;
-      border-radius: 28px;
-      padding: 18px 20px;
-      margin-bottom: 24px;
-      box-shadow: var(--sombra-suave);
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      align-items: flex-end;
+      border-radius: 20px;
+      padding: 15px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
     .filtro-group {
-      flex: 1;
-      min-width: 160px;
+      margin-bottom: 15px;
     }
     .filtro-group label {
       font-weight: 600;
       display: block;
       margin-bottom: 8px;
-      color: var(--azul-colonial);
-      font-size: 0.85rem;
-      letter-spacing: 0.5px;
+      color: #2E7D32;
     }
     .select-custom {
       width: 100%;
-      padding: 10px 14px;
-      border-radius: 40px;
-      border: 1px solid #DDD8CE;
-      background: white;
-      font-family: 'Poppins', sans-serif;
-      transition: var(--transition-base);
-      cursor: pointer;
-      outline: none;
+      padding: 10px;
+      border-radius: 30px;
+      border: 1px solid #ddd;
+      background: #f9f9f9;
     }
-    .select-custom:focus {
-      border-color: var(--terracota);
-      box-shadow: 0 0 0 3px rgba(199, 92, 46, 0.2);
-    }
-
-    /* GRID DE TARJETAS (libreta) */
     .places-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 20px;
+      gap: 16px;
     }
     .place-card {
       background: white;
-      border-radius: 24px;
+      border-radius: 20px;
       overflow: hidden;
-      box-shadow: 0 6px 14px rgba(0,0,0,0.08);
-      transition: var(--transition-base);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transition: transform 0.2s;
       cursor: pointer;
     }
     .place-card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 16px 28px rgba(0,0,0,0.12);
+      transform: translateY(-4px);
     }
     .place-card img {
       width: 100%;
-      height: 170px;
+      height: 160px;
       object-fit: cover;
     }
     .place-info-card {
-      padding: 14px;
+      padding: 12px;
     }
     .place-info-card h4 {
-      font-size: 1.2rem;
-      margin-bottom: 6px;
-      color: var(--azul-colonial);
+      font-size: 18px;
+      margin-bottom: 4px;
     }
     .place-badge {
       display: inline-block;
-      background: #FDF0E6;
-      color: var(--terracota);
-      border-radius: 40px;
-      padding: 4px 14px;
-      font-size: 0.7rem;
-      font-weight: 600;
-      margin: 8px 0;
+      background: #F57C10;
+      color: white;
+      border-radius: 30px;
+      padding: 4px 12px;
+      font-size: 12px;
+      margin: 6px 0;
     }
     .explore-btn {
-      background: var(--verde-pinolero);
+      background: #2E7D32;
       color: white;
       border: none;
-      padding: 10px;
-      border-radius: 40px;
+      padding: 8px 16px;
+      border-radius: 30px;
       width: 100%;
-      font-weight: 600;
+      margin-top: 10px;
       cursor: pointer;
-      transition: var(--transition-base);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
+      font-weight: bold;
     }
-    .explore-btn:hover {
-      background: #1B5E20;
-      transform: scale(0.98);
-    }
-
-    /* MAPA y controles */
+    /* Mapa */
     .map-container {
       position: relative;
       width: 100%;
       height: 100%;
-      min-height: 550px;
-      border-radius: 24px;
+      min-height: 500px;
+      border-radius: 20px;
       overflow: hidden;
-      box-shadow: var(--sombra-suave);
     }
     #map {
       height: 100%;
@@ -296,32 +226,25 @@
       right: 20px;
       z-index: 1000;
       background: white;
-      border-radius: 60px;
-      padding: 6px;
+      border-radius: 50px;
+      padding: 5px;
       display: flex;
-      gap: 8px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      gap: 5px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
     }
     .layer-btn {
-      width: 42px;
-      height: 42px;
+      width: 40px;
+      height: 40px;
       border-radius: 50%;
       border: none;
       background: white;
       cursor: pointer;
-      transition: var(--transition-base);
-      color: var(--azul-colonial);
     }
     .layer-btn.active {
-      background: var(--terracota);
+      background: #F57C00;
       color: white;
     }
-    .layer-btn:hover {
-      background: var(--azul-colonial);
-      color: white;
-    }
-
-    /* PASAPORTE */
+    /* Pasaporte */
     .pasaporte-list {
       display: flex;
       flex-direction: column;
@@ -329,40 +252,37 @@
     }
     .pasaporte-item {
       background: white;
-      border-radius: 24px;
+      border-radius: 20px;
       padding: 16px;
       display: flex;
-      gap: 18px;
+      gap: 16px;
       flex-wrap: wrap;
       align-items: center;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
     }
     .pasaporte-img {
       width: 80px;
       height: 80px;
-      border-radius: 20px;
+      border-radius: 16px;
       object-fit: cover;
     }
     .pasaporte-info {
       flex: 1;
     }
     .visits-count {
-      background: var(--terracota);
+      background: #F57C00;
       color: white;
-      border-radius: 40px;
-      padding: 4px 14px;
-      font-size: 0.75rem;
+      border-radius: 30px;
+      padding: 4px 12px;
+      font-size: 12px;
       display: inline-block;
     }
     .user-review {
-      background: #F8F5F0;
-      padding: 10px;
-      border-radius: 20px;
-      margin-top: 10px;
-      font-size: 0.85rem;
+      background: #f0f0f0;
+      padding: 8px;
+      border-radius: 12px;
+      margin-top: 8px;
     }
-
-    /* MODALES PREMIUM */
+    /* modales */
     .modal {
       display: none;
       position: fixed;
@@ -370,85 +290,51 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0,0,0,0.6);
+      background: rgba(0,0,0,0.5);
       justify-content: center;
       align-items: center;
       z-index: 2000;
-      backdrop-filter: blur(4px);
     }
     .modal-content {
       background: white;
-      border-radius: 32px;
+      border-radius: 20px;
       width: 90%;
-      max-width: 520px;
+      max-width: 500px;
       max-height: 90vh;
       overflow-y: auto;
-      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.3);
-      animation: fadeUp 0.2s ease;
-    }
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(20px);}
-      to { opacity: 1; transform: translateY(0);}
     }
     .modal-header {
-      padding: 18px 22px;
-      background: var(--azul-colonial);
+      padding: 15px;
+      background: #2E7D32;
       color: white;
-      border-radius: 32px 32px 0 0;
+      border-radius: 20px 20px 0 0;
       display: flex;
       justify-content: space-between;
-      font-weight: 600;
-    }
-    .close-modal {
-      background: none;
-      border: none;
-      font-size: 28px;
-      color: white;
-      cursor: pointer;
-      line-height: 1;
     }
     .form-group {
-      padding: 12px 22px;
+      padding: 10px 15px;
     }
     .form-group label {
       display: block;
-      font-size: 0.8rem;
-      font-weight: 600;
-      margin-bottom: 6px;
-      color: var(--azul-colonial);
+      font-size: 13px;
+      margin-bottom: 5px;
     }
     .form-group input, .form-group select, .form-group textarea {
       width: 100%;
-      padding: 10px 14px;
-      border: 1px solid #D4CEC2;
-      border-radius: 16px;
-      font-family: 'Poppins', sans-serif;
-      transition: var(--transition-base);
-      outline: none;
-      background: white;
-    }
-    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
-      border-color: var(--terracota);
-      box-shadow: 0 0 0 3px rgba(199,92,46,0.15);
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
     }
     .submit-btn {
-      width: calc(100% - 44px);
-      margin: 10px 22px 22px 22px;
-      padding: 12px;
-      background: var(--terracota);
+      width: calc(100% - 30px);
+      margin: 0 15px 15px;
+      padding: 10px;
+      background: #F57C00;
       color: white;
       border: none;
-      border-radius: 40px;
-      font-weight: bold;
+      border-radius: 10px;
       cursor: pointer;
-      transition: var(--transition-base);
     }
-    .submit-btn:hover {
-      background: #A84E28;
-      transform: translateY(-2px);
-    }
-
-    /* TOAST */
     .toast-container {
       position: fixed;
       bottom: 20px;
@@ -457,98 +343,45 @@
     }
     .toast {
       background: white;
-      padding: 10px 20px;
-      border-radius: 60px;
-      margin-top: 8px;
-      box-shadow: 0 6px 14px rgba(0,0,0,0.15);
-      border-left: 5px solid var(--terracota);
-      font-weight: 500;
+      padding: 8px 16px;
+      border-radius: 10px;
+      margin-top: 5px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      border-left: 4px solid #F57C00;
     }
-
     .whatsapp-float {
       position: fixed;
       bottom: 20px;
       left: 20px;
       background: #25D366;
       color: white;
-      width: 52px;
-      height: 52px;
+      width: 50px;
+      height: 50px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 30px;
+      font-size: 28px;
       text-decoration: none;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
       z-index: 99;
-      transition: transform 0.2s;
     }
-    .whatsapp-float:hover {
-      transform: scale(1.05);
+    .dark-mode {
+      background: #1a1a2e;
     }
-
-    /* MODO OSCURO personalizado */
-    body.dark-mode {
-      background: #121826;
-    }
-    body.dark-mode .app-header, body.dark-mode .tabs, body.dark-mode .filtros-container,
-    body.dark-mode .place-card, body.dark-mode .pasaporte-item, body.dark-mode .modal-content,
-    body.dark-mode .toast {
-      background: #1E2A3A;
-      color: #E0E0E0;
-    }
-    body.dark-mode .tab-btn {
-      color: #B0B0B0;
-    }
-    body.dark-mode .tab-btn.active {
-      color: #F29B6B;
-    }
-    body.dark-mode .select-custom, body.dark-mode .form-group input, 
-    body.dark-mode .form-group select, body.dark-mode .form-group textarea {
-      background: #2C3E4E;
-      border-color: #4A627A;
+    .dark-mode .app-header, .dark-mode .tabs, .dark-mode .filtros-container, .dark-mode .place-card, .dark-mode .pasaporte-item, .dark-mode .modal-content {
+      background: #2d2d44;
       color: white;
     }
-    body.dark-mode .user-review {
-      background: #2C3E4E;
+    .dark-mode .tab-btn {
+      color: #ccc;
     }
-
-    /* RESPONSIVE: mapa ocupa más espacio */
+    .dark-mode .tab-btn.active {
+      color: #F57C00;
+    }
     @media (max-width: 768px) {
-      .app-header {
-        padding: 8px 12px;
-      }
-      .logo h2 {
-        font-size: 1.1rem;
-      }
-      .tabs {
-        padding: 0 12px;
-        gap: 12px;
-      }
-      .tab-btn {
-        padding: 10px 0 6px;
-        font-size: 0.85rem;
-      }
-      .filtros-container {
-        flex-direction: row;
-        flex-wrap: nowrap;
-        overflow-x: auto;
-        gap: 12px;
-        padding: 12px;
-        scrollbar-width: thin;
-      }
-      .filtro-group {
-        min-width: 140px;
-      }
       .map-container {
-        min-height: 65vh;
-        height: calc(100% - 10px);
-      }
-      .tab-content {
-        padding: 12px;
-      }
-      .places-grid {
-        grid-template-columns: 1fr;
+        height: 70vh;
       }
     }
   </style>
@@ -567,7 +400,7 @@
     </div>
   </header>
   <div class="tabs">
-    <button class="tab-btn active" data-tab="libreta"><i class="fas fa-book-open"></i> Libreta</button>
+    <button class="tab-btn active" data-tab="libreta"><i class="fas fa-book"></i> Libreta</button>
     <button class="tab-btn" data-tab="mapa"><i class="fas fa-map"></i> Mapa</button>
     <button class="tab-btn" data-tab="pasaporte"><i class="fas fa-passport"></i> Pasaporte</button>
   </div>
@@ -583,12 +416,14 @@
         <label><i class="fas fa-route"></i> Tipo de Ruta</label>
         <select id="filtroTipoCamino" class="select-custom">
           <option value="todos">Todos</option>
-          <option value="Educativo">📚 Ruta Educativa</option>
-          <option value="Comercial">🍽️ Ruta Comercial</option>
+          <option value="Educativo">Ruta Educativa (Turismo/Historia)</option>
+          <option value="Comercial">Ruta Comercial (Gastronomía/Economía Local)</option>
         </select>
       </div>
     </div>
-    <div id="lugaresGrid" class="places-grid"></div>
+    <div id="lugaresGrid" class="places-grid">
+      <!-- cards dinámicas -->
+    </div>
   </div>
   <div id="mapaTab" class="tab-content hidden-tab">
     <div class="map-container">
@@ -601,16 +436,18 @@
     </div>
   </div>
   <div id="pasaporteTab" class="tab-content hidden-tab">
-    <div id="pasaporteList" class="pasaporte-list"></div>
+    <div id="pasaporteList" class="pasaporte-list">
+      <!-- historial de conquistas -->
+    </div>
   </div>
 </div>
 
-<!-- Modales mejorados -->
-<div id="adminModal" class="modal"><div class="modal-content"><div class="modal-header"><h3><i class="fas fa-lock"></i> Acceso Admin</h3><button class="close-modal">&times;</button></div><form id="adminLoginForm"><div class="form-group"><label>Contraseña</label><input type="password" id="adminPassword" placeholder="Contraseña" required></div><button type="submit" class="submit-btn">Entrar</button></form></div></div>
-<div id="lugarModal" class="modal"><div class="modal-content"><div class="modal-header"><h3 id="modalTitle"><i class="fas fa-plus-circle"></i> Añadir Lugar</h3><button class="close-modal">&times;</button></div><form id="lugarForm"><input type="hidden" id="lugarId"><div class="form-group"><label>Nombre</label><input type="text" id="lugarNombre" required placeholder="Ej. Catedral de Diriamba"></div><div style="display:flex;gap:12px;padding:0 22px;"><div class="form-group" style="flex:1;padding:0"><label>Latitud</label><input type="number" step="any" id="lugarLat" required></div><div class="form-group" style="flex:1;padding:0"><label>Longitud</label><input type="number" step="any" id="lugarLng" required></div></div><div class="form-group"><label>Ciudad *</label><input type="text" id="lugarCiudad" placeholder="Diriamba, León, Managua..." required></div><div class="form-group"><label>Tipo de Camino *</label><select id="lugarTipoCamino" required><option value="Educativo">📚 Ruta Educativa</option><option value="Comercial">🍽️ Ruta Comercial</option></select></div><div class="form-group"><label>URL (enlace)</label><input type="text" id="lugarUrl" placeholder="https://"></div><div class="form-group"><label>Imagen URL</label><input type="text" id="lugarImagen" placeholder="https://..."></div><div class="form-group"><label>Categoría (opcional)</label><input type="text" id="lugarCategoria"></div><button type="submit" class="submit-btn">Guardar lugar</button></form></div></div>
-<div id="userModal" class="modal"><div class="modal-content"><div class="modal-header"><h3><i class="fas fa-user-plus"></i> Iniciar Sesión</h3><button class="close-modal">&times;</button></div><div id="userModalBody"></div></div></div>
-<div id="profileModal" class="modal"><div class="modal-content"><div class="modal-header"><h3><i class="fas fa-id-card"></i> Mi Perfil</h3><button class="close-modal">&times;</button></div><div id="profileBody"></div></div></div>
-<div id="comentarioModal" class="modal"><div class="modal-content"><div class="modal-header"><h3><i class="fas fa-star"></i> Comentar lugar</h3><button class="close-modal">&times;</button></div><div id="comentarioBody"></div></div></div>
+<!-- Modales -->
+<div id="adminModal" class="modal"><div class="modal-content"><div class="modal-header"><h3>Acceso Admin</h3><button class="close-modal">&times;</button></div><form id="adminLoginForm"><div class="form-group"><label>Contraseña</label><input type="password" id="adminPassword" required></div><button type="submit" class="submit-btn">Entrar</button></form></div></div>
+<div id="lugarModal" class="modal"><div class="modal-content"><div class="modal-header"><h3 id="modalTitle">Añadir Lugar</h3><button class="close-modal">&times;</button></div><form id="lugarForm"><input type="hidden" id="lugarId"><div class="form-group"><label>Nombre</label><input type="text" id="lugarNombre" required></div><div style="display:flex;gap:10px;padding:0 15px;"><div class="form-group" style="flex:1"><label>Lat</label><input type="number" step="any" id="lugarLat" required></div><div class="form-group" style="flex:1"><label>Lng</label><input type="number" step="any" id="lugarLng" required></div></div><div class="form-group"><label>Ciudad *</label><input type="text" id="lugarCiudad" placeholder="Ej. Diriamba" required></div><div class="form-group"><label>Tipo de Camino *</label><select id="lugarTipoCamino" required><option value="Educativo">Ruta Educativa</option><option value="Comercial">Ruta Comercial</option></select></div><div class="form-group"><label>URL (enlace)</label><input type="text" id="lugarUrl" placeholder="https://..."></div><div class="form-group"><label>Imagen URL</label><input type="text" id="lugarImagen"></div><div class="form-group"><label>Categoría (opcional)</label><input type="text" id="lugarCategoria"></div><button type="submit" class="submit-btn">Guardar</button></form></div></div>
+<div id="userModal" class="modal"><div class="modal-content"><div class="modal-header"><h3>Iniciar Sesión</h3><button class="close-modal">&times;</button></div><div id="userModalBody"></div></div></div>
+<div id="profileModal" class="modal"><div class="modal-content"><div class="modal-header"><h3>Mi Perfil</h3><button class="close-modal">&times;</button></div><div id="profileBody"></div></div></div>
+<div id="comentarioModal" class="modal"><div class="modal-content"><div class="modal-header"><h3>Comentar lugar</h3><button class="close-modal">&times;</button></div><div id="comentarioBody"></div></div></div>
 <div id="toastContainer" class="toast-container"></div>
 <a href="https://wa.me/50588170531?text=Hola%20Guía%20Pinolera" class="whatsapp-float" target="_blank"><i class="fab fa-whatsapp"></i></a>
 
@@ -627,7 +464,7 @@
 <script type="module">
   import { initializeApp } from "firebase/app";
   import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
-  import { getFirestore, collection, onSnapshot, addDoc, updateDoc, deleteDoc, doc, getDocs, query, where, getDoc } from "firebase/firestore";
+  import { getFirestore, collection, onSnapshot, addDoc, updateDoc, deleteDoc, doc, getDocs, query, where, getDoc, Timestamp } from "firebase/firestore";
 
   const firebaseConfig = {
     apiKey: "AIzaSyA6jVICuE17KJcO34gE1brMxqWEfNd3Fy0",
@@ -635,7 +472,8 @@
     projectId: "mapa-41b00",
     storageBucket: "mapa-41b00.firebasestorage.app",
     messagingSenderId: "535032835400",
-    appId: "1:535032835400:web:68c079cbc3f419eafd177d"
+    appId: "1:535032835400:web:68c079cbc3f419eafd177d",
+    measurementId: "G-7R3DSH7PPN"
   };
 
   const app = initializeApp(firebaseConfig);
@@ -643,22 +481,40 @@
   const db = getFirestore(app);
   const provider = new GoogleAuthProvider();
 
+  // Variables globales
   let map, markerCluster, currentLayers = {}, allPlaces = [], isAdmin = false;
   let currentUser = null, userDocId = null, userPointsTotal = 0;
   let gpsActive = false, watchId = null;
   let ultimaRecompensaPorLugar = {};
+  let activeTab = 'libreta';
+  let selectedPlaceToCenter = null;
 
-  // Helper UI
+  // DOM
+  const darkModeBtn = document.getElementById('darkModeBtn');
+  const adminLoginBtn = document.getElementById('adminLoginBtn');
+  const adminPanelHeader = document.getElementById('adminPanelHeader');
+  const logoutAdminBtn = document.getElementById('logoutAdminBtn');
+  const adminModal = document.getElementById('adminModal');
+  const lugarModal = document.getElementById('lugarModal');
+  const placesGrid = document.getElementById('lugaresGrid');
+  const filtroCiudad = document.getElementById('filtroCiudad');
+  const filtroTipoCamino = document.getElementById('filtroTipoCamino');
+  const userBtn = document.getElementById('userBtn');
+  const gpsBtn = document.getElementById('gpsBtn');
+  const pointsSpan = document.getElementById('pointsValue');
+  const userPointsDisplay = document.getElementById('userPointsDisplay');
+  const pasaporteList = document.getElementById('pasaporteList');
+
   function mostrarToast(msg, tipo='info') {
     const container = document.getElementById('toastContainer');
     const toast = document.createElement('div');
     toast.className = 'toast';
-    toast.innerHTML = `<i class="fas ${tipo==='error'?'fa-exclamation-triangle':'fa-check-circle'}"></i> ${msg}`;
+    toast.innerHTML = `<i class="fas ${tipo==='error'?'fa-exclamation-circle':'fa-check-circle'}"></i> ${msg}`;
     container.appendChild(toast);
     setTimeout(() => toast.remove(), 3000);
   }
 
-  // Firestore lugares tiempo real
+  // ========== FIRESTORE: LUGARES (tiempo real) ==========
   let unsubscribePlaces = null;
   function cargarLugaresFirestore() {
     if(unsubscribePlaces) unsubscribePlaces();
@@ -668,36 +524,41 @@
       actualizarFiltrosCiudad();
       actualizarLibreta();
       if(map && markerCluster) actualizarMarcadoresMapa();
-      if(currentUser) actualizarPasaporte();
-    });
+    }, error => mostrarToast("Error Firestore: "+error.message, "error"));
   }
 
   function actualizarFiltrosCiudad() {
-    const ciudades = [...new Set(allPlaces.map(p => p.ciudad).filter(c => c))];
-    const current = document.getElementById('filtroCiudad').value;
-    const select = document.getElementById('filtroCiudad');
-    select.innerHTML = '<option value="todas">🌍 Todas las ciudades</option>' + ciudades.map(c => `<option value="${c}">${c}</option>`).join('');
-    if(current && ciudades.includes(current)) select.value = current;
-    else select.value = 'todas';
+    const ciudades = [...new Set(allPlaces.map(p => p.ciudad).filter(c => c && c.trim() !== ''))];
+    const currentVal = filtroCiudad.value;
+    filtroCiudad.innerHTML = '<option value="todas">Todas las ciudades</option>' + ciudades.map(c => `<option value="${c}">${c}</option>`).join('');
+    if(currentVal && ciudades.includes(currentVal)) filtroCiudad.value = currentVal;
+    else filtroCiudad.value = 'todas';
+  }
+
+  function getFiltros() {
+    const ciudad = filtroCiudad.value;
+    const tipo = filtroTipoCamino.value;
+    return { ciudad, tipo };
   }
 
   function actualizarLibreta() {
-    const ciudad = document.getElementById('filtroCiudad').value;
-    const tipo = document.getElementById('filtroTipoCamino').value;
-    let filtered = allPlaces.filter(p => (ciudad === 'todas' || p.ciudad === ciudad) && (tipo === 'todos' || p.tipoCamino === tipo));
-    const grid = document.getElementById('lugaresGrid');
-    if(!filtered.length) { grid.innerHTML = '<div style="text-align:center;padding:30px;">✨ No hay lugares con esos filtros</div>'; return; }
-    grid.innerHTML = filtered.map(place => `
+    const { ciudad, tipo } = getFiltros();
+    let filtered = [...allPlaces];
+    if(ciudad !== 'todas') filtered = filtered.filter(p => p.ciudad === ciudad);
+    if(tipo !== 'todos') filtered = filtered.filter(p => p.tipoCamino === tipo);
+    if(filtered.length === 0) { placesGrid.innerHTML = '<div style="padding:20px;text-align:center;">No hay lugares con esos filtros</div>'; return; }
+    placesGrid.innerHTML = filtered.map(place => `
       <div class="place-card" data-id="${place.id}">
-        <img src="${place.imagen || 'https://via.placeholder.com/300x160?text=Imagen+Pinolera'}" onerror="this.src='https://via.placeholder.com/300x160?text=📸+Imagen+no+disponible'">
+        <img src="${place.imagen || 'https://via.placeholder.com/300x160?text=Sin+imagen'}" onerror="this.src='https://via.placeholder.com/300x160?text=Imagen+no+disponible'">
         <div class="place-info-card">
           <h4>${place.nombre}</h4>
-          <div class="place-badge"><i class="fas fa-map-pin"></i> ${place.ciudad || 'Nicaragua'} • ${place.tipoCamino === 'Educativo' ? '📖 Educativo' : '🍴 Comercial'}</div>
+          <div class="place-badge">${place.ciudad || 'Sin ciudad'} • ${place.tipoCamino === 'Educativo' ? '📚 Educativo' : '🍽️ Comercial'}</div>
           <button class="explore-btn" data-id="${place.id}" data-lat="${place.lat}" data-lng="${place.lng}"><i class="fas fa-compass"></i> Explorar</button>
-          ${isAdmin ? `<button class="explore-btn" style="background:#5D3A1A; margin-top:6px;" data-edit="${place.id}"><i class="fas fa-edit"></i> Editar</button>` : ''}
+          ${isAdmin ? `<button class="explore-btn" style="background:#666; margin-top:5px;" data-edit="${place.id}">✏️ Editar</button>` : ''}
         </div>
       </div>
-    `);
+    `).join('');
+    // Eventos explorar
     document.querySelectorAll('.explore-btn[data-id]').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -705,15 +566,34 @@
         const place = allPlaces.find(p => p.id === id);
         if(place) {
           document.querySelector('.tab-btn[data-tab="mapa"]').click();
-          setTimeout(() => { if(map) { map.setView([place.lat, place.lng], 15); markerCluster.eachLayer(layer => { if(layer.getLatLng().lat === place.lat && layer.getLatLng().lng === place.lng) layer.openPopup(); }); } }, 300);
+          setTimeout(() => {
+            if(map) {
+              map.setView([place.lat, place.lng], 15);
+              // Abrir popup automático
+              markerCluster.eachLayer(layer => {
+                if(layer.getLatLng().lat === place.lat && layer.getLatLng().lng === place.lng) {
+                  layer.openPopup();
+                }
+              });
+            }
+          }, 300);
         }
       });
-      if(isAdmin && btn.dataset.edit) btn.addEventListener('click', (e) => { e.stopPropagation(); editarLugarAdmin(btn.dataset.edit); });
+      if(isAdmin && btn.dataset.edit) {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const id = btn.dataset.edit;
+          const p = allPlaces.find(p => p.id === id);
+          if(p) editarLugarAdmin(p.id);
+        });
+      }
     });
   }
 
-  // Mapa
+  // ========== MAPA ==========
   function initMap() {
+    const mapDiv = document.getElementById('map');
+    if(!mapDiv) return;
     if(map) map.remove();
     map = L.map('map').setView([12.8654, -85.2072], 8);
     currentLayers.calles = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { attribution: '&copy; OpenStreetMap' }).addTo(map);
@@ -722,14 +602,19 @@
     map.addLayer(markerCluster);
     document.querySelectorAll('.layer-btn[data-layer]').forEach(btn => {
       btn.addEventListener('click', () => {
+        const layer = btn.dataset.layer;
         Object.keys(currentLayers).forEach(l => map.removeLayer(currentLayers[l]));
-        map.addLayer(currentLayers[btn.dataset.layer]);
+        map.addLayer(currentLayers[layer]);
         document.querySelectorAll('.layer-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
       });
     });
-    document.getElementById('geolocationBtn').onclick = () => navigator.geolocation.getCurrentPosition(pos => map.setView([pos.coords.latitude, pos.coords.longitude], 14), ()=>mostrarToast("No se pudo obtener ubicación","error"));
-    if(isAdmin) map.on('click', (e) => abrirFormularioNuevo(e.latlng.lat, e.latlng.lng));
+    geolocationBtn.onclick = () => {
+      if(navigator.geolocation) navigator.geolocation.getCurrentPosition(pos=>map.setView([pos.coords.latitude,pos.coords.longitude],13), ()=>mostrarToast("Error ubicación","error"));
+    };
+    if(isAdmin) {
+      map.on('click', (e) => abrirFormularioNuevo(e.latlng.lat, e.latlng.lng));
+    }
     actualizarMarcadoresMapa();
   }
 
@@ -737,110 +622,219 @@
     if(!markerCluster) return;
     markerCluster.clearLayers();
     for(let place of allPlaces) {
-      const div = document.createElement('div');
-      div.innerHTML = `<b>${place.nombre}</b><br>${place.imagen?`<img src="${place.imagen}" style="width:120px;border-radius:12px;">` : ''}<br>📍 ${place.ciudad}`;
-      const checkBtn = document.createElement('button'); checkBtn.innerHTML = '<i class="fas fa-check-circle"></i> Check-in aquí'; checkBtn.style.cssText = 'background:#C75C2E; color:white; border:none; padding:6px 12px; border-radius:40px; margin:6px 0; width:100%';
+      const popupDiv = document.createElement('div');
+      popupDiv.innerHTML = `<b>${place.nombre}</b><br>${place.imagen?`<img src="${place.imagen}" style="width:100%;border-radius:8px;max-width:180px;">` : ''}<br><a href="${place.url||'#'}" target="_blank">🔗 Visitar</a>`;
+      const checkBtn = document.createElement('button');
+      checkBtn.innerHTML = '<i class="fas fa-map-marker-check"></i> Hacer Check-in aquí';
+      checkBtn.style.display = 'block';
+      checkBtn.style.margin = '5px 0';
+      checkBtn.style.background = '#F57C00';
+      checkBtn.style.color = 'white';
+      checkBtn.style.border = 'none';
+      checkBtn.style.padding = '6px';
+      checkBtn.style.borderRadius = '20px';
       checkBtn.onclick = () => realizarCheckin(place.id, place.nombre);
-      div.appendChild(checkBtn);
-      if(currentUser && await verificarSiYaVisito(currentUser.uid, place.id)) {
-        const commentBtn = document.createElement('button'); commentBtn.innerHTML = '<i class="fas fa-star"></i> Comentar'; commentBtn.style.cssText = 'background:#2E7D32; color:white; border:none; border-radius:40px; padding:6px; width:100%';
-        commentBtn.onclick = () => abrirComentario(place.id, place.nombre);
-        div.appendChild(commentBtn);
+      popupDiv.appendChild(checkBtn);
+      
+      // Botón comentar (solo si ya tiene visita)
+      if(currentUser) {
+        const yaVisito = await verificarSiYaVisito(currentUser.uid, place.id);
+        if(yaVisito) {
+          const commentBtn = document.createElement('button');
+          commentBtn.innerHTML = '<i class="fas fa-star"></i> Comentar / Puntuar';
+          commentBtn.style.display = 'block';
+          commentBtn.style.marginTop = '5px';
+          commentBtn.style.background = '#2E7D32';
+          commentBtn.onclick = () => abrirComentario(place.id, place.nombre);
+          popupDiv.appendChild(commentBtn);
+        }
       }
       if(isAdmin) {
-        const eBtn = document.createElement('button'); eBtn.innerText='✏️ Editar'; eBtn.onclick=()=>editarLugarAdmin(place.id);
-        const dBtn = document.createElement('button'); dBtn.innerText='🗑️ Eliminar'; dBtn.onclick=()=>deleteDoc(doc(db,'lugares',place.id));
-        div.appendChild(eBtn); div.appendChild(dBtn);
+        const editBtn = document.createElement('button'); editBtn.innerText='✏️ Editar'; editBtn.onclick=()=>editarLugarAdmin(place.id);
+        const delBtn = document.createElement('button'); delBtn.innerText='🗑️ Eliminar'; delBtn.onclick=()=>eliminarLugarFirestore(place.id);
+        popupDiv.appendChild(editBtn); popupDiv.appendChild(delBtn);
       }
-      const marker = L.marker([place.lat, place.lng]).bindPopup(div);
+      const marker = L.marker([place.lat, place.lng]).bindPopup(popupDiv);
       markerCluster.addLayer(marker);
     }
   }
 
-  async function realizarCheckin(lugarId, nombre) {
-    if(!currentUser) return mostrarToast("Inicia sesión","error");
+  async function realizarCheckin(lugarId, lugarNombre) {
+    if(!currentUser) { mostrarToast("Inicia sesión para hacer check-in","error"); return; }
+    if(!navigator.geolocation) { mostrarToast("GPS no soportado","error"); return; }
     navigator.geolocation.getCurrentPosition(async (pos) => {
-      const place = allPlaces.find(p=>p.id===lugarId);
+      const place = allPlaces.find(p => p.id === lugarId);
       if(!place) return;
       const dist = calcularDistancia(pos.coords.latitude, pos.coords.longitude, place.lat, place.lng);
-      if(dist > 50) return mostrarToast(`Lejos (${Math.round(dist)}m). Acércate al lugar`,"error");
-      const ya = await verificarSiYaVisito(currentUser.uid, lugarId);
-      const puntos = ya ? 2 : 10;
-      await addDoc(collection(db,'visitas'), { usuarioId: currentUser.uid, lugarId, fecha: new Date(), puntos, tipo: 'gps' });
-      await sumarPuntos(puntos, `Check-in ${nombre}`);
-      mostrarToast(`✅ +${puntos} puntos por ${nombre}`, "success");
+      if(dist > 50) { mostrarToast(`Estás demasiado lejos (${Math.round(dist)}m). Acércate al lugar.`,"error"); return; }
+      const yaVisito = await verificarSiYaVisito(currentUser.uid, lugarId);
+      const puntos = yaVisito ? 2 : 10;
+      await registrarVisita(currentUser.uid, lugarId, puntos, 'gps');
+      await sumarPuntos(puntos, `Check-in en ${lugarNombre}`, lugarId);
+      mostrarToast(`✅ Check-in exitoso! +${puntos} puntos`, "success");
       actualizarMarcadoresMapa();
-      actualizarPasaporte();
-    }, () => mostrarToast("Permiso de ubicación denegado","error"));
+      if(!yaVisito && currentUser) actualizarPasaporte(); // refrescar pasaporte
+    }, () => mostrarToast("No se pudo obtener tu ubicación","error"));
   }
 
-  async function verificarSiYaVisito(uid, lugarId) { const snap = await getDocs(query(collection(db,'visitas'), where('usuarioId','==',uid), where('lugarId','==',lugarId))); return !snap.empty; }
-  async function sumarPuntos(cantidad, motivo) { const nuevos = userPointsTotal + cantidad; await updateDoc(doc(db,'usuarios',userDocId), { puntos: nuevos }); userPointsTotal = nuevos; pointsSpan.innerText = userPointsTotal; mostrarToast(`+${cantidad} puntos (${motivo})`,"success"); }
-  function calcularDistancia(lat1,lon1,lat2,lon2){ const R=6371e3; const φ1=lat1*Math.PI/180, φ2=lat2*Math.PI/180; const Δφ=(lat2-lat1)*Math.PI/180, Δλ=(lon2-lon1)*Math.PI/180; const a=Math.sin(Δφ/2)**2+Math.cos(φ1)*Math.cos(φ2)*Math.sin(Δλ/2)**2; return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a)); }
-
-  async function actualizarPasaporte() {
-    if(!currentUser) { document.getElementById('pasaporteList').innerHTML = '<div style="padding:20px;text-align:center;">🔐 Inicia sesión para ver tu pasaporte</div>'; return; }
-    const visitsSnap = await getDocs(query(collection(db,'visitas'), where('usuarioId','==',currentUser.uid)));
-    const visitasMap = new Map(); visitsSnap.forEach(d => { const id = d.data().lugarId; visitasMap.set(id, (visitasMap.get(id)||0)+1); });
-    const comSnap = await getDocs(query(collection(db,'comentarios'), where('usuarioId','==',currentUser.uid)));
-    const comMap = new Map(); comSnap.forEach(d => { const c = d.data(); comMap.set(c.lugarId, { texto: c.texto, estrellas: c.estrellas }); });
-    if(!visitasMap.size) { document.getElementById('pasaporteList').innerHTML = '<div style="text-align:center;padding:30px;">🌱 Aún no has visitado ningún lugar. ¡Explora!</div>'; return; }
-    let html = '';
-    for(let [id, count] of visitasMap.entries()) {
-      const lugar = allPlaces.find(p=>p.id===id);
-      if(!lugar) continue;
-      const rev = comMap.get(id);
-      html += `<div class="pasaporte-item"><img class="pasaporte-img" src="${lugar.imagen || 'https://via.placeholder.com/80'}" onerror="this.src='https://via.placeholder.com/80'"><div class="pasaporte-info"><h4>${lugar.nombre}</h4><span class="visits-count"><i class="fas fa-shoe-prints"></i> ${count} visita(s)</span><div>${lugar.ciudad} • ${lugar.tipoCamino}</div>${rev ? `<div class="user-review"><i class="fas fa-comment-dots"></i> "${rev.texto}"<br>${'⭐'.repeat(rev.estrellas)}</div>` : '<div class="user-review">Sin reseña aún</div>'}</div></div>`;
-    }
-    document.getElementById('pasaporteList').innerHTML = html;
+  function calcularDistancia(lat1,lon1,lat2,lon2){
+    const R=6371e3; const φ1=lat1*Math.PI/180, φ2=lat2*Math.PI/180; const Δφ=(lat2-lat1)*Math.PI/180, Δλ=(lon2-lon1)*Math.PI/180;
+    const a=Math.sin(Δφ/2)**2+Math.cos(φ1)*Math.cos(φ2)*Math.sin(Δλ/2)**2; return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
   }
 
-  async function abrirComentario(lugarId, nombre) {
+  async function verificarSiYaVisito(uid, lugarId) {
+    const q = query(collection(db, 'visitas'), where('usuarioId', '==', uid), where('lugarId', '==', lugarId));
+    const snap = await getDocs(q);
+    return !snap.empty;
+  }
+
+  async function registrarVisita(uid, lugarId, puntos, tipo) {
+    await addDoc(collection(db, 'visitas'), { usuarioId: uid, lugarId, fecha: new Date(), puntos, tipo });
+  }
+
+  async function sumarPuntos(cantidad, motivo, lugarId=null) {
     if(!currentUser) return;
-    if(!await verificarSiYaVisito(currentUser.uid, lugarId)) return mostrarToast("Haz check-in primero","error");
-    const snap = await getDocs(query(collection(db,'comentarios'), where('usuarioId','==',currentUser.uid), where('lugarId','==',lugarId)));
-    const existente = snap.empty ? null : snap.docs[0];
-    const body = document.getElementById('comentarioBody');
-    body.innerHTML = `<div style="padding:20px;"><h4>${nombre}</h4><div class="form-group"><label>Puntuación (1-5)</label><select id="estrellas">${[1,2,3,4,5].map(s=>`<option value="${s}" ${existente && existente.data().estrellas==s?'selected':''}>${'⭐'.repeat(s)}</option>`).join('')}</select></div><div class="form-group"><label>Comentario</label><textarea id="comentarioTexto" rows="3">${existente?existente.data().texto:''}</textarea></div><button id="guardarComentarioBtn" class="submit-btn">Guardar</button>${existente?'<button id="eliminarComentarioBtn" class="submit-btn" style="background:#6c2e1f;">Eliminar</button>':''}</div>`;
+    const nuevos = userPointsTotal + cantidad;
+    await updateDoc(doc(db, 'usuarios', userDocId), { puntos: nuevos });
+    userPointsTotal = nuevos;
+    pointsSpan.innerText = userPointsTotal;
+    mostrarToast(`+${cantidad} puntos (${motivo})`, "success");
+  }
+
+  // ========== PASAPORTE ==========
+  async function actualizarPasaporte() {
+    if(!currentUser) { pasaporteList.innerHTML = '<div style="padding:20px;text-align:center;">Inicia sesión para ver tu pasaporte</div>'; return; }
+    const visitsSnap = await getDocs(query(collection(db, 'visitas'), where('usuarioId', '==', currentUser.uid)));
+    const visitasMap = new Map(); // lugarId -> { count, lastDate }
+    visitsSnap.forEach(doc => {
+      const data = doc.data();
+      const lugarId = data.lugarId;
+      if(!visitasMap.has(lugarId)) visitasMap.set(lugarId, { count: 0 });
+      visitasMap.get(lugarId).count++;
+    });
+    const comentariosSnap = await getDocs(query(collection(db, 'comentarios'), where('usuarioId', '==', currentUser.uid)));
+    const comentariosMap = new Map();
+    comentariosSnap.forEach(doc => { const c = doc.data(); comentariosMap.set(c.lugarId, { texto: c.texto, estrellas: c.estrellas }); });
+    
+    if(visitasMap.size === 0) { pasaporteList.innerHTML = '<div style="padding:20px;text-align:center;">Aún no has visitado ningún lugar. ¡Explora!</div>'; return; }
+    let html = '';
+    for(let [lugarId, data] of visitasMap.entries()) {
+      const lugar = allPlaces.find(p => p.id === lugarId);
+      if(!lugar) continue;
+      const comentario = comentariosMap.get(lugarId);
+      html += `
+        <div class="pasaporte-item">
+          <img class="pasaporte-img" src="${lugar.imagen || 'https://via.placeholder.com/80'}" onerror="this.src='https://via.placeholder.com/80'">
+          <div class="pasaporte-info">
+            <h4>${lugar.nombre}</h4>
+            <div><span class="visits-count">Visitas: ${data.count}</span>  |  ${lugar.ciudad} • ${lugar.tipoCamino === 'Educativo' ? 'Educativo' : 'Comercial'}</div>
+            ${comentario ? `<div class="user-review"><i class="fas fa-comment"></i> "${comentario.texto}"<br>${'⭐'.repeat(comentario.estrellas)}</div>` : '<div class="user-review"><i class="fas fa-edit"></i> Sin reseña aún</div>'}
+          </div>
+        </div>
+      `;
+    }
+    pasaporteList.innerHTML = html;
+  }
+
+  // ========== ADMIN CRUD ==========
+  const ADMIN_PASSWORD = "Diriamba2026";
+  function entrarModoAdmin() { isAdmin=true; adminLoginBtn.style.display='none'; adminPanelHeader.style.display='flex'; mostrarToast("Admin activado","success"); if(map) map.on('click', onMapClick); actualizarLibreta(); actualizarMarcadoresMapa(); }
+  function salirModoAdmin() { isAdmin=false; adminLoginBtn.style.display='flex'; adminPanelHeader.style.display='none'; if(map) map.off('click'); actualizarLibreta(); actualizarMarcadoresMapa(); }
+  function onMapClick(e) { if(isAdmin) abrirFormularioNuevo(e.latlng.lat, e.latlng.lng); }
+  adminLoginBtn.onclick = () => adminModal.style.display='flex';
+  document.getElementById('adminLoginForm').addEventListener('submit',(e)=>{e.preventDefault(); if(document.getElementById('adminPassword').value===ADMIN_PASSWORD){adminModal.style.display='none';entrarModoAdmin();}else mostrarToast("Contraseña incorrecta","error");});
+  logoutAdminBtn.onclick = salirModoAdmin;
+  function abrirFormularioNuevo(lat,lng) { document.getElementById('modalTitle').innerText='Añadir Lugar'; document.getElementById('lugarId').value=''; document.getElementById('lugarNombre').value=''; document.getElementById('lugarLat').value=lat.toFixed(6); document.getElementById('lugarLng').value=lng.toFixed(6); document.getElementById('lugarCiudad').value=''; document.getElementById('lugarTipoCamino').value='Educativo'; document.getElementById('lugarUrl').value=''; document.getElementById('lugarImagen').value=''; document.getElementById('lugarCategoria').value=''; lugarModal.style.display='flex'; }
+  function editarLugarAdmin(id) { const p=allPlaces.find(p=>p.id===id); if(!p) return; document.getElementById('modalTitle').innerText='Editar Lugar'; document.getElementById('lugarId').value=p.id; document.getElementById('lugarNombre').value=p.nombre; document.getElementById('lugarLat').value=p.lat; document.getElementById('lugarLng').value=p.lng; document.getElementById('lugarCiudad').value=p.ciudad||''; document.getElementById('lugarTipoCamino').value=p.tipoCamino||'Educativo'; document.getElementById('lugarUrl').value=p.url||''; document.getElementById('lugarImagen').value=p.imagen||''; document.getElementById('lugarCategoria').value=p.categoria||''; lugarModal.style.display='flex'; }
+  window.eliminarLugarFirestore = async (id) => { if(confirm('¿Eliminar lugar?')) await deleteDoc(doc(db,'lugares',id)); };
+  document.getElementById('lugarForm').addEventListener('submit', async(e) => {
+    e.preventDefault(); const id=document.getElementById('lugarId').value; const nombre=document.getElementById('lugarNombre').value.trim(); const lat=parseFloat(document.getElementById('lugarLat').value); const lng=parseFloat(document.getElementById('lugarLng').value); const ciudad=document.getElementById('lugarCiudad').value.trim(); const tipoCamino=document.getElementById('lugarTipoCamino').value; const url=document.getElementById('lugarUrl').value.trim(); const imagen=document.getElementById('lugarImagen').value.trim(); const categoria=document.getElementById('lugarCategoria').value.trim();
+    if(!nombre || isNaN(lat) || isNaN(lng) || !ciudad) { mostrarToast("Complete nombre, coordenadas y ciudad","error"); return; }
+    const data = { nombre, lat, lng, ciudad, tipoCamino, url, imagen, categoria };
+    if(id) await updateDoc(doc(db,'lugares',id), data);
+    else await addDoc(collection(db,'lugares'), data);
+    lugarModal.style.display='none';
+  });
+
+  // ========== COMENTARIOS ==========
+  async function abrirComentario(lugarId, lugarNombre) {
+    if(!currentUser) return;
+    const yaVisito = await verificarSiYaVisito(currentUser.uid, lugarId);
+    if(!yaVisito) { mostrarToast("Primero haz check-in para comentar","error"); return; }
+    const q = query(collection(db,'comentarios'), where('usuarioId','==',currentUser.uid), where('lugarId','==',lugarId));
+    const snap = await getDocs(q);
+    let existente = null;
+    if(!snap.empty) existente = snap.docs[0];
+    const modalBody = document.getElementById('comentarioBody');
+    modalBody.innerHTML = `<div style="padding:15px;"><h4>${lugarNombre}</h4>
+      <div class="form-group"><label>Puntuación (1-5)</label><select id="estrellas">${[1,2,3,4,5].map(s=>`<option value="${s}" ${existente && existente.data().estrellas==s?'selected':''}>${'⭐'.repeat(s)}</option>`).join('')}</select></div>
+      <div class="form-group"><label>Comentario</label><textarea id="comentarioTexto" rows="3">${existente?existente.data().texto:''}</textarea></div>
+      <button id="guardarComentarioBtn" class="submit-btn">Guardar comentario</button>${existente?'<button id="eliminarComentarioBtn" class="submit-btn" style="background:#d32f2f;">Eliminar</button>':''}</div>`;
     document.getElementById('guardarComentarioBtn').onclick = async () => {
       const estrellas = parseInt(document.getElementById('estrellas').value);
       const texto = document.getElementById('comentarioTexto').value.trim();
-      if(!texto) return mostrarToast("Escribe algo","error");
+      if(!texto){ mostrarToast("Escribe un comentario","error"); return; }
       if(existente) await updateDoc(doc(db,'comentarios',existente.id), { texto, estrellas, editado: true });
-      else { await addDoc(collection(db,'comentarios'), { usuarioId: currentUser.uid, lugarId, texto, estrellas, fecha: new Date() }); await sumarPuntos(7, `Comentario y valoración`); }
+      else {
+        await addDoc(collection(db,'comentarios'), { usuarioId: currentUser.uid, lugarId, texto, estrellas, fecha: new Date(), editado: false });
+        await sumarPuntos(5, `Comentario en ${lugarNombre}`, lugarId);
+        await sumarPuntos(2, `Valoración en ${lugarNombre}`, lugarId);
+      }
       document.getElementById('comentarioModal').style.display='none';
-      actualizarPasaporte();
+      if(currentUser) actualizarPasaporte();
     };
-    if(existente) document.getElementById('eliminarComentarioBtn').onclick = async () => { await deleteDoc(doc(db,'comentarios',existente.id)); mostrarToast("Comentario eliminado","info"); document.getElementById('comentarioModal').style.display='none'; actualizarPasaporte(); };
+    if(existente) document.getElementById('eliminarComentarioBtn').onclick = async()=>{ await deleteDoc(doc(db,'comentarios',existente.id)); mostrarToast("Comentario eliminado","info"); document.getElementById('comentarioModal').style.display='none'; actualizarPasaporte(); };
     document.getElementById('comentarioModal').style.display='flex';
   }
 
-  // Admin
-  const ADMIN_PASSWORD = "Diriamba2026";
-  function entrarModoAdmin() { isAdmin=true; adminLoginBtn.style.display='none'; adminPanelHeader.style.display='flex'; if(map) map.on('click', (e)=>abrirFormularioNuevo(e.latlng.lat, e.latlng.lng)); actualizarLibreta(); actualizarMarcadoresMapa(); }
-  function salirModoAdmin() { isAdmin=false; adminLoginBtn.style.display='flex'; adminPanelHeader.style.display='none'; if(map) map.off('click'); actualizarLibreta(); actualizarMarcadoresMapa(); }
-  document.getElementById('adminLoginForm').addEventListener('submit',(e)=>{ e.preventDefault(); if(document.getElementById('adminPassword').value===ADMIN_PASSWORD){ adminModal.style.display='none'; entrarModoAdmin(); } else mostrarToast("Contraseña incorrecta","error"); });
-  document.getElementById('logoutAdminBtn').onclick = salirModoAdmin;
-  function abrirFormularioNuevo(lat,lng) { document.getElementById('lugarId').value=''; document.getElementById('lugarNombre').value=''; document.getElementById('lugarLat').value=lat; document.getElementById('lugarLng').value=lng; document.getElementById('lugarCiudad').value=''; document.getElementById('lugarTipoCamino').value='Educativo'; lugarModal.style.display='flex'; }
-  function editarLugarAdmin(id) { const p=allPlaces.find(p=>p.id===id); if(p){ document.getElementById('lugarId').value=p.id; document.getElementById('lugarNombre').value=p.nombre; document.getElementById('lugarLat').value=p.lat; document.getElementById('lugarLng').value=p.lng; document.getElementById('lugarCiudad').value=p.ciudad||''; document.getElementById('lugarTipoCamino').value=p.tipoCamino||'Educativo'; document.getElementById('lugarUrl').value=p.url||''; document.getElementById('lugarImagen').value=p.imagen||''; document.getElementById('lugarCategoria').value=p.categoria||''; lugarModal.style.display='flex'; } }
-  document.getElementById('lugarForm').addEventListener('submit', async(e) => { e.preventDefault(); const id=document.getElementById('lugarId').value; const data={ nombre:document.getElementById('lugarNombre').value, lat:parseFloat(document.getElementById('lugarLat').value), lng:parseFloat(document.getElementById('lugarLng').value), ciudad:document.getElementById('lugarCiudad').value, tipoCamino:document.getElementById('lugarTipoCamino').value, url:document.getElementById('lugarUrl').value, imagen:document.getElementById('lugarImagen').value, categoria:document.getElementById('lugarCategoria').value }; if(id) await updateDoc(doc(db,'lugares',id), data); else await addDoc(collection(db,'lugares'), data); lugarModal.style.display='none'; });
-
-  // Autenticación
-  async function cargarPuntosUsuario() { const q = query(collection(db,'usuarios'), where('uid','==',currentUser.uid)); const snap = await getDocs(q); if(!snap.empty){ userDocId = snap.docs[0].id; userPointsTotal = snap.docs[0].data().puntos||0; pointsSpan.innerText = userPointsTotal; } else { const ref = await addDoc(collection(db,'usuarios'), { uid:currentUser.uid, email:currentUser.email, puntos:0 }); userDocId = ref.id; userPointsTotal=0; pointsSpan.innerText='0'; } }
-  function actualizarUIUsuario(){ if(currentUser){ userPointsDisplay.style.display='flex'; gpsBtn.style.display='flex'; cargarPuntosUsuario(); actualizarPasaporte(); } else { userPointsDisplay.style.display='none'; gpsBtn.style.display='none'; if(gpsActive && watchId) navigator.geolocation.clearWatch(watchId); gpsActive=false; } }
-  function mostrarModalUsuario(){ if(currentUser){ document.getElementById('profileBody').innerHTML = `<div style="text-align:center;padding:20px;"><img src="${currentUser.photoURL||'https://via.placeholder.com/80'}" style="border-radius:50%;"><h4>${currentUser.displayName||currentUser.email}</h4><p>⭐ Puntos: ${userPointsTotal}</p><button id="cerrarSesionBtn" class="submit-btn" style="background:#d32f2f;">Cerrar sesión</button></div>`; document.getElementById('cerrarSesionBtn').onclick = async()=>{ await signOut(auth); location.reload(); }; profileModal.style.display='flex'; } else { document.getElementById('userModalBody').innerHTML = `<div style="padding:20px;"><button id="googleLoginBtn" class="submit-btn" style="background:#4285F4;"><i class="fab fa-google"></i> Google</button><hr><input type="email" id="loginEmail" placeholder="Email" class="form-group" style="width:100%"><input type="password" id="loginPassword" placeholder="Contraseña" class="form-group" style="width:100%"><button id="emailLoginBtn" class="submit-btn">Iniciar sesión</button><button id="emailRegistroBtn" class="submit-btn" style="background:#2E7D32;">Registrarse</button></div>`; document.getElementById('googleLoginBtn').onclick = ()=> signInWithPopup(auth,provider); document.getElementById('emailLoginBtn').onclick = ()=> signInWithEmailAndPassword(auth, document.getElementById('loginEmail').value, document.getElementById('loginPassword').value); document.getElementById('emailRegistroBtn').onclick = ()=> createUserWithEmailAndPassword(auth, document.getElementById('loginEmail').value, document.getElementById('loginPassword').value); userModal.style.display='flex'; } }
+  // ========== USUARIO Y AUTENTICACIÓN ==========
+  async function cargarPuntosUsuario() {
+    if(!currentUser) return;
+    const q = query(collection(db,'usuarios'), where('uid','==',currentUser.uid));
+    const snap = await getDocs(q);
+    if(!snap.empty){ userDocId = snap.docs[0].id; userPointsTotal = snap.docs[0].data().puntos||0; pointsSpan.innerText = userPointsTotal; }
+    else { const ref = await addDoc(collection(db,'usuarios'), { uid:currentUser.uid, email:currentUser.email, nombre:currentUser.displayName||currentUser.email, puntos:0 }); userDocId = ref.id; userPointsTotal=0; pointsSpan.innerText='0'; }
+  }
+  function actualizarUIUsuario(){
+    if(currentUser){ userPointsDisplay.style.display='flex'; gpsBtn.style.display='flex'; userBtn.innerHTML='<i class="fas fa-user-check"></i>'; cargarPuntosUsuario(); actualizarPasaporte(); }
+    else { userPointsDisplay.style.display='none'; gpsBtn.style.display='none'; userBtn.innerHTML='<i class="fas fa-user-circle"></i>'; if(gpsActive && watchId) navigator.geolocation.clearWatch(watchId); gpsActive=false; pasaporteList.innerHTML = '<div>Inicia sesión para ver tu pasaporte</div>'; }
+  }
+  function mostrarModalUsuario(){
+    if(currentUser){
+      document.getElementById('profileBody').innerHTML = `<div style="text-align:center;padding:15px;"><img src="${currentUser.photoURL||'https://via.placeholder.com/80'}" style="width:80px;border-radius:50%;"><h4>${currentUser.displayName||currentUser.email}</h4><p>Puntos: ${userPointsTotal}</p><button id="cerrarSesionBtn" class="submit-btn" style="background:#d32f2f;">Cerrar sesión</button><button id="eliminarCuentaBtn" class="submit-btn" style="background:#666;">Eliminar cuenta</button></div>`;
+      document.getElementById('cerrarSesionBtn').onclick = async()=>{ await signOut(auth); location.reload(); };
+      document.getElementById('eliminarCuentaBtn').onclick = async () => { if(confirm("¿Eliminar cuenta?")){ await currentUser.delete(); await signOut(auth); location.reload(); } };
+      profileModal.style.display='flex';
+    } else {
+      document.getElementById('userModalBody').innerHTML = `<div style="padding:20px;"><button id="googleLoginBtn" class="submit-btn" style="background:#4285F4;">Google</button><hr><input type="email" id="loginEmail" placeholder="Email"><input type="password" id="loginPassword" placeholder="Contraseña"><button id="emailLoginBtn" class="submit-btn">Iniciar sesión</button><button id="emailRegistroBtn" class="submit-btn" style="background:#2E7D32;">Registrarse</button></div>`;
+      document.getElementById('googleLoginBtn').onclick = ()=> signInWithPopup(auth,provider).then(()=>location.reload());
+      document.getElementById('emailLoginBtn').onclick = ()=>{ const email=document.getElementById('loginEmail').value, pass=document.getElementById('loginPassword').value; signInWithEmailAndPassword(auth,email,pass).then(()=>location.reload()); };
+      document.getElementById('emailRegistroBtn').onclick = ()=>{ const email=document.getElementById('loginEmail').value, pass=document.getElementById('loginPassword').value; createUserWithEmailAndPassword(auth,email,pass).then(()=>location.reload()); };
+      userModal.style.display='flex';
+    }
+  }
+  gpsBtn.onclick = () => { if(!currentUser) mostrarToast("Inicia sesión","error"); else { if(gpsActive){ if(watchId) navigator.geolocation.clearWatch(watchId); gpsActive=false; gpsBtn.classList.remove('active'); mostrarToast("GPS desactivado","info"); } else { navigator.geolocation.getCurrentPosition(()=>{ gpsActive=true; gpsBtn.classList.add('active'); watchId = navigator.geolocation.watchPosition(async (pos)=>{ for(let place of allPlaces){ const dist = calcularDistancia(pos.coords.latitude,pos.coords.longitude,place.lat,place.lng); if(dist<=50 && (!ultimaRecompensaPorLugar[place.id] || Date.now()-ultimaRecompensaPorLugar[place.id]>60000)){ const ya = await verificarSiYaVisito(currentUser.uid, place.id); const pts = ya?2:10; await registrarVisita(currentUser.uid,place.id,pts,'gps'); await sumarPuntos(pts,`GPS ${place.nombre}`,place.id); ultimaRecompensaPorLugar[place.id]=Date.now(); actualizarMarcadoresMapa(); actualizarPasaporte(); } } }, ()=>mostrarToast("Error GPS","error"), {enableHighAccuracy:true}); }, ()=>mostrarToast("Permiso denegado","error")); } } };
+  userBtn.onclick = mostrarModalUsuario;
   onAuthStateChanged(auth, (user) => { currentUser = user; actualizarUIUsuario(); if(map && markerCluster) actualizarMarcadoresMapa(); });
-  document.getElementById('userBtn').onclick = mostrarModalUsuario;
-  document.getElementById('gpsBtn').onclick = () => { if(!currentUser) return mostrarToast("Inicia sesión","error"); if(gpsActive){ if(watchId) navigator.geolocation.clearWatch(watchId); gpsActive=false; gpsBtn.classList.remove('active'); } else { navigator.geolocation.getCurrentPosition(()=>{ gpsActive=true; gpsBtn.classList.add('active'); watchId = navigator.geolocation.watchPosition(async (pos)=>{ for(let p of allPlaces){ if(calcularDistancia(pos.coords.latitude,pos.coords.longitude,p.lat,p.lng)<=50 && (!ultimaRecompensaPorLugar[p.id] || Date.now()-ultimaRecompensaPorLugar[p.id]>60000)){ const ya = await verificarSiYaVisito(currentUser.uid, p.id); const pts = ya?2:10; await addDoc(collection(db,'visitas'), { usuarioId:currentUser.uid, lugarId:p.id, fecha:new Date(), puntos:pts, tipo:'gps' }); await sumarPuntos(pts, `GPS ${p.nombre}`); ultimaRecompensaPorLugar[p.id]=Date.now(); actualizarMarcadoresMapa(); actualizarPasaporte(); } } }, null, {enableHighAccuracy:true}); }, ()=>mostrarToast("Permiso denegado","error")); } };
-  // Cerrar modales
-  document.querySelectorAll('.close-modal').forEach(btn => btn.onclick = () => btn.closest('.modal').style.display='none');
-  // Dark mode
-  document.getElementById('darkModeBtn').onclick = () => { document.body.classList.toggle('dark-mode'); localStorage.setItem('darkMode', document.body.classList.contains('dark-mode')); };
+  // tabs
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const tab = btn.dataset.tab;
+      document.getElementById('libretaTab').classList.add('hidden-tab');
+      document.getElementById('mapaTab').classList.add('hidden-tab');
+      document.getElementById('pasaporteTab').classList.add('hidden-tab');
+      if(tab === 'libreta') document.getElementById('libretaTab').classList.remove('hidden-tab');
+      if(tab === 'mapa') { document.getElementById('mapaTab').classList.remove('hidden-tab'); if(map) setTimeout(()=> map.invalidateSize(), 100); else initMap(); }
+      if(tab === 'pasaporte') { document.getElementById('pasaporteTab').classList.remove('hidden-tab'); actualizarPasaporte(); }
+    });
+  });
+  filtroCiudad.addEventListener('change', () => actualizarLibreta());
+  filtroTipoCamino.addEventListener('change', () => actualizarLibreta());
+  darkModeBtn.onclick = () => { document.body.classList.toggle('dark-mode'); localStorage.setItem('darkMode', document.body.classList.contains('dark-mode')); darkModeBtn.innerHTML = document.body.classList.contains('dark-mode') ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>'; };
   if(localStorage.getItem('darkMode') === 'true') document.body.classList.add('dark-mode');
-  // Tabs
-  document.querySelectorAll('.tab-btn').forEach(btn => btn.addEventListener('click', () => { document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); document.getElementById('libretaTab').classList.add('hidden-tab'); document.getElementById('mapaTab').classList.add('hidden-tab'); document.getElementById('pasaporteTab').classList.add('hidden-tab'); if(btn.dataset.tab === 'libreta') document.getElementById('libretaTab').classList.remove('hidden-tab'); if(btn.dataset.tab === 'mapa') { document.getElementById('mapaTab').classList.remove('hidden-tab'); if(map) setTimeout(()=>map.invalidateSize(), 100); else initMap(); } if(btn.dataset.tab === 'pasaporte') { document.getElementById('pasaporteTab').classList.remove('hidden-tab'); actualizarPasaporte(); } }));
-  document.getElementById('filtroCiudad').addEventListener('change',()=>actualizarLibreta());
-  document.getElementById('filtroTipoCamino').addEventListener('change',()=>actualizarLibreta());
+  document.querySelectorAll('.close-modal').forEach(btn => btn.onclick = () => btn.closest('.modal').style.display='none');
   cargarLugaresFirestore();
   initMap();
 </script>
