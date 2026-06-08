@@ -351,7 +351,7 @@ function mostrarModalUsuario() {
                 <button id="emailRegistroBtn" class="submit-btn" style="background:#2E7D32;">Registrarse</button>
             </div>
         `;
-        document.getElementById('googleLoginBtn').onclick = () => signInWithPopup(window.auth, provider).then(() => location.reload());
+        document.getElementById('googleLoginBtn').onclick = () => signInWithRedirect(window.auth, provider).then(() => location.reload());
         document.getElementById('emailLoginBtn').onclick = () => {
             const email = document.getElementById('loginEmail').value;
             const pass = document.getElementById('loginPassword').value;
