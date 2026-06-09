@@ -8,8 +8,15 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 
+  <!-- ============================================ -->
+  /*                    CSS ESTILOS                    */
+  /* ============================================ -->
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
     
     body {
       font-family: 'Inter', sans-serif;
@@ -34,6 +41,23 @@
       z-index: 0;
     }
     
+    .wave-bg {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 280px;
+      z-index: 0;
+      opacity: 0.15;
+      pointer-events: none;
+    }
+    
+    .wave-bg svg {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+    }
+    
     .container {
       position: relative;
       z-index: 2;
@@ -52,15 +76,25 @@
       backdrop-filter: blur(16px);
       border-radius: 2.5rem;
       padding: 2.5rem 2rem;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255,255,255,0.1);
       border: 1px solid rgba(255, 255, 255, 0.25);
       width: 100%;
       max-width: 480px;
       text-align: center;
+      transition: transform 0.3s ease;
+    }
+    
+    .glass-card:hover {
+      transform: translateY(-5px);
+    }
+    
+    .mascota {
+      margin-bottom: 1rem;
     }
     
     .mascota img {
       width: 90px;
+      filter: drop-shadow(0 8px 20px rgba(0,0,0,0.2));
       animation: float 3s ease-in-out infinite;
     }
     
@@ -71,15 +105,24 @@
     
     h1 {
       font-size: 2.8rem;
-      background: linear-gradient(135deg, #FFE259, #FFA751);
+      background: linear-gradient(135deg, #FFE259, #FFA751, #FFD54F);
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
       font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 0.5rem;
+    }
+    
+    .subtitle {
+      color: rgba(255,255,255,0.9);
+      margin-bottom: 2rem;
+      font-size: 0.95rem;
     }
     
     .input-group {
       margin-bottom: 1rem;
+      text-align: left;
     }
     
     .input-group input {
@@ -91,11 +134,16 @@
       color: white;
       font-size: 0.95rem;
       outline: none;
+      transition: all 0.2s;
     }
     
     .input-group input:focus {
       background: rgba(255,255,255,0.2);
       box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.3);
+    }
+    
+    .input-group input::placeholder {
+      color: rgba(255,255,255,0.55);
     }
     
     .btn {
@@ -111,18 +159,29 @@
       font-size: 0.95rem;
       margin-bottom: 12px;
       border: none;
-      transition: all 0.2s;
+      transition: all 0.2s ease;
     }
     
     .btn-primary {
       background: linear-gradient(135deg, #F9A826, #F57C00);
       color: white;
+      box-shadow: 0 8px 20px rgba(245, 124, 0, 0.3);
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 25px rgba(245, 124, 0, 0.4);
     }
     
     .btn-outline {
       background: transparent;
       border: 1.5px solid rgba(255,255,255,0.5);
       color: white;
+    }
+    
+    .btn-outline:hover {
+      background: rgba(255,255,255,0.1);
+      border-color: rgba(255,255,255,0.8);
     }
     
     .btn-edit {
@@ -148,6 +207,11 @@
       border-bottom: 1px solid rgba(255,255,255,0.2);
     }
     
+    .divider span {
+      margin: 0 10px;
+      font-size: 0.8rem;
+    }
+    
     .link {
       text-align: center;
       margin-top: 12px;
@@ -156,27 +220,12 @@
     .link a {
       color: #FFD54F;
       text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
     }
     
-    /* Menú principal */
-    .menu-section {
-      display: none;
-      width: 100%;
-      animation: fadeInUp 0.6s ease;
-    }
-    
-    .menu-section h2 {
-      color: white;
-      text-align: center;
-      margin-bottom: 1rem;
-      font-size: 1.8rem;
-    }
-    
-    .menu-section h2 span {
-      background: linear-gradient(135deg, #FFE259, #FFA751);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
+    .link a:hover {
+      text-decoration: underline;
     }
     
     /* Perfil compacto */
@@ -298,6 +347,26 @@
     }
     
     /* Menú de botones */
+    .menu-section {
+      display: none;
+      width: 100%;
+      animation: fadeInUp 0.6s ease;
+    }
+    
+    .menu-section h2 {
+      color: white;
+      text-align: center;
+      margin-bottom: 1rem;
+      font-size: 1.8rem;
+    }
+    
+    .menu-section h2 span {
+      background: linear-gradient(135deg, #FFE259, #FFA751);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    
     .menu-buttons {
       display: flex;
       flex-wrap: wrap;
@@ -335,6 +404,19 @@
       font-weight: 600;
     }
     
+    .logout-wrapper {
+      text-align: center;
+      margin-top: 1rem;
+    }
+    
+    #logoutBtn {
+      width: auto;
+      padding: 10px 30px;
+      background: rgba(220, 53, 69, 0.2);
+      border-color: rgba(220, 53, 69, 0.5);
+    }
+    
+    /* Toast */
     .toast-message {
       position: fixed;
       bottom: 100px;
@@ -350,6 +432,7 @@
       white-space: nowrap;
     }
     
+    /* WhatsApp */
     .whatsapp-container {
       position: fixed;
       bottom: 25px;
@@ -389,6 +472,9 @@
     }
     
     @media (max-width: 680px) {
+      .container { padding: 1rem; }
+      .glass-card { padding: 1.8rem 1.2rem; max-width: 95%; }
+      h1 { font-size: 2rem; }
       .menu-card { width: 155px; }
       .profile-header { flex-direction: column; text-align: center; }
       .profile-info { flex-direction: column; }
@@ -397,8 +483,14 @@
   </style>
 </head>
 <body>
+  <div class="wave-bg">
+    <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
+      <path fill="rgba(255,255,255,0.08)" d="M0,192L48,197.3C96,203,192,213,288,208C384,203,480,181,576,176C672,171,768,181,864,197.3C960,213,1056,235,1152,224C1248,213,1344,171,1392,149.3L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+    </svg>
+  </div>
+
   <div class="container">
-    <!-- Login -->
+    <!-- Tarjeta de autenticación -->
     <div id="authCard" class="glass-card">
       <div class="mascota">
         <img src="https://cdn-icons-png.flaticon.com/512/4712/4712109.png" alt="Mascota" />
@@ -457,6 +549,9 @@
         <a href="mapa.html" class="menu-card">
           <span>🗺️</span><h3>Mapa Interactivo</h3>
         </a>
+        <a href="../lugares/lugares.html" class="menu-card">
+          <span>🧭</span><h3>Lugares</h3>
+        </a>
         <a href="comunidad.html" class="menu-card">
           <span>👩🏾‍🤝‍🧑🏻</span><h3>Comunidad</h3>
         </a>
@@ -468,9 +563,11 @@
         </a>
       </div>
       
-      <button id="logoutBtn" class="btn btn-outline" style="width:auto; margin:0 auto; display:block;">
-        Cerrar sesión
-      </button>
+      <div class="logout-wrapper">
+        <button id="logoutBtn" class="btn btn-outline">
+          <i class="fas fa-sign-out-alt"></i> Cerrar sesión
+        </button>
+      </div>
     </div>
   </div>
 
@@ -509,6 +606,9 @@
 
   <div id="toast" class="toast-message" style="display: none;"></div>
 
+  <!-- ============================================ -->
+  /*                   JAVASCRIPT                    */
+  /* ============================================ -->
   <script type="importmap">
     {
       "imports": {
@@ -520,6 +620,9 @@
   </script>
 
   <script type="module">
+    // ============================================
+    //  CONFIGURACIÓN DE FIREBASE
+    // ============================================
     import { initializeApp } from "firebase/app";
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, sendPasswordResetEmail, updateProfile } from "firebase/auth";
     import { getFirestore, doc, setDoc, getDoc, updateDoc } from "firebase/firestore";
@@ -537,7 +640,9 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    // Elementos
+    // ============================================
+    //  ELEMENTOS DEL DOM
+    // ============================================
     const authCard = document.getElementById('authCard');
     const menuSection = document.getElementById('menuSection');
     const userNameSpan = document.getElementById('userName');
@@ -552,18 +657,24 @@
     const avatarGrid = document.getElementById('avatarGrid');
     const uploadPhoto = document.getElementById('uploadPhoto');
 
+    // ============================================
+    //  CONSTANTES
+    // ============================================
     const DEFAULT_AVATARS = [
-      "https://imgur.com/CFcEYQZ.jpg",
-      "https://imgur.com/rf8HVpD.jpg",
-      "https://imgur.com/LmBBFaT.jpg",
-      "https://us.123rf.com/450wm/yupiramos/yupiramos2009/yupiramos200902259/154588033-avatar-de-un-dise%C3%B1o-de-mujer-de-moda-ni%C3%B1a-persona-humana-humana-y-tema-de-belleza-ilustraci%C3%B3n.jpg?ver=6",
+      "https://randomuser.me/api/portraits/women/68.jpg",
+      "https://randomuser.me/api/portraits/men/32.jpg",
+      "https://randomuser.me/api/portraits/women/45.jpg",
+      "https://randomuser.me/api/portraits/men/75.jpg",
       "https://randomuser.me/api/portraits/lego/1.jpg",
       "https://randomuser.me/api/portraits/lego/2.jpg",
-      "https://cdni.iconscout.com/illustration/free/thumb/free-chica-negro-illustration-svg-download-png-1415695.png",
-      "https://img.magnific.com/vector-gratis/ilustracion-empresaria_53876-5857.jpg?semt=ais_hybrid&w=740&q=80"
+      "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
+      "https://cdn-icons-png.flaticon.com/512/3135/3135768.png"
     ];
     const FALLBACK = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
 
+    // ============================================
+    //  FUNCIONES AUXILIARES
+    // ============================================
     function showToast(msg, isError = false) {
       toastDiv.textContent = msg;
       toastDiv.style.display = 'block';
@@ -580,6 +691,7 @@
           email: user.email,
           nombre: extra.nombre || user.displayName || user.email.split('@')[0],
           fotoURL: extra.fotoURL || user.photoURL || DEFAULT_AVATARS[0],
+          puntos: 0,
           fechaRegistro: new Date()
         });
       }
@@ -645,7 +757,9 @@
       editModal.style.display = 'none';
     }
 
-    // ========== Login y Registro ==========
+    // ============================================
+    //  LOGIN Y REGISTRO
+    // ============================================
     document.getElementById('doLoginBtn').onclick = async () => {
       const email = document.getElementById('loginEmail').value.trim();
       const pass = document.getElementById('loginPassword').value;
@@ -686,7 +800,6 @@
       }
     };
 
-    // Mostrar/ocultar formularios
     document.getElementById('showRegisterBtn').onclick = () => {
       loginForm.style.display = 'none';
       registerForm.style.display = 'block';
@@ -700,7 +813,9 @@
       showToast('👋 Sesión cerrada');
     };
 
-    // ========== PERFIL con subida de foto FUNCIONANDO ==========
+    // ============================================
+    //  PERFIL CON SUBIDA DE FOTO
+    // ============================================
     let fotoTemporal = null;
 
     document.getElementById('editProfileBtn').onclick = async () => {
@@ -718,7 +833,6 @@
       editModal.style.display = 'flex';
     };
 
-    // Subir foto desde el dispositivo
     document.getElementById('uploadPhotoIcon').onclick = () => uploadPhoto.click();
     
     uploadPhoto.onchange = (e) => {
@@ -731,7 +845,6 @@
       reader.onload = (ev) => {
         fotoTemporal = ev.target.result;
         modalProfileImage.src = fotoTemporal;
-        // Remover selección de avatares predeterminados
         document.querySelectorAll('.avatar-pred').forEach(a => a.classList.remove('selected'));
         showToast('Foto cargada, guarda los cambios');
       };
@@ -752,7 +865,9 @@
       if (e.target === editModal) editModal.style.display = 'none';
     };
 
-    // ========== WhatsApp ==========
+    // ============================================
+    //  WHATSAPP
+    // ============================================
     document.getElementById('whatsappBtn').onclick = (e) => {
       e.preventDefault();
       const user = auth.currentUser;
@@ -761,7 +876,9 @@
       window.open(`https://wa.me/50588170531?text=${msg}`, '_blank');
     };
 
-    // Estado de autenticación
+    // ============================================
+    //  ESTADO DE AUTENTICACIÓN
+    // ============================================
     onAuthStateChanged(auth, (user) => {
       if (user) {
         authCard.style.display = 'none';
@@ -772,6 +889,11 @@
         menuSection.style.display = 'none';
         loginForm.style.display = 'block';
         registerForm.style.display = 'none';
+        document.getElementById('loginEmail').value = '';
+        document.getElementById('loginPassword').value = '';
+        document.getElementById('regEmail').value = '';
+        document.getElementById('regPassword').value = '';
+        document.getElementById('regName').value = '';
       }
     });
   </script>
