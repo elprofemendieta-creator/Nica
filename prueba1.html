@@ -45,12 +45,6 @@
       pointer-events: none;
     }
     
-    .wave-bg svg {
-      position: absolute;
-      bottom: 0;
-      width: 100%;
-    }
-    
     .container {
       position: relative;
       z-index: 2;
@@ -75,10 +69,6 @@
       max-width: 480px;
       text-align: center;
       transition: transform 0.3s ease;
-    }
-    
-    .glass-card:hover {
-      transform: translateY(-5px);
     }
     
     .mascota {
@@ -118,7 +108,7 @@
       text-align: left;
     }
     
-    .input-group input, .input-group select {
+    .input-group input {
       width: 100%;
       padding: 14px 18px;
       border-radius: 50px;
@@ -128,20 +118,9 @@
       font-size: 0.95rem;
       outline: none;
       transition: all 0.2s;
-      font-weight: 400;
     }
     
-    .input-group select {
-      cursor: pointer;
-      appearance: none;
-    }
-    
-    .input-group select option {
-      background: #1a4a2a;
-      color: white;
-    }
-    
-    .input-group input:focus, .input-group select:focus {
+    .input-group input:focus {
       background: rgba(255,255,255,0.2);
       box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.3);
     }
@@ -188,6 +167,15 @@
       border-color: rgba(255,255,255,0.8);
     }
     
+    .btn-edit {
+      background: rgba(255, 193, 7, 0.2);
+      border: 1.5px solid #FFD54F;
+      color: #FFD54F;
+      width: auto;
+      padding: 8px 20px;
+      font-size: 0.85rem;
+    }
+    
     .divider {
       display: flex;
       align-items: center;
@@ -224,67 +212,6 @@
       text-decoration: underline;
     }
     
-    /* Perfil */
-    .profile-section {
-      margin-bottom: 2rem;
-      padding-bottom: 1.5rem;
-      border-bottom: 1px solid rgba(255,255,255,0.2);
-    }
-    
-    .profile-pic {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 1rem;
-    }
-    
-    .profile-pic img {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 3px solid #FFD54F;
-      background: #ddd;
-      cursor: pointer;
-    }
-    
-    .avatar-options {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      justify-content: center;
-      margin: 15px 0;
-    }
-    
-    .avatar-option {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      cursor: pointer;
-      border: 2px solid transparent;
-      transition: 0.1s;
-      object-fit: cover;
-    }
-    
-    .avatar-option.selected {
-      border-color: #FFD54F;
-      transform: scale(1.05);
-    }
-    
-    .profile-edit {
-      background: rgba(255,255,255,0.08);
-      border-radius: 1rem;
-      padding: 1rem;
-      margin-top: 1rem;
-    }
-    
-    .profile-edit label {
-      display: block;
-      color: white;
-      font-size: 0.8rem;
-      margin-top: 10px;
-      margin-bottom: 5px;
-    }
-    
     /* Menú principal */
     .menu-section {
       display: none;
@@ -295,10 +222,9 @@
     .menu-section h2 {
       color: white;
       text-align: center;
-      margin-bottom: 2rem;
+      margin-bottom: 1rem;
       font-size: 1.8rem;
       font-weight: 600;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.2);
     }
     
     .menu-section h2 span {
@@ -308,6 +234,127 @@
       color: transparent;
     }
     
+    /* Tarjeta de perfil compacta */
+    .profile-header {
+      background: rgba(255,255,255,0.08);
+      border-radius: 1.5rem;
+      padding: 1rem 1.5rem;
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    
+    .profile-info {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    .profile-avatar {
+      width: 55px;
+      height: 55px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #FFD54F;
+    }
+    
+    .profile-name {
+      color: white;
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+    
+    /* Modal de edición de perfil */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 2000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.8);
+      backdrop-filter: blur(8px);
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .modal-content {
+      background: linear-gradient(145deg, #0a2a1f, #1a4a2a);
+      border-radius: 2rem;
+      padding: 2rem;
+      width: 90%;
+      max-width: 450px;
+      color: white;
+      border: 1px solid rgba(255,255,255,0.2);
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    
+    .modal-content h3 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      font-size: 1.5rem;
+    }
+    
+    .profile-pic-edit {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+    
+    .profile-pic-edit img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #FFD54F;
+      cursor: pointer;
+    }
+    
+    .camera-icon {
+      position: absolute;
+      bottom: 5px;
+      right: calc(50% - 60px);
+      background: #F9A826;
+      border-radius: 50%;
+      padding: 8px;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    
+    .avatar-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin: 1rem 0;
+    }
+    
+    .avatar-pred {
+      width: 55px;
+      height: 55px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: 0.1s;
+      object-fit: cover;
+    }
+    
+    .avatar-pred.selected {
+      border-color: #FFD54F;
+      transform: scale(1.05);
+    }
+    
+    /* Menú de botones */
     .menu-buttons {
       display: flex;
       flex-wrap: wrap;
@@ -333,7 +380,6 @@
       transform: translateY(-10px);
       background: linear-gradient(145deg, rgba(255,255,255,0.2), rgba(255,255,255,0.1));
       border-color: rgba(255, 193, 7, 0.5);
-      box-shadow: 0 20px 35px -12px rgba(0,0,0,0.3);
     }
     
     .menu-card span {
@@ -359,11 +405,6 @@
       border-color: rgba(220, 53, 69, 0.5);
     }
     
-    #logoutBtn:hover {
-      background: rgba(220, 53, 69, 0.4);
-      border-color: #dc3545;
-    }
-    
     /* Toast */
     .toast-message {
       position: fixed;
@@ -379,32 +420,6 @@
       font-weight: 500;
       font-size: 0.9rem;
       white-space: nowrap;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-    }
-    
-    /* Modal */
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 2000;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0,0,0,0.7);
-      backdrop-filter: blur(5px);
-    }
-    
-    .modal-content {
-      background: linear-gradient(145deg, #0a2a1f, #1a4a2a);
-      margin: 15% auto;
-      padding: 2rem;
-      border-radius: 2rem;
-      width: 90%;
-      max-width: 400px;
-      color: white;
-      text-align: center;
-      border: 1px solid rgba(255,255,255,0.3);
     }
     
     /* WhatsApp */
@@ -431,33 +446,6 @@
       animation: pulse 2s infinite;
     }
     
-    .whatsapp-float:hover {
-      transform: scale(1.1);
-    }
-    
-    .whatsapp-tooltip {
-      position: absolute;
-      bottom: 70px;
-      right: 0;
-      background: white;
-      color: #1a4a2a;
-      padding: 8px 16px;
-      border-radius: 30px;
-      font-size: 12px;
-      font-weight: 600;
-      white-space: nowrap;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      opacity: 0;
-      visibility: hidden;
-      transition: all 0.3s;
-    }
-    
-    .whatsapp-container:hover .whatsapp-tooltip {
-      opacity: 1;
-      visibility: visible;
-      bottom: 75px;
-    }
-    
     @keyframes pulse {
       0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.6); }
       70% { box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); }
@@ -479,16 +467,10 @@
       .container { padding: 1rem; }
       .glass-card { padding: 1.8rem 1.2rem; max-width: 95%; }
       h1 { font-size: 2rem; }
-      .menu-section h2 { font-size: 1.3rem; }
       .menu-card { width: 155px; padding: 1.2rem 0.8rem; }
       .menu-card span { font-size: 2.2rem; }
-      .toast-message { white-space: normal; text-align: center; max-width: 85%; }
-      .whatsapp-float { width: 50px; height: 50px; font-size: 28px; }
-    }
-    
-    @media (max-width: 480px) {
-      .menu-buttons { gap: 1rem; }
-      .menu-card { width: calc(50% - 0.5rem); min-width: 140px; }
+      .profile-header { flex-direction: column; text-align: center; }
+      .profile-info { flex-direction: column; }
     }
   </style>
 </head>
@@ -521,7 +503,7 @@
             <i class="fas fa-sign-in-alt"></i> Iniciar sesión
           </button>
           <div class="link">
-            <a href="#" id="forgotPasswordLink">🔐 ¿Olvidaste tu contraseña? (Recuperar con pregunta secreta)</a>
+            <a href="#" id="forgotPasswordLink">¿Olvidaste tu contraseña?</a>
           </div>
           <div class="divider"><span>o</span></div>
           <button id="showRegisterBtn" class="btn btn-outline">
@@ -540,23 +522,6 @@
           <div class="input-group">
             <input type="password" id="regPassword" placeholder="🔒 Contraseña (mínimo 6 caracteres)" />
           </div>
-          
-          <!-- Pregunta secreta -->
-          <div class="input-group">
-            <select id="regPregunta">
-              <option value="">📌 Selecciona una pregunta secreta</option>
-              <option value="¿Nombre de tu primera mascota?">🐕 ¿Nombre de tu primera mascota?</option>
-              <option value="¿Nombre de tu madre soltera?">👩 ¿Nombre de tu madre soltera?</option>
-              <option value="¿Nombre de tu mejor amigo de infancia?">👫 ¿Nombre de tu mejor amigo de infancia?</option>
-              <option value="¿Tu comida favorita?">🍕 ¿Tu comida favorita?</option>
-              <option value="¿Ciudad donde naciste?">🌆 ¿Ciudad donde naciste?</option>
-              <option value="¿Marca de tu primer carro?">🚗 ¿Marca de tu primer carro?</option>
-            </select>
-          </div>
-          <div class="input-group">
-            <input type="text" id="regRespuesta" placeholder="🔐 Respuesta a la pregunta secreta" />
-          </div>
-          
           <button id="doRegisterBtn" class="btn btn-primary">
             <i class="fas fa-user-plus"></i> Registrarse
           </button>
@@ -571,23 +536,15 @@
     <div id="menuSection" class="menu-section">
       <h2>¡Bienvenido, <span id="userName"></span>!</h2>
       
-      <!-- Sección de perfil -->
-      <div class="glass-card" style="max-width: 500px; margin: 0 auto 2rem auto; padding: 1.5rem;">
-        <div class="profile-pic">
-          <img id="profileImage" src="" alt="Foto perfil" onclick="document.getElementById('uploadPhoto').click()" />
+      <!-- Perfil compacto -->
+      <div class="profile-header">
+        <div class="profile-info">
+          <img id="profileAvatar" class="profile-avatar" src="" alt="Avatar" />
+          <div class="profile-name" id="profileNameDisplay"></div>
         </div>
-        <div class="profile-edit">
-          <label>✏️ Editar nombre:</label>
-          <input type="text" id="editNameInput" placeholder="Tu nombre" style="width: 100%; margin-bottom: 10px;" />
-          <button id="saveNameBtn" class="btn-primary" style="padding: 8px; font-size: 0.85rem;">Guardar nombre</button>
-          
-          <label>🖼️ Foto de perfil (elige una):</label>
-          <div class="avatar-options" id="avatarOptionsContainer"></div>
-          
-          <label>📸 O sube tu propia foto:</label>
-          <input type="file" id="uploadPhoto" accept="image/*" style="display: none;" />
-          <button id="uploadPhotoBtn" class="btn-outline" style="padding: 8px; font-size: 0.85rem;">Seleccionar imagen</button>
-        </div>
+        <button id="editProfileBtn" class="btn-edit">
+          <i class="fas fa-pen"></i> Editar perfil
+        </button>
       </div>
       
       <div class="menu-buttons">
@@ -624,30 +581,41 @@
     </div>
   </div>
 
-  <!-- Modal para recuperar contraseña con pregunta secreta -->
-  <div id="recoveryModal" class="modal">
+  <!-- Modal de edición de perfil -->
+  <div id="editProfileModal" class="modal">
     <div class="modal-content">
-      <h3>🔐 Recuperar contraseña</h3>
+      <h3><i class="fas fa-user-edit"></i> Editar perfil</h3>
+      
+      <div class="profile-pic-edit">
+        <img id="modalProfileImage" src="" alt="Foto de perfil" />
+        <div class="camera-icon" id="uploadPhotoIcon">
+          <i class="fas fa-camera"></i>
+        </div>
+      </div>
+      <input type="file" id="uploadPhoto" accept="image/*" style="display: none;" />
+      
       <div class="input-group">
-        <input type="email" id="recoveryEmail" placeholder="📧 Tu correo electrónico" />
+        <label style="color:white;">Nombre completo:</label>
+        <input type="text" id="editNameInput" placeholder="Tu nombre" />
       </div>
-      <div id="recoveryQuestionArea" style="display:none;">
-        <p id="recoveryQuestion" style="margin: 15px 0; padding: 10px; background: rgba(255,255,255,0.1); border-radius: 10px;"></p>
-        <div class="input-group">
-          <input type="text" id="recoveryAnswer" placeholder="🔐 Tu respuesta" />
-        </div>
-        <div class="input-group">
-          <input type="password" id="newPassword" placeholder="🔒 Nueva contraseña" />
-        </div>
-        <button id="confirmRecoveryBtn" class="btn btn-primary">Restablecer contraseña</button>
-      </div>
-      <button id="closeModalBtn" class="btn btn-outline" style="margin-top: 10px;">Cerrar</button>
+      
+      <label style="color:white;">O elige una foto predeterminada:</label>
+      <div class="avatar-grid" id="avatarGrid"></div>
+      
+      <div class="divider"><span></span></div>
+      
+      <button id="saveProfileBtn" class="btn btn-primary">
+        <i class="fas fa-save"></i> Guardar cambios
+      </button>
+      <button id="closeModalBtn" class="btn btn-outline">
+        Cancelar
+      </button>
     </div>
   </div>
 
   <!-- WhatsApp -->
   <div class="whatsapp-container">
-    <div class="whatsapp-tooltip">
+    <div class="whatsapp-tooltip" style="position:absolute; bottom:70px; right:0; background:white; color:#1a4a2a; padding:8px 16px; border-radius:30px; font-size:12px; white-space:nowrap;">
       <span>¿Necesitas ayuda? 😊</span>
     </div>
     <a href="#" class="whatsapp-float" id="whatsappBtn">
@@ -657,7 +625,7 @@
 
   <div id="toast" class="toast-message" style="display: none;"></div>
 
-  <!-- Firebase Import Map -->
+  <!-- Firebase -->
   <script type="importmap">
     {
       "imports": {
@@ -670,7 +638,7 @@
 
   <script type="module">
     import { initializeApp } from "firebase/app";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, updatePassword, updateProfile, sendPasswordResetEmail } from "firebase/auth";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, sendPasswordResetEmail, updateProfile } from "firebase/auth";
     import { getFirestore, doc, setDoc, getDoc, updateDoc } from "firebase/firestore";
 
     const firebaseConfig = {
@@ -691,16 +659,16 @@
     const authCard = document.getElementById('authCard');
     const menuSection = document.getElementById('menuSection');
     const userNameSpan = document.getElementById('userName');
+    const profileNameDisplay = document.getElementById('profileNameDisplay');
+    const profileAvatar = document.getElementById('profileAvatar');
     const loginFormDiv = document.getElementById('loginForm');
     const registerFormDiv = document.getElementById('registerForm');
     const toastDiv = document.getElementById('toast');
-    const profileImage = document.getElementById('profileImage');
+    const editProfileModal = document.getElementById('editProfileModal');
+    const modalProfileImage = document.getElementById('modalProfileImage');
     const editNameInput = document.getElementById('editNameInput');
-    const saveNameBtn = document.getElementById('saveNameBtn');
-    const avatarOptionsContainer = document.getElementById('avatarOptionsContainer');
+    const avatarGrid = document.getElementById('avatarGrid');
     const uploadPhoto = document.getElementById('uploadPhoto');
-    const uploadPhotoBtn = document.getElementById('uploadPhotoBtn');
-    const recoveryModal = document.getElementById('recoveryModal');
 
     // URLs de avatares predeterminados
     const DEFAULT_AVATARS = [
@@ -731,15 +699,8 @@
           email: user.email,
           nombre: additionalData.nombre || user.displayName || user.email.split('@')[0],
           fotoURL: additionalData.fotoURL || user.photoURL || DEFAULT_AVATARS[0],
-          preguntaSecreta: additionalData.preguntaSecreta || null,
-          respuestaSecreta: additionalData.respuestaSecreta || null,
           puntos: 0,
           fechaRegistro: new Date()
-        });
-      } else if (additionalData.preguntaSecreta) {
-        await updateDoc(userRef, {
-          preguntaSecreta: additionalData.preguntaSecreta,
-          respuestaSecreta: additionalData.respuestaSecreta
         });
       }
     }
@@ -753,55 +714,53 @@
         const nombre = data.nombre || user.displayName || user.email.split('@')[0];
         const fotoURL = data.fotoURL || user.photoURL || FALLBACK_AVATAR;
         userNameSpan.textContent = nombre;
-        profileImage.src = fotoURL;
-        editNameInput.value = nombre;
-        profileImage.onerror = () => { profileImage.src = FALLBACK_AVATAR; };
-        renderAvatarOptions(fotoURL);
+        profileNameDisplay.textContent = nombre;
+        profileAvatar.src = fotoURL;
+        profileAvatar.onerror = () => { profileAvatar.src = FALLBACK_AVATAR; };
       } else {
         await guardarUsuarioEnFirestore(user);
         cargarPerfil(user);
       }
     }
 
-    function renderAvatarOptions(currentFoto) {
-      avatarOptionsContainer.innerHTML = '';
+    function renderAvatarOptions(selectedFoto) {
+      avatarGrid.innerHTML = '';
       DEFAULT_AVATARS.forEach((url) => {
         const img = document.createElement('img');
         img.src = url;
-        img.className = 'avatar-option';
-        if (currentFoto === url) img.classList.add('selected');
-        img.addEventListener('click', async () => {
-          await actualizarFotoPerfil(url);
+        img.className = 'avatar-pred';
+        if (selectedFoto === url) img.classList.add('selected');
+        img.addEventListener('click', () => {
+          document.querySelectorAll('.avatar-pred').forEach(a => a.classList.remove('selected'));
+          img.classList.add('selected');
+          modalProfileImage.src = url;
         });
-        avatarOptionsContainer.appendChild(img);
+        avatarGrid.appendChild(img);
       });
     }
 
-    async function actualizarFotoPerfil(url) {
+    async function actualizarPerfil(nuevoNombre, nuevaFotoURL) {
       const user = auth.currentUser;
       if (!user) return;
       try {
+        if (nuevoNombre && nuevoNombre !== user.displayName) {
+          await updateProfile(user, { displayName: nuevoNombre });
+        }
         const userRef = doc(db, 'usuarios', user.uid);
-        await updateDoc(userRef, { fotoURL: url });
-        profileImage.src = url;
-        renderAvatarOptions(url);
-        showToast('✅ Foto de perfil actualizada');
+        const updates = {};
+        if (nuevoNombre) updates.nombre = nuevoNombre;
+        if (nuevaFotoURL) updates.fotoURL = nuevaFotoURL;
+        await updateDoc(userRef, updates);
+        
+        userNameSpan.textContent = nuevoNombre || user.displayName;
+        profileNameDisplay.textContent = nuevoNombre || user.displayName;
+        if (nuevaFotoURL) {
+          profileAvatar.src = nuevaFotoURL;
+        }
+        showToast('✅ Perfil actualizado');
+        editProfileModal.style.display = 'none';
       } catch (error) {
-        showToast('❌ Error al actualizar foto', true);
-      }
-    }
-
-    async function actualizarNombre(nuevoNombre) {
-      const user = auth.currentUser;
-      if (!user) return;
-      try {
-        await updateProfile(user, { displayName: nuevoNombre });
-        const userRef = doc(db, 'usuarios', user.uid);
-        await updateDoc(userRef, { nombre: nuevoNombre });
-        userNameSpan.textContent = nuevoNombre;
-        showToast('✅ Nombre actualizado');
-      } catch (error) {
-        showToast('❌ Error al actualizar nombre', true);
+        showToast('❌ Error al actualizar perfil: ' + error.message, true);
       }
     }
 
@@ -820,8 +779,6 @@
         document.getElementById('regEmail').value = '';
         document.getElementById('regPassword').value = '';
         document.getElementById('regName').value = '';
-        document.getElementById('regPregunta').value = '';
-        document.getElementById('regRespuesta').value = '';
       }
     }
 
@@ -847,31 +804,18 @@
       }
     });
 
-    // Registro con pregunta secreta
+    // Registro
     document.getElementById('doRegisterBtn').addEventListener('click', async () => {
       const name = document.getElementById('regName').value.trim();
       const email = document.getElementById('regEmail').value.trim();
       const password = document.getElementById('regPassword').value;
-      const pregunta = document.getElementById('regPregunta').value;
-      const respuesta = document.getElementById('regRespuesta').value.trim();
-
       if (!name || !email || !password) return showToast('📝 Completa todos los campos', true);
       if (password.length < 6) return showToast('🔒 La contraseña debe tener al menos 6 caracteres', true);
-      if (!pregunta || !respuesta) return showToast('🔐 Selecciona una pregunta secreta y escribe tu respuesta', true);
-
       try {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         await updateProfile(userCredential.user, { displayName: name });
-        
-        // Guardar pregunta secreta en Firestore
-        await guardarUsuarioEnFirestore(userCredential.user, { 
-          nombre: name, 
-          fotoURL: DEFAULT_AVATARS[0],
-          preguntaSecreta: pregunta,
-          respuestaSecreta: respuesta.toLowerCase().trim()
-        });
-        
-        showToast('🎉 ¡Registro exitoso! Ya puedes explorar Nicaragua');
+        await guardarUsuarioEnFirestore(userCredential.user, { nombre: name, fotoURL: DEFAULT_AVATARS[0] });
+        showToast('🎉 ¡Registro exitoso!');
       } catch (error) {
         let msg = error.message;
         if (msg.includes('email-already-in-use')) msg = '📧 El correo ya está registrado';
@@ -880,97 +824,25 @@
       }
     });
 
-    // Recuperar contraseña con pregunta secreta
-    let recoveryUserData = null;
-
-    document.getElementById('forgotPasswordLink').addEventListener('click', (e) => {
-      e.preventDefault();
-      recoveryModal.style.display = 'block';
-      document.getElementById('recoveryEmail').value = '';
-      document.getElementById('recoveryQuestionArea').style.display = 'none';
-      document.getElementById('recoveryAnswer').value = '';
-      document.getElementById('newPassword').value = '';
-      recoveryUserData = null;
-    });
-
-    document.getElementById('closeModalBtn').addEventListener('click', () => {
-      recoveryModal.style.display = 'none';
-    });
-
-    document.getElementById('recoveryEmail').addEventListener('change', async () => {
-      const email = document.getElementById('recoveryEmail').value.trim();
-      if (!email) return;
-      
-      // Buscar usuario por email en Firestore
-      const usersRef = doc(db, 'usuarios', email); // Esto no funciona así, necesitamos query
-      // Mejor: buscar en Firebase Auth primero
-      try {
-        // Primero intentamos obtener el usuario por email desde Auth (necesitamos su UID)
-        // Como no podemos buscar por email directamente, usamos una colección de emails
-        // Solución más simple: el usuario debe ingresar su email, si existe, mostramos la pregunta
-        const querySnapshot = await import("firebase/firestore").then(({ collection, query, where, getDocs }) => {
-          const q = query(collection(db, "usuarios"), where("email", "==", email));
-          return getDocs(q);
-        });
-        
-        if (querySnapshot.empty) {
-          showToast('❌ No hay cuenta con ese correo', true);
-          return;
+    // Olvidé contraseña - Enviar correo
+    document.getElementById('forgotPasswordLink').addEventListener('click', async () => {
+      const email = prompt('📧 Ingresa tu correo electrónico para restablecer tu contraseña:');
+      if (email && email.includes('@')) {
+        try {
+          await sendPasswordResetEmail(auth, email);
+          showToast('📨 Revisa tu bandeja de entrada. Te enviamos un correo para restablecer tu contraseña.');
+        } catch (error) {
+          let msg = error.message;
+          if (msg.includes('user-not-found')) msg = '❌ No existe una cuenta con ese correo';
+          else msg = '❌ Error al enviar el correo';
+          showToast(msg, true);
         }
-        
-        const userDoc = querySnapshot.docs[0];
-        recoveryUserData = { id: userDoc.id, ...userDoc.data() };
-        
-        if (recoveryUserData.preguntaSecreta) {
-          document.getElementById('recoveryQuestion').innerHTML = `<i class="fas fa-question-circle"></i> ${recoveryUserData.preguntaSecreta}`;
-          document.getElementById('recoveryQuestionArea').style.display = 'block';
-        } else {
-          showToast('❌ Esta cuenta no tiene pregunta secreta configurada. Contacta a soporte.', true);
-        }
-      } catch (error) {
-        showToast('❌ Error al buscar usuario', true);
+      } else if (email) {
+        showToast('❌ Ingresa un correo válido', true);
       }
     });
 
-    document.getElementById('confirmRecoveryBtn').addEventListener('click', async () => {
-      const answer = document.getElementById('recoveryAnswer').value.toLowerCase().trim();
-      const newPassword = document.getElementById('newPassword').value;
-      
-      if (!recoveryUserData) {
-        showToast('❌ Primero ingresa tu correo', true);
-        return;
-      }
-      
-      if (answer !== recoveryUserData.respuestaSecreta) {
-        showToast('❌ Respuesta incorrecta', true);
-        return;
-      }
-      
-      if (!newPassword || newPassword.length < 6) {
-        showToast('🔒 La nueva contraseña debe tener al menos 6 caracteres', true);
-        return;
-      }
-      
-      try {
-        // Obtener usuario actual de Firebase Auth
-        const user = auth.currentUser;
-        if (user && user.email === recoveryUserData.email) {
-          await updatePassword(user, newPassword);
-          showToast('✅ Contraseña actualizada. Inicia sesión nuevamente.');
-          recoveryModal.style.display = 'none';
-          await signOut(auth);
-        } else {
-          // Si no está logueado, necesitamos un método especial. 
-          // Como alternativa, usamos sendPasswordResetEmail (pero eso no queremos)
-          // Mejor: pedir que inicie sesión con la nueva contraseña después
-          showToast('⚠️ Por seguridad, cierra sesión si estás logueado y vuelve a intentar', true);
-        }
-      } catch (error) {
-        showToast('❌ Error al actualizar contraseña: ' + error.message, true);
-      }
-    });
-
-    // Cambiar entre formularios
+    // Mostrar/ocultar formularios
     document.getElementById('showRegisterBtn').addEventListener('click', () => {
       loginFormDiv.style.display = 'none';
       registerFormDiv.style.display = 'block';
@@ -986,35 +858,66 @@
       showToast('👋 Sesión cerrada');
     });
 
-    // Editar nombre
-    saveNameBtn.addEventListener('click', async () => {
-      const newName = editNameInput.value.trim();
-      if (newName) {
-        await actualizarNombre(newName);
-      } else {
-        showToast('❌ El nombre no puede estar vacío', true);
-      }
+    // ========== PERFIL: Modal de edición ==========
+    let currentUserData = {};
+
+    document.getElementById('editProfileBtn').addEventListener('click', async () => {
+      const user = auth.currentUser;
+      if (!user) return;
+      
+      const userRef = doc(db, 'usuarios', user.uid);
+      const userSnap = await getDoc(userRef);
+      const data = userSnap.exists() ? userSnap.data() : { nombre: user.displayName, fotoURL: user.photoURL };
+      currentUserData = data;
+      
+      editNameInput.value = data.nombre || '';
+      const currentFoto = data.fotoURL || DEFAULT_AVATARS[0];
+      modalProfileImage.src = currentFoto;
+      renderAvatarOptions(currentFoto);
+      editProfileModal.style.display = 'flex';
     });
 
-    // Subir foto
-    uploadPhotoBtn.addEventListener('click', () => {
+    document.getElementById('saveProfileBtn').addEventListener('click', async () => {
+      const nuevoNombre = editNameInput.value.trim();
+      const fotoSeleccionada = modalProfileImage.src;
+      if (!nuevoNombre) {
+        showToast('❌ El nombre no puede estar vacío', true);
+        return;
+      }
+      await actualizarPerfil(nuevoNombre, fotoSeleccionada);
+    });
+
+    document.getElementById('closeModalBtn').addEventListener('click', () => {
+      editProfileModal.style.display = 'none';
+    });
+
+    document.getElementById('uploadPhotoIcon').addEventListener('click', () => {
       uploadPhoto.click();
     });
 
     uploadPhoto.addEventListener('change', (e) => {
       const file = e.target.files[0];
       if (!file) return;
+      if (!file.type.startsWith('image/')) {
+        showToast('❌ Por favor selecciona una imagen', true);
+        return;
+      }
+      if (file.size > 5 * 1024 * 1024) {
+        showToast('❌ La imagen no puede superar 5MB', true);
+        return;
+      }
       const reader = new FileReader();
-      reader.onload = async function(ev) {
-        await actualizarFotoPerfil(ev.target.result);
+      reader.onload = function(ev) {
+        modalProfileImage.src = ev.target.result;
+        document.querySelectorAll('.avatar-pred').forEach(a => a.classList.remove('selected'));
       };
       reader.readAsDataURL(file);
     });
 
     // Cerrar modal al hacer clic fuera
     window.addEventListener('click', (e) => {
-      if (e.target === recoveryModal) {
-        recoveryModal.style.display = 'none';
+      if (e.target === editProfileModal) {
+        editProfileModal.style.display = 'none';
       }
     });
 
@@ -1025,8 +928,7 @@
       if (user && user.displayName) {
         mensaje = `Hola,%20soy%20${encodeURIComponent(user.displayName)}.%20${mensaje}`;
       }
-      const url = `https://wa.me/50588170531?text=${mensaje}`;
-      window.open(url, '_blank');
+      window.open(`https://wa.me/50588170531?text=${mensaje}`, '_blank');
     }
 
     document.getElementById('whatsappBtn').addEventListener('click', (e) => {
