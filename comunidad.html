@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Comunidad - Nica Explorer</title>
+<title>Comunidad - Guía Pinolero</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
@@ -281,6 +281,7 @@ display:flex;
 align-items:center;
 gap:8px;
 backdrop-filter:blur(8px);
+z-index:100;
 }
 
 @keyframes pulse{
@@ -483,15 +484,15 @@ puntos: 0,
 amigos: [],
 solicitudesEnviadas: [],
 solicitudesRecibidas: [],
+fotoURL: user.photoURL || null,
 fechaRegistro: Date.now()
 });
 console.log("Perfil creado exitosamente");
-toast("¡Bienvenido a Nica Explorer!");
+toast("¡Bienvenido a Guía Pinolero!");
 } else {
 const userData = userDoc.data();
 if(userData.puntos === undefined){
 await updateDoc(userRef, { puntos: 0 });
-console.log("Campo puntos agregado");
 }
 if(!userData.amigos){
 await updateDoc(userRef, { amigos: [] });
@@ -510,24 +511,66 @@ return false;
 }
 }
 
-// PERFIL
+// ============================================
+// 🎯 FUNCIÓN CARGAR PERFIL - CON FOTO DESDE FIRESTORE
+// ============================================
 async function cargarPerfil(user){
-document.getElementById("userDisplayName").innerText = user.displayName || user.email.split('@')[0];
-if(user.photoURL){
-const photo = document.getElementById("userPhoto");
-photo.src = user.photoURL;
-photo.style.display = "block";
-document.getElementById("defaultAvatar").style.display = "none";
-}
-const q = query(collection(db,"usuarios"), where("uid","==",user.uid));
-const snap = await getDocs(q);
-if(!snap.empty){
-const data = snap.docs[0].data();
-document.getElementById("userPoints").innerText = data.puntos || 0;
-}
+  // Mostrar nombre
+  const nombreMostrar = user.displayName || user.email.split('@')[0];
+  document.getElementById("userDisplayName").innerText = nombreMostrar;
+  
+  try {
+    // Buscar en Firestore la foto guardada
+    const userRef = doc(db, "usuarios", user.uid);
+    const userDoc = await getDoc(userRef);
+    const photo = document.getElementById("userPhoto");
+    const defaultAvatar = document.getElementById("defaultAvatar");
+    
+    if(userDoc.exists()){
+      const data = userDoc.data();
+      // Cargar puntos
+      document.getElementById("userPoints").innerText = data.puntos || 0;
+      
+      // Cargar foto de perfil (LA QUE EL USUARIO SUBIÓ EN index.html)
+      const fotoURL = data.fotoURL;
+      
+      if(fotoURL && fotoURL !== "" && fotoURL !== null && fotoURL !== "null"){
+        photo.src = fotoURL;
+        photo.style.display = "block";
+        defaultAvatar.style.display = "none";
+        // Manejar error si la foto no carga
+        photo.onerror = () => {
+          console.warn("No se pudo cargar la foto, usando avatar por defecto");
+          photo.style.display = "none";
+          defaultAvatar.style.display = "flex";
+        };
+      } else {
+        // Si no tiene foto guardada, usar la de Google si existe
+        if(user.photoURL && user.photoURL !== ""){
+          photo.src = user.photoURL;
+          photo.style.display = "block";
+          defaultAvatar.style.display = "none";
+        } else {
+          photo.style.display = "none";
+          defaultAvatar.style.display = "flex";
+        }
+      }
+    } else {
+      // Si no existe documento en Firestore, mostrar avatar por defecto
+      document.getElementById("userPoints").innerText = "0";
+      photo.style.display = "none";
+      defaultAvatar.style.display = "flex";
+    }
+  } catch(error){
+    console.error("Error cargando perfil:", error);
+    // Fallback: usar avatar por defecto
+    document.getElementById("userPoints").innerText = "0";
+    document.getElementById("userPhoto").style.display = "none";
+    document.getElementById("defaultAvatar").style.display = "flex";
+  }
 }
 
-// Calcular posición global del usuario - VERSIÓN CORREGIDA
+// Calcular posición global del usuario
 async function calcularPosicionGlobal(uid){
 try{
 const userDoc = await getDoc(doc(db, "usuarios", uid));
@@ -539,7 +582,6 @@ return null;
 const userData = userDoc.data();
 const puntosUsuario = userData.puntos || 0;
 
-// Obtener todos los usuarios ordenados por puntos
 const q = query(collection(db,"usuarios"), orderBy("puntos","desc"));
 const snap = await getDocs(q);
 
@@ -557,7 +599,6 @@ nombre: data.nombre || "Usuario"
 });
 });
 
-// Buscar la posición del usuario actual
 for(let i = 0; i < usuariosArray.length; i++){
 if(usuariosArray[i].uid === uid){
 posicion = i + 1;
@@ -584,7 +625,6 @@ medalEmoji = '🥉';
 
 positionText.innerHTML = `${medalIcon}Posición #${posicion} de ${totalUsuarios} ${medalEmoji}`;
 
-// Mostrar tooltip con información útil
 if(posicion > 1 && usuariosArray[posicion-2]){
 const puntosSiguiente = usuariosArray[posicion-2].puntos;
 const puntosNecesarios = puntosSiguiente - puntosUsuario;
@@ -599,7 +639,6 @@ positionText.title = `🏆 ¡Eres el #1! Increíble trabajo`;
 positionText.title = `📈 Sigue acumulando puntos para subir en el ranking`;
 }
 } else {
-// No encontró la posición - mostrar mensaje apropiado
 if(puntosUsuario === 0){
 positionText.innerHTML = '🌟 0 puntos - ¡Empieza a explorar Nicaragua!';
 positionText.title = 'Completa actividades y visita lugares para ganar puntos';
@@ -663,7 +702,6 @@ body.innerHTML += `
 pos++;
 }
 
-// Si hay menos de 50 usuarios, mostrar mensaje
 if(pos === 1){
 body.innerHTML = '<tr><td colspan="3" style="text-align:center;">No hay usuarios registrados aún</td></tr>';
 }
