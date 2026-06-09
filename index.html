@@ -8,9 +8,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 
-  <!-- ============================================ -->
-  /*                    CSS ESTILOS                    */
-  /* ============================================ -->
   <style>
     * {
       margin: 0;
@@ -228,7 +225,6 @@
       text-decoration: underline;
     }
     
-    /* Perfil compacto */
     .profile-header {
       background: rgba(255,255,255,0.08);
       border-radius: 1.5rem;
@@ -261,7 +257,6 @@
       font-size: 1.1rem;
     }
     
-    /* Modal de edición */
     .modal {
       display: none;
       position: fixed;
@@ -346,7 +341,6 @@
       transform: scale(1.05);
     }
     
-    /* Menú de botones */
     .menu-section {
       display: none;
       width: 100%;
@@ -416,7 +410,6 @@
       border-color: rgba(220, 53, 69, 0.5);
     }
     
-    /* Toast */
     .toast-message {
       position: fixed;
       bottom: 100px;
@@ -432,7 +425,6 @@
       white-space: nowrap;
     }
     
-    /* WhatsApp */
     .whatsapp-container {
       position: fixed;
       bottom: 25px;
@@ -490,7 +482,6 @@
   </div>
 
   <div class="container">
-    <!-- Tarjeta de autenticación -->
     <div id="authCard" class="glass-card">
       <div class="mascota">
         <img src="https://cdn-icons-png.flaticon.com/512/4712/4712109.png" alt="Mascota" />
@@ -528,7 +519,6 @@
       </div>
     </div>
     
-    <!-- Menú principal -->
     <div id="menuSection" class="menu-section">
       <h2>¡Bienvenido, <span id="userName"></span>!</h2>
       
@@ -571,7 +561,6 @@
     </div>
   </div>
 
-  <!-- Modal Editar Perfil -->
   <div id="editProfileModal" class="modal">
     <div class="modal-content">
       <h3><i class="fas fa-user-edit"></i> Editar perfil</h3>
@@ -597,7 +586,6 @@
     </div>
   </div>
 
-  <!-- WhatsApp -->
   <div class="whatsapp-container">
     <a href="#" class="whatsapp-float" id="whatsappBtn">
       <i class="fab fa-whatsapp"></i>
@@ -606,9 +594,6 @@
 
   <div id="toast" class="toast-message" style="display: none;"></div>
 
-  <!-- ============================================ -->
-  /*                   JAVASCRIPT                    */
-  /* ============================================ -->
   <script type="importmap">
     {
       "imports": {
@@ -620,9 +605,6 @@
   </script>
 
   <script type="module">
-    // ============================================
-    //  CONFIGURACIÓN DE FIREBASE
-    // ============================================
     import { initializeApp } from "firebase/app";
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, sendPasswordResetEmail, updateProfile } from "firebase/auth";
     import { getFirestore, doc, setDoc, getDoc, updateDoc } from "firebase/firestore";
@@ -640,9 +622,6 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    // ============================================
-    //  ELEMENTOS DEL DOM
-    // ============================================
     const authCard = document.getElementById('authCard');
     const menuSection = document.getElementById('menuSection');
     const userNameSpan = document.getElementById('userName');
@@ -657,9 +636,6 @@
     const avatarGrid = document.getElementById('avatarGrid');
     const uploadPhoto = document.getElementById('uploadPhoto');
 
-    // ============================================
-    //  CONSTANTES
-    // ============================================
     const DEFAULT_AVATARS = [
       "https://randomuser.me/api/portraits/women/68.jpg",
       "https://randomuser.me/api/portraits/men/32.jpg",
@@ -672,9 +648,6 @@
     ];
     const FALLBACK = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
 
-    // ============================================
-    //  FUNCIONES AUXILIARES
-    // ============================================
     function showToast(msg, isError = false) {
       toastDiv.textContent = msg;
       toastDiv.style.display = 'block';
@@ -757,9 +730,6 @@
       editModal.style.display = 'none';
     }
 
-    // ============================================
-    //  LOGIN Y REGISTRO
-    // ============================================
     document.getElementById('doLoginBtn').onclick = async () => {
       const email = document.getElementById('loginEmail').value.trim();
       const pass = document.getElementById('loginPassword').value;
@@ -813,9 +783,6 @@
       showToast('👋 Sesión cerrada');
     };
 
-    // ============================================
-    //  PERFIL CON SUBIDA DE FOTO
-    // ============================================
     let fotoTemporal = null;
 
     document.getElementById('editProfileBtn').onclick = async () => {
@@ -865,9 +832,6 @@
       if (e.target === editModal) editModal.style.display = 'none';
     };
 
-    // ============================================
-    //  WHATSAPP
-    // ============================================
     document.getElementById('whatsappBtn').onclick = (e) => {
       e.preventDefault();
       const user = auth.currentUser;
@@ -876,9 +840,6 @@
       window.open(`https://wa.me/50588170531?text=${msg}`, '_blank');
     };
 
-    // ============================================
-    //  ESTADO DE AUTENTICACIÓN
-    // ============================================
     onAuthStateChanged(auth, (user) => {
       if (user) {
         authCard.style.display = 'none';
