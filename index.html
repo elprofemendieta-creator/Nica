@@ -12,14 +12,13 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
     
     body {
-      font-family: 'Inter', sans-sercomeif;
+      font-family: 'Inter', sans-serif;
       min-height: 100vh;
       background: linear-gradient(145deg, #0a2a1f 0%, #1a4a2a 50%, #0d331f 100%);
       position: relative;
       overflow-x: hidden;
     }
     
-    /* Patrón decorativo */
     body::before {
       content: "🌋🌿🦎🌊🌴🍃";
       position: fixed;
@@ -35,7 +34,6 @@
       z-index: 0;
     }
     
-    /* Ondas decorativas */
     .wave-bg {
       position: fixed;
       bottom: 0;
@@ -66,7 +64,6 @@
       align-items: center;
     }
     
-    /* Glassmorphism premium */
     .glass-card {
       background: rgba(255, 255, 255, 0.12);
       backdrop-filter: blur(16px);
@@ -84,7 +81,6 @@
       transform: translateY(-5px);
     }
     
-    /* Mascota animada */
     .mascota {
       margin-bottom: 1rem;
     }
@@ -117,7 +113,6 @@
       font-size: 0.95rem;
     }
     
-    /* Inputs elegantes */
     .input-group {
       margin-bottom: 1rem;
       text-align: left;
@@ -145,7 +140,6 @@
       color: rgba(255,255,255,0.55);
     }
     
-    /* Botones premium */
     .btn {
       display: inline-flex;
       align-items: center;
@@ -171,17 +165,6 @@
     .btn-primary:hover {
       transform: translateY(-2px);
       box-shadow: 0 12px 25px rgba(245, 124, 0, 0.4);
-    }
-    
-    .btn-google {
-      background: rgba(255,255,255,0.95);
-      color: #444;
-      border: 1px solid rgba(255,255,255,0.3);
-    }
-    
-    .btn-google:hover {
-      background: white;
-      transform: translateY(-2px);
     }
     
     .btn-outline {
@@ -215,7 +198,84 @@
       font-size: 0.8rem;
     }
     
-    /* Menú principal (post-login) */
+    .link {
+      text-align: center;
+      margin-top: 12px;
+    }
+    
+    .link a {
+      color: #FFD54F;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+    
+    .link a:hover {
+      text-decoration: underline;
+    }
+    
+    /* Perfil */
+    .profile-section {
+      margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+    }
+    
+    .profile-pic {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 1rem;
+    }
+    
+    .profile-pic img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #FFD54F;
+      background: #ddd;
+      cursor: pointer;
+    }
+    
+    .avatar-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin: 15px 0;
+    }
+    
+    .avatar-option {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: 0.1s;
+      object-fit: cover;
+    }
+    
+    .avatar-option.selected {
+      border-color: #FFD54F;
+      transform: scale(1.05);
+    }
+    
+    .profile-edit {
+      background: rgba(255,255,255,0.08);
+      border-radius: 1rem;
+      padding: 1rem;
+      margin-top: 1rem;
+    }
+    
+    .profile-edit label {
+      display: block;
+      color: white;
+      font-size: 0.8rem;
+      margin-top: 10px;
+      margin-bottom: 5px;
+    }
+    
+    /* Menú principal */
     .menu-section {
       display: none;
       width: 100%;
@@ -273,11 +333,10 @@
     }
     
     .menu-card h3 {
-      font-size: 0.95rem;
+      font-size: 0.85rem;
       font-weight: 600;
     }
     
-    /* Botón cerrar sesión */
     .logout-wrapper {
       text-align: center;
       margin-top: 1rem;
@@ -295,7 +354,7 @@
       border-color: #dc3545;
     }
     
-    /* Toast notificaciones */
+    /* Toast */
     .toast-message {
       position: fixed;
       bottom: 100px;
@@ -313,7 +372,7 @@
       box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     }
     
-    /* WhatsApp flotante mejorado */
+    /* WhatsApp */
     .whatsapp-container {
       position: fixed;
       bottom: 25px;
@@ -371,7 +430,6 @@
       100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
     }
     
-    /* Animaciones */
     @keyframes fadeInUp {
       from {
         opacity: 0;
@@ -383,7 +441,6 @@
       }
     }
     
-    /* Responsive */
     @media (max-width: 680px) {
       .container { padding: 1rem; }
       .glass-card { padding: 1.8rem 1.2rem; max-width: 95%; }
@@ -402,11 +459,9 @@
   </style>
 </head>
 <body>
-  <!-- Ondas decorativas -->
   <div class="wave-bg">
     <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
       <path fill="rgba(255,255,255,0.08)" d="M0,192L48,197.3C96,203,192,213,288,208C384,203,480,181,576,176C672,171,768,181,864,197.3C960,213,1056,235,1152,224C1248,213,1344,171,1392,149.3L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
-      <path fill="rgba(255,255,255,0.05)" d="M0,224L48,218.7C96,213,192,203,288,208C384,213,480,235,576,240C672,245,768,235,864,218.7C960,203,1056,181,1152,176C1248,171,1344,181,1392,186.7L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
     </svg>
   </div>
 
@@ -431,9 +486,9 @@
           <button id="doLoginBtn" class="btn btn-primary">
             <i class="fas fa-sign-in-alt"></i> Iniciar sesión
           </button>
-          <button id="googleLoginBtn" class="btn btn-google">
-            <i class="fab fa-google"></i> Continuar con Google
-          </button>
+          <div class="link">
+            <a href="#" id="forgotPasswordLink">¿Olvidaste tu contraseña?</a>
+          </div>
           <div class="divider"><span>o</span></div>
           <button id="showRegisterBtn" class="btn btn-outline">
             ✨ Crear cuenta nueva
@@ -442,6 +497,9 @@
         
         <!-- Register Form -->
         <div id="registerForm" style="display:none;">
+          <div class="input-group">
+            <input type="text" id="regName" placeholder="👤 Nombre completo" />
+          </div>
           <div class="input-group">
             <input type="email" id="regEmail" placeholder="📧 Correo electrónico" />
           </div>
@@ -455,12 +513,45 @@
             ← Volver al inicio
           </button>
         </div>
+
+        <!-- Forgot Password Form -->
+        <div id="forgotForm" style="display:none;">
+          <div class="input-group">
+            <input type="email" id="forgotEmail" placeholder="📧 Tu correo electrónico" />
+          </div>
+          <button id="doResetBtn" class="btn btn-primary">
+            <i class="fas fa-envelope"></i> Enviar correo de recuperación
+          </button>
+          <button id="backToLoginFromForgot" class="btn btn-outline">
+            ← Volver al inicio
+          </button>
+        </div>
       </div>
     </div>
     
-    <!-- Menú principal después del login -->
+    <!-- Menú principal después del login (con perfil integrado) -->
     <div id="menuSection" class="menu-section">
-      <h2>¡Bienvenido, <span id="userName"></span>! <br> ¿Qué deseas explorar?</h2>
+      <h2>¡Bienvenido, <span id="userName"></span>!</h2>
+      
+      <!-- Sección de perfil -->
+      <div class="glass-card" style="max-width: 500px; margin: 0 auto 2rem auto; padding: 1.5rem;">
+        <div class="profile-pic">
+          <img id="profileImage" src="" alt="Foto perfil" onclick="document.getElementById('uploadPhoto').click()" />
+        </div>
+        <div class="profile-edit">
+          <label>✏️ Editar nombre:</label>
+          <input type="text" id="editNameInput" placeholder="Tu nombre" style="width: 100%; margin-bottom: 10px;" />
+          <button id="saveNameBtn" class="btn-primary" style="padding: 8px; font-size: 0.85rem;">Guardar nombre</button>
+          
+          <label>🖼️ Foto de perfil (elige una):</label>
+          <div class="avatar-options" id="avatarOptionsContainer"></div>
+          
+          <label>📸 O sube tu propia foto:</label>
+          <input type="file" id="uploadPhoto" accept="image/*" style="display: none;" />
+          <button id="uploadPhotoBtn" class="btn-outline" style="padding: 8px; font-size: 0.85rem;">Seleccionar imagen</button>
+        </div>
+      </div>
+      
       <div class="menu-buttons">
         <a href="../juegos/juegos.html" class="menu-card">
           <span>🎮</span>
@@ -484,8 +575,7 @@
         </a>
         <a href="temporal.html" class="menu-card">
           <span>🏬🛒</span>
-          <h3>Promociones en</h3
-          <h3>Comercios afiliados</h3>
+          <h3>Promociones en Comercios afiliados</h3>
         </a>
       </div>
       <div class="logout-wrapper">
@@ -496,7 +586,7 @@
     </div>
   </div>
 
-  <!-- Botón de WhatsApp flotante -->
+  <!-- WhatsApp -->
   <div class="whatsapp-container">
     <div class="whatsapp-tooltip">
       <span>¿Necesitas ayuda? 😊</span>
@@ -521,8 +611,8 @@
 
   <script type="module">
     import { initializeApp } from "firebase/app";
-    import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "firebase/auth";
-    import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, sendPasswordResetEmail, updateProfile } from "firebase/auth";
+    import { getFirestore, doc, setDoc, getDoc, updateDoc } from "firebase/firestore";
 
     const firebaseConfig = {
       apiKey: "AIzaSyA6jVICuE17KJcO34gE1brMxqWEfNd3Fy0",
@@ -537,7 +627,6 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
-    const provider = new GoogleAuthProvider();
 
     // Elementos DOM
     const authCard = document.getElementById('authCard');
@@ -545,7 +634,27 @@
     const userNameSpan = document.getElementById('userName');
     const loginFormDiv = document.getElementById('loginForm');
     const registerFormDiv = document.getElementById('registerForm');
+    const forgotFormDiv = document.getElementById('forgotForm');
     const toastDiv = document.getElementById('toast');
+    const profileImage = document.getElementById('profileImage');
+    const editNameInput = document.getElementById('editNameInput');
+    const saveNameBtn = document.getElementById('saveNameBtn');
+    const avatarOptionsContainer = document.getElementById('avatarOptionsContainer');
+    const uploadPhoto = document.getElementById('uploadPhoto');
+    const uploadPhotoBtn = document.getElementById('uploadPhotoBtn');
+
+    // URLs de avatares predeterminados
+    const DEFAULT_AVATARS = [
+      "https://randomuser.me/api/portraits/women/68.jpg",
+      "https://randomuser.me/api/portraits/men/32.jpg",
+      "https://randomuser.me/api/portraits/women/45.jpg",
+      "https://randomuser.me/api/portraits/men/75.jpg",
+      "https://randomuser.me/api/portraits/lego/1.jpg",
+      "https://randomuser.me/api/portraits/lego/2.jpg",
+      "https://cdn-icons-png.flaticon.com/512/3135/3135715.png",
+      "https://cdn-icons-png.flaticon.com/512/3135/3135768.png"
+    ];
+    const FALLBACK_AVATAR = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
 
     function showToast(msg, isError = false) {
       toastDiv.textContent = msg;
@@ -554,21 +663,92 @@
       setTimeout(() => { toastDiv.style.display = 'none'; }, 3000);
     }
 
-    async function guardarUsuarioEnFirestore(user) {
+    async function guardarUsuarioEnFirestore(user, additionalData = {}) {
       const userRef = doc(db, 'usuarios', user.uid);
       const userSnap = await getDoc(userRef);
       if (!userSnap.exists()) {
         await setDoc(userRef, {
           uid: user.uid,
           email: user.email,
-          nombre: user.displayName || user.email.split('@')[0],
-          fotoURL: user.photoURL || '',
+          nombre: additionalData.nombre || user.displayName || user.email.split('@')[0],
+          fotoURL: additionalData.fotoURL || user.photoURL || DEFAULT_AVATARS[0],
           puntos: 0,
           fechaRegistro: new Date(),
           sonidosActivos: true,
           tema: 'claro'
         });
-        console.log("Usuario guardado en Firestore");
+      } else {
+        // Actualizar si hay cambios
+        if (additionalData.nombre || additionalData.fotoURL) {
+          await updateDoc(userRef, {
+            ...(additionalData.nombre && { nombre: additionalData.nombre }),
+            ...(additionalData.fotoURL && { fotoURL: additionalData.fotoURL })
+          });
+        }
+      }
+    }
+
+    async function cargarPerfil(user) {
+      if (!user) return;
+      const userRef = doc(db, 'usuarios', user.uid);
+      const userSnap = await getDoc(userRef);
+      if (userSnap.exists()) {
+        const data = userSnap.data();
+        const nombre = data.nombre || user.displayName || user.email.split('@')[0];
+        const fotoURL = data.fotoURL || user.photoURL || FALLBACK_AVATAR;
+        userNameSpan.textContent = nombre;
+        profileImage.src = fotoURL;
+        editNameInput.value = nombre;
+        profileImage.onerror = () => { profileImage.src = FALLBACK_AVATAR; };
+        renderAvatarOptions(fotoURL);
+      } else {
+        // Si no existe en Firestore, crearlo
+        await guardarUsuarioEnFirestore(user);
+        cargarPerfil(user);
+      }
+    }
+
+    function renderAvatarOptions(currentFoto) {
+      avatarOptionsContainer.innerHTML = '';
+      DEFAULT_AVATARS.forEach((url) => {
+        const img = document.createElement('img');
+        img.src = url;
+        img.className = 'avatar-option';
+        if (currentFoto === url) img.classList.add('selected');
+        img.addEventListener('click', async () => {
+          await actualizarFotoPerfil(url);
+        });
+        avatarOptionsContainer.appendChild(img);
+      });
+    }
+
+    async function actualizarFotoPerfil(url) {
+      const user = auth.currentUser;
+      if (!user) return;
+      try {
+        const userRef = doc(db, 'usuarios', user.uid);
+        await updateDoc(userRef, { fotoURL: url });
+        profileImage.src = url;
+        renderAvatarOptions(url);
+        showToast('✅ Foto de perfil actualizada');
+      } catch (error) {
+        showToast('❌ Error al actualizar foto', true);
+      }
+    }
+
+    async function actualizarNombre(nuevoNombre) {
+      const user = auth.currentUser;
+      if (!user) return;
+      try {
+        // Actualizar en Firebase Auth
+        await updateProfile(user, { displayName: nuevoNombre });
+        // Actualizar en Firestore
+        const userRef = doc(db, 'usuarios', user.uid);
+        await updateDoc(userRef, { nombre: nuevoNombre });
+        userNameSpan.textContent = nuevoNombre;
+        showToast('✅ Nombre actualizado');
+      } catch (error) {
+        showToast('❌ Error al actualizar nombre', true);
       }
     }
 
@@ -576,18 +756,19 @@
       if (user) {
         authCard.style.display = 'none';
         menuSection.style.display = 'block';
-        const displayName = user.displayName || user.email.split('@')[0];
-        userNameSpan.textContent = displayName;
-        guardarUsuarioEnFirestore(user);
+        cargarPerfil(user);
       } else {
         authCard.style.display = 'block';
         menuSection.style.display = 'none';
         loginFormDiv.style.display = 'block';
         registerFormDiv.style.display = 'none';
+        forgotFormDiv.style.display = 'none';
         document.getElementById('loginEmail').value = '';
         document.getElementById('loginPassword').value = '';
         document.getElementById('regEmail').value = '';
         document.getElementById('regPassword').value = '';
+        document.getElementById('regName').value = '';
+        document.getElementById('forgotEmail').value = '';
       }
     }
 
@@ -595,7 +776,7 @@
       updateUI(user);
     });
 
-    // Login con email/contraseña
+    // Login
     document.getElementById('doLoginBtn').addEventListener('click', async () => {
       const email = document.getElementById('loginEmail').value.trim();
       const password = document.getElementById('loginPassword').value;
@@ -607,6 +788,7 @@
         let msg = error.message;
         if (msg.includes('user-not-found')) msg = '❌ Usuario no registrado';
         else if (msg.includes('wrong-password')) msg = '❌ Contraseña incorrecta';
+        else if (msg.includes('invalid-email')) msg = '❌ Correo inválido';
         else msg = '❌ Error al iniciar sesión';
         showToast(msg, true);
       }
@@ -614,13 +796,16 @@
 
     // Registro
     document.getElementById('doRegisterBtn').addEventListener('click', async () => {
+      const name = document.getElementById('regName').value.trim();
       const email = document.getElementById('regEmail').value.trim();
       const password = document.getElementById('regPassword').value;
-      if (!email || !password) return showToast('📝 Completa todos los campos', true);
+      if (!name || !email || !password) return showToast('📝 Completa todos los campos', true);
       if (password.length < 6) return showToast('🔒 La contraseña debe tener al menos 6 caracteres', true);
       try {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        await guardarUsuarioEnFirestore(userCredential.user);
+        // Actualizar perfil con nombre
+        await updateProfile(userCredential.user, { displayName: name });
+        await guardarUsuarioEnFirestore(userCredential.user, { nombre: name, fotoURL: DEFAULT_AVATARS[0] });
         showToast('🎉 ¡Registro exitoso! Ya puedes explorar Nicaragua');
       } catch (error) {
         let msg = error.message;
@@ -630,15 +815,36 @@
       }
     });
 
-    // Google
-    document.getElementById('googleLoginBtn').addEventListener('click', async () => {
+    // Olvidé contraseña
+    document.getElementById('forgotPasswordLink').addEventListener('click', (e) => {
+      e.preventDefault();
+      loginFormDiv.style.display = 'none';
+      registerFormDiv.style.display = 'none';
+      forgotFormDiv.style.display = 'block';
+    });
+
+    document.getElementById('doResetBtn').addEventListener('click', async () => {
+      const email = document.getElementById('forgotEmail').value.trim();
+      if (!email) return showToast('📝 Ingresa tu correo', true);
       try {
-        const result = await signInWithPopup(auth, provider);
-        await guardarUsuarioEnFirestore(result.user);
-        showToast('✅ Inicio con Google correcto');
+        await sendPasswordResetEmail(auth, email);
+        showToast('📧 Revisa tu correo para restablecer la contraseña');
+        setTimeout(() => {
+          forgotFormDiv.style.display = 'none';
+          loginFormDiv.style.display = 'block';
+        }, 3000);
       } catch (error) {
-        showToast('❌ Error con Google: ' + error.message, true);
+        let msg = error.message;
+        if (msg.includes('user-not-found')) msg = '❌ No existe cuenta con ese correo';
+        else msg = '❌ Error al enviar correo';
+        showToast(msg, true);
       }
+    });
+
+    document.getElementById('backToLoginFromForgot').addEventListener('click', (e) => {
+      e.preventDefault();
+      forgotFormDiv.style.display = 'none';
+      loginFormDiv.style.display = 'block';
     });
 
     // Cambiar entre formularios
@@ -657,30 +863,45 @@
       showToast('👋 Sesión cerrada');
     });
 
-    // Configuración de WhatsApp
-    const whatsappConfig = {
-      numero: "50588170531",
-      mensajes: {
-        default: "¡Hola!%20Estoy%20explorando%20Nicaragua%20con%20Guía%20Pinolero%20y%20tengo%20una%20consulta%20🌟",
-        ayuda: "¡Hola!%20Necesito%20ayuda%20con%20la%20aplicación%20Guía%20Pinolero.%20¿Me%20pueden%20ayudar?",
-        sugerencia: "¡Hola!%20Quiero%20sugerir%20un%20lugar%20turístico%20para%20agregar%20a%20Guía%20Pinolero:%20",
-        error: "¡Hola!%20Estoy%20teniendo%20un%20problema%20técnico%20con%20Guía%20Pinolero:%20"
+    // Editar nombre
+    saveNameBtn.addEventListener('click', async () => {
+      const newName = editNameInput.value.trim();
+      if (newName) {
+        await actualizarNombre(newName);
+      } else {
+        showToast('❌ El nombre no puede estar vacío', true);
       }
-    };
+    });
 
-    function abrirWhatsApp(tipo = 'default') {
-      let mensaje = whatsappConfig.mensajes[tipo] || whatsappConfig.mensajes.default;
-      const userName = document.getElementById('userName')?.innerText;
-      if (userName && userName !== '') {
-        mensaje = `Hola,%20soy%20${encodeURIComponent(userName)}.%20${mensaje}`;
+    // Subir foto
+    uploadPhotoBtn.addEventListener('click', () => {
+      uploadPhoto.click();
+    });
+
+    uploadPhoto.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = async function(ev) {
+        await actualizarFotoPerfil(ev.target.result);
+      };
+      reader.readAsDataURL(file);
+    });
+
+    // WhatsApp
+    function abrirWhatsApp() {
+      const user = auth.currentUser;
+      let mensaje = "¡Hola!%20Estoy%20explorando%20Nicaragua%20con%20Guía%20Pinolero%20y%20tengo%20una%20consulta%20🌟";
+      if (user && user.displayName) {
+        mensaje = `Hola,%20soy%20${encodeURIComponent(user.displayName)}.%20${mensaje}`;
       }
-      const url = `https://wa.me/${whatsappConfig.numero}?text=${mensaje}`;
+      const url = `https://wa.me/50588170531?text=${mensaje}`;
       window.open(url, '_blank');
     }
 
     document.getElementById('whatsappBtn').addEventListener('click', (e) => {
       e.preventDefault();
-      abrirWhatsApp('default');
+      abrirWhatsApp();
     });
   </script>
 </body>
