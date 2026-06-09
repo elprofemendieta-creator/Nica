@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Guía Pinolero - Con correo y perfil</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: system-ui, 'Segoe UI', sans-serif;
+        }
+        body {
+            margin: 0;
+            background: linear-gradient(145deg, #f5f7e9 0%, #e0e8c7 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            max-width: 500px;
+            width: 100%;
+            background: white;
+            border-radius: 48px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+            padding: 24px;
+            transition: all 0.2s;
+        }
+        h1, h2 {
+            text-align: center;
+            color: #2d5a2c;
+        }
+        .logo {
+            text-align: center;
+            font-size: 3rem;
+        }
+        input, button {
+            width: 100%;
+            padding: 14px 18px;
+            margin: 8px 0;
+            border-radius: 60px;
+            border: 1px solid #ccc;
+            font-size: 1rem;
+        }
+        button {
+            background-color: #2d5a2c;
+            color: white;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        button:hover {
+            background-color: #1f3e1e;
+        }
+        .link {
+            text-align: center;
+            margin-top: 12px;
+            font-size: 0.9rem;
+        }
+        .link a {
+            color: #2d5a2c;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .error-msg {
+            background: #ffe0e0;
+            color: #b00020;
+            padding: 10px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            text-align: center;
+        }
+        .profile-pic {
+            display: flex;
+            justify-content: center;
+            margin: 15px 0;
+        }
+        .profile-pic img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #2d5a2c;
+            background: #ddd;
+        }
+        .avatar-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin: 15px 0;
+        }
+        .avatar-option {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: 0.1s;
+        }
+        .avatar-option.selected {
+            border-color: #2d5a2c;
+            transform: scale(1.05);
+        }
+        .card {
+            background: #fef9e6;
+            border-radius: 32px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div class="container" id="app">
+    <!-- Pantalla de login/registro -->
+    <div id="authPanel">
+        <div class="logo">🌋📱</div>
+        <h1>Guía Pinolero</h1>
+        <p style="text-align:center">Explora Nicaragua jugando</p>
+
+        <div id="loginForm">
+            <input type="email" id="loginEmail" placeholder="Correo electrónico" autocomplete="email">
+            <input type="password" id="loginPassword" placeholder="Contraseña">
+            <button id="doLoginBtn">Iniciar sesión</button>
+            <div class="link"><a href="#" id="forgotPasswordLink">¿Olvidaste tu contraseña?</a></div>
+            <div class="link"><a href="#" id="showRegisterLink">✨ Crear cuenta nueva</a></div>
+            <div id="loginError" class="error-msg hidden"></div>
+        </div>
+
+        <div id="registerForm" class="hidden">
+            <input type="text" id="regName" placeholder="Nombre completo">
+            <input type="email" id="regEmail" placeholder="Correo electrónico">
+            <input type="password" id="regPassword" placeholder="Contraseña">
+            <button id="doRegisterBtn">Registrarse</button>
+            <div class="link"><a href="#" id="showLoginLink">← Volver a inicio de sesión</a></div>
+            <div id="registerError" class="error-msg hidden"></div>
+        </div>
+
+        <div id="forgotPanel" class="hidden">
+            <input type="email" id="forgotEmail" placeholder="Tu correo registrado">
+            <button id="doResetBtn">Enviar nueva contraseña</button>
+            <div class="link"><a href="#" id="backToLoginFromForgot">Cancelar</a></div>
+            <div id="forgotMsg" class="error-msg hidden"></div>
+        </div>
+    </div>
+
+    <!-- Pantalla de perfil y contenido principal después de login -->
+    <div id="mainPanel" class="hidden">
+        <div class="logo">🇳🇮</div>
+        <h2 id="welcomeName">Bienvenido,</h2>
+
+        <div class="profile-pic">
+            <img id="profileImage" src="" alt="Foto perfil">
+        </div>
+
+        <div class="card">
+            <label>✏️ Editar nombre:</label>
+            <input type="text" id="editNameInput" placeholder="Tu nombre">
+            <button id="saveNameBtn">Guardar nombre</button>
+
+            <label>🖼️ Foto de perfil:</label>
+            <div class="avatar-options" id="avatarOptionsContainer">
+                <!-- Aquí se generan las fotos predeterminadas con JS -->
+            </div>
+            <label>O sube tu propia foto:</label>
+            <input type="file" id="uploadPhoto" accept="image/*">
+        </div>
+
+        <div class="card">
+            <p>🎮 Juegos Turísticos &nbsp; 🗺️ Mapa Interactivo</p>
+            <p>🧭 Lugares &nbsp; 👩🏾🤝🧑🏻 Comunidad &nbsp; 🔍 Escanea</p>
+            <button id="logoutBtn">Cerrar sesión</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ---------- Gestión de usuarios en localStorage ----------
+    // Cada usuario: { email, password, name, profileImage (base64 o url predeterminada) }
+
+    const STORAGE_USERS = "guia_pinolero_users";
+    const STORAGE_CURRENT = "guia_pinolero_current_user";
+
+    // Predeterminadas (puedes cambiar las URLs por emojis o imágenes locales)
+    const DEFAULT_AVATARS = [
+        "https://randomuser.me/api/portraits/women/68.jpg",
+        "https://randomuser.me/api/portraits/men/32.jpg",
+        "https://randomuser.me/api/portraits/women/45.jpg",
+        "https://randomuser.me/api/portraits/men/75.jpg",
+        "https://randomuser.me/api/portraits/lego/1.jpg",
+        "https://randomuser.me/api/portraits/lego/2.jpg"
+    ];
+    const FALLBACK_AVATAR = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
+
+    // Helper: obtener usuarios
+    function getUsers() {
+        const raw = localStorage.getItem(STORAGE_USERS);
+        if (!raw) return [];
+        return JSON.parse(raw);
+    }
+
+    function saveUsers(users) {
+        localStorage.setItem(STORAGE_USERS, JSON.stringify(users));
+    }
+
+    function getCurrentUser() {
+        const raw = localStorage.getItem(STORAGE_CURRENT);
+        if (!raw) return null;
+        return JSON.parse(raw);
+    }
+
+    function setCurrentUser(user) {
+        if (user) {
+            localStorage.setItem(STORAGE_CURRENT, JSON.stringify(user));
+        } else {
+            localStorage.removeItem(STORAGE_CURRENT);
+        }
+    }
+
+    // Registrar
+    function registerUser(email, password, name) {
+        let users = getUsers();
+        if (users.find(u => u.email === email)) {
+            throw new Error("Ya existe una cuenta con ese correo.");
+        }
+        const newUser = {
+            email: email,
+            password: password,  // En una app real se hashea. Aquí demo.
+            name: name,
+            profileImage: DEFAULT_AVATARS[0]
+        };
+        users.push(newUser);
+        saveUsers(users);
+        return newUser;
+    }
+
+    // Login
+    function loginUser(email, password) {
+        let users = getUsers();
+        const user = users.find(u => u.email === email && u.password === password);
+        if (!user) throw new Error("Correo o contraseña incorrectos.");
+        return user;
+    }
+
+    // Reset contraseña (simulado: asigna una nueva temporal y la muestra)
+    function resetPassword(email) {
+        let users = getUsers();
+        const userIndex = users.findIndex(u => u.email === email);
+        if (userIndex === -1) throw new Error("No existe un usuario con ese correo.");
+        const newPass = Math.random().toString(36).slice(-8);
+        users[userIndex].password = newPass;
+        saveUsers(users);
+        return newPass;
+    }
+
+    // Actualizar perfil del usuario actual (name, profileImage)
+    function updateCurrentUserProfile(updates) {
+        let current = getCurrentUser();
+        if (!current) return;
+        let users = getUsers();
+        const index = users.findIndex(u => u.email === current.email);
+        if (index !== -1) {
+            users[index] = { ...users[index], ...updates };
+            saveUsers(users);
+            setCurrentUser(users[index]);
+        }
+    }
+
+    // ---------- UI ----------
+    const authPanel = document.getElementById("authPanel");
+    const mainPanel = document.getElementById("mainPanel");
+    const loginFormDiv = document.getElementById("loginForm");
+    const registerFormDiv = document.getElementById("registerForm");
+    const forgotPanelDiv = document.getElementById("forgotPanel");
+
+    function showAuth() {
+        authPanel.classList.remove("hidden");
+        mainPanel.classList.add("hidden");
+        // limpiar formularios
+        loginFormDiv.classList.remove("hidden");
+        registerFormDiv.classList.add("hidden");
+        forgotPanelDiv.classList.add("hidden");
+    }
+
+    function showMain() {
+        const user = getCurrentUser();
+        if (!user) {
+            showAuth();
+            return;
+        }
+        authPanel.classList.add("hidden");
+        mainPanel.classList.remove("hidden");
+        // cargar datos del perfil
+        document.getElementById("welcomeName").innerText = `Bienvenido, ${user.name || user.email}`;
+        document.getElementById("editNameInput").value = user.name || "";
+        const profileImg = document.getElementById("profileImage");
+        profileImg.src = user.profileImage || FALLBACK_AVATAR;
+        profileImg.onerror = () => { profileImg.src = FALLBACK_AVATAR; };
+        renderAvatarOptions();
+    }
+
+    function renderAvatarOptions() {
+        const container = document.getElementById("avatarOptionsContainer");
+        container.innerHTML = "";
+        const currentUser = getCurrentUser();
+        const currentImg = currentUser?.profileImage || FALLBACK_AVATAR;
+        DEFAULT_AVATARS.forEach((url, idx) => {
+            const img = document.createElement("img");
+            img.src = url;
+            img.className = "avatar-option";
+            if (currentImg === url) img.classList.add("selected");
+            img.addEventListener("click", () => {
+                updateCurrentUserProfile({ profileImage: url });
+                showMain(); // refrescar
+            });
+            container.appendChild(img);
+        });
+    }
+
+    // eventos
+    document.getElementById("doLoginBtn").addEventListener("click", () => {
+        const email = document.getElementById("loginEmail").value.trim();
+        const password = document.getElementById("loginPassword").value;
+        const errorDiv = document.getElementById("loginError");
+        try {
+            const user = loginUser(email, password);
+            setCurrentUser(user);
+            showMain();
+        } catch (err) {
+            errorDiv.innerText = err.message;
+            errorDiv.classList.remove("hidden");
+            setTimeout(() => errorDiv.classList.add("hidden"), 3000);
+        }
+    });
+
+    document.getElementById("doRegisterBtn").addEventListener("click", () => {
+        const name = document.getElementById("regName").value.trim();
+        const email = document.getElementById("regEmail").value.trim();
+        const password = document.getElementById("regPassword").value;
+        const errorDiv = document.getElementById("registerError");
+        if (!name || !email || !password) {
+            errorDiv.innerText = "Todos los campos son obligatorios";
+            errorDiv.classList.remove("hidden");
+            return;
+        }
+        try {
+            const newUser = registerUser(email, password, name);
+            setCurrentUser(newUser);
+            showMain();
+        } catch (err) {
+            errorDiv.innerText = err.message;
+            errorDiv.classList.remove("hidden");
+            setTimeout(() => errorDiv.classList.add("hidden"), 3000);
+        }
+    });
+
+    document.getElementById("forgotPasswordLink").addEventListener("click", (e) => {
+        e.preventDefault();
+        loginFormDiv.classList.add("hidden");
+        registerFormDiv.classList.add("hidden");
+        forgotPanelDiv.classList.remove("hidden");
+    });
+
+    document.getElementById("doResetBtn").addEventListener("click", () => {
+        const email = document.getElementById("forgotEmail").value.trim();
+        const msgDiv = document.getElementById("forgotMsg");
+        try {
+            const newPassword = resetPassword(email);
+            msgDiv.classList.remove("hidden");
+            msgDiv.style.background = "#e0ffe0";
+            msgDiv.style.color = "#006400";
+            msgDiv.innerText = `Nueva contraseña temporal: ${newPassword}. Guárdala e inicia sesión.`;
+        } catch (err) {
+            msgDiv.classList.remove("hidden");
+            msgDiv.style.background = "#ffe0e0";
+            msgDiv.style.color = "#b00020";
+            msgDiv.innerText = err.message;
+        }
+    });
+
+    document.getElementById("backToLoginFromForgot").addEventListener("click", (e) => {
+        e.preventDefault();
+        forgotPanelDiv.classList.add("hidden");
+        loginFormDiv.classList.remove("hidden");
+    });
+
+    document.getElementById("showRegisterLink").addEventListener("click", (e) => {
+        e.preventDefault();
+        loginFormDiv.classList.add("hidden");
+        registerFormDiv.classList.remove("hidden");
+    });
+    document.getElementById("showLoginLink").addEventListener("click", (e) => {
+        e.preventDefault();
+        registerFormDiv.classList.add("hidden");
+        loginFormDiv.classList.remove("hidden");
+    });
+
+    document.getElementById("saveNameBtn").addEventListener("click", () => {
+        const newName = document.getElementById("editNameInput").value.trim();
+        if (newName) {
+            updateCurrentUserProfile({ name: newName });
+            showMain();
+        }
+    });
+
+    document.getElementById("uploadPhoto").addEventListener("change", (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(ev) {
+            updateCurrentUserProfile({ profileImage: ev.target.result });
+            showMain();
+        };
+        reader.readAsDataURL(file);
+    });
+
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+        setCurrentUser(null);
+        showAuth();
+        // limpiar campos
+        document.getElementById("loginEmail").value = "";
+        document.getElementById("loginPassword").value = "";
+    });
+
+    // Inicializar: comprobar si hay sesión
+    if (getCurrentUser()) {
+        showMain();
+    } else {
+        showAuth();
+        // crear al menos un usuario demo para pruebas (opcional)
+        const users = getUsers();
+        if (users.length === 0) {
+            registerUser("demo@pinolero.com", "123456", "Usuario Demo");
+        }
+    }
+</script>
+</body>
+</html>
