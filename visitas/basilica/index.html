@@ -1,12 +1,116 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Project Title</title>
-<meta charset="utf-8">
-<meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, minimal-ui" />
-<style> @-ms-viewport { width: device-width; } </style>
-<link rel="stylesheet" href="vendor/reset.min.css">
-<link rel="stylesheet" href="style.css">
+  <title>Parque Central de Diriamba</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, minimal-ui" />
+  <style> @-ms-viewport { width: device-width; } </style>
+  <link rel="stylesheet" href="vendor/reset.min.css">
+  <link rel="stylesheet" href="style.css">
+  <!-- Firebase SDKs -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { getFirestore, doc, runTransaction } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyA6jVICuE17KJcO34gE1brMxqWEfNd3Fy0",
+      authDomain: "mapa-41b00.firebaseapp.com",
+      projectId: "mapa-41b00",
+      storageBucket: "mapa-41b00.firebasestorage.app",
+      messagingSenderId: "535032835400",
+      appId: "1:535032835400:web:68c079cbc3f419eafd177d"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    signInAnonymously(auth).catch(console.error);
+
+    let currentUid = null;
+    onAuthStateChanged(auth, (user) => {
+      if (user) currentUid = user.uid;
+    });
+
+    // Función global para guardar token
+    window.guardarToken = async function(tokenCampo) {
+      if (!currentUid) {
+        alert("Autenticando, espera un momento...");
+        return;
+      }
+      const lugarRef = doc(db, "users", currentUid, "explorer", "parque_diriamba");
+
+      try {
+        let completado = false;
+        await runTransaction(db, async (transaction) => {
+          const lugarSnap = await transaction.get(lugarRef);
+          let data = { token1: false, token2: false, progress: 0, badge: false };
+          if (lugarSnap.exists()) data = lugarSnap.data();
+
+          if (data[tokenCampo]) {
+            // Ya estaba encontrado
+            return;
+          }
+
+          data[tokenCampo] = true;
+          const tokensEncontrados = [data.token1, data.token2].filter(Boolean).length;
+          data.progress = tokensEncontrados * 50;
+          data.badge = data.progress === 100;
+          if (data.badge) {
+            data.completedAt = new Date().toISOString();
+            completado = true;
+          }
+
+          transaction.set(lugarRef, data, { merge: true });
+        });
+
+        // Notificar al usuario
+        mostrarToast(`¡Has descubierto un elemento oculto!`);
+
+        if (completado) {
+          setTimeout(() => {
+            alert("🎉 ¡Felicidades! Has encontrado todos los tokens y obtenido la insignia del Parque de Diriamba.");
+            window.location.href = "https://guiapinolero.netlify.app/visitas/insignias";
+          }, 300);
+        }
+      } catch (e) {
+        console.error("Error al guardar token:", e);
+        alert("Ocurrió un error al guardar el progreso. Intenta de nuevo.");
+      }
+    };
+
+    function mostrarToast(mensaje) {
+      const div = document.createElement('div');
+      div.textContent = mensaje;
+      div.style.cssText = `
+        position: fixed;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #FFB703;
+        color: #023047;
+        padding: 12px 24px;
+        border-radius: 30px;
+        font-weight: bold;
+        z-index: 9999;
+        animation: fadeInUp 0.5s ease-out;
+      `;
+      document.body.appendChild(div);
+      setTimeout(() => div.remove(), 2500);
+    }
+  </script>
+  <style>
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+      to { opacity: 1; transform: translateX(-50%) translateY(0); }
+    }
+    /* Opcional: estilo para hotspots token */
+    .token-hotspot-icon {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
 </head>
 <body class="multiple-scenes view-control-buttons">
 
@@ -14,15 +118,12 @@
 
 <div id="sceneList">
   <ul class="scenes">
-    
       <a href="javascript:void(0)" class="scene" data-id="0-img1">
-        <li class="text">img1</li>
+        <li class="text">Entrada</li>
       </a>
-    
       <a href="javascript:void(0)" class="scene" data-id="1-img2">
-        <li class="text">img2</li>
+        <li class="text">Interior</li>
       </a>
-    
   </ul>
 </div>
 
@@ -67,7 +168,6 @@
 <script src="vendor/screenfull.min.js" ></script>
 <script src="vendor/bowser.min.js" ></script>
 <script src="vendor/marzipano.js" ></script>
-
 <script src="data.js"></script>
 <script src="index.js"></script>
 
