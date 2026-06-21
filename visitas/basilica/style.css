@@ -775,7 +775,13 @@ body.single-scene #sceneList, body.single-scene #sceneListToggle {
   -webkit-transition: opacity 0.3s ease-in-out 0.4s;
   transition: opacity 0.3s ease-in-out 0.4s;
 }
-
+/* Cambiar el color de fondo de los hotspots token */
+.token-hotspot .info-hotspot-header {
+  background-color: #FFB703 !important;
+}
+.token-hotspot .info-hotspot-icon-wrapper {
+  background-color: transparent;
+}
 /* View control buttons */
 
 .viewControlButton {
