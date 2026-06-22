@@ -296,7 +296,7 @@
     var icon = document.createElement('img');
     if (token) {
       // Puedes usar una imagen personalizada, si no existe, usamos info.png con un color distinto
-      icon.src = 'img/token.png';  // Asegúrate de tener esta imagen o reemplazar por 'img/info.png'
+      icon.src = '/visitas/token.png';  // Asegúrate de tener esta imagen o reemplazar por 'img/info.png'
       icon.classList.add('token-hotspot-icon');
     } else {
       icon.src = 'img/info.png';
