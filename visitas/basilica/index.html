@@ -7,7 +7,8 @@
   <style> @-ms-viewport { width: device-width; } </style>
   <link rel="stylesheet" href="vendor/reset.min.css">
   <link rel="stylesheet" href="style.css">
-  <!-- Firebase SDKs -->
+  
+  <!-- Firebase SDKs (módulo) -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
@@ -26,17 +27,14 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
+    // Autenticación anónima inmediata
     signInAnonymously(auth).catch(console.error);
 
-    let currentUid = null;
-    onAuthStateChanged(auth, (user) => {
-      if (user) currentUid = user.uid;
-    });
-
-    // Función global para guardar token
+    // Definir la función global apenas tengamos UID
     window.guardarToken = async function(tokenCampo) {
+      const currentUid = auth.currentUser?.uid;
       if (!currentUid) {
-        alert("Autenticando, espera un momento...");
+        alert("Espera un momento, autenticando...");
         return;
       }
       const lugarRef = doc(db, "users", currentUid, "explorer", "parque_diriamba");
@@ -48,10 +46,7 @@
           let data = { token1: false, token2: false, progress: 0, badge: false };
           if (lugarSnap.exists()) data = lugarSnap.data();
 
-          if (data[tokenCampo]) {
-            // Ya estaba encontrado
-            return;
-          }
+          if (data[tokenCampo]) return; // ya encontrado
 
           data[tokenCampo] = true;
           const tokensEncontrados = [data.token1, data.token2].filter(Boolean).length;
@@ -65,50 +60,40 @@
           transaction.set(lugarRef, data, { merge: true });
         });
 
-        // Notificar al usuario
-        mostrarToast(`¡Has descubierto un elemento oculto!`);
+        // Mostrar toast
+        const toast = document.createElement('div');
+        toast.textContent = '¡Has descubierto un elemento oculto!';
+        toast.style.cssText = `position:fixed; bottom:30px; left:50%; transform:translateX(-50%);
+          background:#FFB703; color:#023047; padding:12px 24px; border-radius:30px;
+          font-weight:bold; z-index:9999;`;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 2500);
 
         if (completado) {
           setTimeout(() => {
             alert("🎉 ¡Felicidades! Has encontrado todos los tokens y obtenido la insignia del Parque de Diriamba.");
             window.location.href = "https://guiapinolero.netlify.app/visitas/insignias";
-          }, 300);
+          }, 500);
         }
       } catch (e) {
-        console.error("Error al guardar token:", e);
-        alert("Ocurrió un error al guardar el progreso. Intenta de nuevo.");
+        console.error(e);
+        alert("Error al guardar progreso.");
       }
     };
 
-    function mostrarToast(mensaje) {
-      const div = document.createElement('div');
-      div.textContent = mensaje;
-      div.style.cssText = `
-        position: fixed;
-        bottom: 30px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: #FFB703;
-        color: #023047;
-        padding: 12px 24px;
-        border-radius: 30px;
-        font-weight: bold;
-        z-index: 9999;
-        animation: fadeInUp 0.5s ease-out;
-      `;
-      document.body.appendChild(div);
-      setTimeout(() => div.remove(), 2500);
-    }
+    // Por si acaso aún no está auth listo al cargar, aseguramos que exista
+    onAuthStateChanged(auth, (user) => {
+      if (user) console.log("Usuario autenticado:", user.uid);
+    });
   </script>
+
+  <!-- Estilos extra para tokens -->
   <style>
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateX(-50%) translateY(20px); }
-      to { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .token-hotspot .info-hotspot-header {
+      background-color: #FFB703 !important;
     }
-    /* Opcional: estilo para hotspots token */
-    .token-hotspot-icon {
-      width: 100%;
-      height: 100%;
+    .token-hotspot .info-hotspot-icon-wrapper img {
+      /* Opcional: filtro para icono de token */
     }
   </style>
 </head>
