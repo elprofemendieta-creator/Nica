@@ -1,0 +1,2 @@
+<script src="/departamento/js/leon.js"></script>
+<link rel="stylesheet" href="/departamentos/css/leon.css">
