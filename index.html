@@ -7,7 +7,7 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
- <style>
+<style>
     * {
       margin: 0;
       padding: 0;
@@ -599,7 +599,8 @@
       "imports": {
         "firebase/app": "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js",
         "firebase/auth": "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js",
-        "firebase/firestore": "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"
+        "firebase/firestore": "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js",
+        "firebase/storage": "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js"
       }
     }
   </script>
@@ -608,6 +609,7 @@
     import { initializeApp } from "firebase/app";
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, sendPasswordResetEmail, updateProfile } from "firebase/auth";
     import { getFirestore, doc, setDoc, getDoc, updateDoc } from "firebase/firestore";
+    import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
 
     const firebaseConfig = {
       apiKey: "AIzaSyA6jVICuE17KJcO34gE1brMxqWEfNd3Fy0",
@@ -621,6 +623,7 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
+    const storage = getStorage(app);
 
     const authCard = document.getElementById('authCard');
     const menuSection = document.getElementById('menuSection');
@@ -648,11 +651,47 @@
     ];
     const FALLBACK = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
 
+    let fotoTemporal = null;
+
     function showToast(msg, isError = false) {
       toastDiv.textContent = msg;
       toastDiv.style.display = 'block';
       toastDiv.style.background = isError ? 'rgba(220,53,69,0.95)' : 'rgba(0,0,0,0.85)';
       setTimeout(() => toastDiv.style.display = 'none', 3000);
+    }
+
+    async function uploadProfileImage(file, userId) {
+      try {
+        // Crear referencia única para la imagen
+        const storageRef = ref(storage, `profile_images/${userId}/${Date.now()}_${file.name}`);
+        
+        // Subir la imagen
+        const snapshot = await uploadBytes(storageRef, file);
+        
+        // Obtener URL de descarga
+        const downloadURL = await getDownloadURL(snapshot.ref);
+        
+        // Si el usuario tenía una imagen anterior, eliminarla (opcional)
+        const userRef = doc(db, 'usuarios', userId);
+        const userSnap = await getDoc(userRef);
+        const oldPhotoURL = userSnap.data()?.fotoURL;
+        
+        // Si la URL antigua es de Firebase Storage, eliminarla
+        if (oldPhotoURL && oldPhotoURL.includes('firebasestorage')) {
+          try {
+            // Extraer la ruta de la URL
+            const oldRef = ref(storage, oldPhotoURL);
+            await deleteObject(oldRef);
+          } catch (e) {
+            console.log('No se pudo eliminar la imagen anterior:', e);
+          }
+        }
+        
+        return downloadURL;
+      } catch (error) {
+        console.error('Error al subir imagen:', error);
+        throw error;
+      }
     }
 
     async function guardarEnFirestore(user, extra = {}) {
@@ -702,6 +741,8 @@
         img.onclick = () => {
           document.querySelectorAll('.avatar-pred').forEach(a => a.classList.remove('selected'));
           img.classList.add('selected');
+          // Para avatares predeterminados, guardamos la URL directamente
+          fotoTemporal = url;
           modalProfileImage.src = url;
         };
         avatarGrid.appendChild(img);
@@ -712,24 +753,41 @@
       const user = auth.currentUser;
       if (!user) return;
       
-      if (nuevoNombre && nuevoNombre !== user.displayName) {
-        await updateProfile(user, { displayName: nuevoNombre });
+      try {
+        let fotoURL = nuevaFoto;
+        
+        // Si es un archivo (File), subirlo a Storage
+        if (nuevaFoto instanceof File) {
+          showToast('📤 Subiendo imagen...');
+          fotoURL = await uploadProfileImage(nuevaFoto, user.uid);
+        }
+        
+        // Actualizar perfil en Auth
+        if (nuevoNombre && nuevoNombre !== user.displayName) {
+          await updateProfile(user, { displayName: nuevoNombre });
+        }
+        
+        // Actualizar Firestore
+        const ref = doc(db, 'usuarios', user.uid);
+        const updates = {};
+        if (nuevoNombre) updates.nombre = nuevoNombre;
+        if (fotoURL) updates.fotoURL = fotoURL;
+        await updateDoc(ref, updates);
+        
+        // Actualizar UI
+        userNameSpan.textContent = nuevoNombre || user.displayName;
+        profileNameDisplay.textContent = nuevoNombre || user.displayName;
+        if (fotoURL) profileAvatar.src = fotoURL;
+        
+        showToast('✅ Perfil actualizado');
+        editModal.style.display = 'none';
+      } catch (error) {
+        console.error('Error al guardar perfil:', error);
+        showToast('Error al guardar: ' + error.message, true);
       }
-      
-      const ref = doc(db, 'usuarios', user.uid);
-      const updates = {};
-      if (nuevoNombre) updates.nombre = nuevoNombre;
-      if (nuevaFoto) updates.fotoURL = nuevaFoto;
-      await updateDoc(ref, updates);
-      
-      userNameSpan.textContent = nuevoNombre || user.displayName;
-      profileNameDisplay.textContent = nuevoNombre || user.displayName;
-      if (nuevaFoto) profileAvatar.src = nuevaFoto;
-      
-      showToast('✅ Perfil actualizado');
-      editModal.style.display = 'none';
     }
 
+    // Event Listeners
     document.getElementById('doLoginBtn').onclick = async () => {
       const email = document.getElementById('loginEmail').value.trim();
       const pass = document.getElementById('loginPassword').value;
@@ -774,16 +832,16 @@
       loginForm.style.display = 'none';
       registerForm.style.display = 'block';
     };
+    
     document.getElementById('backToLoginBtn').onclick = () => {
       registerForm.style.display = 'none';
       loginForm.style.display = 'block';
     };
+    
     document.getElementById('logoutBtn').onclick = async () => {
       await signOut(auth);
       showToast('👋 Sesión cerrada');
     };
-
-    let fotoTemporal = null;
 
     document.getElementById('editProfileBtn').onclick = async () => {
       const user = auth.currentUser;
@@ -808,12 +866,15 @@
       if (!file.type.startsWith('image/')) return showToast('Selecciona una imagen', true);
       if (file.size > 5 * 1024 * 1024) return showToast('Máximo 5MB', true);
       
+      // Guardar el archivo directamente, no la URL base64
+      fotoTemporal = file;
+      
+      // Mostrar preview
       const reader = new FileReader();
       reader.onload = (ev) => {
-        fotoTemporal = ev.target.result;
-        modalProfileImage.src = fotoTemporal;
+        modalProfileImage.src = ev.target.result;
         document.querySelectorAll('.avatar-pred').forEach(a => a.classList.remove('selected'));
-        showToast('Foto cargada, guarda los cambios');
+        showToast('📷 Foto seleccionada, guarda los cambios');
       };
       reader.readAsDataURL(file);
     };
@@ -858,20 +919,20 @@
       }
     });
   </script>
-  <!-- Default Statcounter code for guia_pinolera https://guiapinolero.netlify.app
--->
-<script type="text/javascript">
-var sc_project=13287173; 
-var sc_invisible=1; 
-var sc_security="b52e73f2"; 
-</script>
-<script type="text/javascript"
-src="https://www.statcounter.com/counter/counter.js" async></script>
-<noscript><div class="statcounter"><a title="Web Analytics"
-href="https://statcounter.com/" target="_blank"><img class="statcounter"
-src="https://c.statcounter.com/13287173/0/b52e73f2/1/" alt="Web Analytics"
-referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
-<!-- End of Statcounter Code -->
-<a href="https://statcounter.com/p13287173/?guest=1">View My Stats</a>
+  
+  <!-- Default Statcounter code for guia_pinolera https://guiapinolero.netlify.app -->
+  <script type="text/javascript">
+    var sc_project=13287173; 
+    var sc_invisible=1; 
+    var sc_security="b52e73f2"; 
+  </script>
+  <script type="text/javascript"
+    src="https://www.statcounter.com/counter/counter.js" async></script>
+  <noscript><div class="statcounter"><a title="Web Analytics"
+    href="https://statcounter.com/" target="_blank"><img class="statcounter"
+    src="https://c.statcounter.com/13287173/0/b52e73f2/1/" alt="Web Analytics"
+    referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
+  <!-- End of Statcounter Code -->
+  <a href="https://statcounter.com/p13287173/?guest=1">View My Stats</a>
 </body>
 </html>
