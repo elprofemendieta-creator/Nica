@@ -293,30 +293,67 @@
     const roomCodeFromUrl = urlParams.get('room');
 
     // ================= AUTENTICACIÓN AUTOMÁTICA =================
-    async function iniciarSesionAutomatica() {
-        try {
+  
+async function iniciarSesionAutomatica() {
+    try {
+        // Si ya hay un usuario autenticado (por la guía pinolera), lo usamos
+        let user = auth.currentUser;
+        if (!user) {
+            // Solo si no hay sesión, iniciamos una anónima
             const userCred = await auth.signInAnonymously();
-            const user = userCred.user;
-            // Buscar o crear documento en colección "usuarios"
-            const userRef = db.collection("usuarios").doc(user.uid);
-            const snap = await userRef.get();
-            if (!snap.exists) {
-                const randomName = "Pinolero" + Math.floor(Math.random() * 1000);
-                const avatarOptions = ["🌽", "🦜", "🌋", "🏝️", "🎭", "🇳🇮"];
-                const avatar = avatarOptions[Math.floor(Math.random() * avatarOptions.length)];
-                await userRef.set({
-                    uid: user.uid,
-                    nombre: randomName,
-                    avatar: avatar,
-                    nivel: "Novato Pinolero",
-                    experiencia: 0,
-                    puntosGlobales: 0,
-                    victorias: 0,
-                    partidasJugadas: 0,
-                    mejorPuntuacion: 0,
-                    isGuest: true
-                });
-                currentUserData = { uid: user.uid, nombre: randomName, avatar, nivel: "Novato Pinolero", puntosGlobales: 0, victorias: 0, partidasJugadas: 0 };
+            user = userCred.user;
+        }
+
+        // Buscar o crear documento en colección "usuarios"
+        const userRef = db.collection("usuarios").doc(user.uid);
+        const snap = await userRef.get();
+        if (!snap.exists) {
+            const randomName = "Pinolero" + Math.floor(Math.random() * 1000);
+            const avatarOptions = ["🌽", "🦜", "🌋", "🏝️", "🎭", "🇳🇮"];
+            const avatar = avatarOptions[Math.floor(Math.random() * avatarOptions.length)];
+            await userRef.set({
+                uid: user.uid,
+                nombre: randomName,
+                avatar: avatar,
+                nivel: "Novato Pinolero",
+                experiencia: 0,
+                puntosGlobales: 0,
+                victorias: 0,
+                partidasJugadas: 0,
+                mejorPuntuacion: 0,
+                isGuest: true
+            });
+            currentUserData = { uid: user.uid, nombre: randomName, avatar, nivel: "Novato Pinolero", puntosGlobales: 0, victorias: 0, partidasJugadas: 0 };
+        } else {
+            const data = snap.data();
+            currentUserData = { uid: user.uid, ...data };
+        }
+        updateUserUI();
+        mostrarPanelPrincipal();
+        if (roomCodeFromUrl) setTimeout(() => joinRoomWithCode(roomCodeFromUrl), 1000);
+    } catch (error) {
+        console.error("Error de autenticación:", error);
+        alert("Error al conectar con la Guía Pinolera.\n" + error.message);
+    }
+}
+
+// Listener para el botón Continuar
+continueBtn.addEventListener('click', async () => {
+    // Verificar si Firebase ya tiene un usuario listo (puede estar cargando)
+    auth.onAuthStateChanged(async (user) => {
+        // Este listener se dispara inmediatamente con el estado actual
+        if (user || auth.currentUser) {
+            // Ya hay usuario, procedemos directamente
+            await iniciarSesionAutomatica();
+        } else {
+            // No hay usuario, forzamos el inicio anónimo
+            await iniciarSesionAutomatica();
+        }
+    });
+});
+    
+    //usuario
+    currentUserData = { uid: user.uid, nombre: randomName, avatar, nivel: "Novato Pinolero", puntosGlobales: 0, victorias: 0, partidasJugadas: 0 };
             } else {
                 const data = snap.data();
                 currentUserData = { uid: user.uid, ...data };
