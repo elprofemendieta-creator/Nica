@@ -571,7 +571,8 @@
           <i class="fas fa-camera"></i>
         </div>
       </div>
-      <input type="file" id="uploadPhoto" accept="image/*" capture="environment" style="display: none;" />
+      <!-- CORREGIDO: Sin capture para que abra la galería -->
+      <input type="file" id="uploadPhoto" accept="image/*" style="display: none;" />
       
       <div class="input-group">
         <label style="color:white;">Nombre completo:</label>
@@ -731,7 +732,6 @@
         return;
       }
       try {
-        // Extraer la ruta del archivo de la URL
         const url = new URL(oldPhotoURL);
         const path = decodeURIComponent(url.pathname.split('/o/')[1].split('?')[0]);
         const oldRef = ref(storage, path);
@@ -804,7 +804,6 @@
       try {
         showToast('💾 Guardando cambios...');
         
-        // Actualizar nombre en Firebase Auth
         if (nuevoNombre && nuevoNombre !== user.displayName) {
           await updateProfile(user, { displayName: nuevoNombre });
         }
@@ -816,9 +815,7 @@
         const updates = {};
         if (nuevoNombre) updates.nombre = nuevoNombre;
         
-        // *** CORRECCIÓN IMPORTANTE: Siempre guardar la foto si hay una nueva ***
         if (nuevaFoto && nuevaFoto !== oldData.fotoURL) {
-          // Si la foto anterior era de Firebase Storage, eliminarla
           if (oldData.fotoURL && oldData.fotoURL.includes('firebasestorage')) {
             await deleteOldAvatar(user.uid, oldData.fotoURL);
           }
@@ -827,7 +824,6 @@
         
         await updateDoc(ref, updates);
         
-        // Actualizar UI
         userNameSpan.textContent = nuevoNombre || user.displayName;
         profileNameDisplay.textContent = nuevoNombre || user.displayName;
         if (nuevaFoto) {
@@ -931,19 +927,17 @@
 
     document.getElementById('uploadPhotoIcon').onclick = () => uploadPhoto.click();
     
-    // *** CORRECCIÓN IMPORTANTE: Evento para subir foto ***
+    // Evento para subir foto desde la galería
     uploadPhoto.onchange = async (e) => {
       const file = e.target.files[0];
       if (!file) return;
       
-      // Validar que sea una imagen
       if (!file.type.startsWith('image/')) {
         showToast('Selecciona una imagen válida', true);
         uploadPhoto.value = '';
         return;
       }
       
-      // Validar tamaño (máximo 5MB)
       if (file.size > 5 * 1024 * 1024) {
         showToast('La imagen no puede superar los 5MB', true);
         uploadPhoto.value = '';
@@ -959,28 +953,17 @@
         }
         
         showToast('📤 Subiendo foto...');
-        
-        // Subir la foto a Firebase Storage
         const downloadURL = await uploadAvatar(file, user.uid);
-        
-        // Guardar la URL en la variable temporal
         fotoTemporal = downloadURL;
         avatarSubido = true;
-        
-        // Actualizar la vista previa
         modalProfileImage.src = downloadURL;
-        
-        // Deseleccionar avatares predeterminados
         document.querySelectorAll('.avatar-pred').forEach(a => a.classList.remove('selected'));
-        
         showToast('✅ Foto subida correctamente. ¡Guarda los cambios!');
-        
       } catch (error) {
         console.error('Error al subir foto:', error);
         showToast('❌ Error al subir la foto: ' + error.message, true);
       }
       
-      // Limpiar el input para poder seleccionar la misma imagen nuevamente
       uploadPhoto.value = '';
     };
 
@@ -991,7 +974,6 @@
         return;
       }
       
-      // Asegurarse de que fotoTemporal tenga un valor
       if (!fotoTemporal) {
         showToast('No hay foto seleccionada', true);
         return;
@@ -1020,7 +1002,6 @@
       window.open(`https://wa.me/50588170531?text=${msg}`, '_blank');
     };
 
-    // Escuchar cambios de autenticación
     onAuthStateChanged(auth, (user) => {
       if (user) {
         authCard.style.display = 'none';
