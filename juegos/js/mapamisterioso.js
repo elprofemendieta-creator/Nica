@@ -3,35 +3,35 @@ const lugares = [
     {
         nombre: "Catedral de León",
         departamento: "León",
-        imagen: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Catedral_de_Le%C3%B3n%2C_Le%C3%B3n%2C_Nicaragua.jpg/800px-Catedral_de_Le%C3%B3n%2C_Le%C3%B3n%2C_Nicaragua.jpg",
+        imagen: "https://upload.wikimedia.org/wikipedia/commons/2/29/Catedral_Leon_Nicaragua.jpg",
         pista: "Tiene la catedral más grande de Centroamérica",
         region: "leon"
     },
     {
         nombre: "Isla de Ometepe",
         departamento: "Rivas",
-        imagen: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Ometepe_Island_from_San_Jorge.jpg/800px-Ometepe_Island_from_San_Jorge.jpg",
+        imagen: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Ometepe.jpg/330px-Ometepe.jpg",
         pista: "Está formada por dos volcanes en un lago",
         region: "rivas"
     },
     {
         nombre: "Cañón de Somoto",
         departamento: "Madriz",
-        imagen: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Somoto_Canyon_3.jpg/800px-Somoto_Canyon_3.jpg",
+        imagen: "https://images.ctfassets.net/wka5p55uxbqr/7q7zDs3SLB8g8h1QnxWqcc/216faff814bf1489cff70d698cbee85e/canion-somoto.jpg?w=1920&q=90",
         pista: "Es un cañón formado por el río Coco",
         region: "madriz"
     },
     {
         nombre: "Volcán Masaya",
         departamento: "Masaya",
-        imagen: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Volc%C3%A1n_Masaya_%28Nicaragua%29.jpg/800px-Volc%C3%A1n_Masaya_%28Nicaragua%29.jpg",
+        imagen: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Cratervolcan.jpg/330px-Cratervolcan.jpg",
         pista: "Es conocido como 'La Boca del Infierno'",
         region: "masaya"
     },
     {
         nombre: "Corn Islands",
         departamento: "RAAS",
-        imagen: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Corn_Island_%28Nicaragua%29.jpg/800px-Corn_Island_%28Nicaragua%29.jpg",
+        imagen: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/CornIsland.JPG/250px-CornIsland.JPG",
         pista: "Islas caribeñas con aguas cristalinas",
         region: "raas"
     }
