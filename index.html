@@ -4,15 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>Guía Pinolero - Descubre Nicaragua</title>
-  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet" />
-  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-  <!-- CSS propio -->
   <link rel="stylesheet" href="inicial.css" />
 </head>
 <body>
-  <!-- Fondo decorativo -->
   <div class="wave-bg">
     <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
       <path fill="rgba(255,255,255,0.08)" d="M0,192L48,197.3C96,203,192,213,288,208C384,203,480,181,576,176C672,171,768,181,864,197.3C960,213,1056,235,1152,224C1248,213,1344,171,1392,149.3L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
@@ -20,14 +16,13 @@
   </div>
 
   <div class="container">
-    <!-- Tarjeta de autenticación -->
     <div id="authCard" class="glass-card">
       <div class="mascota">
         <img src="https://cdn-icons-png.flaticon.com/512/4712/4712109.png" alt="Mascota" />
       </div>
       <h1>Guía Pinolero</h1>
       <p class="subtitle">🌋 Explora Nicaragua jugando 🌊</p>
-
+      
       <div id="loginForm">
         <div class="input-group">
           <input type="email" id="loginEmail" placeholder="📧 Correo electrónico" />
@@ -42,7 +37,7 @@
         <div class="divider"><span>o</span></div>
         <button id="showRegisterBtn" class="btn btn-outline">✨ Crear cuenta nueva</button>
       </div>
-
+      
       <div id="registerForm" style="display:none;">
         <div class="input-group">
           <input type="text" id="regName" placeholder="👤 Nombre completo" />
@@ -57,11 +52,10 @@
         <button id="backToLoginBtn" class="btn btn-outline">← Volver</button>
       </div>
     </div>
-
-    <!-- Menú principal (visible tras login) -->
+    
     <div id="menuSection" class="menu-section">
       <h2>¡Bienvenido, <span id="userName"></span>!</h2>
-
+      
       <div class="profile-header">
         <div class="profile-info">
           <img id="profileAvatar" class="profile-avatar" src="" alt="Avatar" />
@@ -71,7 +65,7 @@
           <i class="fas fa-pen"></i> Editar perfil
         </button>
       </div>
-
+      
       <div class="menu-buttons">
         <a href="../juegos/juegos.html" class="menu-card">
           <span>🎮</span><h3>Juegos Turísticos</h3>
@@ -92,7 +86,7 @@
           <span>🏬🛒</span><h3>Promociones</h3>
         </a>
       </div>
-
+      
       <div class="logout-wrapper">
         <button id="logoutBtn" class="btn btn-outline">
           <i class="fas fa-sign-out-alt"></i> Cerrar sesión
@@ -101,11 +95,10 @@
     </div>
   </div>
 
-  <!-- Modal Editar Perfil -->
   <div id="editProfileModal" class="modal">
     <div class="modal-content">
       <h3><i class="fas fa-user-edit"></i> Editar perfil</h3>
-
+      
       <div class="profile-pic-edit">
         <img id="modalProfileImage" src="" alt="Foto" />
         <div class="camera-icon" id="uploadPhotoIcon">
@@ -113,43 +106,39 @@
         </div>
       </div>
       <input type="file" id="uploadPhoto" accept="image/*" style="display: none;" />
-
+      
       <div class="input-group">
         <label style="color:white;">Nombre completo:</label>
         <input type="text" id="editNameInput" placeholder="Tu nombre" />
       </div>
-
+      
       <label style="color:white;">O elige una foto predeterminada:</label>
       <div class="avatar-grid" id="avatarGrid"></div>
-
+      
       <button id="saveProfileBtn" class="btn btn-primary">Guardar cambios</button>
       <button id="closeModalBtn" class="btn btn-outline">Cancelar</button>
     </div>
   </div>
 
-  <!-- Botón WhatsApp -->
   <div class="whatsapp-container">
     <a href="#" class="whatsapp-float" id="whatsappBtn">
       <i class="fab fa-whatsapp"></i>
     </a>
   </div>
 
-  <!-- Toast -->
   <div id="toast" class="toast-message" style="display: none;"></div>
 
-  <!-- Firebase Import Map -->
+  <!-- Firebase Import Map (sin storage) -->
   <script type="importmap">
     {
       "imports": {
         "firebase/app": "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js",
         "firebase/auth": "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js",
-        "firebase/firestore": "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js",
-        "firebase/storage": "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js"
+        "firebase/firestore": "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"
       }
     }
   </script>
 
-  <!-- JS propio (módulo) -->
   <script type="module" src="inicial.js"></script>
 
   <!-- Statcounter (opcional) -->
