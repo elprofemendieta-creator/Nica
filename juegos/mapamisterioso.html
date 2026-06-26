@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#0a3d5e">
+    <title>El Gran Mapa Misterioso - Guía Pinolero</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-container">
+        <!-- Encabezado -->
+        <header>
+            <h1>🗺️ El Gran Mapa Misterioso</h1>
+            <p>¿Reconoces este lugar de Nicaragua?</p>
+        </header>
+
+        <!-- Área del juego -->
+        <main id="game-area">
+            <!-- Foto a adivinar -->
+            <div id="photo-container">
+                <img id="place-image" src="" alt="Lugar misterioso">
+                <div id="hint">💡 Pista: <span id="hint-text"></span></div>
+            </div>
+
+            <!-- Botones de departamentos (en lugar del mapa) -->
+            <div id="buttons-container">
+                <h3>📍 Selecciona un departamento:</h3>
+                <div id="department-buttons">
+                    <button class="dept-btn" data-region="leon">León</button>
+                    <button class="dept-btn" data-region="rivas">Rivas</button>
+                    <button class="dept-btn" data-region="madriz">Madriz</button>
+                    <button class="dept-btn" data-region="masaya">Masaya</button>
+                    <button class="dept-btn" data-region="raas">RAAS</button>
+                    <!-- Agrega más departamentos según necesites -->
+                </div>
+                <div id="click-feedback">Elige un departamento para adivinar</div>
+            </div>
+
+            <!-- Puntuación y controles -->
+            <div id="game-controls">
+                <div id="score">🏆 Puntos: <span id="score-value">0</span></div>
+                <div id="attempts">Intentos: <span id="attempts-value">3</span></div>
+                <button id="next-round">Siguiente Lugar ➜</button>
+                <button id="reset-game">🔄 Reiniciar</button>
+            </div>
+        </main>
+
+        <!-- Resultado Modal -->
+        <div id="result-modal" class="hidden">
+            <div id="result-content">
+                <h2 id="result-title">🎉 ¡Correcto!</h2>
+                <p id="result-message">Has adivinado el lugar</p>
+                <button id="result-button">Continuar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
