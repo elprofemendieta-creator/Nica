@@ -24,7 +24,6 @@
             align-items: flex-start;
             padding: 20px;
         }
-        /* ========== MODALES DE AUTENTICACIÓN ========== */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -79,7 +78,6 @@
         .modal-card button:hover { background: #1e3c72; transform: scale(1.02); }
         .error-msg { color: #e74c3c; font-size: 13px; margin-top: 12px; }
 
-        /* ========== CONTENIDO PRINCIPAL ========== */
         .main-content {
             display: none;
             width: 100%;
@@ -101,7 +99,7 @@
         }
         .header h1 { color: #1e3c72; font-size: 1.8rem; display: flex; align-items: center; gap: 10px; }
         .user-info { background: #eef2fc; border-radius: 20px; padding: 5px 15px; font-weight: 500; }
-        .button-group { display: flex; gap: 15px; flex-wrap: wrap; }
+        .button-group { display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 25px; }
         .btn {
             border: none;
             padding: 12px 24px;
@@ -121,7 +119,6 @@
         .btn-danger:hover { background: #c0392b; transform: translateY(-2px); }
         .btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-        /* ========== SECCIONES DE ADMINISTRACIÓN ========== */
         .admin-section {
             background: #f9fafb;
             border-radius: 20px;
@@ -130,12 +127,6 @@
             border: 1px solid #e2e8f0;
         }
         .admin-section h3 { margin-bottom: 15px; color: #1e3c72; }
-        .form-row { display: flex; gap: 15px; flex-wrap: wrap; align-items: center; }
-        .form-row input { flex: 1 1 200px; padding: 12px 18px; border: 1px solid #ddd; border-radius: 50px; }
-        .form-row button { flex: 0 0 auto; }
-        .result-msg { margin-top: 10px; font-size: 14px; }
-
-        /* ========== TABLA ========== */
         .stats-info {
             background: #eef2fc;
             border-radius: 24px;
@@ -153,6 +144,7 @@
         tr:hover { background: #f8fafc; }
         .loading { text-align: center; padding: 40px; color: #2a5298; font-weight: bold; }
         footer { margin-top: 25px; text-align: center; font-size: 12px; color: #7f8c8d; }
+        .result-msg { margin-top: 10px; font-size: 14px; }
 
         @media (max-width: 700px) {
             .main-content { padding: 18px; }
@@ -163,7 +155,7 @@
 </head>
 <body>
 
-<!-- ==================== MODAL 1: CONTRASEÑA ==================== -->
+<!-- MODAL CONTRASEÑA -->
 <div id="passwordModal" class="modal-overlay">
     <div class="modal-card">
         <h2>🔐 Panel de Administración</h2>
@@ -171,11 +163,10 @@
         <input type="password" id="passwordInput" placeholder="Contraseña" autofocus>
         <button id="verifyPasswordBtn">Continuar</button>
         <div id="loginError" class="error-msg"></div>
-        <p style="font-size:12px; margin-top:15px; color:#888;">Roles: admin / auditor</p>
     </div>
 </div>
 
-<!-- ==================== MODAL 2: CÓDIGO 2FA ==================== -->
+<!-- MODAL 2FA -->
 <div id="twoFactorModal" class="modal-overlay" style="display:none;">
     <div class="modal-card">
         <h2>📱 Verificación en dos pasos</h2>
@@ -186,10 +177,10 @@
     </div>
 </div>
 
-<!-- ==================== PANEL PRINCIPAL ==================== -->
+<!-- PANEL PRINCIPAL -->
 <div id="mainContent" class="main-content">
     <div class="header">
-        <h1>📍 Estadísticas de visitas por lugar</h1>
+        <h1>📍 Panel de Administración</h1>
         <div class="user-info">
             <span id="rolBadge" style="margin-right:10px;"></span>
             <span id="sessionTimer" style="font-weight:bold;"></span>
@@ -197,52 +188,57 @@
         </div>
     </div>
 
-    <!-- Botones de acción principales -->
-    <div class="button-group" style="margin-bottom:25px;">
-        <button id="verOnlineBtn" class="btn btn-primary" disabled>📊 Cargar estadísticas</button>
-        <button id="descargarExcelBtn" class="btn btn-success" disabled>📎 Descargar Excel</button>
-    </div>
-
-    <!-- ========== SECCIÓN ADMIN: ELIMINAR USUARIO ========== -->
-    <div class="admin-section" id="deleteUserSection">
-        <h3>🗑️ Eliminar usuario</h3>
-        <div class="form-row">
-            <input type="text" id="deleteUserIdInput" placeholder="UID del usuario a eliminar">
-            <button id="deleteUserBtn" class="btn btn-danger">Eliminar usuario</button>
+    <!-- SECCIÓN: ESTADÍSTICAS DE VISITAS -->
+    <div class="admin-section">
+        <h3>📊 Estadísticas de visitas por lugar</h3>
+        <div class="button-group">
+            <button id="verEstadisticasBtn" class="btn btn-primary" disabled>📊 Cargar estadísticas</button>
+            <button id="descargarExcelBtn" class="btn btn-success" disabled>📎 Descargar Excel</button>
         </div>
-        <div id="deleteUserMsg" class="result-msg"></div>
-    </div>
-
-    <!-- ========== SECCIÓN ADMIN: ELIMINAR COMENTARIO ========== -->
-    <div class="admin-section" id="deleteCommentSection">
-        <h3>💬 Eliminar comentario</h3>
-        <div class="form-row">
-            <input type="text" id="deleteCommentIdInput" placeholder="ID del comentario a eliminar">
-            <button id="deleteCommentBtn" class="btn btn-danger">Eliminar comentario</button>
+        <div class="stats-info">
+            <span>📌 Registros: <strong id="totalRegistros">0</strong></span>
+            <span>👥 Usuarios distintos: <strong id="totalUsuarios">0</strong></span>
+            <span>🏷️ Lugares distintos: <strong id="totalLugares">0</strong></span>
         </div>
-        <div id="deleteCommentMsg" class="result-msg"></div>
+        <div class="table-container">
+            <table>
+                <thead><tr><th>Usuario</th><th>Lugar</th><th>Visitas</th></tr></thead>
+                <tbody id="tablaEstadisticas"><tr><td colspan="3" style="text-align:center">Presiona "Cargar estadísticas"</td></tr></tbody>
+            </table>
+        </div>
     </div>
 
-    <!-- Resumen de datos -->
-    <div class="stats-info">
-        <span>📌 Datos agregados: <strong id="totalRegistros">0</strong> visitas registradas</span>
-        <span>👥 Usuarios distintos: <strong id="totalUsuarios">0</strong></span>
-        <span>🏷️ Lugares distintos: <strong id="totalLugares">0</strong></span>
+    <!-- SECCIÓN: COMENTARIOS -->
+    <div class="admin-section">
+        <h3>💬 Comentarios</h3>
+        <button id="cargarComentariosBtn" class="btn btn-primary" style="margin-bottom:15px;">🔄 Cargar comentarios</button>
+        <div class="table-container">
+            <table>
+                <thead><tr><th>Autor</th><th>Comentario</th><th>Fecha</th><th>Acción</th></tr></thead>
+                <tbody id="tablaComentarios"><tr><td colspan="4" style="text-align:center">Sin datos</td></tr></tbody>
+            </table>
+        </div>
+        <div id="comentariosMsg" class="result-msg"></div>
     </div>
 
-    <!-- Tabla de estadísticas -->
-    <div class="table-container">
-        <table id="dataTable">
-            <thead><tr><th>Usuario (nombre)</th><th>Lugar (nombre)</th><th>Número de visitas</th></tr></thead>
-            <tbody id="tableBody"><tr><td colspan="3" style="text-align:center">Presiona "Cargar estadísticas" para ver los datos</td></tr></tbody>
-        </table>
+    <!-- SECCIÓN: USUARIOS -->
+    <div class="admin-section">
+        <h3>👥 Usuarios registrados</h3>
+        <button id="cargarUsuariosBtn" class="btn btn-primary" style="margin-bottom:15px;">🔄 Cargar usuarios</button>
+        <div class="table-container">
+            <table>
+                <thead><tr><th>UID</th><th>Nombre</th><th>Acción</th></tr></thead>
+                <tbody id="tablaUsuarios"><tr><td colspan="3" style="text-align:center">Sin datos</td></tr></tbody>
+            </table>
+        </div>
+        <div id="usuariosMsg" class="result-msg"></div>
     </div>
 
     <footer>⚡ Panel multiusuario con roles y verificación en dos pasos.</footer>
 </div>
 
 <script>
-    // ================= CONFIGURACIÓN DE FIREBASE =================
+    // ================= CONFIGURACIÓN FIREBASE =================
     const firebaseConfig = {
         apiKey: "AIzaSyA6jVICuE17KJcO34gE1brMxqWEfNd3Fy0",
         authDomain: "mapa-41b00.firebaseapp.com",
@@ -254,233 +250,170 @@
     };
     // =============================================================
 
-    // ================= SISTEMA DE ROLES Y CREDENCIALES =================
+    // Sistema de roles y credenciales
     const ROLES = {
         admin: {
-            password: "admin2026",      // Contraseña de administrador
-            twoFactorCode: "123456",    // Código 2FA para admin
+            password: "admin2026",
+            twoFactorCode: "123456",
             label: "Administrador",
             permissions: ["deleteUser", "deleteComment", "viewStats", "exportExcel"]
         },
         auditor: {
             password: "auditor2026",
-            twoFactorCode: "654321",    // Código 2FA para auditor
+            twoFactorCode: "654321",
             label: "Auditor",
-            permissions: ["viewStats", "exportExcel"]   // Solo lectura
+            permissions: ["viewStats", "exportExcel"]
         }
     };
-    const SESSION_DURATION = 30 * 60 * 1000; // 30 minutos de inactividad
+    const SESSION_DURATION = 30 * 60 * 1000; // 30 min
 
-    // ================= ESTADO GLOBAL =================
     let app, db;
-    let currentRole = null;            // 'admin' o 'auditor'
-    let currentUser = null;           // nombre del rol
+    let currentRole = null;
     let autenticado = false;
-    let sessionTimeout = null;
-    let inactivityTimer = null;
+    let sessionTimeout, inactivityTimer;
     let datosActuales = [];
 
-    // ================= ELEMENTOS DEL DOM =================
-    // Modales
+    // Elementos DOM principales
     const passwordModal = document.getElementById('passwordModal');
     const twoFactorModal = document.getElementById('twoFactorModal');
-    const passwordInput = document.getElementById('passwordInput');
-    const verifyPasswordBtn = document.getElementById('verifyPasswordBtn');
-    const loginError = document.getElementById('loginError');
-    const twoFactorInput = document.getElementById('twoFactorInput');
-    const verify2FABtn = document.getElementById('verify2FABtn');
-    const twoFactorError = document.getElementById('twoFactorError');
-    // Panel
     const mainContent = document.getElementById('mainContent');
     const rolBadge = document.getElementById('rolBadge');
     const sessionTimer = document.getElementById('sessionTimer');
     const logoutBtn = document.getElementById('logoutBtn');
-    // Estadísticas
-    const verOnlineBtn = document.getElementById('verOnlineBtn');
+    const verEstadisticasBtn = document.getElementById('verEstadisticasBtn');
     const descargarBtn = document.getElementById('descargarExcelBtn');
-    const tableBody = document.getElementById('tableBody');
+    const tablaEstadisticas = document.getElementById('tablaEstadisticas');
     const totalRegistrosSpan = document.getElementById('totalRegistros');
     const totalUsuariosSpan = document.getElementById('totalUsuarios');
     const totalLugaresSpan = document.getElementById('totalLugares');
-    // Admin
-    const deleteUserSection = document.getElementById('deleteUserSection');
-    const deleteCommentSection = document.getElementById('deleteCommentSection');
-    const deleteUserIdInput = document.getElementById('deleteUserIdInput');
-    const deleteUserBtn = document.getElementById('deleteUserBtn');
-    const deleteUserMsg = document.getElementById('deleteUserMsg');
-    const deleteCommentIdInput = document.getElementById('deleteCommentIdInput');
-    const deleteCommentBtn = document.getElementById('deleteCommentBtn');
-    const deleteCommentMsg = document.getElementById('deleteCommentMsg');
+    const cargarComentariosBtn = document.getElementById('cargarComentariosBtn');
+    const tablaComentarios = document.getElementById('tablaComentarios');
+    const comentariosMsg = document.getElementById('comentariosMsg');
+    const cargarUsuariosBtn = document.getElementById('cargarUsuariosBtn');
+    const tablaUsuarios = document.getElementById('tablaUsuarios');
+    const usuariosMsg = document.getElementById('usuariosMsg');
 
-    // ================= FUNCIONES DE UTILIDAD =================
-    function escapeHtml(str) {
-        if (!str) return '';
-        return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'})[m]);
-    }
-
-    // ================= GESTIÓN DE SESIÓN =================
+    // ================= FUNCIONES DE SESIÓN =================
     function saveSession() {
-        const sessionData = {
+        sessionStorage.setItem('adminSession', JSON.stringify({
             role: currentRole,
             timestamp: Date.now()
-        };
-        sessionStorage.setItem('adminSession', JSON.stringify(sessionData));
+        }));
     }
-
     function clearSession() {
         sessionStorage.removeItem('adminSession');
         currentRole = null;
-        currentUser = null;
         autenticado = false;
         clearTimeout(sessionTimeout);
         clearTimeout(inactivityTimer);
+        window.removeEventListener('mousemove', resetInactivityTimer);
+        window.removeEventListener('keydown', resetInactivityTimer);
     }
-
     function restoreSession() {
         const saved = sessionStorage.getItem('adminSession');
         if (!saved) return false;
         try {
             const data = JSON.parse(saved);
-            const elapsed = Date.now() - data.timestamp;
-            if (elapsed > SESSION_DURATION) {
+            if (Date.now() - data.timestamp > SESSION_DURATION) {
                 clearSession();
                 return false;
             }
-            // Restaurar rol
             if (ROLES[data.role]) {
                 currentRole = data.role;
-                currentUser = ROLES[data.role].label;
                 autenticado = true;
                 mostrarPanel();
-                iniciarControlInactividad();
-                actualizarSessionTimeout();
+                iniciarInactividad();
+                actualizarTimeout();
                 return true;
             }
         } catch (e) {}
         clearSession();
         return false;
     }
-
     function logout() {
         clearSession();
         mainContent.style.display = 'none';
         passwordModal.style.display = 'flex';
         twoFactorModal.style.display = 'none';
-        passwordInput.value = '';
-        twoFactorInput.value = '';
-        loginError.textContent = '';
-        twoFactorError.textContent = '';
-        // Limpiar listeners de inactividad
-        window.removeEventListener('mousemove', resetInactivityTimer);
-        window.removeEventListener('keydown', resetInactivityTimer);
+        document.getElementById('passwordInput').value = '';
+        document.getElementById('twoFactorInput').value = '';
     }
-
-    function actualizarSessionTimeout() {
+    function actualizarTimeout() {
         if (sessionTimeout) clearTimeout(sessionTimeout);
         sessionTimeout = setTimeout(() => {
             alert('⏰ Sesión expirada por inactividad.');
             logout();
         }, SESSION_DURATION);
     }
-
-    function iniciarControlInactividad() {
+    function iniciarInactividad() {
         resetInactivityTimer();
         window.addEventListener('mousemove', resetInactivityTimer);
         window.addEventListener('keydown', resetInactivityTimer);
     }
-
     function resetInactivityTimer() {
         if (inactivityTimer) clearTimeout(inactivityTimer);
-        inactivityTimer = setTimeout(() => {
-            actualizarSessionTimeout();
-        }, 500); // pequeño retraso para agrupar eventos
+        inactivityTimer = setTimeout(() => actualizarTimeout(), 500);
     }
 
-    // ================= AUTENTICACIÓN EN DOS PASOS =================
-    verifyPasswordBtn.addEventListener('click', primerPaso);
-    passwordInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') primerPaso(); });
-
-    function primerPaso() {
-        const pass = passwordInput.value.trim();
-        loginError.textContent = '';
-        // Verificar contra todas las contraseñas de roles
-        let foundRole = null;
+    // ================= AUTENTICACIÓN 2FA =================
+    document.getElementById('verifyPasswordBtn').addEventListener('click', paso1);
+    document.getElementById('passwordInput').addEventListener('keypress', (e) => { if (e.key === 'Enter') paso1(); });
+    function paso1() {
+        const pass = document.getElementById('passwordInput').value.trim();
+        document.getElementById('loginError').textContent = '';
+        let found = null;
         for (const [role, data] of Object.entries(ROLES)) {
-            if (pass === data.password) {
-                foundRole = role;
-                break;
-            }
+            if (pass === data.password) { found = role; break; }
         }
-        if (!foundRole) {
-            loginError.textContent = '❌ Contraseña incorrecta.';
-            passwordInput.value = '';
+        if (!found) {
+            document.getElementById('loginError').textContent = '❌ Contraseña incorrecta.';
+            document.getElementById('passwordInput').value = '';
             return;
         }
-        // Guardar temporalmente el rol candidato
-        window._tempRole = foundRole;
-        // Ocultar modal de contraseña y mostrar modal 2FA
+        window._tempRole = found;
         passwordModal.style.display = 'none';
         twoFactorModal.style.display = 'flex';
-        twoFactorInput.value = '';
-        twoFactorInput.focus();
-        twoFactorError.textContent = '';
+        document.getElementById('twoFactorInput').value = '';
+        document.getElementById('twoFactorError').textContent = '';
+        document.getElementById('twoFactorInput').focus();
     }
-
-    verify2FABtn.addEventListener('click', segundoPaso);
-    twoFactorInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') segundoPaso(); });
-
-    function segundoPaso() {
-        const code = twoFactorInput.value.trim();
-        twoFactorError.textContent = '';
-        const tempRole = window._tempRole;
-        if (!tempRole || !ROLES[tempRole]) {
-            twoFactorError.textContent = 'Error de sesión. Regrese al inicio.';
+    document.getElementById('verify2FABtn').addEventListener('click', paso2);
+    document.getElementById('twoFactorInput').addEventListener('keypress', (e) => { if (e.key === 'Enter') paso2(); });
+    function paso2() {
+        const code = document.getElementById('twoFactorInput').value.trim();
+        document.getElementById('twoFactorError').textContent = '';
+        const role = window._tempRole;
+        if (!role || !ROLES[role]) {
+            document.getElementById('twoFactorError').textContent = 'Error de sesión.';
             return;
         }
-        const expectedCode = ROLES[tempRole].twoFactorCode;
-        if (code !== expectedCode) {
-            twoFactorError.textContent = '❌ Código de verificación incorrecto.';
-            twoFactorInput.value = '';
+        if (code !== ROLES[role].twoFactorCode) {
+            document.getElementById('twoFactorError').textContent = '❌ Código incorrecto.';
+            document.getElementById('twoFactorInput').value = '';
             return;
         }
-        // Autenticación exitosa
         window._tempRole = null;
-        currentRole = tempRole;
-        currentUser = ROLES[currentRole].label;
+        currentRole = role;
         autenticado = true;
         twoFactorModal.style.display = 'none';
         saveSession();
         mostrarPanel();
-        iniciarControlInactividad();
-        actualizarSessionTimeout();
+        iniciarInactividad();
+        actualizarTimeout();
+        setInterval(actualizarTimerVisual, 60000);
+        actualizarTimerVisual();
     }
 
     function mostrarPanel() {
         mainContent.style.display = 'block';
-        rolBadge.innerHTML = `🔰 Rol: <strong>${currentUser}</strong>`;
-        // Mostrar/ocultar secciones según permisos
-        const permisos = ROLES[currentRole].permissions;
-        if (permisos.includes('deleteUser')) {
-            deleteUserSection.style.display = 'block';
-            deleteUserBtn.disabled = false;
-        } else {
-            deleteUserSection.style.display = 'block'; // Se muestra pero con mensaje
-            deleteUserBtn.disabled = true;
-            deleteUserMsg.textContent = '⛔ Solo el administrador puede eliminar usuarios.';
-        }
-        if (permisos.includes('deleteComment')) {
-            deleteCommentSection.style.display = 'block';
-            deleteCommentBtn.disabled = false;
-        } else {
-            deleteCommentSection.style.display = 'block';
-            deleteCommentBtn.disabled = true;
-            deleteCommentMsg.textContent = '⛔ Solo el administrador puede eliminar comentarios.';
-        }
-        // Inicializar Firebase
+        rolBadge.innerHTML = `🔰 Rol: <strong>${ROLES[currentRole].label}</strong>`;
         inicializarFirebase();
-        // Iniciar temporizador visual (se actualiza cada minuto)
-        setInterval(actualizarTimerVisual, 60000);
-        actualizarTimerVisual();
+        verEstadisticasBtn.disabled = false;
+        // Permisos
+        const permisos = ROLES[currentRole].permissions;
+        if (!permisos.includes('deleteComment')) {
+            // Ocultaremos botones de eliminación más tarde, pero dejamos cargar datos
+        }
     }
 
     function actualizarTimerVisual() {
@@ -488,239 +421,216 @@
         if (saved) {
             const data = JSON.parse(saved);
             const restante = Math.max(0, SESSION_DURATION - (Date.now() - data.timestamp));
-            const minutos = Math.floor(restante / 60000);
-            const segundos = Math.floor((restante % 60000) / 1000);
-            sessionTimer.textContent = `⏳ ${minutos}:${segundos < 10 ? '0' : ''}${segundos}`;
+            const mins = Math.floor(restante / 60000);
+            const secs = Math.floor((restante % 60000) / 1000);
+            sessionTimer.textContent = `⏳ ${mins}:${secs < 10 ? '0' : ''}${secs}`;
         }
     }
 
     logoutBtn.addEventListener('click', logout);
 
-    // ================= FUNCIONES DE FIREBASE =================
+    // ================= FIREBASE INIT =================
     function inicializarFirebase() {
-        if (firebaseConfig.apiKey.includes("TU_API_KEY")) {
-            mostrarErrorConfiguracion();
-            return;
-        }
         try {
             if (!firebase.apps.length) app = firebase.initializeApp(firebaseConfig);
             else app = firebase.app();
             db = firebase.firestore(app);
-            verOnlineBtn.disabled = false;
-            verOnlineBtn.style.opacity = '1';
-            console.log("✅ Firebase conectado.");
-        } catch (error) {
-            console.error(error);
-            mostrarErrorConfiguracion("Error de conexión.");
+            console.log("✅ Firebase listo");
+        } catch (e) {
+            console.error(e);
+            alert("Error conectando Firebase");
         }
     }
 
-    function mostrarErrorConfiguracion(msg = "⚠️ Configuración de Firebase incompleta.") {
-        tableBody.innerHTML = `<tr><td colspan="3" style="color:red; text-align:center">${msg}</td></tr>`;
-        verOnlineBtn.disabled = true;
-        descargarBtn.disabled = true;
-    }
+    // ================= ESTADÍSTICAS DE VISITAS =================
+    verEstadisticasBtn.addEventListener('click', cargarEstadisticas);
+    descargarBtn.addEventListener('click', exportarExcel);
 
-    // ================= ESTADÍSTICAS (sin cambios) =================
     async function obtenerNombresUsuarios(userIds) {
-        if (!userIds.length) return new Map();
         const map = new Map();
-        try {
-            const promises = userIds.map(async (uid) => {
-                const docSnap = await db.collection("usuarios").doc(uid).get();
-                if (docSnap.exists) {
-                    const nombre = docSnap.data().nombre || uid;
-                    map.set(uid, nombre);
-                } else {
-                    map.set(uid, uid);
-                }
-            });
-            await Promise.all(promises);
-        } catch (error) {
-            console.error(error);
-            userIds.forEach(uid => map.set(uid, uid));
-        }
+        if (!userIds.length) return map;
+        const promises = userIds.map(async (uid) => {
+            const snap = await db.collection("usuarios").doc(uid).get();
+            const nombre = snap.exists ? (snap.data().nombre || uid) : uid;
+            map.set(uid, nombre);
+        });
+        await Promise.all(promises);
         return map;
     }
 
     async function obtenerNombresLugares(placeIds) {
-        if (!placeIds.length) return new Map();
         const map = new Map();
-        try {
-            const promises = placeIds.map(async (pid) => {
-                const docSnap = await db.collection("lugares").doc(pid).get();
-                if (docSnap.exists) {
-                    const nombre = docSnap.data().nombre || pid;
-                    map.set(pid, nombre);
-                } else {
-                    map.set(pid, pid);
-                }
-            });
-            await Promise.all(promises);
-        } catch (error) {
-            console.error(error);
-            placeIds.forEach(pid => map.set(pid, pid));
-        }
+        if (!placeIds.length) return map;
+        const promises = placeIds.map(async (pid) => {
+            const snap = await db.collection("lugares").doc(pid).get();
+            const nombre = snap.exists ? (snap.data().nombre || pid) : pid;
+            map.set(pid, nombre);
+        });
+        await Promise.all(promises);
         return map;
     }
 
-    async function cargarDatosEstadisticos() {
-        if (!db) {
-            alert("Firebase no inicializado.");
-            return;
-        }
-        tableBody.innerHTML = '<tr><td colspan="3" class="loading">🔄 Cargando datos...</td></tr>';
+    async function cargarEstadisticas() {
+        tablaEstadisticas.innerHTML = '<tr><td colspan="3" class="loading">Cargando...</td></tr>';
         descargarBtn.disabled = true;
         try {
-            const visitasSnapshot = await db.collection("visitas").get();
-            if (visitasSnapshot.empty) {
-                tableBody.innerHTML = '<tr><td colspan="3" style="text-align:center">📭 Sin registros.</td></tr>';
+            const snapshot = await db.collection("visitas").get();
+            if (snapshot.empty) {
+                tablaEstadisticas.innerHTML = '<tr><td colspan="3">Sin visitas</td></tr>';
                 actualizarResumen(0,0,0);
                 datosActuales = [];
                 descargarBtn.disabled = true;
                 return;
             }
-
             const userIdsSet = new Set();
             const lugarIdsSet = new Set();
             const visitasRaw = [];
-            visitasSnapshot.forEach(doc => {
-                const data = doc.data();
-                const uid = data.usuarioId || data.usuario_id || "desconocido";
-                const lid = data.lugarId || data.lugar_id || "desconocido";
+            snapshot.forEach(doc => {
+                const d = doc.data();
+                const uid = d.usuarioId || d.usuario_id || "?";
+                const lid = d.lugarId || d.lugar_id || "?";
                 userIdsSet.add(uid);
                 lugarIdsSet.add(lid);
-                visitasRaw.push({ usuarioId: uid, lugarId: lid });
+                visitasRaw.push({ uid, lid });
             });
-
-            const [userNamesMap, placeNamesMap] = await Promise.all([
+            const [userNames, placeNames] = await Promise.all([
                 obtenerNombresUsuarios(Array.from(userIdsSet)),
                 obtenerNombresLugares(Array.from(lugarIdsSet))
             ]);
-
             const contador = new Map();
-            for (const visita of visitasRaw) {
-                const usuarioNombre = userNamesMap.get(visita.usuarioId) || visita.usuarioId;
-                const lugarNombre = placeNamesMap.get(visita.lugarId) || visita.lugarId;
-                const clave = `${usuarioNombre}|${lugarNombre}`;
-                if (contador.has(clave)) {
-                    contador.get(clave).visitas++;
-                } else {
-                    contador.set(clave, { usuarioNombre, lugarNombre, visitas: 1 });
-                }
-            }
-
-            const datosAgrupados = Array.from(contador.values());
-            datosAgrupados.sort((a,b) => b.visitas - a.visitas);
-            datosActuales = datosAgrupados;
-
-            const totalVisitasRaw = visitasRaw.length;
-            const usuariosUnicos = new Set(datosAgrupados.map(item => item.usuarioNombre));
-            const lugaresUnicos = new Set(datosAgrupados.map(item => item.lugarNombre));
-            actualizarResumen(totalVisitasRaw, usuariosUnicos.size, lugaresUnicos.size);
-            renderizarTabla(datosAgrupados);
+            visitasRaw.forEach(v => {
+                const uname = userNames.get(v.uid) || v.uid;
+                const pname = placeNames.get(v.lid) || v.lid;
+                const key = `${uname}|${pname}`;
+                if (contador.has(key)) contador.get(key).visitas++;
+                else contador.set(key, { usuario: uname, lugar: pname, visitas: 1 });
+            });
+            datosActuales = Array.from(contador.values()).sort((a,b) => b.visitas - a.visitas);
+            actualizarResumen(visitasRaw.length, new Set(datosActuales.map(d => d.usuario)).size, new Set(datosActuales.map(d => d.lugar)).size);
+            renderizarTablaEstadisticas(datosActuales);
             descargarBtn.disabled = false;
-        } catch (error) {
-            console.error(error);
-            tableBody.innerHTML = `<tr><td colspan="3" style="color:red">❌ Error: ${error.message}</td></tr>`;
-            descargarBtn.disabled = true;
+        } catch (e) {
+            tablaEstadisticas.innerHTML = `<tr><td colspan="3">Error: ${e.message}</td></tr>`;
         }
     }
 
-    function actualizarResumen(totalVisitas, totalUsers, totalLugares) {
-        totalRegistrosSpan.textContent = totalVisitas;
-        totalUsuariosSpan.textContent = totalUsers;
-        totalLugaresSpan.textContent = totalLugares;
+    function actualizarResumen(total, usuarios, lugares) {
+        totalRegistrosSpan.textContent = total;
+        totalUsuariosSpan.textContent = usuarios;
+        totalLugaresSpan.textContent = lugares;
     }
 
-    function renderizarTabla(datos) {
-        if (!datos.length) {
-            tableBody.innerHTML = '<tr><td colspan="3">Sin datos.</td></tr>';
-            return;
-        }
-        let html = '';
-        for (const item of datos) {
-            html += `<tr>
-                        <td>${escapeHtml(item.usuarioNombre)}</td>
-                        <td>${escapeHtml(item.lugarNombre)}</td>
-                        <td><strong>${item.visitas}</strong></td>
-                     </tr>`;
-        }
-        tableBody.innerHTML = html;
+    function renderizarTablaEstadisticas(datos) {
+        tablaEstadisticas.innerHTML = datos.map(d => `<tr><td>${escapeHtml(d.usuario)}</td><td>${escapeHtml(d.lugar)}</td><td><strong>${d.visitas}</strong></td></tr>`).join('');
     }
 
-    function exportarAExcel() {
-        if (!datosActuales || datosActuales.length === 0) {
-            alert("No hay datos para exportar.");
-            return;
-        }
-        const hojaData = [["Usuario", "Lugar", "Número de visitas"]];
-        for (const item of datosActuales) {
-            hojaData.push([item.usuarioNombre, item.lugarNombre, item.visitas]);
-        }
-        const ws = XLSX.utils.aoa_to_sheet(hojaData);
+    function exportarExcel() {
+        if (!datosActuales.length) return alert("Sin datos");
+        const ws = XLSX.utils.aoa_to_sheet([["Usuario","Lugar","Visitas"], ...datosActuales.map(d => [d.usuario, d.lugar, d.visitas])]);
         const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "Estadisticas_Visitas");
-        XLSX.writeFile(wb, `reporte_visitas_${new Date().toISOString().slice(0,19).replace(/:/g, '-')}.xlsx`);
+        XLSX.utils.book_append_sheet(wb, ws, "Visitas");
+        XLSX.writeFile(wb, `visitas_${new Date().toISOString().slice(0,10)}.xlsx`);
     }
 
-    // ================= FUNCIONES DE ADMINISTRACIÓN =================
-    deleteUserBtn.addEventListener('click', async () => {
-        const uid = deleteUserIdInput.value.trim();
-        if (!uid) {
-            deleteUserMsg.innerHTML = '❌ Debe ingresar un UID.';
-            return;
+    // ================= COMENTARIOS =================
+    cargarComentariosBtn.addEventListener('click', cargarComentarios);
+    async function cargarComentarios() {
+        tablaComentarios.innerHTML = '<tr><td colspan="4" class="loading">Cargando...</td></tr>';
+        comentariosMsg.textContent = '';
+        try {
+            const snap = await db.collection("comentarios").orderBy("fecha", "desc").get();
+            if (snap.empty) {
+                tablaComentarios.innerHTML = '<tr><td colspan="4">No hay comentarios</td></tr>';
+                return;
+            }
+            let html = '';
+            snap.forEach(doc => {
+                const d = doc.data();
+                const autor = d.usuarioNombre || d.autor || d.usuarioId || "Anónimo";
+                const texto = d.texto || d.comentario || "";
+                const fecha = d.fecha ? new Date(d.fecha.seconds * 1000).toLocaleString() : "Sin fecha";
+                const deleteBtn = ROLES[currentRole].permissions.includes('deleteComment')
+                    ? `<button class="btn btn-danger" style="padding:5px 15px;" onclick="eliminarComentario('${doc.id}')">🗑️ Borrar</button>`
+                    : `<button class="btn" disabled style="padding:5px 15px;">🔒 Sin permiso</button>`;
+                html += `<tr>
+                    <td>${escapeHtml(autor)}</td>
+                    <td>${escapeHtml(texto)}</td>
+                    <td>${fecha}</td>
+                    <td>${deleteBtn}</td>
+                </tr>`;
+            });
+            tablaComentarios.innerHTML = html;
+        } catch (e) {
+            tablaComentarios.innerHTML = `<tr><td colspan="4">Error: ${e.message}</td></tr>`;
         }
-        if (!ROLES[currentRole].permissions.includes('deleteUser')) {
-            deleteUserMsg.innerHTML = '⛔ No tiene permisos.';
-            return;
+    }
+
+    window.eliminarComentario = async function(id) {
+        if (!confirm("¿Eliminar este comentario?")) return;
+        try {
+            await db.collection("comentarios").doc(id).delete();
+            comentariosMsg.innerHTML = '✅ Comentario eliminado.';
+            cargarComentarios();
+        } catch (e) {
+            comentariosMsg.innerHTML = `❌ Error: ${e.message}`;
         }
+    };
+
+    // ================= USUARIOS =================
+    cargarUsuariosBtn.addEventListener('click', cargarUsuarios);
+    async function cargarUsuarios() {
+        tablaUsuarios.innerHTML = '<tr><td colspan="3" class="loading">Cargando...</td></tr>';
+        usuariosMsg.textContent = '';
+        try {
+            const snap = await db.collection("usuarios").get();
+            if (snap.empty) {
+                tablaUsuarios.innerHTML = '<tr><td colspan="3">No hay usuarios</td></tr>';
+                return;
+            }
+            let html = '';
+            snap.forEach(doc => {
+                const d = doc.data();
+                const nombre = d.nombre || d.email || doc.id;
+                const deleteBtn = ROLES[currentRole].permissions.includes('deleteUser')
+                    ? `<button class="btn btn-danger" style="padding:5px 15px;" onclick="eliminarUsuario('${doc.id}')">🗑️ Borrar</button>`
+                    : `<button class="btn" disabled style="padding:5px 15px;">🔒 Sin permiso</button>`;
+                html += `<tr>
+                    <td>${escapeHtml(doc.id)}</td>
+                    <td>${escapeHtml(nombre)}</td>
+                    <td>${deleteBtn}</td>
+                </tr>`;
+            });
+            tablaUsuarios.innerHTML = html;
+        } catch (e) {
+            tablaUsuarios.innerHTML = `<tr><td colspan="3">Error: ${e.message}</td></tr>`;
+        }
+    }
+
+    window.eliminarUsuario = async function(uid) {
+        if (!confirm(`¿Eliminar permanentemente al usuario ${uid}?`)) return;
         try {
             await db.collection("usuarios").doc(uid).delete();
-            deleteUserMsg.innerHTML = '✅ Usuario eliminado exitosamente.';
-            deleteUserIdInput.value = '';
+            // También podrías borrar sus comentarios/visitas si quieres, pero por ahora solo el documento
+            usuariosMsg.innerHTML = '✅ Usuario eliminado.';
+            cargarUsuarios();
         } catch (e) {
-            deleteUserMsg.innerHTML = `❌ Error: ${e.message}`;
+            usuariosMsg.innerHTML = `❌ Error: ${e.message}`;
         }
-    });
+    };
 
-    deleteCommentBtn.addEventListener('click', async () => {
-        const commentId = deleteCommentIdInput.value.trim();
-        if (!commentId) {
-            deleteCommentMsg.innerHTML = '❌ Debe ingresar un ID de comentario.';
-            return;
-        }
-        if (!ROLES[currentRole].permissions.includes('deleteComment')) {
-            deleteCommentMsg.innerHTML = '⛔ No tiene permisos.';
-            return;
-        }
-        try {
-            await db.collection("comentarios").doc(commentId).delete();
-            deleteCommentMsg.innerHTML = '✅ Comentario eliminado exitosamente.';
-            deleteCommentIdInput.value = '';
-        } catch (e) {
-            deleteCommentMsg.innerHTML = `❌ Error: ${e.message}`;
-        }
-    });
+    // Utils
+    function escapeHtml(str) {
+        return (str || '').replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'})[m]);
+    }
 
-    // ================= EVENTOS INICIALES =================
-    verOnlineBtn.addEventListener('click', cargarDatosEstadisticos);
-    descargarBtn.addEventListener('click', exportarAExcel);
-
-    // Al cargar la página: intentar restaurar sesión o mostrar modal de contraseña
+    // Inicio
     window.addEventListener('load', () => {
         if (!restoreSession()) {
             mainContent.style.display = 'none';
             passwordModal.style.display = 'flex';
-            twoFactorModal.style.display = 'none';
         }
     });
-
-    // Limpiar sesión al cerrar pestaña (sessionStorage se borra solo, pero aseguramos)
-    window.addEventListener('beforeunload', () => {
-        // sessionStorage se elimina automáticamente al cerrar pestaña, pero podemos forzarlo
-        clearSession();
-    });
+    window.addEventListener('beforeunload', () => clearSession());
 </script>
 </body>
 </html>
