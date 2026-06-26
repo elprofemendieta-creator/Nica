@@ -1,7 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, sendPasswordResetEmail, updateProfile } from "firebase/auth";
 import { getFirestore, doc, setDoc, getDoc, updateDoc } from "firebase/firestore";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+// Ya NO importamos firebase/storage
 
 const firebaseConfig = {
   apiKey: "AIzaSyA6jVICuE17KJcO34gE1brMxqWEfNd3Fy0",
@@ -15,9 +15,8 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
-const storage = getStorage(app);
 
-// Elementos DOM
+// Elementos DOM (igual que antes)
 const authCard = document.getElementById('authCard');
 const menuSection = document.getElementById('menuSection');
 const userNameSpan = document.getElementById('userName');
@@ -33,6 +32,7 @@ const avatarGrid = document.getElementById('avatarGrid');
 const uploadPhoto = document.getElementById('uploadPhoto');
 const saveProfileBtn = document.getElementById('saveProfileBtn');
 
+// Imágenes predeterminadas (puedes mantener las mismas)
 const DEFAULT_AVATARS = [
   "https://imgur.com/CFcEYQZ.jpg",
   "https://imgur.com/rf8HVpD.jpg",
@@ -56,7 +56,7 @@ function showToast(msg, isError = false, duration = 3000) {
   toastDiv._timeout = setTimeout(() => toastDiv.style.display = 'none', duration);
 }
 
-// Compresión de imagen
+// ===== COMPRESIÓN DE IMAGEN (igual que antes) =====
 function compressImage(file) {
   return new Promise((resolve, reject) => {
     try {
@@ -107,26 +107,36 @@ function compressImage(file) {
   });
 }
 
-// Subir imagen a Storage (usa nombre fijo para sobrescribir)
-async function uploadProfileImage(file, userId) {
-  try {
-    const compressed = await compressImage(file);
-    const fileName = `profile_${userId}.jpg`; // nombre fijo
-    const storageRef = ref(storage, `profile_images/${userId}/${fileName}`);
-    const metadata = {
-      contentType: 'image/jpeg',
-      customMetadata: { uploadedBy: userId }
-    };
-    const snapshot = await uploadBytes(storageRef, compressed, metadata);
-    const downloadURL = await getDownloadURL(snapshot.ref);
-    return downloadURL;
-  } catch (error) {
-    console.error('Error al subir imagen:', error);
-    throw new Error('No se pudo subir la imagen. Verifica tu conexión y permisos.');
+// ===== SUBIR A IMGBB =====
+async function uploadToImgBB(file) {
+  // Convertir el archivo a base64
+  const reader = new FileReader();
+  const dataUrl = await new Promise((resolve, reject) => {
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+  const base64 = dataUrl.split(',')[1]; // extraer solo la parte base64
+
+  const formData = new FormData();
+  formData.append('key', '241be8181060d6203088a57a14c355fa'); // Tu API key
+  formData.append('image', base64);
+
+  const response = await fetch('https://api.imgbb.com/1/upload', {
+    method: 'POST',
+    body: formData,
+  });
+  if (!response.ok) {
+    throw new Error('Error al subir a ImgBB (código ' + response.status + ')');
   }
+  const json = await response.json();
+  if (!json.success) {
+    throw new Error(json.error?.message || 'Error desconocido en ImgBB');
+  }
+  return json.data.url; // URL pública de la imagen
 }
 
-// Guardar/crear usuario en Firestore
+// ===== GUARDAR EN FIRESTORE =====
 async function guardarEnFirestore(user, extra = {}) {
   const ref = doc(db, 'usuarios', user.uid);
   const snap = await getDoc(ref);
@@ -142,7 +152,7 @@ async function guardarEnFirestore(user, extra = {}) {
   }
 }
 
-// Cargar perfil en UI
+// ===== CARGAR PERFIL =====
 async function cargarPerfil(user) {
   if (!user) return;
   const ref = doc(db, 'usuarios', user.uid);
@@ -163,7 +173,7 @@ async function cargarPerfil(user) {
   profileAvatar.onerror = () => profileAvatar.src = FALLBACK;
 }
 
-// Renderizar avatares predeterminados
+// ===== RENDER AVATARES PREDETERMINADOS =====
 function renderAvatars(selected) {
   avatarGrid.innerHTML = '';
   DEFAULT_AVATARS.forEach(url => {
@@ -182,7 +192,7 @@ function renderAvatars(selected) {
   });
 }
 
-// Guardar perfil (nombre y foto)
+// ===== GUARDAR PERFIL (NOMBRE + FOTO) =====
 async function guardarPerfil(nuevoNombre, nuevaFoto) {
   const user = auth.currentUser;
   if (!user) {
@@ -197,10 +207,12 @@ async function guardarPerfil(nuevoNombre, nuevaFoto) {
   try {
     let fotoURL = null;
 
-    // Si es un archivo, subir a Storage
+    // Si es un archivo, subir a ImgBB
     if (nuevaFoto instanceof File) {
-      showToast('📤 Subiendo imagen...', false, 5000);
-      fotoURL = await uploadProfileImage(nuevaFoto, user.uid);
+      showToast('📤 Subiendo imagen a ImgBB...', false, 5000);
+      // Comprimir antes de subir
+      const compressed = await compressImage(nuevaFoto);
+      fotoURL = await uploadToImgBB(compressed);
     } else if (typeof nuevaFoto === 'string' && nuevaFoto.startsWith('http')) {
       fotoURL = nuevaFoto; // avatar predeterminado
     } else {
@@ -242,8 +254,7 @@ async function guardarPerfil(nuevoNombre, nuevaFoto) {
   }
 }
 
-// ------- Event Listeners -------
-
+// ===== EVENT LISTENERS (igual que antes) =====
 document.getElementById('doLoginBtn').onclick = async () => {
   const email = document.getElementById('loginEmail').value.trim();
   const pass = document.getElementById('loginPassword').value;
@@ -380,7 +391,6 @@ onAuthStateChanged(auth, (user) => {
     menuSection.style.display = 'none';
     loginForm.style.display = 'block';
     registerForm.style.display = 'none';
-    // Limpiar campos
     document.getElementById('loginEmail').value = '';
     document.getElementById('loginPassword').value = '';
     document.getElementById('regEmail').value = '';
