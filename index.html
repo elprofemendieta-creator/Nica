@@ -599,8 +599,7 @@
       "imports": {
         "firebase/app": "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js",
         "firebase/auth": "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js",
-        "firebase/firestore": "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js",
-        "firebase/storage": "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js"
+        "firebase/firestore": "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"
       }
     }
   </script>
@@ -609,7 +608,6 @@
     import { initializeApp } from "firebase/app";
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, sendPasswordResetEmail, updateProfile } from "firebase/auth";
     import { getFirestore, doc, setDoc, getDoc, updateDoc } from "firebase/firestore";
-    import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
 
     const firebaseConfig = {
       apiKey: "AIzaSyA6jVICuE17KJcO34gE1brMxqWEfNd3Fy0",
@@ -623,7 +621,6 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
-    const storage = getStorage(app);
 
     const authCard = document.getElementById('authCard');
     const menuSection = document.getElementById('menuSection');
@@ -651,39 +648,11 @@
     ];
     const FALLBACK = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
 
-    let fotoTemporal = null;
-    let urlSubida = false;
-
     function showToast(msg, isError = false) {
       toastDiv.textContent = msg;
       toastDiv.style.display = 'block';
       toastDiv.style.background = isError ? 'rgba(220,53,69,0.95)' : 'rgba(0,0,0,0.85)';
-      if (toastDiv.timeout) clearTimeout(toastDiv.timeout);
-      toastDiv.timeout = setTimeout(() => toastDiv.style.display = 'none', 3000);
-    }
-
-    // FUNCIÓN SIMPLIFICADA - Sin compresión para evitar errores
-    async function uploadAvatar(file, userId) {
-      try {
-        // Crear nombre único
-        const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.jpg`;
-        const storageRef = ref(storage, `avatars/${userId}/${fileName}`);
-        
-        console.log('📤 Subiendo archivo:', file.name, 'Tamaño:', file.size);
-        
-        // Subir el archivo directamente sin comprimir
-        const snapshot = await uploadBytes(storageRef, file);
-        console.log('✅ Archivo subido:', snapshot.ref.fullPath);
-        
-        // Obtener la URL de descarga
-        const downloadURL = await getDownloadURL(snapshot.ref);
-        console.log('📎 URL obtenida:', downloadURL);
-        
-        return downloadURL;
-      } catch (error) {
-        console.error('❌ Error en uploadAvatar:', error);
-        throw error;
-      }
+      setTimeout(() => toastDiv.style.display = 'none', 3000);
     }
 
     async function guardarEnFirestore(user, extra = {}) {
@@ -698,7 +667,6 @@
           puntos: 0,
           fechaRegistro: new Date()
         });
-        console.log('📝 Usuario creado en Firestore');
       }
     }
 
@@ -712,7 +680,6 @@
         const data = snap.data();
         nombre = data.nombre || user.displayName || user.email.split('@')[0];
         fotoURL = data.fotoURL || user.photoURL || FALLBACK;
-        console.log('📸 Foto cargada desde Firestore:', fotoURL);
       } else {
         nombre = user.displayName || user.email.split('@')[0];
         fotoURL = user.photoURL || FALLBACK;
@@ -736,9 +703,6 @@
           document.querySelectorAll('.avatar-pred').forEach(a => a.classList.remove('selected'));
           img.classList.add('selected');
           modalProfileImage.src = url;
-          fotoTemporal = url;
-          urlSubida = false;
-          console.log('🔄 Avatar predeterminado seleccionado:', url);
         };
         avatarGrid.appendChild(img);
       });
@@ -748,49 +712,24 @@
       const user = auth.currentUser;
       if (!user) return;
       
-      try {
-        showToast('💾 Guardando cambios...');
-        console.log('💾 Guardando perfil - Nombre:', nuevoNombre, 'Foto:', nuevaFoto);
-        
-        if (nuevoNombre && nuevoNombre !== user.displayName) {
-          await updateProfile(user, { displayName: nuevoNombre });
-          console.log('✅ Nombre actualizado en Auth');
-        }
-        
-        const ref = doc(db, 'usuarios', user.uid);
-        const snap = await getDoc(ref);
-        const oldData = snap.exists() ? snap.data() : {};
-        
-        const updates = {};
-        if (nuevoNombre) updates.nombre = nuevoNombre;
-        
-        // Guardar la foto SIEMPRE que haya una nueva
-        if (nuevaFoto) {
-          updates.fotoURL = nuevaFoto;
-          console.log('📸 Guardando nueva foto en Firestore:', nuevaFoto);
-        }
-        
-        await updateDoc(ref, updates);
-        console.log('✅ Firestore actualizado:', updates);
-        
-        // Actualizar UI
-        userNameSpan.textContent = nuevoNombre || user.displayName;
-        profileNameDisplay.textContent = nuevoNombre || user.displayName;
-        if (nuevaFoto) {
-          profileAvatar.src = nuevaFoto;
-        }
-        
-        showToast('✅ Perfil actualizado correctamente');
-        editModal.style.display = 'none';
-        urlSubida = false;
-      } catch (error) {
-        console.error('❌ Error guardando perfil:', error);
-        showToast('❌ Error al guardar: ' + error.message, true);
+      if (nuevoNombre && nuevoNombre !== user.displayName) {
+        await updateProfile(user, { displayName: nuevoNombre });
       }
+      
+      const ref = doc(db, 'usuarios', user.uid);
+      const updates = {};
+      if (nuevoNombre) updates.nombre = nuevoNombre;
+      if (nuevaFoto) updates.fotoURL = nuevaFoto;
+      await updateDoc(ref, updates);
+      
+      userNameSpan.textContent = nuevoNombre || user.displayName;
+      profileNameDisplay.textContent = nuevoNombre || user.displayName;
+      if (nuevaFoto) profileAvatar.src = nuevaFoto;
+      
+      showToast('✅ Perfil actualizado');
+      editModal.style.display = 'none';
     }
 
-    // ============ EVENT LISTENERS ============
-    
     document.getElementById('doLoginBtn').onclick = async () => {
       const email = document.getElementById('loginEmail').value.trim();
       const pass = document.getElementById('loginPassword').value;
@@ -799,13 +738,7 @@
         await signInWithEmailAndPassword(auth, email, pass);
         showToast('✅ Bienvenido');
       } catch (err) {
-        if (err.code === 'auth/user-not-found') {
-          showToast('Usuario no registrado', true);
-        } else if (err.code === 'auth/wrong-password') {
-          showToast('Contraseña incorrecta', true);
-        } else {
-          showToast('Error al iniciar sesión', true);
-        }
+        showToast('Credenciales incorrectas', true);
       }
     };
 
@@ -821,11 +754,7 @@
         await guardarEnFirestore(cred.user, { nombre: name, fotoURL: DEFAULT_AVATARS[0] });
         showToast('✅ Registro exitoso');
       } catch (err) {
-        if (err.code === 'auth/email-already-in-use') {
-          showToast('Este correo ya está registrado', true);
-        } else {
-          showToast('Error al registrarse: ' + err.message, true);
-        }
+        showToast(err.message.includes('email') ? 'Correo ya registrado' : 'Error', true);
       }
     };
 
@@ -834,13 +763,9 @@
       if (email && email.includes('@')) {
         try {
           await sendPasswordResetEmail(auth, email);
-          showToast('📨 Revisa tu correo (incluye SPAM)');
+          showToast('📨 Revisa tu correo (incluso SPAM)');
         } catch (err) {
-          if (err.code === 'auth/user-not-found') {
-            showToast('Correo no registrado', true);
-          } else {
-            showToast('Error: ' + err.message, true);
-          }
+          showToast(err.message.includes('user-not-found') ? 'Correo no registrado' : 'Error', true);
         }
       }
     };
@@ -849,16 +774,16 @@
       loginForm.style.display = 'none';
       registerForm.style.display = 'block';
     };
-    
     document.getElementById('backToLoginBtn').onclick = () => {
       registerForm.style.display = 'none';
       loginForm.style.display = 'block';
     };
-    
     document.getElementById('logoutBtn').onclick = async () => {
       await signOut(auth);
       showToast('👋 Sesión cerrada');
     };
+
+    let fotoTemporal = null;
 
     document.getElementById('editProfileBtn').onclick = async () => {
       const user = auth.currentUser;
@@ -873,101 +798,38 @@
       fotoTemporal = fotoActual;
       renderAvatars(fotoActual);
       editModal.style.display = 'flex';
-      urlSubida = false;
-      console.log('✏️ Editando perfil - Foto actual:', fotoActual);
     };
 
     document.getElementById('uploadPhotoIcon').onclick = () => uploadPhoto.click();
     
-    // ============ EVENTO PRINCIPAL PARA SUBIR FOTO ============
-    uploadPhoto.onchange = async (e) => {
+    uploadPhoto.onchange = (e) => {
       const file = e.target.files[0];
-      if (!file) {
-        console.log('⚠️ No se seleccionó ningún archivo');
-        return;
-      }
+      if (!file) return;
+      if (!file.type.startsWith('image/')) return showToast('Selecciona una imagen', true);
+      if (file.size > 5 * 1024 * 1024) return showToast('Máximo 5MB', true);
       
-      console.log('📁 Archivo seleccionado:', file.name, 'Tamaño:', file.size, 'Tipo:', file.type);
-      
-      // Validar que sea una imagen
-      if (!file.type.startsWith('image/')) {
-        showToast('Selecciona una imagen válida', true);
-        uploadPhoto.value = '';
-        return;
-      }
-      
-      // Validar tamaño (máximo 5MB)
-      if (file.size > 5 * 1024 * 1024) {
-        showToast('La imagen no puede superar los 5MB', true);
-        uploadPhoto.value = '';
-        return;
-      }
-      
-      try {
-        const user = auth.currentUser;
-        if (!user) {
-          showToast('Debes iniciar sesión', true);
-          uploadPhoto.value = '';
-          return;
-        }
-        
-        showToast('📤 Subiendo foto...');
-        console.log('🚀 Iniciando subida a Firebase Storage...');
-        
-        // Subir la foto a Firebase Storage
-        const downloadURL = await uploadAvatar(file, user.uid);
-        console.log('✅ URL obtenida de Storage:', downloadURL);
-        
-        // Guardar la URL en la variable temporal
-        fotoTemporal = downloadURL;
-        urlSubida = true;
-        
-        // Actualizar la vista previa
-        modalProfileImage.src = downloadURL;
-        console.log('🖼️ Vista previa actualizada');
-        
-        // Deseleccionar avatares predeterminados
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        fotoTemporal = ev.target.result;
+        modalProfileImage.src = fotoTemporal;
         document.querySelectorAll('.avatar-pred').forEach(a => a.classList.remove('selected'));
-        
-        showToast('✅ Foto subida correctamente. ¡Guarda los cambios!');
-        console.log('🎉 Proceso de subida completado exitosamente');
-        
-      } catch (error) {
-        console.error('❌ ERROR EN LA SUBIDA:', error);
-        showToast('❌ Error al subir la foto: ' + error.message, true);
-      }
-      
-      // Limpiar el input para poder seleccionar la misma imagen nuevamente
-      uploadPhoto.value = '';
+        showToast('Foto cargada, guarda los cambios');
+      };
+      reader.readAsDataURL(file);
     };
 
     document.getElementById('saveProfileBtn').onclick = async () => {
       const nuevoNombre = editNameInput.value.trim();
-      if (!nuevoNombre) {
-        showToast('El nombre no puede estar vacío', true);
-        return;
-      }
-      
-      console.log('💾 Guardando perfil - fotoTemporal:', fotoTemporal, 'urlSubida:', urlSubida);
-      
-      if (!fotoTemporal) {
-        showToast('No hay foto seleccionada', true);
-        return;
-      }
-      
+      if (!nuevoNombre) return showToast('El nombre no puede estar vacío', true);
       await guardarPerfil(nuevoNombre, fotoTemporal);
     };
 
     document.getElementById('closeModalBtn').onclick = () => {
       editModal.style.display = 'none';
-      urlSubida = false;
     };
 
     window.onclick = (e) => {
-      if (e.target === editModal) {
-        editModal.style.display = 'none';
-        urlSubida = false;
-      }
+      if (e.target === editModal) editModal.style.display = 'none';
     };
 
     document.getElementById('whatsappBtn').onclick = (e) => {
@@ -996,20 +858,20 @@
       }
     });
   </script>
-  
-  <!-- Default Statcounter code for guia_pinolera https://guiapinolero.netlify.app -->
-  <script type="text/javascript">
-    var sc_project=13287173; 
-    var sc_invisible=1; 
-    var sc_security="b52e73f2"; 
-  </script>
-  <script type="text/javascript"
-    src="https://www.statcounter.com/counter/counter.js" async></script>
-  <noscript><div class="statcounter"><a title="Web Analytics"
-    href="https://statcounter.com/" target="_blank"><img class="statcounter"
-    src="https://c.statcounter.com/13287173/0/b52e73f2/1/" alt="Web Analytics"
-    referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
-  <!-- End of Statcounter Code -->
-  <a href="https://statcounter.com/p13287173/?guest=1">View My Stats</a>
+  <!-- Default Statcounter code for guia_pinolera https://guiapinolero.netlify.app
+-->
+<script type="text/javascript">
+var sc_project=13287173; 
+var sc_invisible=1; 
+var sc_security="b52e73f2"; 
+</script>
+<script type="text/javascript"
+src="https://www.statcounter.com/counter/counter.js" async></script>
+<noscript><div class="statcounter"><a title="Web Analytics"
+href="https://statcounter.com/" target="_blank"><img class="statcounter"
+src="https://c.statcounter.com/13287173/0/b52e73f2/1/" alt="Web Analytics"
+referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
+<!-- End of Statcounter Code -->
+<a href="https://statcounter.com/p13287173/?guest=1">View My Stats</a>
 </body>
 </html>
