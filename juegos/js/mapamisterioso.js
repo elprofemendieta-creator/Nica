@@ -127,7 +127,7 @@ function handleDeptClick(regionKey, button) {
     
     if (isCorrect) {
         button.classList.add('correcto');
-        score += 5 + (attempts * 2);
+        score += 4 + (attempts * 2);
         scoreEl.textContent = score;
         feedbackEl.textContent = `✅ ¡Correcto! Era ${currentPlace.nombre}`;
         feedbackEl.style.color = '#2ecc71';
