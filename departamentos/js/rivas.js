@@ -1,4 +1,3 @@
-<script>
 
 const reveals = document.querySelectorAll(".reveal");
 
@@ -47,5 +46,3 @@ function darkMode(){
 document.body.classList.toggle("dark-mode");
 
 }
-
-</script>
