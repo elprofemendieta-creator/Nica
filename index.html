@@ -599,8 +599,7 @@
       "imports": {
         "firebase/app": "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js",
         "firebase/auth": "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js",
-        "firebase/firestore": "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js",
-        "firebase/storage": "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js"
+        "firebase/firestore": "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"
       }
     }
   </script>
@@ -609,7 +608,6 @@
     import { initializeApp } from "firebase/app";
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, sendPasswordResetEmail, updateProfile } from "firebase/auth";
     import { getFirestore, doc, setDoc, getDoc, updateDoc } from "firebase/firestore";
-    import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
 
     const firebaseConfig = {
       apiKey: "AIzaSyA6jVICuE17KJcO34gE1brMxqWEfNd3Fy0",
@@ -623,7 +621,6 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
-    const storage = getStorage(app);
 
     const authCard = document.getElementById('authCard');
     const menuSection = document.getElementById('menuSection');
@@ -651,96 +648,11 @@
     ];
     const FALLBACK = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
 
-    let fotoTemporal = null;
-    let avatarSubido = false;
-
     function showToast(msg, isError = false) {
       toastDiv.textContent = msg;
       toastDiv.style.display = 'block';
       toastDiv.style.background = isError ? 'rgba(220,53,69,0.95)' : 'rgba(0,0,0,0.85)';
-      if (toastDiv.timeout) clearTimeout(toastDiv.timeout);
-      toastDiv.timeout = setTimeout(() => toastDiv.style.display = 'none', 3000);
-    }
-
-    // Función para subir avatar a Firebase Storage
-    async function uploadAvatar(file, userId) {
-      try {
-        // Crear nombre único con timestamp para evitar colisiones
-        const fileExtension = file.name.split('.').pop();
-        const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExtension}`;
-        const storageRef = ref(storage, `avatars/${userId}/${fileName}`);
-        
-        // Comprimir imagen antes de subir (opcional pero recomendado)
-        const compressedFile = await compressImage(file);
-        
-        const snapshot = await uploadBytes(storageRef, compressedFile);
-        const downloadURL = await getDownloadURL(snapshot.ref);
-        return downloadURL;
-      } catch (error) {
-        console.error("Error subiendo avatar:", error);
-        throw error;
-      }
-    }
-
-    // Función para comprimir imagen (reduce tamaño)
-    function compressImage(file) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = (event) => {
-          const img = new Image();
-          img.src = event.target.result;
-          img.onload = () => {
-            const canvas = document.createElement('canvas');
-            const MAX_WIDTH = 400;
-            const MAX_HEIGHT = 400;
-            let width = img.width;
-            let height = img.height;
-
-            if (width > height) {
-              if (width > MAX_WIDTH) {
-                height *= MAX_WIDTH / width;
-                width = MAX_WIDTH;
-              }
-            } else {
-              if (height > MAX_HEIGHT) {
-                width *= MAX_HEIGHT / height;
-                height = MAX_HEIGHT;
-              }
-            }
-
-            canvas.width = width;
-            canvas.height = height;
-            const ctx = canvas.getContext('2d');
-            ctx.imageSmoothingEnabled = true;
-            ctx.imageSmoothingQuality = 'high';
-            ctx.drawImage(img, 0, 0, width, height);
-            
-            canvas.toBlob((blob) => {
-              if (blob) {
-                resolve(new File([blob], file.name, { type: 'image/jpeg', quality: 0.8 }));
-              } else {
-                reject(new Error('Error al comprimir imagen'));
-              }
-            }, 'image/jpeg', 0.8);
-          };
-          img.onerror = reject;
-        };
-        reader.onerror = reject;
-      });
-    }
-
-    // Función para eliminar avatar anterior
-    async function deleteOldAvatar(userId, oldPhotoURL) {
-      if (!oldPhotoURL || oldPhotoURL.startsWith('http') && !oldPhotoURL.includes('firebasestorage')) {
-        return; // No es una URL de Firebase Storage
-      }
-      try {
-        const oldRef = ref(storage, oldPhotoURL);
-        await deleteObject(oldRef);
-      } catch (error) {
-        console.log('No se pudo eliminar el avatar anterior:', error);
-      }
+      setTimeout(() => toastDiv.style.display = 'none', 3000);
     }
 
     async function guardarEnFirestore(user, extra = {}) {
@@ -791,8 +703,6 @@
           document.querySelectorAll('.avatar-pred').forEach(a => a.classList.remove('selected'));
           img.classList.add('selected');
           modalProfileImage.src = url;
-          fotoTemporal = url;
-          avatarSubido = false;
         };
         avatarGrid.appendChild(img);
       });
@@ -802,47 +712,24 @@
       const user = auth.currentUser;
       if (!user) return;
       
-      try {
-        showToast('💾 Guardando cambios...');
-        
-        // Actualizar nombre en Firebase Auth
-        if (nuevoNombre && nuevoNombre !== user.displayName) {
-          await updateProfile(user, { displayName: nuevoNombre });
-        }
-        
-        const ref = doc(db, 'usuarios', user.uid);
-        const snap = await getDoc(ref);
-        const oldData = snap.exists() ? snap.data() : {};
-        
-        const updates = {};
-        if (nuevoNombre) updates.nombre = nuevoNombre;
-        
-        // Si se subió una nueva foto (no es una URL predeterminada)
-        if (nuevaFoto && nuevaFoto !== oldData.fotoURL) {
-          // Si la foto anterior era de Firebase Storage, eliminarla
-          if (oldData.fotoURL && oldData.fotoURL.includes('firebasestorage')) {
-            await deleteOldAvatar(user.uid, oldData.fotoURL);
-          }
-          updates.fotoURL = nuevaFoto;
-        }
-        
-        await updateDoc(ref, updates);
-        
-        // Actualizar UI
-        userNameSpan.textContent = nuevoNombre || user.displayName;
-        profileNameDisplay.textContent = nuevoNombre || user.displayName;
-        if (nuevaFoto) profileAvatar.src = nuevaFoto;
-        
-        showToast('✅ Perfil actualizado correctamente');
-        editModal.style.display = 'none';
-        avatarSubido = false;
-      } catch (error) {
-        console.error('Error guardando perfil:', error);
-        showToast('❌ Error al guardar: ' + error.message, true);
+      if (nuevoNombre && nuevoNombre !== user.displayName) {
+        await updateProfile(user, { displayName: nuevoNombre });
       }
+      
+      const ref = doc(db, 'usuarios', user.uid);
+      const updates = {};
+      if (nuevoNombre) updates.nombre = nuevoNombre;
+      if (nuevaFoto) updates.fotoURL = nuevaFoto;
+      await updateDoc(ref, updates);
+      
+      userNameSpan.textContent = nuevoNombre || user.displayName;
+      profileNameDisplay.textContent = nuevoNombre || user.displayName;
+      if (nuevaFoto) profileAvatar.src = nuevaFoto;
+      
+      showToast('✅ Perfil actualizado');
+      editModal.style.display = 'none';
     }
 
-    // Event Listeners
     document.getElementById('doLoginBtn').onclick = async () => {
       const email = document.getElementById('loginEmail').value.trim();
       const pass = document.getElementById('loginPassword').value;
@@ -851,13 +738,7 @@
         await signInWithEmailAndPassword(auth, email, pass);
         showToast('✅ Bienvenido');
       } catch (err) {
-        if (err.code === 'auth/user-not-found') {
-          showToast('Usuario no registrado', true);
-        } else if (err.code === 'auth/wrong-password') {
-          showToast('Contraseña incorrecta', true);
-        } else {
-          showToast('Error al iniciar sesión', true);
-        }
+        showToast('Credenciales incorrectas', true);
       }
     };
 
@@ -873,11 +754,7 @@
         await guardarEnFirestore(cred.user, { nombre: name, fotoURL: DEFAULT_AVATARS[0] });
         showToast('✅ Registro exitoso');
       } catch (err) {
-        if (err.code === 'auth/email-already-in-use') {
-          showToast('Este correo ya está registrado', true);
-        } else {
-          showToast('Error al registrarse: ' + err.message, true);
-        }
+        showToast(err.message.includes('email') ? 'Correo ya registrado' : 'Error', true);
       }
     };
 
@@ -886,13 +763,9 @@
       if (email && email.includes('@')) {
         try {
           await sendPasswordResetEmail(auth, email);
-          showToast('📨 Revisa tu correo (incluye SPAM)');
+          showToast('📨 Revisa tu correo (incluso SPAM)');
         } catch (err) {
-          if (err.code === 'auth/user-not-found') {
-            showToast('Correo no registrado', true);
-          } else {
-            showToast('Error: ' + err.message, true);
-          }
+          showToast(err.message.includes('user-not-found') ? 'Correo no registrado' : 'Error', true);
         }
       }
     };
@@ -901,16 +774,16 @@
       loginForm.style.display = 'none';
       registerForm.style.display = 'block';
     };
-    
     document.getElementById('backToLoginBtn').onclick = () => {
       registerForm.style.display = 'none';
       loginForm.style.display = 'block';
     };
-    
     document.getElementById('logoutBtn').onclick = async () => {
       await signOut(auth);
       showToast('👋 Sesión cerrada');
     };
+
+    let fotoTemporal = null;
 
     document.getElementById('editProfileBtn').onclick = async () => {
       const user = auth.currentUser;
@@ -925,35 +798,24 @@
       fotoTemporal = fotoActual;
       renderAvatars(fotoActual);
       editModal.style.display = 'flex';
-      avatarSubido = false;
     };
 
     document.getElementById('uploadPhotoIcon').onclick = () => uploadPhoto.click();
     
-    uploadPhoto.onchange = async (e) => {
+    uploadPhoto.onchange = (e) => {
       const file = e.target.files[0];
       if (!file) return;
-      if (!file.type.startsWith('image/')) return showToast('Selecciona una imagen válida', true);
+      if (!file.type.startsWith('image/')) return showToast('Selecciona una imagen', true);
       if (file.size > 5 * 1024 * 1024) return showToast('Máximo 5MB', true);
       
-      try {
-        const user = auth.currentUser;
-        if (!user) {
-          showToast('Debes iniciar sesión', true);
-          return;
-        }
-        
-        showToast('📤 Subiendo foto...');
-        const downloadURL = await uploadAvatar(file, user.uid);
-        fotoTemporal = downloadURL;
-        modalProfileImage.src = downloadURL;
-        avatarSubido = true;
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        fotoTemporal = ev.target.result;
+        modalProfileImage.src = fotoTemporal;
         document.querySelectorAll('.avatar-pred').forEach(a => a.classList.remove('selected'));
-        showToast('✅ Foto subida correctamente');
-      } catch (error) {
-        console.error('Error:', error);
-        showToast('❌ Error al subir la foto', true);
-      }
+        showToast('Foto cargada, guarda los cambios');
+      };
+      reader.readAsDataURL(file);
     };
 
     document.getElementById('saveProfileBtn').onclick = async () => {
@@ -964,14 +826,10 @@
 
     document.getElementById('closeModalBtn').onclick = () => {
       editModal.style.display = 'none';
-      avatarSubido = false;
     };
 
     window.onclick = (e) => {
-      if (e.target === editModal) {
-        editModal.style.display = 'none';
-        avatarSubido = false;
-      }
+      if (e.target === editModal) editModal.style.display = 'none';
     };
 
     document.getElementById('whatsappBtn').onclick = (e) => {
@@ -982,7 +840,6 @@
       window.open(`https://wa.me/50588170531?text=${msg}`, '_blank');
     };
 
-    // Escuchar cambios de autenticación
     onAuthStateChanged(auth, (user) => {
       if (user) {
         authCard.style.display = 'none';
@@ -1001,20 +858,20 @@
       }
     });
   </script>
-  
-  <!-- Default Statcounter code for guia_pinolera https://guiapinolero.netlify.app -->
-  <script type="text/javascript">
-    var sc_project=13287173; 
-    var sc_invisible=1; 
-    var sc_security="b52e73f2"; 
-  </script>
-  <script type="text/javascript"
-    src="https://www.statcounter.com/counter/counter.js" async></script>
-  <noscript><div class="statcounter"><a title="Web Analytics"
-    href="https://statcounter.com/" target="_blank"><img class="statcounter"
-    src="https://c.statcounter.com/13287173/0/b52e73f2/1/" alt="Web Analytics"
-    referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
-  <!-- End of Statcounter Code -->
-  <a href="https://statcounter.com/p13287173/?guest=1">View My Stats</a>
+  <!-- Default Statcounter code for guia_pinolera https://guiapinolero.netlify.app
+-->
+<script type="text/javascript">
+var sc_project=13287173; 
+var sc_invisible=1; 
+var sc_security="b52e73f2"; 
+</script>
+<script type="text/javascript"
+src="https://www.statcounter.com/counter/counter.js" async></script>
+<noscript><div class="statcounter"><a title="Web Analytics"
+href="https://statcounter.com/" target="_blank"><img class="statcounter"
+src="https://c.statcounter.com/13287173/0/b52e73f2/1/" alt="Web Analytics"
+referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
+<!-- End of Statcounter Code -->
+<a href="https://statcounter.com/p13287173/?guest=1">View My Stats</a>
 </body>
 </html>
