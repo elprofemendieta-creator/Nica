@@ -682,7 +682,7 @@
       toastDiv._timeout = setTimeout(() => toastDiv.style.display = 'none', duration);
     }
 
-    // Función para comprimir imágenes - VERSIÓN SIMPLIFICADA Y MÁS ROBUSTA
+    // Función para comprimir imágenes
     function compressImage(file) {
       return new Promise((resolve, reject) => {
         try {
@@ -696,8 +696,7 @@
               let width = img.width;
               let height = img.height;
               
-              // Reducir si es muy grande
-              const MAX_SIZE = 800;
+              const MAX_SIZE = 600;
               if (width > MAX_SIZE || height > MAX_SIZE) {
                 if (width > height) {
                   height = height * (MAX_SIZE / width);
@@ -715,10 +714,8 @@
               ctx.imageSmoothingQuality = 'high';
               ctx.drawImage(img, 0, 0, width, height);
               
-              // Convertir a blob con calidad reducida
               canvas.toBlob((blob) => {
                 if (blob) {
-                  // Crear un nuevo File con el blob comprimido
                   const compressedFile = new File(
                     [blob], 
                     file.name.replace(/\.[^.]+$/, '.jpg'),
@@ -749,24 +746,32 @@
     async function uploadProfileImage(file, userId) {
       try {
         console.log('📤 Iniciando subida de imagen...');
-        console.log('📄 Archivo:', file.name, file.size, file.type);
         
-        // Comprimir la imagen antes de subir
+        // Comprimir la imagen
         const compressedFile = await compressImage(file);
-        console.log('📦 Archivo comprimido listo para subir');
         
-        // Crear referencia única para la imagen
-        const fileExtension = 'jpg'; // Siempre será jpg después de la compresión
-        const storageRef = ref(storage, `profile_images/${userId}/${Date.now()}.${fileExtension}`);
+        // Crear referencia con nombre seguro (sin caracteres especiales)
+        const timestamp = Date.now();
+        const fileName = `profile_${timestamp}.jpg`;
+        const storageRef = ref(storage, `profile_images/${userId}/${fileName}`);
         
-        // Subir la imagen comprimida
         console.log('☁️ Subiendo a Firebase Storage...');
-        const snapshot = await uploadBytes(storageRef, compressedFile);
+        
+        // Subir con metadatos
+        const metadata = {
+          contentType: 'image/jpeg',
+          customMetadata: {
+            'uploadedBy': userId,
+            'uploadedAt': new Date().toISOString()
+          }
+        };
+        
+        const snapshot = await uploadBytes(storageRef, compressedFile, metadata);
         console.log('✅ Imagen subida exitosamente');
         
         // Obtener URL de descarga
         const downloadURL = await getDownloadURL(snapshot.ref);
-        console.log('🔗 URL de descarga obtenida:', downloadURL);
+        console.log('🔗 URL obtenida:', downloadURL);
         
         // Eliminar imagen anterior si existe
         const userRef = doc(db, 'usuarios', userId);
@@ -776,6 +781,7 @@
         if (oldPhotoURL && oldPhotoURL.includes('firebasestorage')) {
           try {
             console.log('🗑️ Eliminando imagen anterior...');
+            // Extraer la ruta de la URL
             const oldRef = ref(storage, oldPhotoURL);
             await deleteObject(oldRef);
             console.log('✅ Imagen anterior eliminada');
@@ -841,7 +847,7 @@
           fotoTemporal = url;
           modalProfileImage.src = url;
           uploadPhoto.value = '';
-          console.log('🔄 Avatar seleccionado:', url);
+          console.log('🔄 Avatar seleccionado');
         };
         avatarGrid.appendChild(img);
       });
@@ -862,31 +868,21 @@
       try {
         console.log('🔄 Iniciando guardado de perfil...');
         console.log('📝 Nombre:', nuevoNombre);
-        console.log('📷 Tipo de foto:', nuevaFoto instanceof File ? 'File' : typeof nuevaFoto);
         
         let fotoURL = null;
         
         // Determinar qué tipo de foto es
         if (nuevaFoto instanceof File) {
-          // Es un archivo subido por el usuario
           console.log('📤 Subiendo archivo a Storage...');
           showToast('📤 Subiendo imagen...', false, 5000);
           fotoURL = await uploadProfileImage(nuevaFoto, user.uid);
-          console.log('✅ Foto subida exitosamente:', fotoURL);
+          console.log('✅ Foto subida exitosamente');
         } else if (typeof nuevaFoto === 'string' && nuevaFoto.startsWith('http')) {
-          // Es una URL de avatar predeterminado
-          console.log('🌐 Usando URL de avatar:', nuevaFoto);
+          console.log('🌐 Usando URL de avatar');
           fotoURL = nuevaFoto;
-        } else if (typeof nuevaFoto === 'string' && nuevaFoto.startsWith('data:image')) {
-          // Es una URL base64 (raro, pero por si acaso)
-          console.log('🔄 Convirtiendo base64 a File...');
-          const response = await fetch(nuevaFoto);
-          const blob = await response.blob();
-          const file = new File([blob], 'profile.jpg', { type: 'image/jpeg' });
-          fotoURL = await uploadProfileImage(file, user.uid);
         } else {
           // Si no hay foto, usar la actual
-          console.log('⚠️ No se detectó foto válida, manteniendo actual');
+          console.log('⚠️ Manteniendo foto actual');
           const ref = doc(db, 'usuarios', user.uid);
           const snap = await getDoc(ref);
           fotoURL = snap.exists() ? snap.data().fotoURL : null;
@@ -919,7 +915,17 @@
         editModal.style.display = 'none';
       } catch (error) {
         console.error('❌ Error al guardar perfil:', error);
-        showToast('❌ Error al guardar: ' + (error.message || 'Intenta de nuevo'), true, 5000);
+        
+        // Mensaje de error más amigable
+        let errorMsg = 'Error al guardar';
+        if (error.message.includes('CORS')) {
+          errorMsg = 'Error de CORS. Contacta al administrador.';
+        } else if (error.message.includes('permission')) {
+          errorMsg = 'Error de permisos. Verifica las reglas.';
+        } else {
+          errorMsg = error.message || 'Intenta de nuevo';
+        }
+        showToast('❌ ' + errorMsg, true, 5000);
       } finally {
         isSaving = false;
         saveProfileBtn.disabled = false;
@@ -1007,7 +1013,6 @@
       
       console.log('📷 Archivo seleccionado:', file.name, file.size, file.type);
       
-      // Validar tipo de archivo
       const validTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp', 'image/gif'];
       if (!validTypes.includes(file.type)) {
         showToast('❌ Formato no soportado. Usa JPG, PNG o WEBP', true);
@@ -1015,7 +1020,6 @@
         return;
       }
       
-      // Validar tamaño (máximo 5MB)
       if (file.size > 5 * 1024 * 1024) {
         showToast('❌ La imagen es muy grande. Máximo 5MB', true);
         uploadPhoto.value = '';
@@ -1023,14 +1027,12 @@
       }
       
       try {
-        // Mostrar preview
         const reader = new FileReader();
         reader.onload = (ev) => {
           modalProfileImage.src = ev.target.result;
           document.querySelectorAll('.avatar-pred').forEach(a => a.classList.remove('selected'));
-          // Guardar el archivo para subirlo después
           fotoTemporal = file;
-          console.log('✅ Foto cargada en el preview, tipo:', file instanceof File);
+          console.log('✅ Foto cargada en el preview');
           showToast('📷 Foto seleccionada, guarda los cambios');
         };
         reader.readAsDataURL(file);
@@ -1053,7 +1055,6 @@
         return;
       }
       
-      console.log('💾 Guardando perfil con foto:', fotoTemporal instanceof File ? 'File' : typeof fotoTemporal);
       await guardarPerfil(nuevoNombre, fotoTemporal);
     };
 
@@ -1092,7 +1093,7 @@
     });
   </script>
   
-  <!-- Default Statcounter code for guia_pinolera https://guiapinolero.netlify.app -->
+  <!-- Default Statcounter code -->
   <script type="text/javascript">
     var sc_project=13287173; 
     var sc_invisible=1; 
@@ -1104,7 +1105,5 @@
     href="https://statcounter.com/" target="_blank"><img class="statcounter"
     src="https://c.statcounter.com/13287173/0/b52e73f2/1/" alt="Web Analytics"
     referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
-  <!-- End of Statcounter Code -->
-  <a href="https://statcounter.com/p13287173/?guest=1">View My Stats</a>
 </body>
 </html>
