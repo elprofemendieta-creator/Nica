@@ -1,0 +1,348 @@
+/* ===== RESET Y BASE ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #0a3d5e, #1a6b8a);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+}
+
+#game-container {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    padding: 15px;
+    max-width: 600px;
+    width: 100%;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+/* ===== ENCABEZADO ===== */
+header {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+header h1 {
+    font-size: 1.6rem;
+    color: #0a3d5e;
+    margin-bottom: 2px;
+}
+
+header p {
+    color: #2c6e8a;
+    font-size: 0.95rem;
+}
+
+/* ===== ÁREA PRINCIPAL ===== */
+#game-area {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+}
+
+/* ----- FOTO ----- */
+#photo-container {
+    width: 100%;
+    max-width: 400px;
+    background: #f0f7fa;
+    border-radius: 16px;
+    padding: 12px;
+    box-shadow: inset 0 2px 8px rgba(0,0,0,0.06);
+    text-align: center;
+}
+
+#place-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 12px;
+    background: #d9e6ed;
+}
+
+#hint {
+    margin-top: 10px;
+    padding: 8px 12px;
+    background: #e1edf4;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    color: #0a3d5e;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#hint-text {
+    font-weight: 700;
+    color: #c44536;
+}
+
+/* ----- BOTONES DE DEPARTAMENTOS ----- */
+#buttons-container {
+    width: 100%;
+    max-width: 500px;
+    background: #e8f0f5;
+    border-radius: 16px;
+    padding: 15px;
+    box-shadow: inset 0 2px 8px rgba(0,0,0,0.06);
+}
+
+#buttons-container h3 {
+    text-align: center;
+    color: #0a3d5e;
+    font-size: 1rem;
+    margin-bottom: 10px;
+}
+
+#department-buttons {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 10px;
+}
+
+.dept-btn {
+    padding: 12px 8px;
+    border: none;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    background: #7ba9c4;
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-height: 50px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    touch-action: manipulation;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.dept-btn:hover {
+    transform: translateY(-2px);
+    background: #4a8aaa;
+}
+
+.dept-btn:active {
+    transform: scale(0.95);
+    background: #2c6e8a;
+}
+
+.dept-btn.correcto {
+    background: #2ecc71 !important;
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(46, 204, 113, 0.5);
+}
+
+.dept-btn.incorrecto {
+    background: #e74c3c !important;
+    animation: shake 0.4s ease;
+}
+
+.dept-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+#click-feedback {
+    margin-top: 12px;
+    font-size: 0.9rem;
+    color: #1f5a77;
+    text-align: center;
+    padding: 8px 12px;
+    background: #d9eaf3;
+    border-radius: 20px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ----- CONTROLES ----- */
+#game-controls {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    background: #ecf5f9;
+    border-radius: 16px;
+}
+
+#score, #attempts {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #0a3d5e;
+}
+
+#score-value, #attempts-value {
+    color: #c44536;
+    font-size: 1.2rem;
+}
+
+button {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 30px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: #1a6b8a;
+    color: white;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    min-height: 48px;
+    touch-action: manipulation;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+button:active {
+    transform: scale(0.95);
+}
+
+#next-round {
+    background: #2c7a4d;
+    flex: 1;
+    min-width: 100px;
+}
+
+#reset-game {
+    background: #6c757d;
+    flex: 0.5;
+    min-width: 60px;
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+/* ===== MODAL ===== */
+#result-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    padding: 20px;
+}
+
+#result-modal.hidden {
+    display: none;
+}
+
+#result-content {
+    background: white;
+    padding: 30px 25px;
+    border-radius: 30px;
+    text-align: center;
+    max-width: 400px;
+    width: 100%;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes popIn {
+    0% { transform: scale(0.8) translateY(20px); opacity: 0; }
+    100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+#result-title {
+    font-size: 2rem;
+    margin-bottom: 8px;
+}
+
+#result-title.correcto { color: #2ecc71; }
+#result-title.incorrecto { color: #e74c3c; }
+
+#result-message {
+    font-size: 1rem;
+    color: #2c3e50;
+    margin: 12px 0 20px;
+    line-height: 1.5;
+}
+
+#result-button {
+    background: #0a3d5e;
+    padding: 14px 40px;
+    font-size: 1.05rem;
+    min-height: 50px;
+    width: 100%;
+    max-width: 250px;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 600px) {
+    #game-container {
+        padding: 10px;
+        border-radius: 16px;
+    }
+    
+    header h1 {
+        font-size: 1.3rem;
+    }
+    
+    #place-image {
+        height: 180px;
+    }
+    
+    #department-buttons {
+        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+        gap: 8px;
+    }
+    
+    .dept-btn {
+        padding: 10px 6px;
+        font-size: 0.8rem;
+        min-height: 44px;
+    }
+    
+    #game-controls {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+        padding: 12px;
+    }
+    
+    #score, #attempts {
+        text-align: center;
+    }
+    
+    button {
+        width: 100%;
+        text-align: center;
+        padding: 14px;
+    }
+    
+    #next-round, #reset-game {
+        flex: none;
+        width: 100%;
+    }
+}
