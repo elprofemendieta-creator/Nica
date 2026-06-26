@@ -37,7 +37,7 @@ const continueBtn = document.getElementById('continueBtn');
 const urlParams = new URLSearchParams(window.location.search);
 const roomCodeFromUrl = urlParams.get('room');
 
-// Autenticación
+// Autenticación automática
 async function iniciarSesionAutomatica() {
     try {
         let user = auth.currentUser;
@@ -146,9 +146,9 @@ document.getElementById('catStyleSelect').addEventListener('change', (e) => {
     }
 });
 
-// Crear sala (sin compartir)
+// Crear sala
 document.getElementById('confirmCreateRoom').addEventListener('click', async () => {
-    if (!currentUserData) return;
+    if (!currentUserData) return alert("Debes iniciar sesión primero.");
     const roomName = document.getElementById('roomName').value.trim() || "Sala Pinolera";
     const maxPlayers = parseInt(document.getElementById('maxPlayers').value);
     const roundTime = parseInt(document.getElementById('roundTime').value);
@@ -167,20 +167,24 @@ document.getElementById('confirmCreateRoom').addEventListener('click', async () 
     }
 
     const roomId = Math.random().toString(36).substring(2, 8).toUpperCase();
-    await db.collection("rooms").doc(roomId).set({
-        roomId, roomName, host: currentUserData.uid, maxPlayers, roundTime, numRounds,
-        categories: categories,
-        players: [{ uid: currentUserData.uid, nombre: currentUserData.nombre, avatar: currentUserData.avatar, total: 0 }],
-        state: "waiting", currentRound: 0, currentLetter: null, stopTriggered: false
-    });
-    await db.collection("rooms").doc(roomId).collection("messages").add({
-        sender: "Sistema", text: `${currentUserData.nombre} creó la sala`, timestamp: firebase.firestore.FieldValue.serverTimestamp()
-    });
-
-    closeModals();
-    alert(`✅ Sala creada\nCódigo: ${roomId}`);
-    loadRoomView(roomId);
-    playSound("correct");
+    try {
+        await db.collection("rooms").doc(roomId).set({
+            roomId, roomName, host: currentUserData.uid, maxPlayers, roundTime, numRounds,
+            categories: categories,
+            players: [{ uid: currentUserData.uid, nombre: currentUserData.nombre, avatar: currentUserData.avatar, total: 0 }],
+            state: "waiting", currentRound: 0, currentLetter: null, stopTriggered: false
+        });
+        await db.collection("rooms").doc(roomId).collection("messages").add({
+            sender: "Sistema", text: `${currentUserData.nombre} creó la sala`, timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        closeModals();
+        alert(`✅ Sala creada. Código: ${roomId}`);
+        loadRoomView(roomId);
+        playSound("correct");
+    } catch (error) {
+        console.error(error);
+        alert("Error al crear sala: " + error.message);
+    }
 });
 
 // Unirse a sala
@@ -212,7 +216,7 @@ document.getElementById('confirmJoinRoom').addEventListener('click', async () =>
     closeModals();
 });
 
-// Vista de sala (sin botones de compartir)
+// Vista de sala
 async function loadRoomView(roomId) {
     if (currentRoomUnsub) currentRoomUnsub();
     const roomRef = db.collection("rooms").doc(roomId);
@@ -268,5 +272,338 @@ async function loadRoomView(roomId) {
     });
 }
 
-// El resto del código (juego, validación, rondas, ranking, amigos, perfil, config) se mantiene exactamente igual a la versión anterior.
-// ... (todo el código desde validateWord hasta el final permanece sin cambios)
+function validateWord(word, letter) {
+    if (!word) return false;
+    const normalized = word.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    return normalized.startsWith(letter.toLowerCase());
+}
+
+async function autoSaveAnswer(roomId, category, value, round) {
+    if (!currentUserData) return;
+    const answersRef = db.collection("rooms").doc(roomId).collection("answers").doc(currentUserData.uid);
+    const docSnap = await answersRef.get();
+    let currentAnswers = {};
+    if (docSnap.exists && docSnap.data().round === round) {
+        currentAnswers = docSnap.data().answers;
+    }
+    currentAnswers[category] = value;
+    await answersRef.set({ uid: currentUserData.uid, answers: currentAnswers, round: round });
+}
+
+async function renderGameInterface(roomId, room) {
+    const categories = room.categories;
+    const letter = room.currentLetter;
+    let formHtml = `<div class="card"><h2>🎲 Ronda ${room.currentRound}/${room.numRounds} | Letra: ${letter}</h2>
+                 <div id="timerDisplay" style="font-size:2.5rem; font-weight:bold; text-align:center">⏱️ --</div>
+                 <button id="stopBtnGlobal" class="btn btn-stop">🛑 STOP</button>
+                 <div class="category-grid" id="catsGrid"></div></div>
+                 <div id="roundResults"></div>`;
+    document.getElementById('dynamicView').innerHTML = formHtml;
+
+    const container = document.getElementById('catsGrid');
+    const answersDoc = await db.collection("rooms").doc(roomId).collection("answers").doc(currentUserData.uid).get();
+    let savedAnswers = {};
+    if (answersDoc.exists && answersDoc.data().round === room.currentRound) savedAnswers = answersDoc.data().answers;
+
+    for (let cat of categories) {
+        const savedVal = savedAnswers[cat] || "";
+        const icon = savedVal ? (validateWord(savedVal, letter) ? "✅" : "❌") : "⚪";
+        const catDiv = document.createElement('div');
+        catDiv.className = 'cat-input';
+        catDiv.innerHTML = `<label>${cat}</label>
+                            <div class="input-wrapper">
+                                <input type="text" class="answer-input" data-cat="${cat}" value="${escapeHtml(savedVal)}" placeholder="Palabra con ${letter}...">
+                                <span class="validation-icon">${icon}</span>
+                            </div>`;
+        container.appendChild(catDiv);
+        const input = catDiv.querySelector('.answer-input');
+        const iconSpan = catDiv.querySelector('.validation-icon');
+        input.addEventListener('input', async (e) => {
+            const word = e.target.value.trim();
+            if (!word) {
+                iconSpan.textContent = "⚪";
+            } else {
+                const valid = validateWord(word, letter);
+                iconSpan.textContent = valid ? "✅" : "❌";
+                if (valid) playSound("correct");
+            }
+            await autoSaveAnswer(roomId, cat, word, room.currentRound);
+        });
+    }
+
+    let timeLeft = room.roundTime;
+    const timerElem = document.getElementById('timerDisplay');
+    if (currentTimer) clearInterval(currentTimer);
+    currentTimer = setInterval(async () => {
+        if (timeLeft <= 0) {
+            clearInterval(currentTimer);
+            await finishRound(roomId);
+        } else {
+            timerElem.innerText = `⏱️ ${timeLeft} segundos`;
+            timeLeft--;
+        }
+    }, 1000);
+
+    document.getElementById('stopBtnGlobal')?.addEventListener('click', async () => {
+        const roomSnap = await db.collection("rooms").doc(roomId).get();
+        if (roomSnap.data().stopTriggered) return;
+        await db.collection("rooms").doc(roomId).update({ stopTriggered: true });
+        await db.collection("rooms").doc(roomId).collection("messages").add({
+            sender: "Sistema", text: `${currentUserData.nombre} presionó STOP! ⏰ 10 segundos restantes`, timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        playSound("stop");
+        const stopOverlay = document.createElement('div');
+        stopOverlay.className = 'stop-overlay';
+        stopOverlay.innerHTML = `<div>¡STOP! ⏰</div><div class="count">10</div>`;
+        document.body.appendChild(stopOverlay);
+        let counter = 10;
+        const countdown = setInterval(() => {
+            counter--;
+            if (counter >= 0) stopOverlay.querySelector('.count').innerText = counter;
+            else clearInterval(countdown);
+        }, 1000);
+        setTimeout(() => { stopOverlay.remove(); clearInterval(countdown); }, 10000);
+        setTimeout(() => finishRound(roomId), 10000);
+    });
+}
+
+function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[m]);
+}
+
+async function finishRound(roomId) {
+    clearInterval(currentTimer);
+    const overlay = document.querySelector('.stop-overlay');
+    if (overlay) overlay.remove();
+
+    const roomRef = db.collection("rooms").doc(roomId);
+    const roomSnap = await roomRef.get();
+    const room = roomSnap.data();
+    if (!room) return;
+
+    const answersSnap = await db.collection(`rooms/${roomId}/answers`).get();
+    const allAnswers = {};
+    answersSnap.forEach(docu => { allAnswers[docu.id] = docu.data(); });
+
+    const categoriesList = room.categories;
+    const playersList = room.players;
+
+    let votingHtml = `<div class="card"><h3>📋 Validar respuestas - Ronda ${room.currentRound}</h3>`;
+    for (let cat of categoriesList) {
+        votingHtml += `<h4>📌 ${cat}</h4><table class="answers-table">`;
+        votingHtml += `<tr><th>Jugador</th><th>Respuesta</th><th>Votación</th></tr>`;
+        for (let player of playersList) {
+            const answerObj = allAnswers[player.uid];
+            const word = answerObj && answerObj.round === room.currentRound ? (answerObj.answers[cat] || "") : "";
+            const votesRef = db.collection("rooms").doc(roomId).collection("votes");
+            const qVotes = await votesRef.where("round", "==", room.currentRound)
+                .where("category", "==", cat).where("playerUid", "==", player.uid).get();
+            let incorrectCount = 0;
+            qVotes.forEach(v => { if (v.data().vote === false) incorrectCount++; });
+            const isInvalid = incorrectCount > (playersList.length / 2);
+            votingHtml += `<tr>
+                 <td>${player.nombre}</td>
+                 <td>${word || "(vacío)"}</td>
+                 <td class="vote-group">
+                     <button class="vote-btn vote-correct" data-cat="${cat}" data-player="${player.uid}" data-vote="true">✅ Correcta</button>
+                     <button class="vote-btn vote-incorrect" data-cat="${cat}" data-player="${player.uid}" data-vote="false">❌ Incorrecta</button>
+                     ${isInvalid ? '<span style="margin-left:8px;">🚫 Anulada</span>' : ''}
+                 </td>
+             </tr>`;
+        }
+        votingHtml += `</table>`;
+    }
+    votingHtml += `<button id="finalizeVotingBtn" class="btn btn-primary">✅ Finalizar ronda</button></div>`;
+    document.getElementById('dynamicView').innerHTML = votingHtml;
+
+    document.querySelectorAll('.vote-correct, .vote-incorrect').forEach(btn => {
+        btn.addEventListener('click', async () => {
+            const category = btn.dataset.cat;
+            const playerUid = btn.dataset.player;
+            const voteValue = btn.dataset.vote === 'true';
+            const voteId = `${room.currentRound}_${category}_${playerUid}_${currentUserData.uid}`;
+            await db.collection("rooms").doc(roomId).collection("votes").doc(voteId).set({
+                round: room.currentRound, category, playerUid, voter: currentUserData.uid,
+                vote: voteValue, timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            finishRound(roomId);
+        });
+    });
+
+    document.getElementById('finalizeVotingBtn')?.addEventListener('click', async () => {
+        const allVotesSnap = await db.collection("rooms").doc(roomId).collection("votes").get();
+        const invalidMap = new Map();
+        allVotesSnap.forEach(vote => {
+            const v = vote.data();
+            if (v.round === room.currentRound) {
+                const key = `${v.category}_${v.playerUid}`;
+                if (!invalidMap.has(key)) invalidMap.set(key, []);
+                invalidMap.get(key).push(v.vote === false);
+            }
+        });
+        const invalidSet = new Set();
+        for (let [key, votes] of invalidMap.entries()) {
+            const incorrectCount = votes.filter(v => v === true).length;
+            if (incorrectCount > (playersList.length / 2)) invalidSet.add(key);
+        }
+
+        const scores = {};
+        playersList.forEach(p => scores[p.uid] = 0);
+        for (let cat of categoriesList) {
+            const wordMap = new Map();
+            for (let player of playersList) {
+                const key = `${cat}_${player.uid}`;
+                if (invalidSet.has(key)) continue;
+                const answerObj = allAnswers[player.uid];
+                const word = answerObj && answerObj.round === room.currentRound ? (answerObj.answers[cat] || "").trim().toLowerCase() : "";
+                if (word && word !== "") {
+                    if (!wordMap.has(word)) wordMap.set(word, []);
+                    wordMap.get(word).push(player.uid);
+                }
+            }
+            for (let [word, uids] of wordMap.entries()) {
+                let points = (uids.length === 1) ? 2 : 1;
+                uids.forEach(uid => scores[uid] += points);
+            }
+        }
+
+        let maxScore = 0, winnerUid = null;
+        for (let [uid, pts] of Object.entries(scores)) {
+            if (pts > maxScore) { maxScore = pts; winnerUid = uid; }
+        }
+
+        const newPlayers = room.players.map(p => ({
+            ...p,
+            total: p.total + (scores[p.uid] || 0) + ((p.uid === winnerUid) ? 5 : 0)
+        }));
+
+        await roomRef.update({ players: newPlayers, stopTriggered: false });
+        await roomRef.collection("messages").add({
+            sender: "Sistema",
+            text: `📊 Ronda ${room.currentRound}: ${winnerUid === currentUserData.uid ? "¡Ganaste! +5" : "Finalizada"}`,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        });
+
+        if (room.currentRound >= room.numRounds) {
+            finalizeGame(roomId);
+        } else {
+            const newLetter = String.fromCharCode(65 + Math.floor(Math.random() * 26));
+            await roomRef.update({
+                currentRound: firebase.firestore.FieldValue.increment(1),
+                currentLetter: newLetter,
+                roundStart: firebase.firestore.FieldValue.serverTimestamp(),
+                stopTriggered: false
+            });
+            await roomRef.collection("messages").add({
+                sender: "Sistema", text: `🔄 Nueva Ronda ${room.currentRound + 1} - Letra: ${newLetter}`, timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            playSound("startRound");
+            const updatedRoom = (await roomRef.get()).data();
+            renderGameInterface(roomId, updatedRoom);
+        }
+    });
+}
+
+async function finalizeGame(roomId) {
+    const roomRef = db.collection("rooms").doc(roomId);
+    const snap = await roomRef.get();
+    const room = snap.data();
+    const sorted = [...room.players].sort((a, b) => b.total - a.total);
+    const winner = sorted[0];
+
+    for (let player of room.players) {
+        const userRef = db.collection("usuarios").doc(player.uid);
+        const userSnap = await userRef.get();
+        if (userSnap.exists) {
+            const data = userSnap.data();
+            await userRef.update({
+                partidasJugadas: (data.partidasJugadas || 0) + 1,
+                puntosGlobales: (data.puntosGlobales || 0) + player.total,
+                victorias: (player.uid === winner.uid) ? (data.victorias || 0) + 1 : (data.victorias || 0)
+            });
+        }
+    }
+
+    await roomRef.collection("messages").add({
+        sender: "Sistema", text: `🏆 ¡FIN! Ganador: ${winner.nombre} (${winner.total} pts)`, timestamp: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    playSound("gameEnd");
+    document.getElementById('dynamicView').innerHTML = `<div class="card"><h2>🏁 Partida finalizada</h2>
+        <p>🥇 ${sorted[0]?.nombre} - ${sorted[0]?.total} pts</p>
+        <p>🥈 ${sorted[1]?.nombre} - ${sorted[1]?.total} pts</p>
+        <p>🥉 ${sorted[2]?.nombre} - ${sorted[2]?.total} pts</p>
+        <button class="btn" onclick="location.reload()">Volver al inicio</button></div>`;
+    await roomRef.update({ state: "finished" });
+}
+
+// Ranking, amigos, perfil, config
+document.getElementById('rankingBtn').addEventListener('click', async () => {
+    const q = db.collection("usuarios").orderBy("puntosGlobales", "desc").limit(20);
+    const snap = await q.get();
+    let rankHtml = `<div class="card"><h2>🏆 Ranking Global</h2><ol>`;
+    snap.forEach(docu => { let d = docu.data(); rankHtml += `<li><strong>${d.nombre}</strong> - ${d.puntosGlobales || 0} pts - ${d.nivel}</li>`; });
+    rankHtml += `</ol></div>`;
+    document.getElementById('dynamicView').innerHTML = rankHtml;
+});
+
+document.getElementById('friendsBtn').addEventListener('click', async () => {
+    const q = db.collection("amigos").where("usuario", "==", currentUserData.uid).where("estado", "==", "aceptado");
+    const snap = await q.get();
+    let html = `<div class="card"><h2>👥 Mis Amigos</h2><input id="searchFriend" placeholder="Buscar por nombre..."><button id="searchBtn" class="btn">🔍 Buscar</button><ul id="friendList">`;
+    snap.forEach(d => html += `<li>👤 ${d.data().amigoNombre || d.data().amigo}</li>`);
+    html += `</ul></div>`;
+    document.getElementById('dynamicView').innerHTML = html;
+    document.getElementById('searchBtn').addEventListener('click', async () => {
+        const search = document.getElementById('searchFriend').value;
+        const res = await db.collection("usuarios").orderBy("nombre").startAt(search).endAt(search + "\uf8ff").limit(5).get();
+        let list = '<h4>Resultados</h4>';
+        res.forEach(u => {
+            if (u.id !== currentUserData.uid) list += `<div>${u.data().nombre} <button class="sendRequestBtn" data-uid="${u.id}">➕ Agregar</button></div>`;
+        });
+        document.getElementById('friendList').innerHTML = list;
+        document.querySelectorAll('.sendRequestBtn').forEach(btn => btn.addEventListener('click', async () => {
+            const friendId = btn.dataset.uid;
+            const friendDoc = await db.collection("usuarios").doc(friendId).get();
+            await db.collection("amigos").add({
+                usuario: currentUserData.uid, amigo: friendId, estado: "pendiente",
+                amigoNombre: friendDoc.data().nombre, timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            alert("Solicitud enviada");
+        }));
+    });
+});
+
+document.getElementById('profileBtn').addEventListener('click', () => {
+    const u = currentUserData;
+    document.getElementById('dynamicView').innerHTML = `<div class="card"><h2>👤 Mi Perfil</h2>
+        <p>🎭 Avatar: ${u.avatar}</p><p>📛 Nombre: ${u.nombre}</p>
+        <p>🏅 Nivel: ${u.nivel}</p><p>⭐ Experiencia: ${u.experiencia || 0}</p>
+        <p>💰 Puntos: ${u.puntosGlobales}</p><p>🎮 Partidas: ${u.partidasJugadas}</p>
+        <p>🏆 Victorias: ${u.victorias}</p>
+        <button id="toggleDark" class="btn">🌙 Modo Oscuro</button>
+        <button id="shareProfile" class="btn">🔗 Compartir perfil</button></div>`;
+    document.getElementById('toggleDark')?.addEventListener('click', () => {
+        document.body.classList.toggle('dark');
+        localStorage.setItem('darkMode', document.body.classList.contains('dark'));
+    });
+    document.getElementById('shareProfile')?.addEventListener('click', () => {
+        alert(`Comparte: ${window.location.origin}/u/${currentUserData.uid}`);
+    });
+    if (localStorage.getItem('darkMode') === 'true') document.body.classList.add('dark');
+});
+
+document.getElementById('settingsBtn').addEventListener('click', () => {
+    const soundEnabled = localStorage.getItem('soundEnabled') !== 'false';
+    document.getElementById('dynamicView').innerHTML = `<div class="card"><h2>⚙️ Configuración</h2>
+        <label><input type="checkbox" id="soundToggle" ${soundEnabled ? 'checked' : ''}> 🔊 Activar sonidos</label><br>
+        <button id="saveSettings" class="btn">Guardar</button></div>`;
+    document.getElementById('saveSettings').addEventListener('click', () => {
+        const enabled = document.getElementById('soundToggle').checked;
+        localStorage.setItem('soundEnabled', enabled);
+        alert("Preferencias guardadas");
+    });
+});
+
+if (localStorage.getItem('darkMode') === 'true') document.body.classList.add('dark');
+window.loadRoomView = loadRoomView;
