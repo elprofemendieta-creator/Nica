@@ -8,6 +8,13 @@ const lugares = [
         region: "leon"
     },
     {
+        nombre: "Reloj Público",
+        departamento: "Carazo",
+        imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSL83Htlm1nrmfJ40AO1gOxqHFeg0Fu-_CQb-eHLu8YTcp58V8z-2CZyxN3&s=10",
+        pista: "Símbolo histórico de la ciudad caraceña.",
+        region: "carazo"
+    },
+    {
         nombre: "Isla de Ometepe",
         departamento: "Rivas",
         imagen: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Ometepe.jpg/330px-Ometepe.jpg",
@@ -45,7 +52,8 @@ const regionesMap = {
     rivas: { nombre: 'Rivas' },
     madriz: { nombre: 'Madriz' },
     masaya: { nombre: 'Masaya' },
-    raas: { nombre: 'RAAS' }
+    raas: { nombre: 'RAAS' },
+    carazo: { nombre: 'carazo' },
 };
 
 // ===== ESTADO DEL JUEGO =====
