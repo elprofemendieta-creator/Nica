@@ -608,7 +608,8 @@ document.getElementById('profileBtn').addEventListener('click', () => {
         <p>🏅 Nivel: ${u.nivel}</p><p>⭐ Experiencia: ${u.experiencia || 0}</p>
         <p>💰 Puntos: ${u.puntosGlobales}</p><p>🎮 Partidas: ${u.partidasJugadas}</p>
         <p>🏆 Victorias: ${u.victorias}</p>
-        <button id="toggleDark" class="btn">🌙 Modo Oscuro</button>;
+        <button id="toggleDark" class="btn">🌙 Modo Oscuro</button>
+        <button id="shareProfile" class="btn">🔗 Compartir perfil</button></div>`;
     document.getElementById('toggleDark')?.addEventListener('click', () => {
         document.body.classList.toggle('dark');
         localStorage.setItem('darkMode', document.body.classList.contains('dark'));
