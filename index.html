@@ -4,496 +4,15 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>Guía Pinolero - Descubre Nicaragua</title>
-  
+  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet" />
+  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-<style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    
-    body {
-      font-family: 'Inter', sans-serif;
-      min-height: 100vh;
-      background: linear-gradient(145deg, #0a2a1f 0%, #1a4a2a 50%, #0d331f 100%);
-      position: relative;
-      overflow-x: hidden;
-    }
-    
-    body::before {
-      content: "🌋🌿🦎🌊🌴🍃";
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      font-size: 80px;
-      opacity: 0.04;
-      pointer-events: none;
-      white-space: pre;
-      text-align: center;
-      letter-spacing: 20px;
-      z-index: 0;
-    }
-    
-    .wave-bg {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 280px;
-      z-index: 0;
-      opacity: 0.15;
-      pointer-events: none;
-    }
-    
-    .wave-bg svg {
-      position: absolute;
-      bottom: 0;
-      width: 100%;
-    }
-    
-    .container {
-      position: relative;
-      z-index: 2;
-      max-width: 1300px;
-      margin: 0 auto;
-      padding: 2rem 1.5rem;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-    }
-    
-    .glass-card {
-      background: rgba(255, 255, 255, 0.12);
-      backdrop-filter: blur(16px);
-      border-radius: 2.5rem;
-      padding: 2.5rem 2rem;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255,255,255,0.1);
-      border: 1px solid rgba(255, 255, 255, 0.25);
-      width: 100%;
-      max-width: 480px;
-      text-align: center;
-      transition: transform 0.3s ease;
-    }
-    
-    .glass-card:hover {
-      transform: translateY(-5px);
-    }
-    
-    .mascota {
-      margin-bottom: 1rem;
-    }
-    
-    .mascota img {
-      width: 90px;
-      filter: drop-shadow(0 8px 20px rgba(0,0,0,0.2));
-      animation: float 3s ease-in-out infinite;
-    }
-    
-    @keyframes float {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-10px); }
-    }
-    
-    h1 {
-      font-size: 2.8rem;
-      background: linear-gradient(135deg, #FFE259, #FFA751, #FFD54F);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      font-weight: 800;
-      letter-spacing: -1px;
-      margin-bottom: 0.5rem;
-    }
-    
-    .subtitle {
-      color: rgba(255,255,255,0.9);
-      margin-bottom: 2rem;
-      font-size: 0.95rem;
-    }
-    
-    .input-group {
-      margin-bottom: 1rem;
-      text-align: left;
-    }
-    
-    .input-group input {
-      width: 100%;
-      padding: 14px 18px;
-      border-radius: 50px;
-      border: none;
-      background: rgba(255,255,255,0.12);
-      color: white;
-      font-size: 0.95rem;
-      outline: none;
-      transition: all 0.2s;
-    }
-    
-    .input-group input:focus {
-      background: rgba(255,255,255,0.2);
-      box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.3);
-    }
-    
-    .input-group input::placeholder {
-      color: rgba(255,255,255,0.55);
-    }
-    
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      padding: 14px 24px;
-      border-radius: 60px;
-      font-weight: 600;
-      cursor: pointer;
-      width: 100%;
-      font-size: 0.95rem;
-      margin-bottom: 12px;
-      border: none;
-      transition: all 0.2s ease;
-    }
-    
-    .btn-primary {
-      background: linear-gradient(135deg, #F9A826, #F57C00);
-      color: white;
-      box-shadow: 0 8px 20px rgba(245, 124, 0, 0.3);
-    }
-    
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 25px rgba(245, 124, 0, 0.4);
-    }
-    
-    .btn-outline {
-      background: transparent;
-      border: 1.5px solid rgba(255,255,255,0.5);
-      color: white;
-    }
-    
-    .btn-outline:hover {
-      background: rgba(255,255,255,0.1);
-      border-color: rgba(255,255,255,0.8);
-    }
-    
-    .btn-edit {
-      background: rgba(255, 193, 7, 0.2);
-      border: 1.5px solid #FFD54F;
-      color: #FFD54F;
-      width: auto;
-      padding: 8px 20px;
-    }
-    
-    .divider {
-      display: flex;
-      align-items: center;
-      text-align: center;
-      color: rgba(255,255,255,0.5);
-      margin: 1.2rem 0;
-    }
-    
-    .divider::before,
-    .divider::after {
-      content: '';
-      flex: 1;
-      border-bottom: 1px solid rgba(255,255,255,0.2);
-    }
-    
-    .divider span {
-      margin: 0 10px;
-      font-size: 0.8rem;
-    }
-    
-    .link {
-      text-align: center;
-      margin-top: 12px;
-    }
-    
-    .link a {
-      color: #FFD54F;
-      text-decoration: none;
-      font-size: 0.9rem;
-      font-weight: 500;
-    }
-    
-    .link a:hover {
-      text-decoration: underline;
-    }
-    
-    .profile-header {
-      background: rgba(255,255,255,0.08);
-      border-radius: 1.5rem;
-      padding: 1rem 1.5rem;
-      margin-bottom: 2rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-    
-    .profile-info {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-    
-    .profile-avatar {
-      width: 55px;
-      height: 55px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid #FFD54F;
-    }
-    
-    .profile-name {
-      color: white;
-      font-weight: 600;
-      font-size: 1.1rem;
-    }
-    
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 2000;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0,0,0,0.8);
-      backdrop-filter: blur(8px);
-      align-items: center;
-      justify-content: center;
-    }
-    
-    .modal-content {
-      background: linear-gradient(145deg, #0a2a1f, #1a4a2a);
-      border-radius: 2rem;
-      padding: 2rem;
-      width: 90%;
-      max-width: 450px;
-      color: white;
-      border: 1px solid rgba(255,255,255,0.2);
-      max-height: 90vh;
-      overflow-y: auto;
-    }
-    
-    .modal-content h3 {
-      text-align: center;
-      margin-bottom: 1.5rem;
-    }
-    
-    .profile-pic-edit {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 1.5rem;
-      position: relative;
-    }
-    
-    .profile-pic-edit img {
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 3px solid #FFD54F;
-      cursor: pointer;
-    }
-    
-    .camera-icon {
-      position: absolute;
-      bottom: 5px;
-      right: calc(50% - 60px);
-      background: #F9A826;
-      border-radius: 50%;
-      padding: 8px;
-      width: 32px;
-      height: 32px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-    }
-    
-    .avatar-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      justify-content: center;
-      margin: 1rem 0;
-    }
-    
-    .avatar-pred {
-      width: 55px;
-      height: 55px;
-      border-radius: 50%;
-      cursor: pointer;
-      border: 2px solid transparent;
-      object-fit: cover;
-    }
-    
-    .avatar-pred.selected {
-      border-color: #FFD54F;
-      transform: scale(1.05);
-    }
-    
-    .menu-section {
-      display: none;
-      width: 100%;
-      animation: fadeInUp 0.6s ease;
-    }
-    
-    .menu-section h2 {
-      color: white;
-      text-align: center;
-      margin-bottom: 1rem;
-      font-size: 1.8rem;
-    }
-    
-    .menu-section h2 span {
-      background: linear-gradient(135deg, #FFE259, #FFA751);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-    
-    .menu-buttons {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 1.5rem;
-      margin-bottom: 2rem;
-    }
-    
-    .menu-card {
-      background: linear-gradient(145deg, rgba(255,255,255,0.12), rgba(255,255,255,0.06));
-      backdrop-filter: blur(12px);
-      border-radius: 1.8rem;
-      padding: 1.8rem 1rem;
-      width: 190px;
-      text-align: center;
-      text-decoration: none;
-      color: white;
-      transition: all 0.3s;
-      border: 1px solid rgba(255,255,255,0.15);
-    }
-    
-    .menu-card:hover {
-      transform: translateY(-10px);
-      border-color: rgba(255, 193, 7, 0.5);
-    }
-    
-    .menu-card span {
-      font-size: 3rem;
-      display: block;
-      margin-bottom: 0.8rem;
-    }
-    
-    .menu-card h3 {
-      font-size: 0.85rem;
-      font-weight: 600;
-    }
-    
-    .logout-wrapper {
-      text-align: center;
-      margin-top: 1rem;
-    }
-    
-    #logoutBtn {
-      width: auto;
-      padding: 10px 30px;
-      background: rgba(220, 53, 69, 0.2);
-      border-color: rgba(220, 53, 69, 0.5);
-    }
-    
-    .toast-message {
-      position: fixed;
-      bottom: 100px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(0,0,0,0.85);
-      backdrop-filter: blur(8px);
-      color: white;
-      padding: 12px 24px;
-      border-radius: 60px;
-      z-index: 1000;
-      font-size: 0.9rem;
-      white-space: nowrap;
-    }
-    
-    .whatsapp-container {
-      position: fixed;
-      bottom: 25px;
-      right: 25px;
-      z-index: 1000;
-    }
-    
-    .whatsapp-float {
-      background: linear-gradient(135deg, #25D366, #128C7E);
-      color: white;
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 32px;
-      text-decoration: none;
-      animation: pulse 2s infinite;
-    }
-    
-    @keyframes pulse {
-      0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.6); }
-      70% { box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
-    }
-    
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(40px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    
-    .loading-spinner {
-      display: inline-block;
-      width: 20px;
-      height: 20px;
-      border: 3px solid rgba(255,255,255,0.3);
-      border-radius: 50%;
-      border-top-color: #fff;
-      animation: spin 1s ease-in-out infinite;
-    }
-    
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-    
-    .btn:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-    
-    @media (max-width: 680px) {
-      .container { padding: 1rem; }
-      .glass-card { padding: 1.8rem 1.2rem; max-width: 95%; }
-      h1 { font-size: 2rem; }
-      .menu-card { width: 155px; }
-      .profile-header { flex-direction: column; text-align: center; }
-      .profile-info { flex-direction: column; }
-      .toast-message { white-space: normal; text-align: center; max-width: 85%; }
-    }
-  </style>
- 
+  <!-- CSS propio -->
+  <link rel="stylesheet" href="inicial.css" />
 </head>
 <body>
+  <!-- Fondo decorativo -->
   <div class="wave-bg">
     <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
       <path fill="rgba(255,255,255,0.08)" d="M0,192L48,197.3C96,203,192,213,288,208C384,203,480,181,576,176C672,171,768,181,864,197.3C960,213,1056,235,1152,224C1248,213,1344,171,1392,149.3L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
@@ -501,13 +20,14 @@
   </div>
 
   <div class="container">
+    <!-- Tarjeta de autenticación -->
     <div id="authCard" class="glass-card">
       <div class="mascota">
         <img src="https://cdn-icons-png.flaticon.com/512/4712/4712109.png" alt="Mascota" />
       </div>
       <h1>Guía Pinolero</h1>
       <p class="subtitle">🌋 Explora Nicaragua jugando 🌊</p>
-      
+
       <div id="loginForm">
         <div class="input-group">
           <input type="email" id="loginEmail" placeholder="📧 Correo electrónico" />
@@ -522,7 +42,7 @@
         <div class="divider"><span>o</span></div>
         <button id="showRegisterBtn" class="btn btn-outline">✨ Crear cuenta nueva</button>
       </div>
-      
+
       <div id="registerForm" style="display:none;">
         <div class="input-group">
           <input type="text" id="regName" placeholder="👤 Nombre completo" />
@@ -537,10 +57,11 @@
         <button id="backToLoginBtn" class="btn btn-outline">← Volver</button>
       </div>
     </div>
-    
+
+    <!-- Menú principal (visible tras login) -->
     <div id="menuSection" class="menu-section">
       <h2>¡Bienvenido, <span id="userName"></span>!</h2>
-      
+
       <div class="profile-header">
         <div class="profile-info">
           <img id="profileAvatar" class="profile-avatar" src="" alt="Avatar" />
@@ -550,7 +71,7 @@
           <i class="fas fa-pen"></i> Editar perfil
         </button>
       </div>
-      
+
       <div class="menu-buttons">
         <a href="../juegos/juegos.html" class="menu-card">
           <span>🎮</span><h3>Juegos Turísticos</h3>
@@ -562,7 +83,7 @@
           <span>👩🏾‍🤝‍🧑🏻</span><h3>Comunidad</h3>
         </a>
         <a href="visitas/index.html" class="menu-card">
-          <span> 📌 </span><h3>Visitas Virtuales</h3>
+          <span>📌</span><h3>Visitas Virtuales</h3>
         </a>
         <a href="https://nicaguia.base44.app" class="menu-card">
           <span>🔍</span><h3>Escanea y aprende</h3>
@@ -571,7 +92,7 @@
           <span>🏬🛒</span><h3>Promociones</h3>
         </a>
       </div>
-      
+
       <div class="logout-wrapper">
         <button id="logoutBtn" class="btn btn-outline">
           <i class="fas fa-sign-out-alt"></i> Cerrar sesión
@@ -580,10 +101,11 @@
     </div>
   </div>
 
+  <!-- Modal Editar Perfil -->
   <div id="editProfileModal" class="modal">
     <div class="modal-content">
       <h3><i class="fas fa-user-edit"></i> Editar perfil</h3>
-      
+
       <div class="profile-pic-edit">
         <img id="modalProfileImage" src="" alt="Foto" />
         <div class="camera-icon" id="uploadPhotoIcon">
@@ -591,28 +113,31 @@
         </div>
       </div>
       <input type="file" id="uploadPhoto" accept="image/*" style="display: none;" />
-      
+
       <div class="input-group">
         <label style="color:white;">Nombre completo:</label>
         <input type="text" id="editNameInput" placeholder="Tu nombre" />
       </div>
-      
+
       <label style="color:white;">O elige una foto predeterminada:</label>
       <div class="avatar-grid" id="avatarGrid"></div>
-      
+
       <button id="saveProfileBtn" class="btn btn-primary">Guardar cambios</button>
       <button id="closeModalBtn" class="btn btn-outline">Cancelar</button>
     </div>
   </div>
 
+  <!-- Botón WhatsApp -->
   <div class="whatsapp-container">
     <a href="#" class="whatsapp-float" id="whatsappBtn">
       <i class="fab fa-whatsapp"></i>
     </a>
   </div>
 
+  <!-- Toast -->
   <div id="toast" class="toast-message" style="display: none;"></div>
 
+  <!-- Firebase Import Map -->
   <script type="importmap">
     {
       "imports": {
@@ -624,486 +149,22 @@
     }
   </script>
 
-  <script type="module">
-    import { initializeApp } from "firebase/app";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, sendPasswordResetEmail, updateProfile } from "firebase/auth";
-    import { getFirestore, doc, setDoc, getDoc, updateDoc } from "firebase/firestore";
-    import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
+  <!-- JS propio (módulo) -->
+  <script type="module" src="inicial.js"></script>
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyA6jVICuE17KJcO34gE1brMxqWEfNd3Fy0",
-      authDomain: "mapa-41b00.firebaseapp.com",
-      projectId: "mapa-41b00",
-      storageBucket: "mapa-41b00.firebasestorage.app",
-      messagingSenderId: "535032835400",
-      appId: "1:535032835400:web:68c079cbc3f419eafd177d"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-    const storage = getStorage(app);
-
-    const authCard = document.getElementById('authCard');
-    const menuSection = document.getElementById('menuSection');
-    const userNameSpan = document.getElementById('userName');
-    const profileNameDisplay = document.getElementById('profileNameDisplay');
-    const profileAvatar = document.getElementById('profileAvatar');
-    const loginForm = document.getElementById('loginForm');
-    const registerForm = document.getElementById('registerForm');
-    const toastDiv = document.getElementById('toast');
-    const editModal = document.getElementById('editProfileModal');
-    const modalProfileImage = document.getElementById('modalProfileImage');
-    const editNameInput = document.getElementById('editNameInput');
-    const avatarGrid = document.getElementById('avatarGrid');
-    const uploadPhoto = document.getElementById('uploadPhoto');
-    const saveProfileBtn = document.getElementById('saveProfileBtn');
-
-    const DEFAULT_AVATARS = [
-      "https://imgur.com/CFcEYQZ.jpg",
-      "https://imgur.com/rf8HVpD.jpg",
-      "https://imgur.com/LmBBFaT.jpg",
-      "https://us.123rf.com/450wm/yupiramos/yupiramos2009/yupiramos200902259/154588033-avatar-de-un-dise%C3%B1o-de-mujer-de-moda-ni%C3%B1a-persona-humana-humana-y-tema-de-belleza-ilustraci%C3%B3n.jpg?ver=6",
-      "https://randomuser.me/api/portraits/lego/1.jpg",     
-      "https://randomuser.me/api/portraits/lego/2.jpg",     
-      "https://cdni.iconscout.com/illustration/free/thumb/free-chica-negro-illustration-svg-download-png-1415695.png",
-      "https://img.magnific.com/vector-gratis/ilustracion-empresaria_53876-5857.jpg?semt=ais_hybrid&w=740&q=80"
-    ];
-    const FALLBACK = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
-
-    let fotoTemporal = null;
-    let isSaving = false;
-
-    function showToast(msg, isError = false, duration = 3000) {
-      toastDiv.textContent = msg;
-      toastDiv.style.display = 'block';
-      toastDiv.style.background = isError ? 'rgba(220,53,69,0.95)' : 'rgba(0,0,0,0.85)';
-      clearTimeout(toastDiv._timeout);
-      toastDiv._timeout = setTimeout(() => toastDiv.style.display = 'none', duration);
-    }
-
-    // Función para comprimir imágenes
-    function compressImage(file) {
-      return new Promise((resolve, reject) => {
-        try {
-          const reader = new FileReader();
-          reader.readAsDataURL(file);
-          reader.onload = (e) => {
-            const img = new Image();
-            img.src = e.target.result;
-            img.onload = () => {
-              const canvas = document.createElement('canvas');
-              let width = img.width;
-              let height = img.height;
-              
-              const MAX_SIZE = 600;
-              if (width > MAX_SIZE || height > MAX_SIZE) {
-                if (width > height) {
-                  height = height * (MAX_SIZE / width);
-                  width = MAX_SIZE;
-                } else {
-                  width = width * (MAX_SIZE / height);
-                  height = MAX_SIZE;
-                }
-              }
-              
-              canvas.width = Math.round(width);
-              canvas.height = Math.round(height);
-              const ctx = canvas.getContext('2d');
-              ctx.imageSmoothingEnabled = true;
-              ctx.imageSmoothingQuality = 'high';
-              ctx.drawImage(img, 0, 0, width, height);
-              
-              canvas.toBlob((blob) => {
-                if (blob) {
-                  const compressedFile = new File(
-                    [blob], 
-                    file.name.replace(/\.[^.]+$/, '.jpg'),
-                    { 
-                      type: 'image/jpeg',
-                      lastModified: Date.now()
-                    }
-                  );
-                  console.log('✅ Imagen comprimida:', {
-                    originalSize: (file.size / 1024).toFixed(2) + ' KB',
-                    compressedSize: (blob.size / 1024).toFixed(2) + ' KB'
-                  });
-                  resolve(compressedFile);
-                } else {
-                  reject(new Error('Error al comprimir la imagen'));
-                }
-              }, 'image/jpeg', 0.8);
-            };
-            img.onerror = () => reject(new Error('Error al cargar la imagen'));
-          };
-          reader.onerror = () => reject(new Error('Error al leer el archivo'));
-        } catch (error) {
-          reject(error);
-        }
-      });
-    }
-
-    async function uploadProfileImage(file, userId) {
-      try {
-        console.log('📤 Iniciando subida de imagen...');
-        
-        // Comprimir la imagen
-        const compressedFile = await compressImage(file);
-        
-        // Crear referencia con nombre seguro (sin caracteres especiales)
-        const timestamp = Date.now();
-        const fileName = `profile_${timestamp}.jpg`;
-        const storageRef = ref(storage, `profile_images/${userId}/${fileName}`);
-        
-        console.log('☁️ Subiendo a Firebase Storage...');
-        
-        // Subir con metadatos
-        const metadata = {
-          contentType: 'image/jpeg',
-          customMetadata: {
-            'uploadedBy': userId,
-            'uploadedAt': new Date().toISOString()
-          }
-        };
-        
-        const snapshot = await uploadBytes(storageRef, compressedFile, metadata);
-        console.log('✅ Imagen subida exitosamente');
-        
-        // Obtener URL de descarga
-        const downloadURL = await getDownloadURL(snapshot.ref);
-        console.log('🔗 URL obtenida:', downloadURL);
-        
-        // Eliminar imagen anterior si existe
-        const userRef = doc(db, 'usuarios', userId);
-        const userSnap = await getDoc(userRef);
-        const oldPhotoURL = userSnap.data()?.fotoURL;
-        
-        if (oldPhotoURL && oldPhotoURL.includes('firebasestorage')) {
-          try {
-            console.log('🗑️ Eliminando imagen anterior...');
-            // Extraer la ruta de la URL
-            const oldRef = ref(storage, oldPhotoURL);
-            await deleteObject(oldRef);
-            console.log('✅ Imagen anterior eliminada');
-          } catch (e) {
-            console.log('⚠️ No se pudo eliminar la imagen anterior:', e.message);
-          }
-        }
-        
-        return downloadURL;
-      } catch (error) {
-        console.error('❌ Error al subir imagen:', error);
-        throw error;
-      }
-    }
-
-    async function guardarEnFirestore(user, extra = {}) {
-      const ref = doc(db, 'usuarios', user.uid);
-      const snap = await getDoc(ref);
-      if (!snap.exists()) {
-        await setDoc(ref, {
-          uid: user.uid,
-          email: user.email,
-          nombre: extra.nombre || user.displayName || user.email.split('@')[0],
-          fotoURL: extra.fotoURL || user.photoURL || DEFAULT_AVATARS[0],
-          puntos: 0,
-          fechaRegistro: new Date()
-        });
-      }
-    }
-
-    async function cargarPerfil(user) {
-      if (!user) return;
-      const ref = doc(db, 'usuarios', user.uid);
-      const snap = await getDoc(ref);
-      let nombre, fotoURL;
-      
-      if (snap.exists()) {
-        const data = snap.data();
-        nombre = data.nombre || user.displayName || user.email.split('@')[0];
-        fotoURL = data.fotoURL || user.photoURL || FALLBACK;
-      } else {
-        nombre = user.displayName || user.email.split('@')[0];
-        fotoURL = user.photoURL || FALLBACK;
-        await guardarEnFirestore(user, { nombre, fotoURL });
-      }
-      
-      userNameSpan.textContent = nombre;
-      profileNameDisplay.textContent = nombre;
-      profileAvatar.src = fotoURL;
-      profileAvatar.onerror = () => profileAvatar.src = FALLBACK;
-    }
-
-    function renderAvatars(selected) {
-      avatarGrid.innerHTML = '';
-      DEFAULT_AVATARS.forEach(url => {
-        const img = document.createElement('img');
-        img.src = url;
-        img.className = 'avatar-pred';
-        if (selected === url) img.classList.add('selected');
-        img.onclick = () => {
-          document.querySelectorAll('.avatar-pred').forEach(a => a.classList.remove('selected'));
-          img.classList.add('selected');
-          fotoTemporal = url;
-          modalProfileImage.src = url;
-          uploadPhoto.value = '';
-          console.log('🔄 Avatar seleccionado');
-        };
-        avatarGrid.appendChild(img);
-      });
-    }
-
-    async function guardarPerfil(nuevoNombre, nuevaFoto) {
-      const user = auth.currentUser;
-      if (!user) {
-        showToast('❌ Usuario no autenticado', true);
-        return;
-      }
-      
-      if (isSaving) return;
-      isSaving = true;
-      saveProfileBtn.disabled = true;
-      saveProfileBtn.innerHTML = '<span class="loading-spinner"></span> Guardando...';
-      
-      try {
-        console.log('🔄 Iniciando guardado de perfil...');
-        console.log('📝 Nombre:', nuevoNombre);
-        
-        let fotoURL = null;
-        
-        // Determinar qué tipo de foto es
-        if (nuevaFoto instanceof File) {
-          console.log('📤 Subiendo archivo a Storage...');
-          showToast('📤 Subiendo imagen...', false, 5000);
-          fotoURL = await uploadProfileImage(nuevaFoto, user.uid);
-          console.log('✅ Foto subida exitosamente');
-        } else if (typeof nuevaFoto === 'string' && nuevaFoto.startsWith('http')) {
-          console.log('🌐 Usando URL de avatar');
-          fotoURL = nuevaFoto;
-        } else {
-          // Si no hay foto, usar la actual
-          console.log('⚠️ Manteniendo foto actual');
-          const ref = doc(db, 'usuarios', user.uid);
-          const snap = await getDoc(ref);
-          fotoURL = snap.exists() ? snap.data().fotoURL : null;
-        }
-        
-        // Actualizar perfil en Auth
-        if (nuevoNombre && nuevoNombre !== user.displayName) {
-          console.log('🔄 Actualizando nombre en Auth...');
-          await updateProfile(user, { displayName: nuevoNombre });
-        }
-        
-        // Actualizar Firestore
-        console.log('🔄 Actualizando Firestore...');
-        const ref = doc(db, 'usuarios', user.uid);
-        const updates = {};
-        if (nuevoNombre) updates.nombre = nuevoNombre;
-        if (fotoURL) updates.fotoURL = fotoURL;
-        await updateDoc(ref, updates);
-        console.log('✅ Firestore actualizado');
-        
-        // Actualizar UI
-        userNameSpan.textContent = nuevoNombre || user.displayName;
-        profileNameDisplay.textContent = nuevoNombre || user.displayName;
-        if (fotoURL) {
-          profileAvatar.src = fotoURL;
-          profileAvatar.onerror = () => profileAvatar.src = FALLBACK;
-        }
-        
-        showToast('✅ Perfil actualizado correctamente');
-        editModal.style.display = 'none';
-      } catch (error) {
-        console.error('❌ Error al guardar perfil:', error);
-        
-        // Mensaje de error más amigable
-        let errorMsg = 'Error al guardar';
-        if (error.message.includes('CORS')) {
-          errorMsg = 'Error de CORS. Contacta al administrador.';
-        } else if (error.message.includes('permission')) {
-          errorMsg = 'Error de permisos. Verifica las reglas.';
-        } else {
-          errorMsg = error.message || 'Intenta de nuevo';
-        }
-        showToast('❌ ' + errorMsg, true, 5000);
-      } finally {
-        isSaving = false;
-        saveProfileBtn.disabled = false;
-        saveProfileBtn.innerHTML = 'Guardar cambios';
-      }
-    }
-
-    // Event Listeners
-    document.getElementById('doLoginBtn').onclick = async () => {
-      const email = document.getElementById('loginEmail').value.trim();
-      const pass = document.getElementById('loginPassword').value;
-      if (!email || !pass) return showToast('Completa los campos', true);
-      try {
-        await signInWithEmailAndPassword(auth, email, pass);
-        showToast('✅ Bienvenido');
-      } catch (err) {
-        showToast('❌ Credenciales incorrectas', true);
-      }
-    };
-
-    document.getElementById('doRegisterBtn').onclick = async () => {
-      const name = document.getElementById('regName').value.trim();
-      const email = document.getElementById('regEmail').value.trim();
-      const pass = document.getElementById('regPassword').value;
-      if (!name || !email || !pass) return showToast('Completa los campos', true);
-      if (pass.length < 6) return showToast('Contraseña mínimo 6 caracteres', true);
-      try {
-        const cred = await createUserWithEmailAndPassword(auth, email, pass);
-        await updateProfile(cred.user, { displayName: name });
-        await guardarEnFirestore(cred.user, { nombre: name, fotoURL: DEFAULT_AVATARS[0] });
-        showToast('✅ Registro exitoso');
-      } catch (err) {
-        showToast(err.message.includes('email') ? '❌ Correo ya registrado' : '❌ Error al registrar', true);
-      }
-    };
-
-    document.getElementById('forgotPasswordLink').onclick = async () => {
-      const email = prompt('Ingresa tu correo para restablecer contraseña:');
-      if (email && email.includes('@')) {
-        try {
-          await sendPasswordResetEmail(auth, email);
-          showToast('📨 Revisa tu correo (incluso SPAM)');
-        } catch (err) {
-          showToast(err.message.includes('user-not-found') ? '❌ Correo no registrado' : '❌ Error', true);
-        }
-      }
-    };
-
-    document.getElementById('showRegisterBtn').onclick = () => {
-      loginForm.style.display = 'none';
-      registerForm.style.display = 'block';
-    };
-    
-    document.getElementById('backToLoginBtn').onclick = () => {
-      registerForm.style.display = 'none';
-      loginForm.style.display = 'block';
-    };
-    
-    document.getElementById('logoutBtn').onclick = async () => {
-      await signOut(auth);
-      showToast('👋 Sesión cerrada');
-    };
-
-    document.getElementById('editProfileBtn').onclick = async () => {
-      const user = auth.currentUser;
-      if (!user) return;
-      const ref = doc(db, 'usuarios', user.uid);
-      const snap = await getDoc(ref);
-      const data = snap.exists() ? snap.data() : { nombre: user.displayName, fotoURL: user.photoURL };
-      
-      editNameInput.value = data.nombre || '';
-      const fotoActual = data.fotoURL || FALLBACK;
-      modalProfileImage.src = fotoActual;
-      fotoTemporal = fotoActual;
-      renderAvatars(fotoActual);
-      uploadPhoto.value = '';
-      editModal.style.display = 'flex';
-    };
-
-    document.getElementById('uploadPhotoIcon').onclick = () => uploadPhoto.click();
-    
-    uploadPhoto.onchange = (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
-      
-      console.log('📷 Archivo seleccionado:', file.name, file.size, file.type);
-      
-      const validTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp', 'image/gif'];
-      if (!validTypes.includes(file.type)) {
-        showToast('❌ Formato no soportado. Usa JPG, PNG o WEBP', true);
-        uploadPhoto.value = '';
-        return;
-      }
-      
-      if (file.size > 5 * 1024 * 1024) {
-        showToast('❌ La imagen es muy grande. Máximo 5MB', true);
-        uploadPhoto.value = '';
-        return;
-      }
-      
-      try {
-        const reader = new FileReader();
-        reader.onload = (ev) => {
-          modalProfileImage.src = ev.target.result;
-          document.querySelectorAll('.avatar-pred').forEach(a => a.classList.remove('selected'));
-          fotoTemporal = file;
-          console.log('✅ Foto cargada en el preview');
-          showToast('📷 Foto seleccionada, guarda los cambios');
-        };
-        reader.readAsDataURL(file);
-      } catch (error) {
-        console.error('Error al leer la imagen:', error);
-        showToast('❌ Error al cargar la imagen', true);
-        uploadPhoto.value = '';
-      }
-    };
-
-    saveProfileBtn.onclick = async () => {
-      const nuevoNombre = editNameInput.value.trim();
-      if (!nuevoNombre) {
-        showToast('❌ El nombre no puede estar vacío', true);
-        return;
-      }
-      
-      if (!fotoTemporal) {
-        showToast('❌ Selecciona una foto de perfil', true);
-        return;
-      }
-      
-      await guardarPerfil(nuevoNombre, fotoTemporal);
-    };
-
-    document.getElementById('closeModalBtn').onclick = () => {
-      editModal.style.display = 'none';
-    };
-
-    window.onclick = (e) => {
-      if (e.target === editModal) editModal.style.display = 'none';
-    };
-
-    document.getElementById('whatsappBtn').onclick = (e) => {
-      e.preventDefault();
-      const user = auth.currentUser;
-      let msg = "¡Hola!%20Estoy%20explorando%20Nicaragua%20con%20Guía%20Pinolero";
-      if (user?.displayName) msg = `Hola,%20soy%20${encodeURIComponent(user.displayName)}.%20${msg}`;
-      window.open(`https://wa.me/50588170531?text=${msg}`, '_blank');
-    };
-
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        authCard.style.display = 'none';
-        menuSection.style.display = 'block';
-        cargarPerfil(user);
-      } else {
-        authCard.style.display = 'block';
-        menuSection.style.display = 'none';
-        loginForm.style.display = 'block';
-        registerForm.style.display = 'none';
-        document.getElementById('loginEmail').value = '';
-        document.getElementById('loginPassword').value = '';
-        document.getElementById('regEmail').value = '';
-        document.getElementById('regPassword').value = '';
-        document.getElementById('regName').value = '';
-      }
-    });
-  </script>
-  
-  <!-- Default Statcounter code -->
+  <!-- Statcounter (opcional) -->
   <script type="text/javascript">
-    var sc_project=13287173; 
-    var sc_invisible=1; 
-    var sc_security="b52e73f2"; 
+    var sc_project = 13287173;
+    var sc_invisible = 1;
+    var sc_security = "b52e73f2";
   </script>
-  <script type="text/javascript"
-    src="https://www.statcounter.com/counter/counter.js" async></script>
-  <noscript><div class="statcounter"><a title="Web Analytics"
-    href="https://statcounter.com/" target="_blank"><img class="statcounter"
-    src="https://c.statcounter.com/13287173/0/b52e73f2/1/" alt="Web Analytics"
-    referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
+  <script type="text/javascript" src="https://www.statcounter.com/counter/counter.js" async></script>
+  <noscript>
+    <div class="statcounter">
+      <a title="Web Analytics" href="https://statcounter.com/" target="_blank">
+        <img class="statcounter" src="https://c.statcounter.com/13287173/0/b52e73f2/1/" alt="Web Analytics" referrerpolicy="no-referrer-when-downgrade">
+      </a>
+    </div>
+  </noscript>
 </body>
 </html>
