@@ -10,7 +10,7 @@ const lugares = [
     {
         nombre: "Reloj Público",
         departamento: "Carazo",
-        imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSL83Htlm1nrmfJ40AO1gOxqHFeg0Fu-_CQb-eHLu8YTcp58V8z-2CZyxN3&s=10",
+        imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBQtqaLq2J1a3OxstSwJMgr5BBqrJrLW7WcYJYTOy4hg&s=10",
         pista: "Símbolo histórico de la ciudad caraceña.",
         region: "carazo"
     },
@@ -127,7 +127,7 @@ function handleDeptClick(regionKey, button) {
     
     if (isCorrect) {
         button.classList.add('correcto');
-        score += 10 + (attempts * 2);
+        score += 5 + (attempts * 2);
         scoreEl.textContent = score;
         feedbackEl.textContent = `✅ ¡Correcto! Era ${currentPlace.nombre}`;
         feedbackEl.style.color = '#2ecc71';
