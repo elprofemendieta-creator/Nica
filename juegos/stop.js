@@ -16,7 +16,7 @@ let currentRoomUnsub = null;
 let currentTimer = null;
 
 const sounds = {
-    startRound: new Audio("https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3"),
+    startRound: new Audio("https://www.epidemicsound.com/es/sound-effects/tracks/c964d0a3-9514-4270-959e-e08a11ebe30b.mp3"),
     stop: new Audio("https://www.soundjay.com/misc/sounds/alarm-clock-short-01.mp3"),
     correct: new Audio("https://www.soundjay.com/misc/sounds/button-press-01.mp3"),
     gameEnd: new Audio("https://www.soundjay.com/misc/sounds/applause-01.mp3"),
