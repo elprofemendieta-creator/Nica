@@ -462,6 +462,26 @@
       }
     }
     
+    /* Estilos para el loading */
+    .loading-spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border-top-color: #fff;
+      animation: spin 1s ease-in-out infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    
     @media (max-width: 680px) {
       .container { padding: 1rem; }
       .glass-card { padding: 1.8rem 1.2rem; max-width: 95%; }
@@ -638,6 +658,7 @@
     const editNameInput = document.getElementById('editNameInput');
     const avatarGrid = document.getElementById('avatarGrid');
     const uploadPhoto = document.getElementById('uploadPhoto');
+    const saveProfileBtn = document.getElementById('saveProfileBtn');
 
     const DEFAULT_AVATARS = [
       "https://imgur.com/CFcEYQZ.jpg",
@@ -652,34 +673,88 @@
     const FALLBACK = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
 
     let fotoTemporal = null;
+    let isSaving = false;
 
-    function showToast(msg, isError = false) {
+    function showToast(msg, isError = false, duration = 3000) {
       toastDiv.textContent = msg;
       toastDiv.style.display = 'block';
       toastDiv.style.background = isError ? 'rgba(220,53,69,0.95)' : 'rgba(0,0,0,0.85)';
-      setTimeout(() => toastDiv.style.display = 'none', 3000);
+      clearTimeout(toastDiv._timeout);
+      toastDiv._timeout = setTimeout(() => toastDiv.style.display = 'none', duration);
+    }
+
+    // Función para comprimir imágenes
+    function compressImage(file, maxWidth = 600, maxHeight = 600, quality = 0.7) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = (e) => {
+          const img = new Image();
+          img.src = e.target.result;
+          img.onload = () => {
+            const canvas = document.createElement('canvas');
+            let width = img.width;
+            let height = img.height;
+            
+            if (width > height) {
+              if (width > maxWidth) {
+                height = height * (maxWidth / width);
+                width = maxWidth;
+              }
+            } else {
+              if (height > maxHeight) {
+                width = width * (maxHeight / height);
+                height = maxHeight;
+              }
+            }
+            
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.imageSmoothingEnabled = true;
+            ctx.imageSmoothingQuality = 'high';
+            ctx.drawImage(img, 0, 0, width, height);
+            
+            canvas.toBlob((blob) => {
+              if (blob) {
+                const compressedFile = new File([blob], file.name, {
+                  type: 'image/jpeg',
+                  lastModified: Date.now()
+                });
+                resolve(compressedFile);
+              } else {
+                reject(new Error('Error al comprimir la imagen'));
+              }
+            }, 'image/jpeg', quality);
+          };
+          img.onerror = reject;
+        };
+        reader.onerror = reject;
+      });
     }
 
     async function uploadProfileImage(file, userId) {
       try {
-        // Crear referencia única para la imagen
-        const storageRef = ref(storage, `profile_images/${userId}/${Date.now()}_${file.name}`);
+        // Comprimir la imagen antes de subir
+        const compressedFile = await compressImage(file, 600, 600, 0.7);
         
-        // Subir la imagen
-        const snapshot = await uploadBytes(storageRef, file);
+        // Crear referencia única para la imagen
+        const fileExtension = compressedFile.name.split('.').pop() || 'jpg';
+        const storageRef = ref(storage, `profile_images/${userId}/${Date.now()}.${fileExtension}`);
+        
+        // Subir la imagen comprimida
+        const snapshot = await uploadBytes(storageRef, compressedFile);
         
         // Obtener URL de descarga
         const downloadURL = await getDownloadURL(snapshot.ref);
         
-        // Si el usuario tenía una imagen anterior, eliminarla (opcional)
+        // Eliminar imagen anterior si existe
         const userRef = doc(db, 'usuarios', userId);
         const userSnap = await getDoc(userRef);
         const oldPhotoURL = userSnap.data()?.fotoURL;
         
-        // Si la URL antigua es de Firebase Storage, eliminarla
         if (oldPhotoURL && oldPhotoURL.includes('firebasestorage')) {
           try {
-            // Extraer la ruta de la URL
             const oldRef = ref(storage, oldPhotoURL);
             await deleteObject(oldRef);
           } catch (e) {
@@ -741,9 +816,10 @@
         img.onclick = () => {
           document.querySelectorAll('.avatar-pred').forEach(a => a.classList.remove('selected'));
           img.classList.add('selected');
-          // Para avatares predeterminados, guardamos la URL directamente
           fotoTemporal = url;
           modalProfileImage.src = url;
+          // Resetear el input file para que no haya conflictos
+          uploadPhoto.value = '';
         };
         avatarGrid.appendChild(img);
       });
@@ -751,16 +827,38 @@
 
     async function guardarPerfil(nuevoNombre, nuevaFoto) {
       const user = auth.currentUser;
-      if (!user) return;
+      if (!user) {
+        showToast('❌ Usuario no autenticado', true);
+        return;
+      }
+      
+      if (isSaving) return;
+      isSaving = true;
+      saveProfileBtn.disabled = true;
+      saveProfileBtn.innerHTML = '<span class="loading-spinner"></span> Guardando...';
       
       try {
         let fotoURL = nuevaFoto;
         
         // Si es un archivo (File), subirlo a Storage
         if (nuevaFoto instanceof File) {
-          showToast('📤 Subiendo imagen...');
+          showToast('📤 Subiendo imagen...', false, 5000);
           fotoURL = await uploadProfileImage(nuevaFoto, user.uid);
+        } else if (typeof nuevaFoto === 'string' && nuevaFoto.startsWith('data:image')) {
+          // Si es una URL de datos (base64), la convertimos a File para subirla
+          try {
+            const response = await fetch(nuevaFoto);
+            const blob = await response.blob();
+            const file = new File([blob], 'profile.jpg', { type: 'image/jpeg' });
+            showToast('📤 Subiendo imagen...', false, 5000);
+            fotoURL = await uploadProfileImage(file, user.uid);
+          } catch (e) {
+            console.error('Error al procesar imagen base64:', e);
+            // Si falla, mantener la URL actual
+            fotoURL = nuevaFoto;
+          }
         }
+        // Si es una URL string (avatar predeterminado), la usamos directamente
         
         // Actualizar perfil en Auth
         if (nuevoNombre && nuevoNombre !== user.displayName) {
@@ -777,13 +875,20 @@
         // Actualizar UI
         userNameSpan.textContent = nuevoNombre || user.displayName;
         profileNameDisplay.textContent = nuevoNombre || user.displayName;
-        if (fotoURL) profileAvatar.src = fotoURL;
+        if (fotoURL) {
+          profileAvatar.src = fotoURL;
+          profileAvatar.onerror = () => profileAvatar.src = FALLBACK;
+        }
         
-        showToast('✅ Perfil actualizado');
+        showToast('✅ Perfil actualizado correctamente');
         editModal.style.display = 'none';
       } catch (error) {
         console.error('Error al guardar perfil:', error);
-        showToast('Error al guardar: ' + error.message, true);
+        showToast('❌ Error al guardar: ' + (error.message || 'Intenta de nuevo'), true, 5000);
+      } finally {
+        isSaving = false;
+        saveProfileBtn.disabled = false;
+        saveProfileBtn.innerHTML = 'Guardar cambios';
       }
     }
 
@@ -796,7 +901,7 @@
         await signInWithEmailAndPassword(auth, email, pass);
         showToast('✅ Bienvenido');
       } catch (err) {
-        showToast('Credenciales incorrectas', true);
+        showToast('❌ Credenciales incorrectas', true);
       }
     };
 
@@ -812,7 +917,7 @@
         await guardarEnFirestore(cred.user, { nombre: name, fotoURL: DEFAULT_AVATARS[0] });
         showToast('✅ Registro exitoso');
       } catch (err) {
-        showToast(err.message.includes('email') ? 'Correo ya registrado' : 'Error', true);
+        showToast(err.message.includes('email') ? '❌ Correo ya registrado' : '❌ Error al registrar', true);
       }
     };
 
@@ -823,7 +928,7 @@
           await sendPasswordResetEmail(auth, email);
           showToast('📨 Revisa tu correo (incluso SPAM)');
         } catch (err) {
-          showToast(err.message.includes('user-not-found') ? 'Correo no registrado' : 'Error', true);
+          showToast(err.message.includes('user-not-found') ? '❌ Correo no registrado' : '❌ Error', true);
         }
       }
     };
@@ -855,33 +960,61 @@
       modalProfileImage.src = fotoActual;
       fotoTemporal = fotoActual;
       renderAvatars(fotoActual);
+      uploadPhoto.value = ''; // Resetear input file
       editModal.style.display = 'flex';
     };
 
     document.getElementById('uploadPhotoIcon').onclick = () => uploadPhoto.click();
     
-    uploadPhoto.onchange = (e) => {
+    uploadPhoto.onchange = async (e) => {
       const file = e.target.files[0];
       if (!file) return;
-      if (!file.type.startsWith('image/')) return showToast('Selecciona una imagen', true);
-      if (file.size > 5 * 1024 * 1024) return showToast('Máximo 5MB', true);
       
-      // Guardar el archivo directamente, no la URL base64
-      fotoTemporal = file;
+      // Validar tipo de archivo
+      const validTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp', 'image/gif'];
+      if (!validTypes.includes(file.type)) {
+        showToast('❌ Formato no soportado. Usa JPG, PNG o WEBP', true);
+        uploadPhoto.value = '';
+        return;
+      }
       
-      // Mostrar preview
-      const reader = new FileReader();
-      reader.onload = (ev) => {
-        modalProfileImage.src = ev.target.result;
-        document.querySelectorAll('.avatar-pred').forEach(a => a.classList.remove('selected'));
-        showToast('📷 Foto seleccionada, guarda los cambios');
-      };
-      reader.readAsDataURL(file);
+      // Validar tamaño (máximo 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        showToast('❌ La imagen es muy grande. Máximo 5MB', true);
+        uploadPhoto.value = '';
+        return;
+      }
+      
+      try {
+        // Mostrar preview
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          modalProfileImage.src = ev.target.result;
+          document.querySelectorAll('.avatar-pred').forEach(a => a.classList.remove('selected'));
+          // Guardar el archivo para subirlo después
+          fotoTemporal = file;
+          showToast('📷 Foto seleccionada, guarda los cambios');
+        };
+        reader.readAsDataURL(file);
+      } catch (error) {
+        console.error('Error al leer la imagen:', error);
+        showToast('❌ Error al cargar la imagen', true);
+        uploadPhoto.value = '';
+      }
     };
 
-    document.getElementById('saveProfileBtn').onclick = async () => {
+    saveProfileBtn.onclick = async () => {
       const nuevoNombre = editNameInput.value.trim();
-      if (!nuevoNombre) return showToast('El nombre no puede estar vacío', true);
+      if (!nuevoNombre) {
+        showToast('❌ El nombre no puede estar vacío', true);
+        return;
+      }
+      
+      if (!fotoTemporal) {
+        showToast('❌ Selecciona una foto de perfil', true);
+        return;
+      }
+      
       await guardarPerfil(nuevoNombre, fotoTemporal);
     };
 
