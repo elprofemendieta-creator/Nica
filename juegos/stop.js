@@ -49,8 +49,7 @@ async function iniciarSesionAutomatica() {
         const snap = await userRef.get();
         if (!snap.exists) {
             const randomName = "Pinolero" + Math.floor(Math.random() * 1000);
-            const avatarOptions = ["🌽", "🦜", "🌋", "🏝️", "🎭", "🇳🇮"];
-            const avatar = avatarOptions[Math.floor(Math.random() * avatarOptions.length)];
+            const avatar = ["🌽", "🦜", "🌋", "🏝️", "🎭", "🇳🇮"][Math.floor(Math.random() * 6)];
             await userRef.set({
                 uid: user.uid,
                 nombre: randomName,
@@ -68,6 +67,15 @@ async function iniciarSesionAutomatica() {
             const data = snap.data();
             currentUserData = { uid: user.uid, ...data };
         }
+        // Asegurar valores mínimos para evitar undefined
+        currentUserData.nombre = currentUserData.nombre || "Pinolero";
+        currentUserData.avatar = currentUserData.avatar || "🎭";
+        currentUserData.puntosGlobales = currentUserData.puntosGlobales || 0;
+        currentUserData.victorias = currentUserData.victorias || 0;
+        currentUserData.partidasJugadas = currentUserData.partidasJugadas || 0;
+        currentUserData.nivel = currentUserData.nivel || "Novato Pinolero";
+        currentUserData.experiencia = currentUserData.experiencia || 0;
+
         updateUserUI();
         mostrarPanelPrincipal();
         if (roomCodeFromUrl) setTimeout(() => joinRoomWithCode(roomCodeFromUrl), 1000);
@@ -87,13 +95,13 @@ continueBtn.addEventListener('click', async () => {
 
 function updateUserUI() {
     if (!currentUserData) return;
-    document.getElementById('userLevel').innerText = currentUserData.nivel || "Novato Pinolero";
-    document.getElementById('userPoints').innerText = currentUserData.puntosGlobales || 0;
-    document.getElementById('userWins').innerText = currentUserData.victorias || 0;
+    document.getElementById('userLevel').innerText = currentUserData.nivel;
+    document.getElementById('userPoints').innerText = currentUserData.puntosGlobales;
+    document.getElementById('userWins').innerText = currentUserData.victorias;
     const header = document.getElementById('userHeader');
     if (header) {
-        header.innerHTML = `<div class="avatar">${currentUserData.avatar || '🇳🇮'}</div>
-                            <div><strong>${currentUserData.nombre}</strong><br>⭐ ${currentUserData.puntosGlobales || 0} pts</div>
+        header.innerHTML = `<div class="avatar">${currentUserData.avatar}</div>
+                            <div><strong>${currentUserData.nombre}</strong><br>⭐ ${currentUserData.puntosGlobales} pts</div>
                             <button id="logoutBtn" class="btn">🚪 Salir</button>`;
         document.getElementById('logoutBtn')?.addEventListener('click', () => {
             auth.signOut();
@@ -146,13 +154,13 @@ document.getElementById('catStyleSelect').addEventListener('change', (e) => {
     }
 });
 
-// Crear sala
+// Crear sala (valores asegurados)
 document.getElementById('confirmCreateRoom').addEventListener('click', async () => {
     if (!currentUserData) return alert("Debes iniciar sesión primero.");
     const roomName = document.getElementById('roomName').value.trim() || "Sala Pinolera";
-    const maxPlayers = parseInt(document.getElementById('maxPlayers').value);
-    const roundTime = parseInt(document.getElementById('roundTime').value);
-    const numRounds = parseInt(document.getElementById('numRounds').value);
+    const maxPlayers = parseInt(document.getElementById('maxPlayers').value) || 4;
+    const roundTime = parseInt(document.getElementById('roundTime').value) || 60;
+    const numRounds = parseInt(document.getElementById('numRounds').value) || 3;
     const catStyle = document.getElementById('catStyleSelect').value;
 
     let categories = [];
@@ -169,13 +177,28 @@ document.getElementById('confirmCreateRoom').addEventListener('click', async () 
     const roomId = Math.random().toString(36).substring(2, 8).toUpperCase();
     try {
         await db.collection("rooms").doc(roomId).set({
-            roomId, roomName, host: currentUserData.uid, maxPlayers, roundTime, numRounds,
+            roomId: roomId,
+            roomName: roomName,
+            host: currentUserData.uid,
+            maxPlayers: maxPlayers,
+            roundTime: roundTime,
+            numRounds: numRounds,
             categories: categories,
-            players: [{ uid: currentUserData.uid, nombre: currentUserData.nombre, avatar: currentUserData.avatar, total: 0 }],
-            state: "waiting", currentRound: 0, currentLetter: null, stopTriggered: false
+            players: [{
+                uid: currentUserData.uid,
+                nombre: currentUserData.nombre || "Jugador",
+                avatar: currentUserData.avatar || "🎭",
+                total: 0
+            }],
+            state: "waiting",
+            currentRound: 0,
+            currentLetter: null,
+            stopTriggered: false
         });
         await db.collection("rooms").doc(roomId).collection("messages").add({
-            sender: "Sistema", text: `${currentUserData.nombre} creó la sala`, timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            sender: "Sistema",
+            text: `${currentUserData.nombre} creó la sala`,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
         });
         closeModals();
         alert(`✅ Sala creada. Código: ${roomId}`);
@@ -198,13 +221,15 @@ async function joinRoomWithCode(code) {
     await roomRef.update({
         players: firebase.firestore.FieldValue.arrayUnion({
             uid: currentUserData.uid,
-            nombre: currentUserData.nombre,
-            avatar: currentUserData.avatar,
+            nombre: currentUserData.nombre || "Jugador",
+            avatar: currentUserData.avatar || "🎭",
             total: 0
         })
     });
     await roomRef.collection("messages").add({
-        sender: "Sistema", text: `${currentUserData.nombre} se unió`, timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        sender: "Sistema",
+        text: `${currentUserData.nombre} se unió`,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp()
     });
     loadRoomView(code);
     playSound("correct");
@@ -224,7 +249,7 @@ async function loadRoomView(roomId) {
         if (!roomSnap.exists) { alert("Sala eliminada"); loadMainMenu(); return; }
         const room = roomSnap.data();
         const isHost = room.host === currentUserData.uid;
-        const playersList = room.players;
+        const playersList = room.players || [];
         let html = `<div class="card">
             <h2>🏠 ${room.roomName} <span style="font-size:1rem; background:#eee; padding:4px 12px; border-radius:20px;">Código: ${roomId}</span></h2>
             <div class="grid-2">
@@ -249,7 +274,9 @@ async function loadRoomView(roomId) {
         document.getElementById('sendChat')?.addEventListener('click', async () => {
             const msg = document.getElementById('chatInput').value;
             if (msg) await db.collection("rooms").doc(roomId).collection("messages").add({
-                sender: currentUserData.nombre, text: msg, timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                sender: currentUserData.nombre || "Anónimo",
+                text: msg,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
             });
             document.getElementById('chatInput').value = '';
         });
