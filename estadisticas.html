@@ -221,6 +221,19 @@
         <div id="comentariosMsg" class="result-msg"></div>
     </div>
 
+    <!-- SECCIÓN: FORO -->
+    <div class="admin-section">
+        <h3>📢 Foro</h3>
+        <button id="cargarForoBtn" class="btn btn-primary" style="margin-bottom:15px;">🔄 Cargar mensajes del foro</button>
+        <div class="table-container">
+            <table>
+                <thead><tr><th>Autor</th><th>Mensaje</th><th>Fecha</th><th>Acción</th></tr></thead>
+                <tbody id="tablaForo"><tr><td colspan="4" style="text-align:center">Sin datos</td></tr></tbody>
+            </table>
+        </div>
+        <div id="foroMsg" class="result-msg"></div>
+    </div>
+
     <!-- SECCIÓN: USUARIOS -->
     <div class="admin-section">
         <h3>👥 Usuarios registrados</h3>
@@ -250,13 +263,12 @@
     };
     // =============================================================
 
-    // Sistema de roles y credenciales
     const ROLES = {
         admin: {
             password: "admin2026",
             twoFactorCode: "123456",
             label: "Administrador",
-            permissions: ["deleteUser", "deleteComment", "viewStats", "exportExcel"]
+            permissions: ["deleteUser", "deleteComment", "deleteForo", "viewStats", "exportExcel"]
         },
         auditor: {
             password: "auditor2026",
@@ -265,7 +277,7 @@
             permissions: ["viewStats", "exportExcel"]
         }
     };
-    const SESSION_DURATION = 30 * 60 * 1000; // 30 min
+    const SESSION_DURATION = 30 * 60 * 1000;
 
     let app, db;
     let currentRole = null;
@@ -273,7 +285,7 @@
     let sessionTimeout, inactivityTimer;
     let datosActuales = [];
 
-    // Elementos DOM principales
+    // Elementos DOM
     const passwordModal = document.getElementById('passwordModal');
     const twoFactorModal = document.getElementById('twoFactorModal');
     const mainContent = document.getElementById('mainContent');
@@ -289,6 +301,9 @@
     const cargarComentariosBtn = document.getElementById('cargarComentariosBtn');
     const tablaComentarios = document.getElementById('tablaComentarios');
     const comentariosMsg = document.getElementById('comentariosMsg');
+    const cargarForoBtn = document.getElementById('cargarForoBtn');
+    const tablaForo = document.getElementById('tablaForo');
+    const foroMsg = document.getElementById('foroMsg');
     const cargarUsuariosBtn = document.getElementById('cargarUsuariosBtn');
     const tablaUsuarios = document.getElementById('tablaUsuarios');
     const usuariosMsg = document.getElementById('usuariosMsg');
@@ -409,11 +424,7 @@
         rolBadge.innerHTML = `🔰 Rol: <strong>${ROLES[currentRole].label}</strong>`;
         inicializarFirebase();
         verEstadisticasBtn.disabled = false;
-        // Permisos
-        const permisos = ROLES[currentRole].permissions;
-        if (!permisos.includes('deleteComment')) {
-            // Ocultaremos botones de eliminación más tarde, pero dejamos cargar datos
-        }
+        // Los permisos se reflejan en los botones de eliminación que se generan dinámicamente
     }
 
     function actualizarTimerVisual() {
@@ -576,6 +587,50 @@
         }
     };
 
+    // ================= FORO =================
+    cargarForoBtn.addEventListener('click', cargarForo);
+    async function cargarForo() {
+        tablaForo.innerHTML = '<tr><td colspan="4" class="loading">Cargando...</td></tr>';
+        foroMsg.textContent = '';
+        try {
+            const snap = await db.collection("foro").orderBy("fecha", "desc").get();
+            if (snap.empty) {
+                tablaForo.innerHTML = '<tr><td colspan="4">No hay mensajes en el foro</td></tr>';
+                return;
+            }
+            let html = '';
+            snap.forEach(doc => {
+                const d = doc.data();
+                const autor = d.usuarioNombre || d.autor || d.usuarioId || "Anónimo";
+                const texto = d.mensaje || d.texto || d.contenido || "";
+                const fecha = d.fecha ? new Date(d.fecha.seconds * 1000).toLocaleString() : "Sin fecha";
+                const deleteBtn = ROLES[currentRole].permissions.includes('deleteForo')
+                    ? `<button class="btn btn-danger" style="padding:5px 15px;" onclick="eliminarForo('${doc.id}')">🗑️ Borrar</button>`
+                    : `<button class="btn" disabled style="padding:5px 15px;">🔒 Sin permiso</button>`;
+                html += `<tr>
+                    <td>${escapeHtml(autor)}</td>
+                    <td>${escapeHtml(texto)}</td>
+                    <td>${fecha}</td>
+                    <td>${deleteBtn}</td>
+                </tr>`;
+            });
+            tablaForo.innerHTML = html;
+        } catch (e) {
+            tablaForo.innerHTML = `<tr><td colspan="4">Error: ${e.message}</td></tr>`;
+        }
+    }
+
+    window.eliminarForo = async function(id) {
+        if (!confirm("¿Eliminar este mensaje del foro?")) return;
+        try {
+            await db.collection("foro").doc(id).delete();
+            foroMsg.innerHTML = '✅ Mensaje eliminado.';
+            cargarForo();
+        } catch (e) {
+            foroMsg.innerHTML = `❌ Error: ${e.message}`;
+        }
+    };
+
     // ================= USUARIOS =================
     cargarUsuariosBtn.addEventListener('click', cargarUsuarios);
     async function cargarUsuarios() {
@@ -610,7 +665,6 @@
         if (!confirm(`¿Eliminar permanentemente al usuario ${uid}?`)) return;
         try {
             await db.collection("usuarios").doc(uid).delete();
-            // También podrías borrar sus comentarios/visitas si quieres, pero por ahora solo el documento
             usuariosMsg.innerHTML = '✅ Usuario eliminado.';
             cargarUsuarios();
         } catch (e) {
