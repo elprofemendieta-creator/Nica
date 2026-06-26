@@ -1,4 +1,4 @@
-<script type="module">
+
 import { initializeApp } from "firebase/app";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getFirestore, collection, query, orderBy, limit, getDocs, where, addDoc, deleteDoc, doc, onSnapshot, updateDoc, arrayUnion, arrayRemove, getDoc, setDoc } from "firebase/firestore";
@@ -519,4 +519,4 @@ onSnapshot(doc(db, "usuarios", user.uid), () => {
 cargarAmigos();
 });
 });
-</script>
+
