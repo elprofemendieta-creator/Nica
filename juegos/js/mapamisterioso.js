@@ -15,26 +15,28 @@ const lugares = [
         region: "rivas"
     },
     {
-        nombre: "Cañón de Somoto",
-        departamento: "Madriz",
-        imagen: "https://images.ctfassets.net/wka5p55uxbqr/7q7zDs3SLB8g8h1QnxWqcc/216faff814bf1489cff70d698cbee85e/canion-somoto.jpg?w=1920&q=90",
-        pista: "Es un cañón formado por el río Coco",
-        region: "madriz"
-    },
-    {
         nombre: "Volcán Masaya",
         departamento: "Masaya",
         imagen: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Cratervolcan.jpg/330px-Cratervolcan.jpg",
         pista: "Es conocido como 'La Boca del Infierno'",
         region: "masaya"
     },
+    
     {
         nombre: "Corn Islands",
         departamento: "RAAS",
         imagen: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/CornIsland.JPG/250px-CornIsland.JPG",
         pista: "Islas caribeñas con aguas cristalinas",
         region: "raas"
-    }
+    },
+    {
+        nombre: "Cañón de Somoto",
+        departamento: "Madriz",
+        imagen: "https://images.ctfassets.net/wka5p55uxbqr/7q7zDs3SLB8g8h1QnxWqcc/216faff814bf1489cff70d698cbee85e/canion-somoto.jpg?w=1920&q=90",
+        pista: "Es un cañón formado por el río Coco",
+        region: "madriz"
+    },
+    
 ];
 
 // ===== MAPA DE DEPARTAMENTOS =====
