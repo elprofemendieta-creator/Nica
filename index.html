@@ -571,7 +571,6 @@
           <i class="fas fa-camera"></i>
         </div>
       </div>
-      <!-- CORREGIDO: Sin capture para que abra la galería -->
       <input type="file" id="uploadPhoto" accept="image/*" style="display: none;" />
       
       <div class="input-group">
@@ -653,7 +652,7 @@
     const FALLBACK = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
 
     let fotoTemporal = null;
-    let avatarSubido = false;
+    let urlSubida = false;
 
     function showToast(msg, isError = false) {
       toastDiv.textContent = msg;
@@ -663,82 +662,27 @@
       toastDiv.timeout = setTimeout(() => toastDiv.style.display = 'none', 3000);
     }
 
-    // Función para comprimir imagen
-    function compressImage(file) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = (event) => {
-          const img = new Image();
-          img.src = event.target.result;
-          img.onload = () => {
-            const canvas = document.createElement('canvas');
-            const MAX_WIDTH = 300;
-            const MAX_HEIGHT = 300;
-            let width = img.width;
-            let height = img.height;
-
-            if (width > height) {
-              if (width > MAX_WIDTH) {
-                height = Math.round((height * MAX_WIDTH) / width);
-                width = MAX_WIDTH;
-              }
-            } else {
-              if (height > MAX_HEIGHT) {
-                width = Math.round((width * MAX_HEIGHT) / height);
-                height = MAX_HEIGHT;
-              }
-            }
-
-            canvas.width = width;
-            canvas.height = height;
-            const ctx = canvas.getContext('2d');
-            ctx.imageSmoothingEnabled = true;
-            ctx.imageSmoothingQuality = 'high';
-            ctx.drawImage(img, 0, 0, width, height);
-            
-            canvas.toBlob((blob) => {
-              if (blob) {
-                resolve(new File([blob], file.name, { type: 'image/jpeg' }));
-              } else {
-                reject(new Error('Error al comprimir imagen'));
-              }
-            }, 'image/jpeg', 0.7);
-          };
-          img.onerror = reject;
-        };
-        reader.onerror = reject;
-      });
-    }
-
-    // Función para subir avatar a Firebase Storage
+    // FUNCIÓN SIMPLIFICADA - Sin compresión para evitar errores
     async function uploadAvatar(file, userId) {
       try {
-        const compressedFile = await compressImage(file);
+        // Crear nombre único
         const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.jpg`;
         const storageRef = ref(storage, `avatars/${userId}/${fileName}`);
-        const snapshot = await uploadBytes(storageRef, compressedFile);
+        
+        console.log('📤 Subiendo archivo:', file.name, 'Tamaño:', file.size);
+        
+        // Subir el archivo directamente sin comprimir
+        const snapshot = await uploadBytes(storageRef, file);
+        console.log('✅ Archivo subido:', snapshot.ref.fullPath);
+        
+        // Obtener la URL de descarga
         const downloadURL = await getDownloadURL(snapshot.ref);
+        console.log('📎 URL obtenida:', downloadURL);
+        
         return downloadURL;
       } catch (error) {
-        console.error("Error subiendo avatar:", error);
+        console.error('❌ Error en uploadAvatar:', error);
         throw error;
-      }
-    }
-
-    // Función para eliminar avatar anterior
-    async function deleteOldAvatar(userId, oldPhotoURL) {
-      if (!oldPhotoURL || !oldPhotoURL.includes('firebasestorage')) {
-        return;
-      }
-      try {
-        const url = new URL(oldPhotoURL);
-        const path = decodeURIComponent(url.pathname.split('/o/')[1].split('?')[0]);
-        const oldRef = ref(storage, path);
-        await deleteObject(oldRef);
-        console.log('Avatar anterior eliminado');
-      } catch (error) {
-        console.log('No se pudo eliminar el avatar anterior:', error);
       }
     }
 
@@ -754,6 +698,7 @@
           puntos: 0,
           fechaRegistro: new Date()
         });
+        console.log('📝 Usuario creado en Firestore');
       }
     }
 
@@ -767,6 +712,7 @@
         const data = snap.data();
         nombre = data.nombre || user.displayName || user.email.split('@')[0];
         fotoURL = data.fotoURL || user.photoURL || FALLBACK;
+        console.log('📸 Foto cargada desde Firestore:', fotoURL);
       } else {
         nombre = user.displayName || user.email.split('@')[0];
         fotoURL = user.photoURL || FALLBACK;
@@ -791,7 +737,8 @@
           img.classList.add('selected');
           modalProfileImage.src = url;
           fotoTemporal = url;
-          avatarSubido = false;
+          urlSubida = false;
+          console.log('🔄 Avatar predeterminado seleccionado:', url);
         };
         avatarGrid.appendChild(img);
       });
@@ -803,9 +750,11 @@
       
       try {
         showToast('💾 Guardando cambios...');
+        console.log('💾 Guardando perfil - Nombre:', nuevoNombre, 'Foto:', nuevaFoto);
         
         if (nuevoNombre && nuevoNombre !== user.displayName) {
           await updateProfile(user, { displayName: nuevoNombre });
+          console.log('✅ Nombre actualizado en Auth');
         }
         
         const ref = doc(db, 'usuarios', user.uid);
@@ -815,15 +764,16 @@
         const updates = {};
         if (nuevoNombre) updates.nombre = nuevoNombre;
         
-        if (nuevaFoto && nuevaFoto !== oldData.fotoURL) {
-          if (oldData.fotoURL && oldData.fotoURL.includes('firebasestorage')) {
-            await deleteOldAvatar(user.uid, oldData.fotoURL);
-          }
+        // Guardar la foto SIEMPRE que haya una nueva
+        if (nuevaFoto) {
           updates.fotoURL = nuevaFoto;
+          console.log('📸 Guardando nueva foto en Firestore:', nuevaFoto);
         }
         
         await updateDoc(ref, updates);
+        console.log('✅ Firestore actualizado:', updates);
         
+        // Actualizar UI
         userNameSpan.textContent = nuevoNombre || user.displayName;
         profileNameDisplay.textContent = nuevoNombre || user.displayName;
         if (nuevaFoto) {
@@ -832,14 +782,15 @@
         
         showToast('✅ Perfil actualizado correctamente');
         editModal.style.display = 'none';
-        avatarSubido = false;
+        urlSubida = false;
       } catch (error) {
-        console.error('Error guardando perfil:', error);
+        console.error('❌ Error guardando perfil:', error);
         showToast('❌ Error al guardar: ' + error.message, true);
       }
     }
 
-    // Event Listeners
+    // ============ EVENT LISTENERS ============
+    
     document.getElementById('doLoginBtn').onclick = async () => {
       const email = document.getElementById('loginEmail').value.trim();
       const pass = document.getElementById('loginPassword').value;
@@ -922,22 +873,30 @@
       fotoTemporal = fotoActual;
       renderAvatars(fotoActual);
       editModal.style.display = 'flex';
-      avatarSubido = false;
+      urlSubida = false;
+      console.log('✏️ Editando perfil - Foto actual:', fotoActual);
     };
 
     document.getElementById('uploadPhotoIcon').onclick = () => uploadPhoto.click();
     
-    // Evento para subir foto desde la galería
+    // ============ EVENTO PRINCIPAL PARA SUBIR FOTO ============
     uploadPhoto.onchange = async (e) => {
       const file = e.target.files[0];
-      if (!file) return;
+      if (!file) {
+        console.log('⚠️ No se seleccionó ningún archivo');
+        return;
+      }
       
+      console.log('📁 Archivo seleccionado:', file.name, 'Tamaño:', file.size, 'Tipo:', file.type);
+      
+      // Validar que sea una imagen
       if (!file.type.startsWith('image/')) {
         showToast('Selecciona una imagen válida', true);
         uploadPhoto.value = '';
         return;
       }
       
+      // Validar tamaño (máximo 5MB)
       if (file.size > 5 * 1024 * 1024) {
         showToast('La imagen no puede superar los 5MB', true);
         uploadPhoto.value = '';
@@ -953,17 +912,32 @@
         }
         
         showToast('📤 Subiendo foto...');
+        console.log('🚀 Iniciando subida a Firebase Storage...');
+        
+        // Subir la foto a Firebase Storage
         const downloadURL = await uploadAvatar(file, user.uid);
+        console.log('✅ URL obtenida de Storage:', downloadURL);
+        
+        // Guardar la URL en la variable temporal
         fotoTemporal = downloadURL;
-        avatarSubido = true;
+        urlSubida = true;
+        
+        // Actualizar la vista previa
         modalProfileImage.src = downloadURL;
+        console.log('🖼️ Vista previa actualizada');
+        
+        // Deseleccionar avatares predeterminados
         document.querySelectorAll('.avatar-pred').forEach(a => a.classList.remove('selected'));
+        
         showToast('✅ Foto subida correctamente. ¡Guarda los cambios!');
+        console.log('🎉 Proceso de subida completado exitosamente');
+        
       } catch (error) {
-        console.error('Error al subir foto:', error);
+        console.error('❌ ERROR EN LA SUBIDA:', error);
         showToast('❌ Error al subir la foto: ' + error.message, true);
       }
       
+      // Limpiar el input para poder seleccionar la misma imagen nuevamente
       uploadPhoto.value = '';
     };
 
@@ -973,6 +947,8 @@
         showToast('El nombre no puede estar vacío', true);
         return;
       }
+      
+      console.log('💾 Guardando perfil - fotoTemporal:', fotoTemporal, 'urlSubida:', urlSubida);
       
       if (!fotoTemporal) {
         showToast('No hay foto seleccionada', true);
@@ -984,13 +960,13 @@
 
     document.getElementById('closeModalBtn').onclick = () => {
       editModal.style.display = 'none';
-      avatarSubido = false;
+      urlSubida = false;
     };
 
     window.onclick = (e) => {
       if (e.target === editModal) {
         editModal.style.display = 'none';
-        avatarSubido = false;
+        urlSubida = false;
       }
     };
 
