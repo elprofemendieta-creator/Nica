@@ -1,7 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, sendPasswordResetEmail, updateProfile } from "firebase/auth";
 import { getFirestore, doc, setDoc, getDoc, updateDoc } from "firebase/firestore";
-// Ya NO importamos firebase/storage
 
 const firebaseConfig = {
   apiKey: "AIzaSyA6jVICuE17KJcO34gE1brMxqWEfNd3Fy0",
@@ -16,7 +15,7 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// Elementos DOM (igual que antes)
+// Elementos DOM
 const authCard = document.getElementById('authCard');
 const menuSection = document.getElementById('menuSection');
 const userNameSpan = document.getElementById('userName');
@@ -32,7 +31,7 @@ const avatarGrid = document.getElementById('avatarGrid');
 const uploadPhoto = document.getElementById('uploadPhoto');
 const saveProfileBtn = document.getElementById('saveProfileBtn');
 
-// Imágenes predeterminadas (puedes mantener las mismas)
+// Imágenes predeterminadas
 const DEFAULT_AVATARS = [
   "https://imgur.com/CFcEYQZ.jpg",
   "https://imgur.com/rf8HVpD.jpg",
@@ -56,7 +55,7 @@ function showToast(msg, isError = false, duration = 3000) {
   toastDiv._timeout = setTimeout(() => toastDiv.style.display = 'none', duration);
 }
 
-// ===== COMPRESIÓN DE IMAGEN (igual que antes) =====
+// ===== COMPRESIÓN DE IMAGEN =====
 function compressImage(file) {
   return new Promise((resolve, reject) => {
     try {
@@ -109,17 +108,16 @@ function compressImage(file) {
 
 // ===== SUBIR A IMGBB =====
 async function uploadToImgBB(file) {
-  // Convertir el archivo a base64
   const reader = new FileReader();
   const dataUrl = await new Promise((resolve, reject) => {
     reader.onload = () => resolve(reader.result);
     reader.onerror = reject;
     reader.readAsDataURL(file);
   });
-  const base64 = dataUrl.split(',')[1]; // extraer solo la parte base64
+  const base64 = dataUrl.split(',')[1];
 
   const formData = new FormData();
-  formData.append('key', '241be8181060d6203088a57a14c355fa'); // Tu API key
+  formData.append('key', '241be8181060d6203088a57a14c355fa');
   formData.append('image', base64);
 
   const response = await fetch('https://api.imgbb.com/1/upload', {
@@ -133,7 +131,7 @@ async function uploadToImgBB(file) {
   if (!json.success) {
     throw new Error(json.error?.message || 'Error desconocido en ImgBB');
   }
-  return json.data.url; // URL pública de la imagen
+  return json.data.url;
 }
 
 // ===== GUARDAR EN FIRESTORE =====
@@ -192,7 +190,7 @@ function renderAvatars(selected) {
   });
 }
 
-// ===== GUARDAR PERFIL (NOMBRE + FOTO) =====
+// ===== GUARDAR PERFIL =====
 async function guardarPerfil(nuevoNombre, nuevaFoto) {
   const user = auth.currentUser;
   if (!user) {
@@ -207,34 +205,28 @@ async function guardarPerfil(nuevoNombre, nuevaFoto) {
   try {
     let fotoURL = null;
 
-    // Si es un archivo, subir a ImgBB
     if (nuevaFoto instanceof File) {
       showToast('📤 Subiendo imagen a ImgBB...', false, 5000);
-      // Comprimir antes de subir
       const compressed = await compressImage(nuevaFoto);
       fotoURL = await uploadToImgBB(compressed);
     } else if (typeof nuevaFoto === 'string' && nuevaFoto.startsWith('http')) {
-      fotoURL = nuevaFoto; // avatar predeterminado
+      fotoURL = nuevaFoto;
     } else {
-      // Mantener la actual
       const ref = doc(db, 'usuarios', user.uid);
       const snap = await getDoc(ref);
       fotoURL = snap.exists() ? snap.data().fotoURL : null;
     }
 
-    // Actualizar nombre en Auth
     if (nuevoNombre && nuevoNombre !== user.displayName) {
       await updateProfile(user, { displayName: nuevoNombre });
     }
 
-    // Actualizar Firestore
     const ref = doc(db, 'usuarios', user.uid);
     const updates = {};
     if (nuevoNombre) updates.nombre = nuevoNombre;
     if (fotoURL) updates.fotoURL = fotoURL;
     await updateDoc(ref, updates);
 
-    // Actualizar UI
     userNameSpan.textContent = nuevoNombre || user.displayName;
     profileNameDisplay.textContent = nuevoNombre || user.displayName;
     if (fotoURL) {
@@ -254,7 +246,7 @@ async function guardarPerfil(nuevoNombre, nuevaFoto) {
   }
 }
 
-// ===== EVENT LISTENERS (igual que antes) =====
+// ===== EVENT LISTENERS =====
 document.getElementById('doLoginBtn').onclick = async () => {
   const email = document.getElementById('loginEmail').value.trim();
   const pass = document.getElementById('loginPassword').value;
@@ -400,36 +392,45 @@ onAuthStateChanged(auth, (user) => {
 });
 
 // ============================================
-// ===== CARRUSEL PREMIUM =====
+// ===== CARRUSEL PREMIUM (VERSIÓN CORREGIDA) =====
 // ============================================
 
-// Esperar a que el DOM esté completamente cargado
 document.addEventListener('DOMContentLoaded', () => {
-  // Seleccionar elementos del carrusel
   const track = document.querySelector('.carousel-track');
   const slides = Array.from(document.querySelectorAll('.carousel-slide'));
   const prevBtn = document.querySelector('.prev-btn');
   const nextBtn = document.querySelector('.next-btn');
   const dots = Array.from(document.querySelectorAll('.indicator-dot'));
+  const wrapper = document.querySelector('.carousel-track-wrapper');
+  
   let currentIndex = 0;
   let autoPlayInterval;
   let isTransitioning = false;
+  let slideWidth = 0;
 
-  // Solo ejecutar si existe el carrusel
   if (!track || slides.length === 0) return;
 
-  // Función para actualizar el carrusel
+  function getSlideWidth() {
+    if (wrapper) {
+      return wrapper.getBoundingClientRect().width;
+    }
+    return slides[0]?.getBoundingClientRect().width || 0;
+  }
+
   function updateCarousel(index, animate = true) {
     if (isTransitioning) return;
     isTransitioning = true;
 
-    // Asegurar que el índice esté dentro de los límites
     if (index < 0) index = slides.length - 1;
     if (index >= slides.length) index = 0;
     
-    const slideWidth = slides[0].getBoundingClientRect().width;
+    slideWidth = getSlideWidth();
     
-    // Aplicar transición
+    if (slideWidth === 0) {
+      isTransitioning = false;
+      return;
+    }
+    
     if (!animate) {
       track.style.transition = 'none';
     } else {
@@ -438,12 +439,10 @@ document.addEventListener('DOMContentLoaded', () => {
     
     track.style.transform = `translateX(-${index * slideWidth}px)`;
     
-    // Actualizar dots
     dots.forEach((dot, i) => {
       dot.classList.toggle('active', i === index);
     });
     
-    // Efecto en slides no activos
     slides.forEach((slide, i) => {
       if (i === index) {
         slide.style.opacity = '1';
@@ -458,43 +457,47 @@ document.addEventListener('DOMContentLoaded', () => {
     
     currentIndex = index;
     
-    // Forzar reflow para animación
     if (!animate) {
       track.offsetHeight;
       track.style.transition = 'transform 0.7s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
     }
 
-    // Liberar el bloqueo después de la animación
     setTimeout(() => {
       isTransitioning = false;
     }, 800);
   }
 
-  // Navegación - Siguiente
+  function goToNext() {
+    if (!isTransitioning) {
+      updateCarousel(currentIndex + 1);
+      resetAutoPlay();
+    }
+  }
+
+  function goToPrev() {
+    if (!isTransitioning) {
+      updateCarousel(currentIndex - 1);
+      resetAutoPlay();
+    }
+  }
+
   if (nextBtn) {
     nextBtn.addEventListener('click', (e) => {
       e.stopPropagation();
-      if (!isTransitioning) {
-        updateCarousel(currentIndex + 1);
-        resetAutoPlay();
-      }
+      goToNext();
     });
   }
 
-  // Navegación - Anterior
   if (prevBtn) {
     prevBtn.addEventListener('click', (e) => {
       e.stopPropagation();
-      if (!isTransitioning) {
-        updateCarousel(currentIndex - 1);
-        resetAutoPlay();
-      }
+      goToPrev();
     });
   }
 
-  // Click en dots (indicadores)
   dots.forEach((dot, index) => {
-    dot.addEventListener('click', () => {
+    dot.addEventListener('click', (e) => {
+      e.stopPropagation();
       if (!isTransitioning && index !== currentIndex) {
         updateCarousel(index);
         resetAutoPlay();
@@ -502,12 +505,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Click en slides (navegación a las URL)
   slides.forEach((slide) => {
-    slide.addEventListener('click', () => {
+    slide.addEventListener('click', (e) => {
+      if (e.target.closest('.carousel-nav-btn')) return;
+      if (e.target.closest('.indicator-dot')) return;
+      
       const url = slide.dataset.url;
       if (url) {
-        // Efecto de click
         slide.style.transform = 'scale(0.95)';
         slide.style.transition = 'transform 0.2s ease';
         setTimeout(() => {
@@ -518,12 +522,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // ===== AUTOPLAY =====
   function startAutoPlay() {
     if (autoPlayInterval) clearInterval(autoPlayInterval);
     autoPlayInterval = setInterval(() => {
       if (!isTransitioning) {
-        updateCarousel(currentIndex + 1);
+        goToNext();
       }
     }, 5000);
   }
@@ -533,7 +536,6 @@ document.addEventListener('DOMContentLoaded', () => {
     startAutoPlay();
   }
 
-  // Pausar autoplay al hacer hover en el carrusel
   const carouselWrapper = document.querySelector('.carousel-premium-wrapper');
   if (carouselWrapper) {
     carouselWrapper.addEventListener('mouseenter', () => {
@@ -544,85 +546,90 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // ===== RESPONSIVE - Redimensionar =====
   let resizeTimeout;
   window.addEventListener('resize', () => {
     clearTimeout(resizeTimeout);
     resizeTimeout = setTimeout(() => {
       if (!isTransitioning) {
-        updateCarousel(currentIndex, false);
+        slideWidth = getSlideWidth();
+        if (slideWidth > 0) {
+          track.style.transition = 'none';
+          track.style.transform = `translateX(-${currentIndex * slideWidth}px)`;
+          track.offsetHeight;
+          track.style.transition = 'transform 0.7s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
+        }
       }
-    }, 150);
+    }, 200);
   });
 
-  // ===== NAVEGACIÓN POR TECLADO =====
   document.addEventListener('keydown', (e) => {
-    // Solo si el carrusel está visible
     const menuSection = document.getElementById('menuSection');
     if (menuSection && menuSection.style.display !== 'none') {
       if (e.key === 'ArrowRight') {
         e.preventDefault();
-        if (nextBtn && !isTransitioning) nextBtn.click();
+        goToNext();
       } else if (e.key === 'ArrowLeft') {
         e.preventDefault();
-        if (prevBtn && !isTransitioning) prevBtn.click();
+        goToPrev();
       }
     }
   });
 
-  // ===== SOPORTE PARA TOUCH (deslizar en móviles) =====
   let touchStartX = 0;
   let touchEndX = 0;
   let isSwiping = false;
 
-  const trackWrapper = document.querySelector('.carousel-track-wrapper');
-  if (trackWrapper) {
-    trackWrapper.addEventListener('touchstart', (e) => {
+  if (wrapper) {
+    wrapper.addEventListener('touchstart', (e) => {
       touchStartX = e.changedTouches[0].screenX;
       isSwiping = true;
     }, { passive: true });
 
-    trackWrapper.addEventListener('touchmove', (e) => {
-      // Prevenir scroll mientras se desliza el carrusel
+    wrapper.addEventListener('touchmove', (e) => {
       if (isSwiping) {
         e.preventDefault();
       }
     }, { passive: false });
 
-    trackWrapper.addEventListener('touchend', (e) => {
+    wrapper.addEventListener('touchend', (e) => {
       if (!isSwiping) return;
       touchEndX = e.changedTouches[0].screenX;
       const diff = touchStartX - touchEndX;
       
-      // Si el deslizamiento es significativo (> 50px)
       if (Math.abs(diff) > 50) {
         if (diff > 0 && !isTransitioning) {
-          // Deslizar a la izquierda -> siguiente
-          updateCarousel(currentIndex + 1);
-          resetAutoPlay();
+          goToNext();
         } else if (diff < 0 && !isTransitioning) {
-          // Deslizar a la derecha -> anterior
-          updateCarousel(currentIndex - 1);
-          resetAutoPlay();
+          goToPrev();
         }
       }
       isSwiping = false;
     }, { passive: true });
   }
 
-  // ===== INICIALIZAR =====
-  // Esperar a que el menú esté visible para inicializar
   function initializeCarousel() {
-    if (document.getElementById('menuSection').style.display !== 'none') {
-      updateCarousel(0, false);
-      setTimeout(startAutoPlay, 1500);
+    const menuSection = document.getElementById('menuSection');
+    if (menuSection && menuSection.style.display !== 'none') {
+      setTimeout(() => {
+        slideWidth = getSlideWidth();
+        if (slideWidth > 0) {
+          updateCarousel(0, false);
+          setTimeout(startAutoPlay, 1500);
+        } else {
+          setTimeout(initializeCarousel, 300);
+        }
+      }, 100);
     } else {
-      // Si el menú no está visible, esperar a que lo esté
       const observer = new MutationObserver(() => {
         const menuSection = document.getElementById('menuSection');
         if (menuSection && menuSection.style.display !== 'none') {
-          updateCarousel(0, false);
-          setTimeout(startAutoPlay, 1500);
+          setTimeout(() => {
+            slideWidth = getSlideWidth();
+            if (slideWidth > 0) {
+              updateCarousel(0, false);
+              setTimeout(startAutoPlay, 1500);
+            }
+          }, 100);
           observer.disconnect();
         }
       });
@@ -633,10 +640,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Inicializar después de un pequeño retraso
-  setTimeout(initializeCarousel, 500);
+  setTimeout(initializeCarousel, 600);
 
-  // ===== EFECTO DE PARTÍCULAS (Fondo animado) =====
+  // ===== PARTÍCULAS =====
   let particlesCreated = false;
 
   function createParticles() {
@@ -657,7 +663,6 @@ document.addEventListener('DOMContentLoaded', () => {
     `;
     document.body.prepend(container);
 
-    // Crear partículas
     for (let i = 0; i < 40; i++) {
       const particle = document.createElement('div');
       const size = Math.random() * 4 + 2;
@@ -679,7 +684,6 @@ document.addEventListener('DOMContentLoaded', () => {
       container.appendChild(particle);
     }
 
-    // Agregar keyframes para partículas si no existen
     if (!document.getElementById('particle-styles')) {
       const style = document.createElement('style');
       style.id = 'particle-styles';
@@ -705,14 +709,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Crear partículas cuando el menú se hace visible
   const menuSectionForParticles = document.getElementById('menuSection');
   if (menuSectionForParticles) {
-    // Si el menú ya está visible, crear partículas inmediatamente
     if (menuSectionForParticles.style.display !== 'none') {
       createParticles();
     } else {
-      // Observar cambios en el display
       const observer = new MutationObserver(() => {
         if (menuSectionForParticles.style.display !== 'none') {
           createParticles();
@@ -726,7 +727,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // ===== EFECTO DE PARALLAX EN EL TÍTULO =====
+  // ===== PARALLAX =====
   const welcomeTitle = document.querySelector('.welcome-title');
   if (welcomeTitle) {
     document.addEventListener('mousemove', (e) => {
