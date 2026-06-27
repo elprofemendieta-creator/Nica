@@ -4,7 +4,28 @@
       padding: 0;
       box-sizing: border-box;
     }
-    
+
+/* Animación y tamaño para tu imagen de logotipo */
+.intro-logo-img {
+  max-width: 200px; /* Ajusta este valor según el tamaño que desees para tu logo */
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  opacity: 0;
+  transform: scale(0.8) translateY(10px); /* Inicia un poco más pequeño y abajo */
+  /* Animación: aparece, se agranda y sube suavemente */
+  animation: logoEntrance 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: 0.3s;
+}
+
+/* nuevo efecto cinematográfico */
+@keyframes logoEntrance {
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
     body {
       font-family: 'Inter', sans-serif;
       min-height: 100vh;
