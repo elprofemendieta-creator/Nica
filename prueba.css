@@ -337,7 +337,7 @@
   transform: rotate(45deg);
 }
 
-/* Botón cerrar sesión */
+/* Botón cerrar sesión mejorado */
 .btn-logout {
   background: rgba(255, 0, 0, 0.1);
   border: 1px solid rgba(255, 0, 0, 0.2);
@@ -363,7 +363,19 @@
   margin-top: 1.5rem;
 }
 
-/* Responsive */
+/* Partículas de fondo */
+.particles-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+/* ===== RESPONSIVE ===== */
 @media (max-width: 640px) {
   .carousel-slide {
     height: 280px;
@@ -391,5 +403,59 @@
   .user-badge {
     font-size: 0.8rem;
     padding: 0.3rem 0.8rem;
+  }
+
+  .profile-header-enhanced {
+    flex-wrap: wrap;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .profile-info-enhanced {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .carousel-premium-wrapper {
+    gap: 5px;
+  }
+
+  .carousel-nav-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 1.2rem;
+  }
+
+  .carousel-slide {
+    height: 250px;
+    padding: 1.5rem 0.8rem;
+  }
+
+  .slide-icon {
+    font-size: 3rem;
+  }
+
+  .slide-content h3 {
+    font-size: 1.2rem;
+  }
+
+  .slide-content p {
+    font-size: 0.85rem;
+  }
+
+  .slide-stats {
+    font-size: 0.75rem;
+    padding: 0.3rem 1rem;
+  }
+
+  .welcome-header {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .welcome-title {
+    font-size: 1.2rem;
   }
 }
