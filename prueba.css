@@ -486,6 +486,7 @@ h1 {
   display: flex;
   align-items: center;
   gap: 10px;
+  width: 100%;
 }
 
 .carousel-track-wrapper {
@@ -498,18 +499,22 @@ h1 {
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.1);
+  min-width: 0;
+  position: relative;
 }
 
 .carousel-track {
   display: flex;
+  width: 100%;
   transition: transform 0.7s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   will-change: transform;
 }
 
 /* Cada slide */
 .carousel-slide {
+  flex: 0 0 100%;
   min-width: 100%;
-  padding: 2.5rem 1.5rem;
+  width: 100%;
   height: 320px;
   display: flex;
   align-items: center;
@@ -518,6 +523,8 @@ h1 {
   cursor: pointer;
   transition: all 0.4s;
   border-radius: 24px;
+  box-sizing: border-box;
+  pointer-events: auto;
 }
 
 .carousel-slide:hover {
@@ -536,6 +543,7 @@ h1 {
   animation: rotateGlow 20s linear infinite;
   opacity: 0;
   transition: opacity 0.6s;
+  pointer-events: none;
 }
 
 .carousel-slide:hover::before {
@@ -556,6 +564,15 @@ h1 {
   text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
   transform: scale(1);
   transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  width: 100%;
+  max-width: 100%;
+  padding: 0 1rem;
+  box-sizing: border-box;
+  pointer-events: none;
+}
+
+.slide-content * {
+  pointer-events: none;
 }
 
 .carousel-slide:hover .slide-content {
@@ -627,6 +644,7 @@ h1 {
   filter: blur(60px);
   animation: glowPulse 3s ease-in-out infinite;
   z-index: 0;
+  pointer-events: none;
 }
 
 @keyframes glowPulse {
@@ -652,6 +670,9 @@ h1 {
   border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
   flex-shrink: 0;
+  position: relative;
+  z-index: 10;
+  pointer-events: auto;
 }
 
 .carousel-nav-btn:hover {
@@ -680,6 +701,9 @@ h1 {
   cursor: pointer;
   transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   border: 2px solid transparent;
+  pointer-events: auto;
+  position: relative;
+  z-index: 5;
 }
 
 .indicator-dot.active {
