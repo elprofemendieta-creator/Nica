@@ -229,14 +229,7 @@
       background: rgba(76, 175, 80, 0.15);
       color: #a5d6a7;
       border-color: rgba(76, 175, 80, 0.2);
-      /* IMPORTANTE: No deshabilitamos el cursor, se puede seguir usando */
       cursor: pointer;
-    }
-
-    .cell.found-highlight {
-      background: rgba(76, 175, 80, 0.3);
-      border-color: #66bb6a;
-      box-shadow: 0 0 15px rgba(76, 175, 80, 0.2);
     }
 
     .word-list {
@@ -413,6 +406,7 @@
       text-align: center;
     }
 
+    /* Puzzle styles */
     .puzzle-container {
       display: flex;
       flex-direction: column;
@@ -516,6 +510,7 @@
       font-weight: 600;
     }
 
+    /* Palabra secreta styles */
     .secreta-area {
       text-align: center;
       padding: 20px;
@@ -732,9 +727,9 @@
 
     <div class="navbar">
       <div class="navbar-left">
-        <button class="nav-btn" id="btnFull">&#9713;</button>
+        <button class="nav-btn" id="btnFull">⛶</button>
         <button class="nav-btn" id="btnInfo">i</button>
-        <button class="nav-btn" id="btnMenu">&#9636;</button>
+        <button class="nav-btn" id="btnMenu">☰</button>
         <button class="nav-btn" id="btnHelp">?</button>
       </div>
       <div class="page-number" id="pageNumber">1</div>
@@ -807,7 +802,7 @@
 
   <script>
     // ============================================================
-    // 1. SOPA DE LETRAS (12x12) - CORREGIDA
+    // 1. SOPA DE LETRAS (12x12)
     // ============================================================
     const palabrasData = [
       { palabra: "MANAGUA", descripcion: "Capital de Nicaragua" },
@@ -953,7 +948,6 @@
         }
         if (isFound) {
           cell.classList.add('found');
-          // Limpiar selección si la celda está encontrada
           cell.classList.remove('selected');
         } else {
           cell.classList.remove('found');
@@ -978,7 +972,6 @@
       });
 
       // Actualizar selección visual
-      const cells = boardEl.querySelectorAll('.cell');
       cells.forEach(cell => cell.classList.remove('selected'));
       selection.forEach(pos => {
         const index = pos.row * SIZE + pos.col;
@@ -1029,12 +1022,9 @@
         if (isFoundCell) break;
       }
 
-      // Si es una celda encontrada, permitir seleccionarla para otras palabras
-      // PERO si está en la selección actual, la quitamos
       const indexInSelection = selection.findIndex(s => s.row === row && s.col === col);
       
       if (indexInSelection !== -1) {
-        // Si es la última seleccionada, la quitamos (permite retroceder)
         if (indexInSelection === selection.length - 1) {
           selection.pop();
           updateFoundStyles();
@@ -1042,19 +1032,16 @@
         return;
       }
 
-      // Si no hay selección, empezar nueva
       if (selection.length === 0) {
         selection.push({ row, col });
         updateFoundStyles();
         return;
       }
 
-      // Verificar que la celda sea adyacente a la última seleccionada
       const last = selection[selection.length - 1];
       const dr = Math.abs(row - last.row);
       const dc = Math.abs(col - last.col);
       
-      // Solo permitir movimientos adyacentes (horizontal, vertical o diagonal)
       if ((dr === 0 && dc === 1) || (dr === 1 && dc === 0) || (dr === 1 && dc === 1)) {
         selection.push({ row, col });
         updateFoundStyles();
@@ -1095,7 +1082,6 @@
       }
 
       if (foundWord && foundPositions) {
-        // Verificar que la selección coincida exactamente con la posición de la palabra
         const match = selection.every((pos, idx) => {
           return pos.row === foundPositions[idx].row && pos.col === foundPositions[idx].col;
         });
@@ -1112,7 +1098,6 @@
           updateFoundStyles();
           renderWordList();
           
-          // Mostrar mensaje de éxito
           const statusMsg = document.querySelector('.status span:first-child');
           if (statusMsg) {
             statusMsg.textContent = `✅ ¡Encontraste "${foundWord}"!`;
@@ -1334,10 +1319,9 @@
     }
 
     // ============================================================
-    // 3. PALABRA SECRETA - CORREGIDA
+    // 3. PALABRA SECRETA
     // ============================================================
     const secretaPalabra = "MASAYA";
-    // Letras disponibles: M(1), A(3), S(1), Y(1)
     const secretaLetrasDisponibles = ["M", "A", "A", "A", "S", "Y", "D", "F", "G", "N", "B", "V", "C", "E", "R", "T", "U"];
     let secretaSeleccionadas = [];
     let secretaCompletada = false;
@@ -1352,12 +1336,10 @@
         btn.textContent = letra;
         btn.dataset.index = index;
 
-        // Si el juego ya está completado, deshabilitar todo
         if (secretaCompletada) {
           btn.classList.add('used');
         }
 
-        // Si la letra está seleccionada actualmente
         if (secretaSeleccionadas.includes(index)) {
           btn.classList.add('selected');
         }
@@ -1365,11 +1347,9 @@
         btn.addEventListener('click', () => {
           if (secretaCompletada) return;
           
-          // Si la letra ya está seleccionada, la deseleccionamos
           if (secretaSeleccionadas.includes(index)) {
             secretaSeleccionadas = secretaSeleccionadas.filter(i => i !== index);
           } else {
-            // Si no está seleccionada, la añadimos (si hay espacio)
             if (secretaSeleccionadas.length < secretaPalabra.length) {
               secretaSeleccionadas.push(index);
             } else {
@@ -1423,7 +1403,6 @@
       } else {
         document.getElementById('secretaStatus').innerHTML = `❌ "${palabraFormada}" no es correcto. Intenta de nuevo.`;
         document.getElementById('secretaStatus').style.color = '#ffab91';
-        // Limpiar selección después de 2 segundos
         setTimeout(() => {
           if (!secretaCompletada) {
             secretaSeleccionadas = [];
@@ -1502,8 +1481,6 @@
     showPanel(1);
 
     console.log('¡Juego de Sopa de Letras cargado correctamente!');
-    console.log('💡 Las palabras pueden compartir letras. ¡Usa las que ya encontraste para formar nuevas!');
   </script>
-
 </body>
 </html>
