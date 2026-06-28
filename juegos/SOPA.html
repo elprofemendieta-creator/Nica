@@ -414,32 +414,34 @@
 
     .puzzle-board {
       display: grid;
-      gap: 3px;
+      gap: 4px;
       width: 100%;
-      max-width: 500px;
+      max-width: 480px;
       aspect-ratio: 1 / 1;
       margin: 0 auto;
-      background: rgba(0, 0, 0, 0.15);
-      border-radius: 12px;
-      padding: 6px;
-      border: 1px solid rgba(255, 255, 255, 0.04);
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 16px;
+      padding: 8px;
+      border: 2px solid rgba(255, 255, 255, 0.08);
     }
 
     .puzzle-piece {
       background-size: cover;
       background-position: center;
-      border-radius: 6px;
+      border-radius: 8px;
       cursor: pointer;
       transition: all 0.2s ease;
       border: 2px solid rgba(255, 255, 255, 0.1);
       position: relative;
-      min-height: 60px;
+      min-height: 50px;
+      background-color: rgba(255, 255, 255, 0.05);
     }
 
     .puzzle-piece:hover {
-      transform: scale(1.02);
+      transform: scale(1.03);
       border-color: rgba(255, 215, 0, 0.3);
       z-index: 2;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     }
 
     .puzzle-piece:active {
@@ -448,24 +450,29 @@
 
     .puzzle-piece.empty {
       background: rgba(255, 255, 255, 0.03) !important;
-      border: 2px dashed rgba(255, 255, 255, 0.1);
+      border: 2px dashed rgba(255, 255, 255, 0.15);
       cursor: default;
+      box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.1);
     }
 
     .puzzle-piece.empty:hover {
       transform: none;
-      border-color: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.15);
+      box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.1);
     }
 
     .puzzle-piece .piece-number {
       position: absolute;
-      top: 4px;
-      left: 6px;
-      font-size: clamp(0.5rem, 1vw, 0.7rem);
+      bottom: 4px;
+      right: 6px;
+      font-size: clamp(0.5rem, 1vw, 0.8rem);
       font-weight: 700;
-      color: rgba(255, 255, 255, 0.4);
-      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+      color: rgba(255, 255, 255, 0.6);
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
       pointer-events: none;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 1px 6px;
+      border-radius: 4px;
     }
 
     .puzzle-controls {
@@ -478,12 +485,26 @@
 
     .puzzle-status {
       text-align: center;
-      font-size: 0.9rem;
-      opacity: 0.8;
-      padding: 8px 16px;
+      font-size: 0.95rem;
+      opacity: 0.9;
+      padding: 10px 20px;
       background: rgba(0, 0, 0, 0.1);
       border-radius: 40px;
       border: 1px solid rgba(255, 255, 255, 0.04);
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .puzzle-status .movements {
+      background: rgba(255, 215, 0, 0.1);
+      padding: 2px 14px;
+      border-radius: 40px;
+      color: #ffd54f;
+      font-weight: 600;
     }
 
     /* ===== PALABRA SECRETA ===== */
@@ -597,6 +618,8 @@
 
       .puzzle-board {
         max-width: 400px;
+        padding: 6px;
+        gap: 3px;
       }
     }
 
@@ -687,19 +710,27 @@
 
       .puzzle-board {
         max-width: 320px;
-        gap: 2px;
         padding: 4px;
+        gap: 2px;
+        border-radius: 12px;
       }
 
       .puzzle-piece {
         border-radius: 4px;
         border-width: 1.5px;
-        min-height: 40px;
+        min-height: 35px;
       }
 
       .puzzle-status {
-        font-size: 0.75rem;
+        font-size: 0.8rem;
         padding: 6px 12px;
+      }
+
+      .puzzle-piece .piece-number {
+        font-size: 0.4rem;
+        bottom: 2px;
+        right: 3px;
+        padding: 1px 4px;
       }
     }
 
@@ -728,13 +759,14 @@
 
       .puzzle-board {
         max-width: 260px;
-        gap: 1.5px;
+        gap: 2px;
         padding: 3px;
       }
 
       .puzzle-piece {
-        min-height: 30px;
+        min-height: 28px;
         border-radius: 3px;
+        border-width: 1px;
       }
     }
   </style>
@@ -792,18 +824,19 @@
       <!-- ===== PANEL 2: PUZZLE ===== -->
       <div class="panel" id="panel2">
         <div class="panel-title">🧩 PUZZLE DE NICARAGUA</div>
-        <div class="panel-desc">Arma el rompecabezas arrastrando las piezas</div>
+        <div class="panel-desc">Haz clic en una pieza adyacente al espacio vacío para moverla</div>
 
         <div class="puzzle-container">
           <div class="puzzle-board" id="puzzleBoard"></div>
 
           <div class="puzzle-controls">
-            <button class="btn btn-reiniciar" id="puzzleReiniciar">🔄 Reiniciar Puzzle</button>
+            <button class="btn btn-reiniciar" id="puzzleReiniciar">🔄 Reiniciar</button>
             <button class="btn btn-verificar" id="puzzleVerificar">✅ Verificar</button>
           </div>
 
           <div class="puzzle-status" id="puzzleStatus">
-            🧩 Arrastra las piezas para completar el mapa
+            🧩 Mueve las piezas para completar el mapa
+            <span class="movements">Movimientos: <span id="puzzleMovements">0</span></span>
           </div>
         </div>
       </div>
@@ -1160,16 +1193,17 @@
     }
 
     // ============================================================
-    // 3. PUZZLE
+    // 3. PUZZLE - VERSIÓN CORREGIDA CON IMAGEN REAL
     // ============================================================
     const PUZZLE_SIZE = 3; // 3x3
     let puzzlePieces = [];
     let puzzleEmptyIndex = 8;
     let puzzleSolved = false;
+    let puzzleMovements = 0;
+    let puzzleImageLoaded = false;
 
-    // Imagen de Nicaragua (usamos una imagen de placeholder con colores representativos)
-    // En un caso real, usarías la imagen real: "file.png"
-    const IMAGE_URL = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Crect width='400' height='400' fill='%230d47a1'/%3E%3Ccircle cx='200' cy='200' r='120' fill='%2300b4d8'/%3E%3Ccircle cx='200' cy='200' r='60' fill='%23ffd54f'/%3E%3Ctext x='200' y='210' text-anchor='middle' fill='white' font-size='40' font-weight='bold'%3ENicaragua%3C/text%3E%3C/svg%3E";
+    // IMAGEN REAL
+    const IMAGE_URL = "file.png";
 
     function initPuzzle() {
       // Crear piezas del puzzle (0-8, donde 8 es el espacio vacío)
@@ -1179,16 +1213,24 @@
       }
       puzzleEmptyIndex = 8;
       puzzleSolved = false;
+      puzzleMovements = 0;
+      document.getElementById('puzzleMovements').textContent = '0';
+
       // Mezclar
       shufflePuzzle();
       renderPuzzle();
-      document.getElementById('puzzleStatus').innerHTML = '🧩 Arrastra las piezas para completar el mapa';
-      document.getElementById('puzzleStatus').style.color = '';
+
+      const status = document.getElementById('puzzleStatus');
+      status.innerHTML = `
+        🧩 Mueve las piezas para completar el mapa
+        <span class="movements">Movimientos: <span id="puzzleMovements">0</span></span>
+      `;
+      status.style.color = '';
     }
 
     function shufflePuzzle() {
       // Realizar movimientos aleatorios para mezclar
-      for (let i = 0; i < 100; i++) {
+      for (let i = 0; i < 150; i++) {
         const emptyRow = Math.floor(puzzleEmptyIndex / PUZZLE_SIZE);
         const emptyCol = puzzleEmptyIndex % PUZZLE_SIZE;
         const neighbors = [];
@@ -1204,7 +1246,6 @@
       }
       // Asegurar que no esté resuelto
       if (isPuzzleSolved()) {
-        // Si está resuelto, hacer un intercambio simple
         if (puzzleEmptyIndex !== 0) {
           puzzlePieces[puzzleEmptyIndex] = puzzlePieces[0];
           puzzlePieces[0] = 8;
@@ -1215,6 +1256,7 @@
           puzzleEmptyIndex = 1;
         }
       }
+      puzzleMovements = 0;
     }
 
     function isPuzzleSolved() {
@@ -1229,42 +1271,80 @@
       board.style.gridTemplateColumns = `repeat(${PUZZLE_SIZE}, 1fr)`;
       board.innerHTML = '';
 
-      const pieceSize = 100 / PUZZLE_SIZE;
+      // Pre-cargar imagen para saber si existe
+      const img = new Image();
+      img.onload = function() {
+        puzzleImageLoaded = true;
+        renderPieces();
+      };
+      img.onerror = function() {
+        puzzleImageLoaded = false;
+        renderPieces();
+      };
+      img.src = IMAGE_URL;
 
-      for (let i = 0; i < 9; i++) {
-        const piece = document.createElement('div');
-        piece.className = 'puzzle-piece';
-        piece.dataset.index = i;
+      function renderPieces() {
+        board.innerHTML = '';
+        for (let i = 0; i < 9; i++) {
+          const piece = document.createElement('div');
+          piece.className = 'puzzle-piece';
+          piece.dataset.index = i;
 
-        if (puzzlePieces[i] === 8) {
-          piece.classList.add('empty');
-          piece.style.background = 'rgba(255,255,255,0.03)';
-        } else {
-          const originalIndex = puzzlePieces[i];
-          const row = Math.floor(originalIndex / PUZZLE_SIZE);
-          const col = originalIndex % PUZZLE_SIZE;
-          // Usar background image con la imagen dividida
-          piece.style.backgroundImage = `url('${IMAGE_URL}')`;
-          piece.style.backgroundSize = `${PUZZLE_SIZE * 100}% ${PUZZLE_SIZE * 100}%`;
-          piece.style.backgroundPosition = `-${col * 100}% -${row * 100}%`;
-          piece.style.border = '2px solid rgba(255,255,255,0.15)';
+          if (puzzlePieces[i] === 8) {
+            piece.classList.add('empty');
+            piece.style.background = 'rgba(255,255,255,0.03)';
+          } else {
+            const originalIndex = puzzlePieces[i];
+            const row = Math.floor(originalIndex / PUZZLE_SIZE);
+            const col = originalIndex % PUZZLE_SIZE;
 
-          const number = document.createElement('span');
-          number.className = 'piece-number';
-          number.textContent = originalIndex + 1;
-          piece.appendChild(number);
+            if (puzzleImageLoaded) {
+              piece.style.backgroundImage = `url('${IMAGE_URL}')`;
+              piece.style.backgroundSize = `${PUZZLE_SIZE * 100}% ${PUZZLE_SIZE * 100}%`;
+              piece.style.backgroundPosition = `-${col * 100}% -${row * 100}%`;
+            } else {
+              // Imagen de respaldo con colores
+              const colors = ['#e53935', '#d81b60', '#8e24aa', '#5e35b1', '#1e88e5', '#00897b', '#43a047', '#fdd835', '#fb8c00'];
+              piece.style.background = colors[originalIndex];
+              piece.style.color = 'white';
+              piece.style.display = 'flex';
+              piece.style.alignItems = 'center';
+              piece.style.justifyContent = 'center';
+              piece.style.fontSize = '1.5rem';
+              piece.style.fontWeight = 'bold';
+              piece.textContent = originalIndex + 1;
+            }
 
-          piece.addEventListener('click', () => movePiece(i));
+            piece.style.border = '2px solid rgba(255,255,255,0.15)';
+
+            const number = document.createElement('span');
+            number.className = 'piece-number';
+            number.textContent = originalIndex + 1;
+            piece.appendChild(number);
+
+            piece.addEventListener('click', () => movePiece(i));
+          }
+
+          board.appendChild(piece);
         }
 
-        board.appendChild(piece);
+        // Verificar si está resuelto
+        if (isPuzzleSolved() && !puzzleSolved) {
+          puzzleSolved = true;
+          const status = document.getElementById('puzzleStatus');
+          status.innerHTML = '🎉 ¡Felicidades! Completaste el puzzle de Nicaragua! 🎉';
+          status.style.color = '#ffd54f';
+        }
       }
 
-      // Verificar si está resuelto
-      if (isPuzzleSolved() && !puzzleSolved) {
-        puzzleSolved = true;
-        document.getElementById('puzzleStatus').innerHTML = '🎉 ¡Felicidades! Completaste el puzzle de Nicaragua!';
-        document.getElementById('puzzleStatus').style.color = '#ffd54f';
+      // Si la imagen ya está cargada, renderizar directamente
+      if (img.complete) {
+        if (img.naturalWidth > 0) {
+          puzzleImageLoaded = true;
+        } else {
+          puzzleImageLoaded = false;
+        }
+        renderPieces();
       }
     }
 
@@ -1276,21 +1356,21 @@
       const clickedRow = Math.floor(index / PUZZLE_SIZE);
       const clickedCol = index % PUZZLE_SIZE;
 
-      // Verificar si la pieza clickeada está adyacente al espacio vacío
       const isAdjacent = (Math.abs(emptyRow - clickedRow) + Math.abs(emptyCol - clickedCol)) === 1;
 
       if (isAdjacent) {
-        // Intercambiar
         puzzlePieces[puzzleEmptyIndex] = puzzlePieces[index];
         puzzlePieces[index] = 8;
         puzzleEmptyIndex = index;
+        puzzleMovements++;
+        document.getElementById('puzzleMovements').textContent = puzzleMovements;
         renderPuzzle();
       }
     }
 
     function verificarPuzzle() {
       if (isPuzzleSolved()) {
-        alert('🎉 ¡El puzzle ya está completo!');
+        alert('🎉 ¡El puzzle ya está completo! Lo lograste en ' + puzzleMovements + ' movimientos.');
       } else {
         alert('❌ El puzzle no está completo. Sigue moviendo las piezas.');
       }
@@ -1355,7 +1435,6 @@
       } else {
         document.getElementById('secretaStatus').innerHTML = '❌ Incorrecto. Intenta de nuevo.';
         document.getElementById('secretaStatus').style.color = '#ffab91';
-        // Reiniciar selección
         secretaSeleccionadas = [];
         secretaLetrasUsadas = [];
         actualizarSecretaDisplay();
