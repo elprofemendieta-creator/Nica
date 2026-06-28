@@ -4,9 +4,40 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>Guía Pinolero - Descubre Nicaragua</title>
+  <!-- Manifest para PWA -->
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#2E7D32" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
   <link rel="stylesheet" href="css/inicio.css" />
+  <style>
+    /* Botón de instalación flotante */
+    #installBtn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #2E7D32;
+      color: white;
+      border: none;
+      border-radius: 50px;
+      padding: 12px 20px;
+      font-size: 1rem;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      cursor: pointer;
+      z-index: 9999;
+      display: none;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+    }
+    #installBtn:hover {
+      transform: scale(1.05);
+      background: #1B5E20;
+    }
+    #installBtn i {
+      font-size: 1.2rem;
+    }
+  </style>
 </head>
 <body>
   <div class="wave-bg">
@@ -14,15 +45,14 @@
       <path fill="rgba(255,255,255,0.08)" d="M0,192L48,197.3C96,203,192,213,288,208C384,203,480,181,576,176C672,171,768,181,864,197.3C960,213,1056,235,1152,224C1248,213,1344,171,1392,149.3L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
     </svg>
   </div>
-<!-- Pantalla de introducción animada con tu Logo -->
-<div class="intro-screen">
-  <div class="intro-content">
-    <!-- Reemplaza "tu-logo.png" por la ruta real de tu imagen -->
-    <img src="logo.gif" alt="Guía Pinolera" class="intro-logo-img">
-    <p class="intro-subtitle">Bienvenido Explorador Pinolero </p>
-    <p class="intro-subtitle">Cargando sistema...</p>
+  <!-- Pantalla de introducción animada con tu Logo -->
+  <div class="intro-screen">
+    <div class="intro-content">
+      <img src="logo.gif" alt="Guía Pinolera" class="intro-logo-img">
+      <p class="intro-subtitle">Bienvenido Explorador Pinolero </p>
+      <p class="intro-subtitle">Cargando sistema...</p>
+    </div>
   </div>
-</div>
 
   <div class="container">
     <div id="authCard" class="glass-card">
@@ -69,7 +99,7 @@
         <h2 class="welcome-title">¡Bienvenido, <span id="userName"></span>!</h2>
         <div class="user-badge">
           <span class="badge-icon">🏆</span>
-          <span class="badge-text">Explorador Nivel 3</span>
+          <span class="badge-text" id="positionBadge">Calculando posición...</span>
         </div>
       </div>
 
@@ -79,7 +109,7 @@
           <img id="profileAvatar" class="profile-avatar-enhanced" src="" alt="Avatar" />
           <div class="profile-details">
             <div class="profile-name-enhanced" id="profileNameDisplay">Usuario</div>
-            <div class="profile-level">⭐ 25 puntos</div>
+            <div class="profile-level" id="userPointsDisplay">⭐ 0 puntos</div>
           </div>
         </div>
         <button id="editProfileBtn" class="btn-edit-enhanced">
@@ -100,7 +130,7 @@
                   <div class="slide-icon">🎮</div>
                   <h3>Juegos Turísticos</h3>
                   <p>Conviértete en el mejor explorador</p>
-                  <div class="slide-stats">🔥 1,234 jugando</div>
+                  <div class="slide-stats">🔥 <span id="jugadoresCount">0</span> jugando</div>
                   <div class="slide-glow"></div>
                 </div>
               </div>
@@ -111,7 +141,7 @@
                   <div class="slide-icon">🗺️</div>
                   <h3>Mapa Interactivo</h3>
                   <p>Descubre lugares secretos</p>
-                  <div class="slide-stats">📍 567 ubicaciones</div>
+                  <div class="slide-stats">📍 <span id="ubicacionesCount">0</span> ubicaciones</div>
                   <div class="slide-glow"></div>
                 </div>
               </div>
@@ -122,7 +152,7 @@
                   <div class="slide-icon">👥</div>
                   <h3>Comunidad</h3>
                   <p>Conecta con viajeros</p>
-                  <div class="slide-stats">💬 3,456 miembros</div>
+                  <div class="slide-stats">💬 <span id="miembrosCount">0</span> miembros</div>
                   <div class="slide-glow"></div>
                 </div>
               </div>
@@ -133,7 +163,7 @@
                   <div class="slide-icon">📌</div>
                   <h3>Visitas Virtuales</h3>
                   <p>Experiencias 360°</p>
-                  <div class="slide-stats">🎥 89 recorridos</div>
+                  <div class="slide-stats">🎥 <span id="visitasCount">0</span> recorridos</div>
                   <div class="slide-glow"></div>
                 </div>
               </div>
@@ -218,6 +248,9 @@
 
   <div id="toast" class="toast-message" style="display: none;"></div>
 
+  <!-- Botón de instalación PWA -->
+  <button id="installBtn"><i class="fas fa-download"></i> Instalar App</button>
+
   <!-- Firebase Import Map -->
   <script type="importmap">
     {
@@ -229,7 +262,173 @@
     }
   </script>
 
+  <!-- ====== TU SCRIPT DE AUTENTICACIÓN (inicio.js) ====== -->
   <script type="module" src="js/inicio.js"></script>
+
+  <!-- ====== SCRIPT PARA ACTUALIZAR ESTADÍSTICAS Y PERFIL ====== -->
+  <script type="module">
+    // Importamos Firebase (usamos la misma app que inicio.js, o inicializamos si no existe)
+    import { initializeApp, getApp, getApps } from 'firebase/app';
+    import { getFirestore, collection, getDocs, doc, getDoc, onSnapshot, query, orderBy } from 'firebase/firestore';
+    import { getAuth, onAuthStateChanged } from 'firebase/auth';
+
+    // 🔥 CONFIGURACIÓN DE FIREBASE (cámbiala por la tuya)
+    const firebaseConfig = {
+      apiKey: "AIzaSyA6jVICuE17KJcO34gE1brMxqWEfNd3Fy0",
+      authDomain: "mapa-41b00.firebaseapp.com",
+      projectId: "mapa-41b00",
+      storageBucket: "mapa-41b00.firebasestorage.app",
+      messagingSenderId: "535032835400",
+      appId: "1:535032835400:web:68c079cbc3f419eafd177d"
+    };
+
+    // Inicializar solo si no hay ninguna app
+    let app;
+    if (getApps().length === 0) {
+      app = initializeApp(firebaseConfig);
+      console.log('Firebase inicializada desde el script de estadísticas.');
+    } else {
+      app = getApp();
+    }
+
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    // Referencias a elementos del DOM
+    const userPointsSpan = document.getElementById('userPointsDisplay');
+    const positionBadge = document.getElementById('positionBadge');
+    const miembrosCount = document.getElementById('miembrosCount');
+    const jugadoresCount = document.getElementById('jugadoresCount');
+    const ubicacionesCount = document.getElementById('ubicacionesCount');
+    const visitasCount = document.getElementById('visitasCount');
+
+    // Función para obtener los puntos y la posición del usuario actual
+    async function updateUserStats(uid) {
+      try {
+        // Obtener datos del usuario
+        const userRef = doc(db, 'usuarios', uid);
+        const userSnap = await getDoc(userRef);
+        if (!userSnap.exists()) return;
+
+        const userData = userSnap.data();
+        const puntos = userData.puntos || 0;
+        userPointsSpan.textContent = `⭐ ${puntos} puntos`;
+
+        // Calcular posición global
+        const q = query(collection(db, 'usuarios'), orderBy('puntos', 'desc'));
+        const querySnap = await getDocs(q);
+        let posicion = 0;
+        let total = 0;
+        querySnap.forEach((doc) => {
+          total++;
+          if (doc.id === uid) {
+            posicion = total;
+          }
+        });
+
+        if (posicion > 0) {
+          let medal = '';
+          if (posicion === 1) medal = '👑 ';
+          else if (posicion === 2) medal = '🥈 ';
+          else if (posicion === 3) medal = '🥉 ';
+          positionBadge.textContent = `${medal}Posición #${posicion} de ${total}`;
+        } else {
+          positionBadge.textContent = '📈 Sin posición aún';
+        }
+
+        // Actualizar total de miembros (para la tarjeta de Comunidad)
+        // Lo hacemos en otra función para no repetir consultas
+      } catch (error) {
+        console.error('Error en updateUserStats:', error);
+      }
+    }
+
+    // Función para actualizar estadísticas globales (total usuarios, lugares, visitas)
+    async function updateGlobalStats() {
+      try {
+        const usuariosSnap = await getDocs(collection(db, 'usuarios'));
+        const lugaresSnap = await getDocs(collection(db, 'lugares'));
+        const visitasSnap = await getDocs(collection(db, 'visitas_virtuales'));
+
+        const totalUsuarios = usuariosSnap.size;
+        const totalLugares = lugaresSnap.size;
+        const totalVisitas = visitasSnap.size;
+
+        const jugadores = Math.floor(totalUsuarios * 0.5);
+
+        miembrosCount.textContent = totalUsuarios;
+        jugadoresCount.textContent = jugadores;
+        ubicacionesCount.textContent = totalLugares;
+        visitasCount.textContent = totalVisitas;
+      } catch (error) {
+        console.error('Error en updateGlobalStats:', error);
+      }
+    }
+
+    // Escuchar cambios en autenticación
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        // Actualizar datos del usuario (puntos y posición)
+        await updateUserStats(user.uid);
+        // Escuchar cambios en tiempo real en los puntos del usuario
+        const userRef = doc(db, 'usuarios', user.uid);
+        onSnapshot(userRef, (docSnap) => {
+          if (docSnap.exists()) {
+            const data = docSnap.data();
+            const puntos = data.puntos || 0;
+            userPointsSpan.textContent = `⭐ ${puntos} puntos`;
+            // Recalcular posición cuando cambian los puntos
+            updateUserStats(user.uid);
+          }
+        });
+
+        // Actualizar estadísticas globales
+        await updateGlobalStats();
+        // También podemos escuchar cambios en la colección de usuarios para actualizar miembros
+        onSnapshot(collection(db, 'usuarios'), () => {
+          updateGlobalStats();
+        });
+      } else {
+        // Usuario no autenticado, resetear valores si se desea
+        // (opcional)
+      }
+    });
+
+    // Instalación PWA
+    let deferredPrompt;
+    const installBtn = document.getElementById('installBtn');
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      installBtn.style.display = 'flex';
+    });
+
+    installBtn.addEventListener('click', async () => {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        const result = await deferredPrompt.userChoice;
+        if (result.outcome === 'accepted') {
+          console.log('Usuario aceptó la instalación');
+        } else {
+          console.log('Usuario rechazó la instalación');
+        }
+        deferredPrompt = null;
+        installBtn.style.display = 'none';
+      }
+    });
+
+    window.addEventListener('appinstalled', () => {
+      console.log('App instalada correctamente');
+      installBtn.style.display = 'none';
+    });
+
+    // También ejecutar al cargar si ya hay usuario (por si la página se recarga)
+    if (auth.currentUser) {
+      updateUserStats(auth.currentUser.uid);
+      updateGlobalStats();
+    }
+  </script>
 
   <!-- Statcounter -->
   <script type="text/javascript">
