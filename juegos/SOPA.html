@@ -165,17 +165,17 @@
       flex-wrap: wrap;
       align-items: center;
       justify-content: center;
-      gap: 12px;
+      gap: 10px;
       margin-top: 20px;
       margin-bottom: 6px;
     }
 
     button {
       border: none;
-      padding: 12px 28px;
+      padding: 12px 22px;
       border-radius: 60px;
       font-weight: 700;
-      font-size: clamp(0.85rem, 1.8vw, 1rem);
+      font-size: clamp(0.8rem, 1.8vw, 1rem);
       cursor: pointer;
       transition: all 0.2s ease;
       background: rgba(255, 255, 255, 0.92);
@@ -187,7 +187,7 @@
       letter-spacing: 0.3px;
       flex: 1 1 auto;
       justify-content: center;
-      min-width: 80px;
+      min-width: 70px;
     }
 
     button:hover {
@@ -200,13 +200,37 @@
       transform: scale(0.96);
     }
 
-    button.reset-btn {
+    /* Colores específicos para cada botón */
+    .btn-verificar {
+      background: rgba(76, 175, 80, 0.9);
+      color: white;
+    }
+    .btn-verificar:hover {
+      background: #66bb6a;
+    }
+
+    .btn-pista {
       background: rgba(255, 215, 0, 0.9);
       color: #1a2a3a;
     }
-
-    button.reset-btn:hover {
+    .btn-pista:hover {
       background: #ffd54f;
+    }
+
+    .btn-siguiente {
+      background: rgba(33, 150, 243, 0.9);
+      color: white;
+    }
+    .btn-siguiente:hover {
+      background: #42a5f5;
+    }
+
+    .btn-reiniciar {
+      background: rgba(255, 152, 0, 0.9);
+      color: white;
+    }
+    .btn-reiniciar:hover {
+      background: #ffa726;
     }
 
     .status {
@@ -309,9 +333,9 @@
       }
 
       button {
-        padding: 10px 16px;
+        padding: 10px 14px;
         font-size: clamp(0.7rem, 2vw, 0.85rem);
-        min-width: 60px;
+        min-width: 55px;
       }
 
       .status {
@@ -357,9 +381,9 @@
       }
 
       button {
-        padding: 8px 12px;
+        padding: 8px 10px;
         font-size: 0.65rem;
-        min-width: 50px;
+        min-width: 45px;
         border-radius: 40px;
       }
 
@@ -389,9 +413,9 @@
       }
 
       button {
-        padding: 6px 10px;
-        font-size: 0.6rem;
-        min-width: 40px;
+        padding: 6px 8px;
+        font-size: 0.55rem;
+        min-width: 35px;
       }
     }
 
@@ -405,9 +429,16 @@
       animation: popIn 0.2s ease forwards;
     }
 
-    .cell:nth-child(1) { animation-delay: 0.01s; }
-    .cell:nth-child(2) { animation-delay: 0.02s; }
-    /* Se aplica a todas las celdas de forma general */
+    .victory {
+      color: #ffd54f;
+      font-weight: 700;
+      animation: pulse 1s ease-in-out infinite alternate;
+    }
+
+    @keyframes pulse {
+      0% { text-shadow: 0 0 10px rgba(255, 215, 0, 0.3); }
+      100% { text-shadow: 0 0 30px rgba(255, 215, 0, 0.8); }
+    }
   </style>
 </head>
 <body>
@@ -424,9 +455,12 @@
       <div id="sopaBoard"></div>
     </div>
 
-    <!-- Controles -->
+    <!-- Controles con todos los botones -->
     <div class="controls">
-      <button id="resetBtn" class="reset-btn">🔄 Reiniciar</button>
+      <button id="verificarBtn" class="btn-verificar">✅ Verificar</button>
+      <button id="pistaBtn" class="btn-pista">💡 Pista</button>
+      <button id="siguienteBtn" class="btn-siguiente">➡ Siguiente</button>
+      <button id="reiniciarBtn" class="btn-reiniciar">🔄 Reiniciar</button>
     </div>
 
     <!-- Estado / Puntuación -->
@@ -459,18 +493,16 @@
     let selectedCells = [];
     let foundWords = new Set();
     let wordPositions = [];
+    let currentIndex = 0; // Para "Siguiente"
 
-    // Letras para rellenar (vocales y consonantes comunes)
     const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     function generateBoard() {
-      // Inicializar tablero vacío
       board = Array.from({ length: SIZE }, () => Array(SIZE).fill(''));
       wordPositions = [];
 
-      // Colocar palabras (horizontal, vertical, diagonal)
       const directions = [
-        [0, 1], [1, 0], [1, 1], [-1, 1] // derecha, abajo, diagonal abajo-derecha, diagonal arriba-derecha
+        [0, 1], [1, 0], [1, 1], [-1, 1]
       ];
 
       palabras.forEach((item, idx) => {
@@ -485,7 +517,6 @@
           const dir = directions[Math.floor(Math.random() * directions.length)];
           const [dr, dc] = dir;
 
-          // Verificar si cabe
           let canPlace = true;
           for (let i = 0; i < word.length; i++) {
             const r = row + i * dr;
@@ -513,7 +544,6 @@
           }
         }
 
-        // Si no se pudo colocar (fallback), se coloca horizontal
         if (!placed) {
           let row = Math.floor(Math.random() * SIZE);
           let col = Math.floor(Math.random() * (SIZE - word.length + 1));
@@ -526,7 +556,6 @@
         }
       });
 
-      // Rellenar espacios vacíos con letras aleatorias
       for (let r = 0; r < SIZE; r++) {
         for (let c = 0; c < SIZE; c++) {
           if (board[r][c] === '') {
@@ -560,7 +589,6 @@
           boardEl.appendChild(cell);
         }
       }
-      // Aplicar estilos de palabras encontradas
       updateFoundStyles();
     }
 
@@ -579,7 +607,6 @@
     }
 
     function updateFoundStyles() {
-      // Actualizar celdas
       const cells = boardEl.querySelectorAll('.cell');
       cells.forEach(cell => {
         const r = parseInt(cell.dataset.row);
@@ -604,7 +631,6 @@
         cell.classList.remove('selected');
       });
 
-      // Actualizar lista de palabras
       const items = wordListEl.querySelectorAll('.word-item');
       items.forEach((item, index) => {
         const palabra = palabras[index].palabra;
@@ -615,19 +641,17 @@
         }
       });
 
-      // Actualizar contador
       foundCountEl.textContent = foundWords.size;
 
-      // Verificar victoria
       if (foundWords.size === palabras.length) {
         statusEl.innerHTML = `
-          <span class="victory" style="color:#ffd54f;font-weight:700;">🎉 ¡Felicidades! Encontraste todas las palabras.</span>
+          <span class="victory">🎉 ¡Felicidades! Encontraste todas las palabras.</span>
           <span class="counter">🏆 <span>${foundWords.size}</span> / <span>${palabras.length}</span></span>
         `;
       } else {
         const restante = palabras.length - foundWords.size;
         const msg = statusEl.querySelector('span:first-child');
-        if (msg) {
+        if (msg && !msg.classList.contains('victory')) {
           msg.textContent = `📌 Encuentra ${restante} palabra${restante > 1 ? 's' : ''} más`;
         }
       }
@@ -639,7 +663,6 @@
     let selection = [];
 
     function onCellClick(row, col) {
-      // Si la celda ya está encontrada, ignorar
       let isFoundCell = false;
       for (const wp of wordPositions) {
         if (wp.found) {
@@ -654,47 +677,35 @@
       }
       if (isFoundCell) return;
 
-      // Si ya hay selección, verificar si la celda es adyacente a la última seleccionada
       if (selection.length > 0) {
         const last = selection[selection.length - 1];
         const dr = Math.abs(row - last.row);
         const dc = Math.abs(col - last.col);
-        // Solo permitir movimiento en línea recta (horizontal, vertical o diagonal)
         if ((dr === 0 && dc === 1) || (dr === 1 && dc === 0) || (dr === 1 && dc === 1)) {
-          // Verificar que no se repita
           const exists = selection.some(s => s.row === row && s.col === col);
           if (!exists) {
             selection.push({ row, col });
             updateSelectionStyles();
-            // Intentar validar la palabra formada
-            tryValidateWord();
             return;
           } else {
-            // Si se hace clic en una celda ya seleccionada, limpiar selección (reiniciar)
             clearSelection();
             return;
           }
         } else {
-          // Si no es adyacente, limpiar selección y comenzar de nuevo
           clearSelection();
-          // Seleccionar la nueva celda
           selection.push({ row, col });
           updateSelectionStyles();
           return;
         }
       } else {
-        // Primera selección
         selection.push({ row, col });
         updateSelectionStyles();
       }
     }
 
     function updateSelectionStyles() {
-      // Limpiar estilos de selección
       const cells = boardEl.querySelectorAll('.cell');
       cells.forEach(cell => cell.classList.remove('selected'));
-
-      // Marcar celdas seleccionadas
       selection.forEach(pos => {
         const index = pos.row * SIZE + pos.col;
         if (cells[index]) {
@@ -710,15 +721,16 @@
     }
 
     function tryValidateWord() {
-      if (selection.length < 3) return; // mínimo 3 letras
+      if (selection.length < 3) {
+        alert('Selecciona al menos 3 letras para formar una palabra.');
+        return false;
+      }
 
-      // Obtener la palabra seleccionada
       let word = '';
       for (const pos of selection) {
         word += board[pos.row][pos.col];
       }
 
-      // Buscar si coincide con alguna palabra (en orden normal o inverso)
       let foundWord = null;
       let foundPositions = null;
       for (const wp of wordPositions) {
@@ -728,7 +740,6 @@
           foundPositions = wp.positions;
           break;
         }
-        // También revisar al revés (por si el usuario seleccionó en orden inverso)
         const reversed = word.split('').reverse().join('');
         if (wp.word === reversed) {
           foundWord = wp.word;
@@ -738,13 +749,11 @@
       }
 
       if (foundWord && foundPositions) {
-        // Verificar que las posiciones coincidan exactamente
         const match = selection.every((pos, idx) => {
           return pos.row === foundPositions[idx].row && pos.col === foundPositions[idx].col;
         });
 
         if (match) {
-          // Marcar como encontrada
           for (const wp of wordPositions) {
             if (wp.word === foundWord) {
               wp.found = true;
@@ -755,16 +764,57 @@
           clearSelection();
           updateFoundStyles();
           renderWordList();
-          return;
+          return true;
         }
       }
-
-      // Si no coincide, mantenemos la selección para que el usuario siga agregando letras
+      alert('❌ Palabra incorrecta. Intenta de nuevo.');
+      clearSelection();
+      return false;
     }
 
     // ============================================================
-    // 5. REINICIAR JUEGO
+    // 5. FUNCIONES DE LOS BOTONES
     // ============================================================
+
+    // Verificar
+    function verificar() {
+      tryValidateWord();
+    }
+
+    // Pista: resalta la primera palabra no encontrada
+    function mostrarPista() {
+      for (const wp of wordPositions) {
+        if (!wp.found) {
+          // Resaltar las celdas de la palabra
+          const cells = boardEl.querySelectorAll('.cell');
+          wp.positions.forEach(pos => {
+            const index = pos.row * SIZE + pos.col;
+            if (cells[index]) {
+              cells[index].style.transition = 'background 0.3s';
+              cells[index].style.background = 'rgba(255, 215, 0, 0.5)';
+              setTimeout(() => {
+                cells[index].style.background = '';
+              }, 2000);
+            }
+          });
+          alert(`💡 Pista: busca "${wp.word}"`);
+          return;
+        }
+      }
+      alert('🎉 ¡Ya encontraste todas las palabras!');
+    }
+
+    // Siguiente: avanza al siguiente conjunto de palabras (reinicia el juego)
+    function siguiente() {
+      resetGame();
+      // Mostrar un mensaje de que se ha reiniciado
+      statusEl.innerHTML = `
+        <span>🔄 ¡Nueva partida! Encuentra todas las palabras</span>
+        <span class="counter">🏷️ <span>0</span> / <span>${palabras.length}</span></span>
+      `;
+    }
+
+    // Reiniciar
     function resetGame() {
       foundWords = new Set();
       selection = [];
@@ -780,23 +830,22 @@
         <span>📌 Encuentra todas las palabras</span>
         <span class="counter">🏷️ <span id="foundCount">0</span> / <span id="totalCount">${palabras.length}</span></span>
       `;
-      // Reasignar referencias después de re-renderizar
       document.getElementById('foundCount').textContent = '0';
     }
 
     // ============================================================
     // 6. INICIALIZACIÓN Y EVENTOS
     // ============================================================
-    document.getElementById('resetBtn').addEventListener('click', resetGame);
+    document.getElementById('verificarBtn').addEventListener('click', verificar);
+    document.getElementById('pistaBtn').addEventListener('click', mostrarPista);
+    document.getElementById('siguienteBtn').addEventListener('click', siguiente);
+    document.getElementById('reiniciarBtn').addEventListener('click', resetGame);
 
     // Iniciar juego
     generateBoard();
     renderBoard();
     renderWordList();
     updateFoundStyles();
-
-    // Para móviles: permitir selección táctil con un toque
-    // (ya manejado con click)
 
     console.log('¡Sopa de Letras cargada correctamente!');
   </script>
