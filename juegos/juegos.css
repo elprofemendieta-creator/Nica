@@ -1,4 +1,3 @@
-
 /* ==========================================================================
    1. RESET Y CONFIGURACIÓN BASE
    ========================================================================== */
@@ -29,8 +28,8 @@
 
 body {
   font-family: var(--font-body);
-  background: radial-gradient(circle at top, #1a2a3a 0%, #0d131a 100%);
-  background-attachment: fixed;
+  background: linear-gradient(145deg, #e8f8f5 0%, #f0fdfa 100%);
+  background-image: radial-gradient(#bae6fd 0.8px, transparent 0.8px);
   background-size: 30px 30px;
   color: #334155;
   margin: 0;
@@ -153,7 +152,7 @@ body::after {
 }
 
 /* ==========================================================================
-   3. CARRUSEL PREMIUM - CORREGIDO
+   3. CARRUSEL PREMIUM
    ========================================================================== */
 .games-container {
   width: 90%;
@@ -167,7 +166,6 @@ body::after {
 .carousel-premium-container {
   width: 100%;
   margin: 0 auto;
-  overflow: hidden;
 }
 
 .carousel-premium-wrapper {
@@ -190,38 +188,35 @@ body::after {
   border: 1px solid rgba(255, 255, 255, 0.1);
   min-width: 0;
   position: relative;
-  padding: 8px 0;
 }
 
 .carousel-track {
   display: flex;
-  gap: 20px;
-  transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  width: 100%;
+  transition: transform 0.7s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   will-change: transform;
-  padding: 4px 4px;
 }
 
+/* Cada slide */
 .carousel-slide {
-  flex: 0 0 calc(33.333% - 14px);
-  min-width: 0;
-  height: 320px;
+  flex: 0 0 100%;
+  min-width: 100%;
+  width: 100%;
+  height: 340px;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
   cursor: pointer;
-  transition: all 0.4s ease;
+  transition: all 0.4s;
   border-radius: 24px;
   box-sizing: border-box;
   pointer-events: auto;
-  padding: 20px 16px;
-  overflow: hidden;
 }
 
 .carousel-slide:hover {
-  transform: translateY(-8px) scale(1.02);
-  filter: brightness(1.08);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+  transform: scale(1.02);
+  filter: brightness(1.1);
 }
 
 .carousel-slide::before {
@@ -231,12 +226,11 @@ body::after {
   left: -50%;
   width: 200%;
   height: 200%;
-  background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
   animation: rotateGlow 20s linear infinite;
   opacity: 0;
   transition: opacity 0.6s;
   pointer-events: none;
-  z-index: 1;
 }
 
 .carousel-slide:hover::before {
@@ -248,23 +242,20 @@ body::after {
   100% { transform: rotate(360deg); }
 }
 
+/* Contenido del slide */
 .slide-content {
   position: relative;
   z-index: 2;
   text-align: center;
   color: white;
   text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  transform: scale(1);
+  transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   width: 100%;
   max-width: 100%;
-  padding: 0;
+  padding: 0 1rem;
   box-sizing: border-box;
   pointer-events: none;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  height: 100%;
 }
 
 .slide-content * {
@@ -272,51 +263,53 @@ body::after {
 }
 
 .carousel-slide:hover .slide-content {
-  transform: scale(1.05);
+  transform: scale(1.08);
 }
 
+/* Ícono animado */
 .slide-icon {
-  font-size: 3.8rem;
+  font-size: 4.5rem;
   display: inline-block;
   animation: floatIcon 3s ease-in-out infinite;
   filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3));
-  margin-bottom: 2px;
-  line-height: 1.2;
+  margin-bottom: 0.5rem;
 }
 
 @keyframes floatIcon {
-  0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
-  33% { transform: translateY(-12px) rotate(3deg) scale(1.05); }
-  66% { transform: translateY(8px) rotate(-3deg) scale(0.95); }
+  0%, 100% { 
+    transform: translateY(0) rotate(0deg) scale(1);
+  }
+  33% { 
+    transform: translateY(-15px) rotate(5deg) scale(1.05);
+  }
+  66% { 
+    transform: translateY(10px) rotate(-5deg) scale(0.95);
+  }
 }
 
 .slide-content h3 {
-  font-family: var(--font-title);
-  font-size: 1.4rem;
+  font-size: 1.8rem;
   font-weight: 800;
-  margin: 2px 0;
-  letter-spacing: 0.5px;
-  line-height: 1.2;
+  margin: 0.3rem 0;
+  letter-spacing: 1px;
 }
 
 .slide-content p {
-  font-size: 0.85rem;
+  font-size: 1rem;
   opacity: 0.9;
-  margin: 2px 0 4px;
+  margin-bottom: 0.8rem;
   font-weight: 400;
-  line-height: 1.3;
 }
 
 .slide-stats {
   display: inline-block;
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.25);
   backdrop-filter: blur(10px);
-  padding: 0.3rem 1rem;
+  padding: 0.4rem 1.2rem;
   border-radius: 50px;
-  font-size: 0.75rem;
+  font-size: 0.85rem;
   font-weight: 600;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  margin-top: 2px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
   animation: pulseStat 2s ease-in-out infinite;
 }
 
@@ -325,26 +318,28 @@ body::after {
   50% { transform: scale(1.05); }
 }
 
+/* Efecto glow */
 .slide-glow {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 200px;
-  height: 200px;
-  background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
+  width: 250px;
+  height: 250px;
+  background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
   border-radius: 50%;
-  filter: blur(50px);
+  filter: blur(60px);
   animation: glowPulse 3s ease-in-out infinite;
   z-index: 0;
   pointer-events: none;
 }
 
 @keyframes glowPulse {
-  0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
+  0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
   50% { transform: translate(-50%, -50%) scale(1.3); opacity: 1; }
 }
 
+/* Botones de navegación */
 .carousel-nav-btn {
   width: 48px;
   height: 48px;
@@ -369,7 +364,7 @@ body::after {
 
 .carousel-nav-btn:hover {
   background: white;
-  transform: scale(1.12);
+  transform: scale(1.15);
   box-shadow: 0 0 40px rgba(0, 168, 150, 0.3);
 }
 
@@ -377,6 +372,7 @@ body::after {
   transform: scale(0.9);
 }
 
+/* Indicadores */
 .carousel-indicators {
   display: flex;
   justify-content: center;
@@ -388,7 +384,7 @@ body::after {
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  background: rgba(0, 168, 150, 0.25);
+  background: rgba(0, 168, 150, 0.3);
   cursor: pointer;
   transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   border: 2px solid transparent;
@@ -407,159 +403,6 @@ body::after {
 .indicator-dot:hover {
   transform: scale(1.2);
   background: var(--secondary-color);
-}
-
-/* ================================================================
-   📱 RESPONSIVE DEL CARRUSEL
-   ================================================================ */
-
-@media (max-width: 1024px) {
-  .carousel-slide {
-    flex: 0 0 calc(50% - 10px);
-    height: 280px;
-  }
-
-  .slide-icon {
-    font-size: 3.2rem;
-  }
-
-  .slide-content h3 {
-    font-size: 1.2rem;
-  }
-
-  .slide-content p {
-    font-size: 0.8rem;
-  }
-}
-
-@media (max-width: 768px) {
-  .carousel-premium-wrapper {
-    gap: 6px;
-  }
-
-  .carousel-track {
-    gap: 14px;
-  }
-
-  .carousel-slide {
-    flex: 0 0 calc(50% - 7px);
-    height: 240px;
-    padding: 14px 12px;
-  }
-
-  .slide-icon {
-    font-size: 2.8rem;
-  }
-
-  .slide-content h3 {
-    font-size: 1rem;
-  }
-
-  .slide-content p {
-    font-size: 0.7rem;
-  }
-
-  .slide-stats {
-    font-size: 0.65rem;
-    padding: 0.2rem 0.8rem;
-  }
-
-  .carousel-nav-btn {
-    width: 36px;
-    height: 36px;
-    font-size: 1.4rem;
-  }
-
-  .slide-glow {
-    width: 140px;
-    height: 140px;
-    filter: blur(40px);
-  }
-}
-
-@media (max-width: 480px) {
-  .carousel-premium-wrapper {
-    gap: 4px;
-  }
-
-  .carousel-track {
-    gap: 12px;
-  }
-
-  .carousel-slide {
-    flex: 0 0 100%;
-    height: 220px;
-    padding: 16px 14px;
-    border-radius: 18px;
-  }
-
-  .slide-icon {
-    font-size: 2.6rem;
-  }
-
-  .slide-content h3 {
-    font-size: 1.1rem;
-  }
-
-  .slide-content p {
-    font-size: 0.75rem;
-  }
-
-  .slide-stats {
-    font-size: 0.6rem;
-    padding: 0.2rem 0.7rem;
-  }
-
-  .carousel-nav-btn {
-    width: 30px;
-    height: 30px;
-    font-size: 1.2rem;
-  }
-
-  .slide-glow {
-    width: 120px;
-    height: 120px;
-    filter: blur(30px);
-  }
-
-  .carousel-indicators {
-    gap: 8px;
-    margin-top: 1rem;
-  }
-
-  .indicator-dot {
-    width: 10px;
-    height: 10px;
-  }
-
-  .indicator-dot.active {
-    transform: scale(1.3);
-  }
-}
-
-@media (max-width: 768px) and (orientation: landscape) {
-  .carousel-slide {
-    height: 200px;
-    padding: 12px 10px;
-  }
-
-  .slide-icon {
-    font-size: 2.2rem;
-  }
-
-  .slide-content h3 {
-    font-size: 0.95rem;
-  }
-
-  .slide-content p {
-    font-size: 0.7rem;
-  }
-
-  .slide-glow {
-    width: 100px;
-    height: 100px;
-    filter: blur(25px);
-  }
 }
 
 /* ==========================================================================
@@ -606,6 +449,7 @@ body::after {
   font-size: 1rem;
 }
 
+/* Placeholder del área de juego */
 .play-placeholder {
   display: flex;
   flex-direction: column;
@@ -672,9 +516,151 @@ body::after {
 }
 
 /* ==========================================================================
-   6. UTILIDADES Y ANIMACIONES
+   6. MEDIA QUERIES
    ========================================================================== */
 
+/* Tablets y móviles grandes */
+@media (max-width: 768px) {
+  .topbar {
+    flex-direction: column;
+    text-align: center;
+    padding: 0.8rem;
+  }
+
+  .topbar h1 {
+    font-size: 1.2rem;
+  }
+
+  .topbar h1::before {
+    font-size: 1.5rem;
+  }
+
+  .games-container {
+    width: 92%;
+    padding: 1.5rem 0;
+  }
+
+  .carousel-slide {
+    height: 280px;
+    padding: 2rem 1rem;
+  }
+
+  .slide-icon {
+    font-size: 3.5rem;
+  }
+
+  .slide-content h3 {
+    font-size: 1.4rem;
+  }
+
+  .carousel-nav-btn {
+    width: 38px;
+    height: 38px;
+    font-size: 1.4rem;
+  }
+
+  .play-area {
+    width: 92%;
+    padding: 1.2rem;
+    min-height: 200px;
+  }
+
+  #gameTitle {
+    font-size: 1.3rem;
+  }
+}
+
+/* Móviles pequeños */
+@media (max-width: 480px) {
+  .games-container {
+    width: 95%;
+    padding: 1rem 0;
+  }
+
+  .carousel-premium-wrapper {
+    gap: 5px;
+  }
+
+  .carousel-nav-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 1.2rem;
+  }
+
+  .carousel-slide {
+    height: 250px;
+    padding: 1.5rem 0.8rem;
+  }
+
+  .slide-icon {
+    font-size: 3rem;
+  }
+
+  .slide-content h3 {
+    font-size: 1.2rem;
+  }
+
+  .slide-content p {
+    font-size: 0.85rem;
+  }
+
+  .slide-stats {
+    font-size: 0.75rem;
+    padding: 0.3rem 1rem;
+  }
+
+  .play-area {
+    padding: 1rem;
+    min-height: 150px;
+  }
+
+  #gameTitle {
+    font-size: 1.1rem;
+  }
+
+  .play-placeholder i {
+    font-size: 2.5rem;
+  }
+
+  .play-placeholder p {
+    font-size: 1rem;
+  }
+
+  .play-hint {
+    font-size: 0.75rem;
+    padding: 0.2rem 0.8rem;
+  }
+}
+
+/* Orientación horizontal en móvil */
+@media (max-width: 768px) and (orientation: landscape) {
+  .carousel-slide {
+    height: 220px;
+    padding: 1rem;
+  }
+
+  .slide-icon {
+    font-size: 2.5rem;
+  }
+
+  .slide-content h3 {
+    font-size: 1.1rem;
+  }
+
+  .slide-content p {
+    font-size: 0.8rem;
+  }
+
+  .play-area {
+    min-height: 150px;
+  }
+}
+
+/* ==========================================================================
+   7. UTILIDADES Y ANIMACIONES
+   ========================================================================== */
+
+/* Ajustes táctiles globales */
 button, 
 .volver,
 .carousel-nav-btn,
@@ -686,7 +672,7 @@ button,
 }
 
 input, textarea, select {
-  font-size: 16px;
+  font-size: 16px; /* Previene zoom en iOS */
 }
 
 img, canvas, iframe {
@@ -694,6 +680,7 @@ img, canvas, iframe {
   height: auto;
 }
 
+/* Animación de carga suave */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -710,6 +697,7 @@ img, canvas, iframe {
   animation: fadeIn 0.5s ease-out;
 }
 
+/* Scrollbar personalizado */
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -725,219 +713,4 @@ img, canvas, iframe {
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--secondary-color);
-}
-/* ================================================================
-   🔥 SOBRESCRITURA CARRUSEL - FUERZA BRUTA
-   ================================================================ */
-
-.carousel-track {
-  display: flex !important;
-  gap: 20px !important;
-  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
-  padding: 4px 4px !important;
-  width: 100% !important;
-  transform: translateX(0px) !important;
-}
-
-.carousel-slide {
-  flex: 0 0 calc(33.333% - 14px) !important;
-  min-width: 0 !important;
-  max-width: calc(33.333% - 14px) !important;
-  height: 320px !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  border-radius: 24px !important;
-  padding: 20px 16px !important;
-  overflow: hidden !important;
-  box-sizing: border-box !important;
-  margin: 0 !important;
-}
-
-.slide-content {
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  justify-content: center !important;
-  height: 100% !important;
-  width: 100% !important;
-  text-align: center !important;
-  padding: 0 !important;
-}
-
-.slide-icon {
-  font-size: 3.8rem !important;
-  margin-bottom: 4px !important;
-  line-height: 1.2 !important;
-}
-
-.slide-content h3 {
-  font-family: 'Fredoka', sans-serif !important;
-  font-size: 1.4rem !important;
-  margin: 2px 0 !important;
-  line-height: 1.2 !important;
-  color: white !important;
-  text-shadow: 0 2px 10px rgba(0,0,0,0.3) !important;
-}
-
-.slide-content p {
-  font-size: 0.85rem !important;
-  margin: 2px 0 4px !important;
-  color: rgba(255,255,255,0.9) !important;
-  text-shadow: 0 2px 10px rgba(0,0,0,0.3) !important;
-}
-
-.slide-stats {
-  display: inline-block !important;
-  padding: 0.3rem 1rem !important;
-  border-radius: 50px !important;
-  font-size: 0.75rem !important;
-  font-weight: 600 !important;
-  background: rgba(0, 0, 0, 0.2) !important;
-  backdrop-filter: blur(10px) !important;
-  border: 1px solid rgba(255,255,255,0.15) !important;
-  color: white !important;
-}
-
-.carousel-track-wrapper {
-  overflow: hidden !important;
-  border-radius: 24px !important;
-  flex: 1 !important;
-  padding: 8px 0 !important;
-}
-
-.carousel-premium-wrapper {
-  display: flex !important;
-  align-items: center !important;
-  gap: 10px !important;
-  width: 100% !important;
-}
-
-/* ===== BOTONES ===== */
-.carousel-nav-btn {
-  width: 48px !important;
-  height: 48px !important;
-  border-radius: 50% !important;
-  border: none !important;
-  background: rgba(255, 255, 255, 0.85) !important;
-  backdrop-filter: blur(10px) !important;
-  color: #028090 !important;
-  font-size: 1.8rem !important;
-  cursor: pointer !important;
-  transition: all 0.3s !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  flex-shrink: 0 !important;
-  z-index: 10 !important;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.1) !important;
-}
-
-.carousel-nav-btn:hover {
-  transform: scale(1.12) !important;
-  box-shadow: 0 0 40px rgba(0,168,150,0.3) !important;
-}
-
-/* ================================================================
-   📱 RESPONSIVE
-   ================================================================ */
-
-@media (max-width: 1024px) {
-  .carousel-slide {
-    flex: 0 0 calc(50% - 10px) !important;
-    max-width: calc(50% - 10px) !important;
-    height: 280px !important;
-  }
-  .slide-icon {
-    font-size: 3.2rem !important;
-  }
-  .slide-content h3 {
-    font-size: 1.2rem !important;
-  }
-  .slide-content p {
-    font-size: 0.8rem !important;
-  }
-}
-
-@media (max-width: 768px) {
-  .carousel-premium-wrapper {
-    gap: 6px !important;
-  }
-  .carousel-track {
-    gap: 14px !important;
-  }
-  .carousel-slide {
-    flex: 0 0 calc(50% - 7px) !important;
-    max-width: calc(50% - 7px) !important;
-    height: 240px !important;
-    padding: 14px 12px !important;
-  }
-  .slide-icon {
-    font-size: 2.8rem !important;
-  }
-  .slide-content h3 {
-    font-size: 1rem !important;
-  }
-  .slide-content p {
-    font-size: 0.7rem !important;
-  }
-  .slide-stats {
-    font-size: 0.65rem !important;
-    padding: 0.2rem 0.8rem !important;
-  }
-  .carousel-nav-btn {
-    width: 36px !important;
-    height: 36px !important;
-    font-size: 1.4rem !important;
-  }
-}
-
-@media (max-width: 480px) {
-  .carousel-premium-wrapper {
-    gap: 4px !important;
-  }
-  .carousel-track {
-    gap: 12px !important;
-  }
-  .carousel-slide {
-    flex: 0 0 100% !important;
-    max-width: 100% !important;
-    height: 220px !important;
-    padding: 16px 14px !important;
-    border-radius: 18px !important;
-  }
-  .slide-icon {
-    font-size: 2.6rem !important;
-  }
-  .slide-content h3 {
-    font-size: 1.1rem !important;
-  }
-  .slide-content p {
-    font-size: 0.75rem !important;
-  }
-  .slide-stats {
-    font-size: 0.6rem !important;
-    padding: 0.2rem 0.7rem !important;
-  }
-  .carousel-nav-btn {
-    width: 30px !important;
-    height: 30px !important;
-    font-size: 1.2rem !important;
-  }
-}
-
-@media (max-width: 768px) and (orientation: landscape) {
-  .carousel-slide {
-    height: 200px !important;
-    padding: 12px 10px !important;
-  }
-  .slide-icon {
-    font-size: 2.2rem !important;
-  }
-  .slide-content h3 {
-    font-size: 0.95rem !important;
-  }
-  .slide-content p {
-    font-size: 0.7rem !important;
-  }
 }
