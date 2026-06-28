@@ -233,6 +233,46 @@
       background: #ffa726;
     }
 
+    /* ===== NAVEGACIÓN ENTRE JUEGOS (estilo tabs) ===== */
+    .game-nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 16px;
+      margin-bottom: 10px;
+      padding: 8px 6px;
+      background: rgba(0, 0, 0, 0.15);
+      border-radius: 60px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .game-nav a {
+      text-decoration: none;
+      padding: 8px 18px;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: clamp(0.7rem, 1.6vw, 0.9rem);
+      color: #e3f2fd;
+      background: rgba(255, 255, 255, 0.06);
+      transition: all 0.25s ease;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .game-nav a:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: translateY(-2px);
+    }
+
+    .game-nav a.active {
+      background: rgba(255, 215, 0, 0.2);
+      border-color: #ffd54f;
+      color: #ffd54f;
+    }
+
     .status {
       margin-top: 12px;
       text-align: center;
@@ -338,6 +378,17 @@
         min-width: 55px;
       }
 
+      .game-nav {
+        gap: 6px;
+        padding: 6px 4px;
+        border-radius: 40px;
+      }
+
+      .game-nav a {
+        padding: 6px 12px;
+        font-size: clamp(0.6rem, 1.4vw, 0.8rem);
+      }
+
       .status {
         font-size: clamp(0.75rem, 2vw, 0.9rem);
         padding: 8px 12px;
@@ -387,6 +438,16 @@
         border-radius: 40px;
       }
 
+      .game-nav {
+        gap: 4px;
+        padding: 4px 3px;
+      }
+
+      .game-nav a {
+        padding: 4px 8px;
+        font-size: 0.55rem;
+      }
+
       .status {
         font-size: 0.65rem;
         padding: 6px 10px;
@@ -416,6 +477,11 @@
         padding: 6px 8px;
         font-size: 0.55rem;
         min-width: 35px;
+      }
+
+      .game-nav a {
+        font-size: 0.5rem;
+        padding: 3px 6px;
       }
     }
 
@@ -447,6 +513,14 @@
   <p class="subtitle">Encuentra las ciudades y lugares turísticos de Nicaragua 🌋🌊</p>
 
   <div class="game-wrapper">
+    <!-- Navegación entre juegos (estilo tabs) -->
+    <div class="game-nav">
+      <a href="#" class="active">📝 Sopa de Letras</a>
+      <a href="../memoria/index.html">🃏 Memoria</a>
+      <a href="../ordena/index.html">🔤 Ordena</a>
+      <a href="../trivia/index.html">❓ Trivia</a>
+    </div>
+
     <!-- Lista de palabras a encontrar -->
     <div class="word-list" id="wordList"></div>
 
@@ -459,7 +533,7 @@
     <div class="controls">
       <button id="verificarBtn" class="btn-verificar">✅ Verificar</button>
       <button id="pistaBtn" class="btn-pista">💡 Pista</button>
-      <button id="siguienteBtn" class="btn-siguiente">➡ Siguiente</button>
+      <button id="siguienteBtn" class="btn-siguiente">➡ Siguiente Juego</button>
       <button id="reiniciarBtn" class="btn-reiniciar">🔄 Reiniciar</button>
     </div>
 
@@ -493,9 +567,16 @@
     let selectedCells = [];
     let foundWords = new Set();
     let wordPositions = [];
-    let currentIndex = 0; // Para "Siguiente"
 
     const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+    // Lista de juegos para navegación
+    const juegos = [
+      { nombre: "Sopa de Letras", url: "../sopa/index.html" },
+      { nombre: "Memoria", url: "../memoria/index.html" },
+      { nombre: "Ordena", url: "../ordena/index.html" },
+      { nombre: "Trivia", url: "../trivia/index.html" }
+    ];
 
     function generateBoard() {
       board = Array.from({ length: SIZE }, () => Array(SIZE).fill(''));
@@ -785,7 +866,6 @@
     function mostrarPista() {
       for (const wp of wordPositions) {
         if (!wp.found) {
-          // Resaltar las celdas de la palabra
           const cells = boardEl.querySelectorAll('.cell');
           wp.positions.forEach(pos => {
             const index = pos.row * SIZE + pos.col;
@@ -804,14 +884,27 @@
       alert('🎉 ¡Ya encontraste todas las palabras!');
     }
 
-    // Siguiente: avanza al siguiente conjunto de palabras (reinicia el juego)
-    function siguiente() {
-      resetGame();
-      // Mostrar un mensaje de que se ha reiniciado
-      statusEl.innerHTML = `
-        <span>🔄 ¡Nueva partida! Encuentra todas las palabras</span>
-        <span class="counter">🏷️ <span>0</span> / <span>${palabras.length}</span></span>
-      `;
+    // Siguiente Juego: navega al siguiente juego en la lista
+    function siguienteJuego() {
+      // Encontrar el índice del juego actual
+      const currentUrl = window.location.pathname;
+      let currentIndex = -1;
+      for (let i = 0; i < juegos.length; i++) {
+        if (currentUrl.includes(juegos[i].url.replace('../', ''))) {
+          currentIndex = i;
+          break;
+        }
+      }
+
+      // Si no se encuentra, ir al primero
+      if (currentIndex === -1) currentIndex = 0;
+
+      // Calcular siguiente índice (cíclico)
+      const nextIndex = (currentIndex + 1) % juegos.length;
+      const nextUrl = juegos[nextIndex].url;
+
+      // Navegar al siguiente juego
+      window.location.href = nextUrl;
     }
 
     // Reiniciar
@@ -825,7 +918,6 @@
       renderBoard();
       renderWordList();
       updateFoundStyles();
-      // Restaurar mensaje de estado
       statusEl.innerHTML = `
         <span>📌 Encuentra todas las palabras</span>
         <span class="counter">🏷️ <span id="foundCount">0</span> / <span id="totalCount">${palabras.length}</span></span>
@@ -838,14 +930,28 @@
     // ============================================================
     document.getElementById('verificarBtn').addEventListener('click', verificar);
     document.getElementById('pistaBtn').addEventListener('click', mostrarPista);
-    document.getElementById('siguienteBtn').addEventListener('click', siguiente);
+    document.getElementById('siguienteBtn').addEventListener('click', siguienteJuego);
     document.getElementById('reiniciarBtn').addEventListener('click', resetGame);
+
+    // Marcar el juego actual en la navegación
+    function marcarJuegoActual() {
+      const links = document.querySelectorAll('.game-nav a');
+      const currentPath = window.location.pathname;
+      links.forEach(link => {
+        link.classList.remove('active');
+        const href = link.getAttribute('href');
+        if (currentPath.includes(href.replace('./', '').replace('../', ''))) {
+          link.classList.add('active');
+        }
+      });
+    }
 
     // Iniciar juego
     generateBoard();
     renderBoard();
     renderWordList();
     updateFoundStyles();
+    marcarJuegoActual();
 
     console.log('¡Sopa de Letras cargada correctamente!');
   </script>
