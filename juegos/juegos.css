@@ -28,7 +28,7 @@
 
 body {
   font-family: var(--font-body);
-  background: linear-gradient(145deg, #e8f8f5 0%, #f0fdfa 100%);
+  background: linear-gradient(145deg, #0a2a1f 0%, #1a4a2a 50%, #0d331f 100%);
   background-image: radial-gradient(#bae6fd 0.8px, transparent 0.8px);
   background-size: 30px 30px;
   color: #334155;
