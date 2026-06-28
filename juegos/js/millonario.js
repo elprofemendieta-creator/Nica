@@ -98,8 +98,9 @@ const QUESTION_BANK = [{
 // ===== PREMIOS (15 preguntas) =====
 const PRIZES = [1000, 2000, 3000, 5000, 7000, 10000, 15000, 20000, 30000, 40000, 50000, 65000, 80000, 90000, 100000];
 
-// ===== COSTO DEL 50/50 =====
+// ===== COSTOS =====
 const FIFTY_COST = 1500;
+const HINT_COST = 1000;  // ✅ NUEVO: costo de la pista
 
 // ===== ESTADO DEL JUEGO =====
 const state = {
@@ -190,6 +191,9 @@ function loadQuestion(index) {
     state.fiftyUsed = false;
     fiftyBtn.disabled = false;
     fiftyBtn.innerHTML = '🎲 50/50 <span class="cost">C$1,500</span>';
+
+    // ✅ Actualizar botón de pista con el costo
+    hintBtn.innerHTML = '💡 Pista <span class="cost">C$1,000</span>';
 
     clearTimeout(window.hintTimeout);
     hintText.textContent = 'Selecciona una opción. ¡Suerte!';
@@ -289,14 +293,33 @@ function useFifty() {
     showHint(`🎲 50/50 aplicado. Te costó ${formatCurrency(FIFTY_COST)}. Dos opciones eliminadas.`);
 }
 
+// ===== PISTA CON COSTO =====
 function useHint() {
-    if (state.hints <= 0 || state.gameOver) {
-        showHint('❌ No te quedan pistas.');
+    // ✅ Verificar si ya no quedan pistas
+    if (state.hints <= 0) {
+        showHint('❌ No te quedan pistas disponibles.');
         return;
     }
+
+    if (state.gameOver || state.answered) {
+        showHint('⚠️ No puedes usar una pista ahora.');
+        return;
+    }
+
+    // ✅ Verificar si tiene suficiente dinero
+    if (state.prize < HINT_COST) {
+        showHint(`❌ No tienes suficiente dinero. Necesitas ${formatCurrency(HINT_COST)} para usar una pista.`);
+        return;
+    }
+
+    // ✅ Cobrar el costo
+    state.prize -= HINT_COST;
+    updatePrizeDisplay(true);
+
+    // ✅ Usar la pista
     state.hints--;
     hintCountDisplay.textContent = state.hints;
-    showHint(`💡 Pista: ${state.currentQuestion.hint}`);
+    showHint(`💡 Pista: ${state.currentQuestion.hint} (Te costó ${formatCurrency(HINT_COST)})`);
 }
 
 function showHint(msg) {
@@ -331,6 +354,7 @@ function resetGame() {
 
     fiftyBtn.disabled = false;
     fiftyBtn.innerHTML = '🎲 50/50 <span class="cost">C$1,500</span>';
+    hintBtn.innerHTML = '💡 Pista <span class="cost">C$1,000</span>';
     nextBtn.disabled = true;
     loadQuestion(0);
     showHint('🔄 Juego reiniciado. ¡Buena suerte! Las preguntas están en orden aleatorio.');
@@ -354,3 +378,4 @@ resetGame();
 console.log('🏆 Pinolero Millonario - Versión mejorada');
 console.log(`📚 Banco de ${QUESTION_BANK.length} preguntas`);
 console.log(`🎲 50/50 cuesta ${formatCurrency(FIFTY_COST)}`);
+console.log(`💡 Pista cuesta ${formatCurrency(HINT_COST)}`);
