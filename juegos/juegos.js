@@ -1,5 +1,5 @@
 // ================================================================
-//  🎠 CARRUSEL DE JUEGOS - GUÍA PINOLERO
+//  🎠 CARRUSEL DE JUEGOS - GUÍA PINOLERO (VERSIÓN CORREGIDA)
 // ================================================================
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -18,6 +18,8 @@ document.addEventListener('DOMContentLoaded', function() {
     return;
   }
 
+  console.log(`✅ Encontradas ${slides.length} tarjetas`);
+
   let currentIndex = 0;
   let slidesPerView = getSlidesPerView();
   const totalSlides = slides.length;
@@ -29,13 +31,20 @@ document.addEventListener('DOMContentLoaded', function() {
     return 3;
   }
 
-  // ===== FUNCIÓN PARA ACTUALIZAR EL CARRUSEL =====
+  // ===== FUNCIÓN PARA ACTUALIZAR EL CARRUSEL (CORREGIDA) =====
   function updateCarousel() {
     if (totalSlides === 0) return;
 
-    const slideWidth = slides[0]?.offsetWidth || 280;
-    const gap = 20;
+    // ✅ Usar getBoundingClientRect para obtener el ancho REAL
+    const firstSlide = slides[0];
+    if (!firstSlide) return;
+    
+    const rect = firstSlide.getBoundingClientRect();
+    const slideWidth = rect.width;
+    const gap = 20; // Mismo gap que en CSS
     const offset = currentIndex * (slideWidth + gap);
+
+    console.log(`📐 Ancho de tarjeta: ${slideWidth}px, offset: ${offset}px`);
 
     track.style.transition = 'transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
     track.style.transform = `translateX(-${offset}px)`;
@@ -55,23 +64,30 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // ===== SIGUIENTE =====
   function nextSlide() {
+    console.log('➡️ Siguiente');
     const maxIndex = Math.max(0, totalSlides - slidesPerView);
     if (currentIndex < maxIndex) {
       currentIndex++;
       updateCarousel();
+    } else {
+      console.log('⚠️ Ya estás en la última tarjeta');
     }
   }
 
   // ===== ANTERIOR =====
   function prevSlide() {
+    console.log('⬅️ Anterior');
     if (currentIndex > 0) {
       currentIndex--;
       updateCarousel();
+    } else {
+      console.log('⚠️ Ya estás en la primera tarjeta');
     }
   }
 
   // ===== IR A UN SLIDE ESPECÍFICO (por indicador) =====
   function goToSlide(index) {
+    console.log(`🎯 Ir a la tarjeta ${index}`);
     const maxIndex = Math.max(0, totalSlides - slidesPerView);
     if (index >= 0 && index <= maxIndex) {
       currentIndex = index;
@@ -81,18 +97,25 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // ===== ASIGNAR EVENTOS A LOS BOTONES =====
   if (prevBtn) {
-    prevBtn.addEventListener('click', prevSlide);
+    prevBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      prevSlide();
+    });
     console.log('✅ Botón "Anterior" asignado');
   }
 
   if (nextBtn) {
-    nextBtn.addEventListener('click', nextSlide);
+    nextBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      nextSlide();
+    });
     console.log('✅ Botón "Siguiente" asignado');
   }
 
   // ===== ASIGNAR EVENTOS A LOS INDICADORES =====
   dots.forEach((dot, index) => {
-    dot.addEventListener('click', () => {
+    dot.addEventListener('click', function(e) {
+      e.preventDefault();
       goToSlide(index);
     });
   });
@@ -105,7 +128,6 @@ document.addEventListener('DOMContentLoaded', function() {
       const newSlidesPerView = getSlidesPerView();
       if (newSlidesPerView !== slidesPerView) {
         slidesPerView = newSlidesPerView;
-        // Asegurar que el índice actual no sea mayor al máximo
         const maxIndex = Math.max(0, totalSlides - slidesPerView);
         if (currentIndex > maxIndex) {
           currentIndex = maxIndex;
