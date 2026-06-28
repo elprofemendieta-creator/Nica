@@ -28,9 +28,8 @@
 
 body {
   font-family: var(--font-body);
- background: radial-gradient(circle at top, #1a2a3a 0%, #0d131a 100%);
-   background-attachment: fixed;
-  
+  background: radial-gradient(circle at top, #1a2a3a 0%, #0d131a 100%);
+  background-attachment: fixed;
   background-size: 30px 30px;
   color: #334155;
   margin: 0;
@@ -153,7 +152,7 @@ body::after {
 }
 
 /* ==========================================================================
-   3. CARRUSEL PREMIUM
+   3. CARRUSEL PREMIUM - CORREGIDO
    ========================================================================== */
 .games-container {
   width: 90%;
@@ -167,6 +166,7 @@ body::after {
 .carousel-premium-container {
   width: 100%;
   margin: 0 auto;
+  overflow: hidden;
 }
 
 .carousel-premium-wrapper {
@@ -189,37 +189,45 @@ body::after {
   border: 1px solid rgba(255, 255, 255, 0.1);
   min-width: 0;
   position: relative;
+  padding: 8px 0;
 }
 
+/* ✅ TRACK: las tarjetas se alinean horizontalmente */
 .carousel-track {
   display: flex;
-  width: 100%;
-  transition: transform 0.7s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  gap: 20px;
+  transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   will-change: transform;
+  padding: 4px 4px;
 }
 
-/* Cada slide */
+/* ✅ CADA TARJETA - tamaño fijo y uniforme */
 .carousel-slide {
-  flex: 0 0 100%;
-  min-width: 100%;
-  width: 100%;
-  height: 340px;
+  flex: 0 0 calc(33.333% - 14px);
+  /* 3 tarjetas por vista */
+  min-width: 0;
+  height: 320px;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
   cursor: pointer;
-  transition: all 0.4s;
+  transition: all 0.4s ease;
   border-radius: 24px;
   box-sizing: border-box;
   pointer-events: auto;
+  padding: 20px 16px;
+  overflow: hidden;
 }
 
+/* ✅ Efecto hover */
 .carousel-slide:hover {
-  transform: scale(1.02);
-  filter: brightness(1.1);
+  transform: translateY(-8px) scale(1.02);
+  filter: brightness(1.08);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
 }
 
+/* ✅ Efecto de brillo rotatorio */
 .carousel-slide::before {
   content: '';
   position: absolute;
@@ -227,11 +235,12 @@ body::after {
   left: -50%;
   width: 200%;
   height: 200%;
-  background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
   animation: rotateGlow 20s linear infinite;
   opacity: 0;
   transition: opacity 0.6s;
   pointer-events: none;
+  z-index: 1;
 }
 
 .carousel-slide:hover::before {
@@ -243,20 +252,24 @@ body::after {
   100% { transform: rotate(360deg); }
 }
 
-/* Contenido del slide */
+/* ✅ Contenido de la tarjeta - centrado */
 .slide-content {
   position: relative;
   z-index: 2;
   text-align: center;
   color: white;
   text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-  transform: scale(1);
-  transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   width: 100%;
   max-width: 100%;
-  padding: 0 1rem;
+  padding: 0;
   box-sizing: border-box;
   pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  height: 100%;
 }
 
 .slide-content * {
@@ -264,53 +277,55 @@ body::after {
 }
 
 .carousel-slide:hover .slide-content {
-  transform: scale(1.08);
+  transform: scale(1.05);
 }
 
-/* Ícono animado */
+/* ✅ Icono */
 .slide-icon {
-  font-size: 4.5rem;
+  font-size: 3.8rem;
   display: inline-block;
   animation: floatIcon 3s ease-in-out infinite;
   filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3));
-  margin-bottom: 0.5rem;
+  margin-bottom: 2px;
+  line-height: 1.2;
 }
 
 @keyframes floatIcon {
-  0%, 100% { 
-    transform: translateY(0) rotate(0deg) scale(1);
-  }
-  33% { 
-    transform: translateY(-15px) rotate(5deg) scale(1.05);
-  }
-  66% { 
-    transform: translateY(10px) rotate(-5deg) scale(0.95);
-  }
+  0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
+  33% { transform: translateY(-12px) rotate(3deg) scale(1.05); }
+  66% { transform: translateY(8px) rotate(-3deg) scale(0.95); }
 }
 
+/* ✅ Título */
 .slide-content h3 {
-  font-size: 1.8rem;
+  font-family: var(--font-title);
+  font-size: 1.4rem;
   font-weight: 800;
-  margin: 0.3rem 0;
-  letter-spacing: 1px;
+  margin: 2px 0;
+  letter-spacing: 0.5px;
+  line-height: 1.2;
 }
 
+/* ✅ Descripción */
 .slide-content p {
-  font-size: 1rem;
+  font-size: 0.85rem;
   opacity: 0.9;
-  margin-bottom: 0.8rem;
+  margin: 2px 0 4px;
   font-weight: 400;
+  line-height: 1.3;
 }
 
+/* ✅ Estadísticas */
 .slide-stats {
   display: inline-block;
-  background: rgba(0, 0, 0, 0.25);
+  background: rgba(0, 0, 0, 0.2);
   backdrop-filter: blur(10px);
-  padding: 0.4rem 1.2rem;
+  padding: 0.3rem 1rem;
   border-radius: 50px;
-  font-size: 0.85rem;
+  font-size: 0.75rem;
   font-weight: 600;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  margin-top: 2px;
   animation: pulseStat 2s ease-in-out infinite;
 }
 
@@ -319,28 +334,28 @@ body::after {
   50% { transform: scale(1.05); }
 }
 
-/* Efecto glow */
+/* ✅ Glow */
 .slide-glow {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 250px;
-  height: 250px;
-  background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
   border-radius: 50%;
-  filter: blur(60px);
+  filter: blur(50px);
   animation: glowPulse 3s ease-in-out infinite;
   z-index: 0;
   pointer-events: none;
 }
 
 @keyframes glowPulse {
-  0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
+  0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
   50% { transform: translate(-50%, -50%) scale(1.3); opacity: 1; }
 }
 
-/* Botones de navegación */
+/* ✅ Botones de navegación */
 .carousel-nav-btn {
   width: 48px;
   height: 48px;
@@ -365,7 +380,7 @@ body::after {
 
 .carousel-nav-btn:hover {
   background: white;
-  transform: scale(1.15);
+  transform: scale(1.12);
   box-shadow: 0 0 40px rgba(0, 168, 150, 0.3);
 }
 
@@ -373,7 +388,7 @@ body::after {
   transform: scale(0.9);
 }
 
-/* Indicadores */
+/* ✅ Indicadores */
 .carousel-indicators {
   display: flex;
   justify-content: center;
@@ -385,7 +400,7 @@ body::after {
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  background: rgba(0, 168, 150, 0.3);
+  background: rgba(0, 168, 150, 0.25);
   cursor: pointer;
   transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   border: 2px solid transparent;
@@ -404,6 +419,227 @@ body::after {
 .indicator-dot:hover {
   transform: scale(1.2);
   background: var(--secondary-color);
+}
+
+/* ================================================================
+   📱 RESPONSIVE DEL CARRUSEL
+   ================================================================ */
+
+/* Tablets: 2 tarjetas */
+@media (max-width: 1024px) {
+  .carousel-slide {
+    flex: 0 0 calc(50% - 10px);
+    height: 280px;
+  }
+
+  .slide-icon {
+    font-size: 3.2rem;
+  }
+
+  .slide-content h3 {
+    font-size: 1.2rem;
+  }
+
+  .slide-content p {
+    font-size: 0.8rem;
+  }
+}
+
+/* Móviles grandes: 2 tarjetas más pequeñas */
+@media (max-width: 768px) {
+  .carousel-premium-wrapper {
+    gap: 6px;
+  }
+
+  .carousel-track {
+    gap: 14px;
+  }
+
+  .carousel-slide {
+    flex: 0 0 calc(50% - 7px);
+    height: 240px;
+    padding: 14px 12px;
+  }
+
+  .slide-icon {
+    font-size: 2.8rem;
+  }
+
+  .slide-content h3 {
+    font-size: 1rem;
+  }
+
+  .slide-content p {
+    font-size: 0.7rem;
+  }
+
+  .slide-stats {
+    font-size: 0.65rem;
+    padding: 0.2rem 0.8rem;
+  }
+
+  .carousel-nav-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 1.4rem;
+  }
+
+  .slide-glow {
+    width: 140px;
+    height: 140px;
+    filter: blur(40px);
+  }
+
+  .topbar {
+    flex-direction: column;
+    text-align: center;
+    padding: 0.8rem;
+  }
+
+  .topbar h1 {
+    font-size: 1.2rem;
+  }
+
+  .topbar h1::before {
+    font-size: 1.5rem;
+  }
+
+  .games-container {
+    width: 92%;
+    padding: 1.5rem 0;
+  }
+
+  .play-area {
+    width: 92%;
+    padding: 1.2rem;
+    min-height: 200px;
+  }
+
+  #gameTitle {
+    font-size: 1.3rem;
+  }
+}
+
+/* Móviles pequeños: 1 tarjeta */
+@media (max-width: 480px) {
+  .games-container {
+    width: 95%;
+    padding: 1rem 0;
+  }
+
+  .carousel-premium-wrapper {
+    gap: 4px;
+  }
+
+  .carousel-track {
+    gap: 12px;
+  }
+
+  .carousel-slide {
+    flex: 0 0 100%;
+    height: 220px;
+    padding: 16px 14px;
+    border-radius: 18px;
+  }
+
+  .slide-icon {
+    font-size: 2.6rem;
+  }
+
+  .slide-content h3 {
+    font-size: 1.1rem;
+  }
+
+  .slide-content p {
+    font-size: 0.75rem;
+  }
+
+  .slide-stats {
+    font-size: 0.6rem;
+    padding: 0.2rem 0.7rem;
+  }
+
+  .carousel-nav-btn {
+    width: 30px;
+    height: 30px;
+    font-size: 1.2rem;
+  }
+
+  .carousel-nav-btn:hover {
+    transform: scale(1.05);
+  }
+
+  .slide-glow {
+    width: 120px;
+    height: 120px;
+    filter: blur(30px);
+  }
+
+  .carousel-indicators {
+    gap: 8px;
+    margin-top: 1rem;
+  }
+
+  .indicator-dot {
+    width: 10px;
+    height: 10px;
+  }
+
+  .indicator-dot.active {
+    transform: scale(1.3);
+  }
+
+  .play-area {
+    padding: 1rem;
+    min-height: 150px;
+  }
+
+  #gameTitle {
+    font-size: 1.1rem;
+  }
+
+  .play-placeholder i {
+    font-size: 2.5rem;
+  }
+
+  .play-placeholder p {
+    font-size: 1rem;
+  }
+
+  .play-hint {
+    font-size: 0.75rem;
+    padding: 0.2rem 0.8rem;
+  }
+}
+
+/* Orientación horizontal en móvil */
+@media (max-width: 768px) and (orientation: landscape) {
+  .carousel-slide {
+    height: 200px;
+    padding: 12px 10px;
+  }
+
+  .slide-icon {
+    font-size: 2.2rem;
+  }
+
+  .slide-content h3 {
+    font-size: 0.95rem;
+  }
+
+  .slide-content p {
+    font-size: 0.7rem;
+  }
+
+  .slide-glow {
+    width: 100px;
+    height: 100px;
+    filter: blur(25px);
+  }
+
+  .play-area {
+    min-height: 150px;
+  }
 }
 
 /* ==========================================================================
@@ -517,148 +753,7 @@ body::after {
 }
 
 /* ==========================================================================
-   6. MEDIA QUERIES
-   ========================================================================== */
-
-/* Tablets y móviles grandes */
-@media (max-width: 768px) {
-  .topbar {
-    flex-direction: column;
-    text-align: center;
-    padding: 0.8rem;
-  }
-
-  .topbar h1 {
-    font-size: 1.2rem;
-  }
-
-  .topbar h1::before {
-    font-size: 1.5rem;
-  }
-
-  .games-container {
-    width: 92%;
-    padding: 1.5rem 0;
-  }
-
-  .carousel-slide {
-    height: 280px;
-    padding: 2rem 1rem;
-  }
-
-  .slide-icon {
-    font-size: 3.5rem;
-  }
-
-  .slide-content h3 {
-    font-size: 1.4rem;
-  }
-
-  .carousel-nav-btn {
-    width: 38px;
-    height: 38px;
-    font-size: 1.4rem;
-  }
-
-  .play-area {
-    width: 92%;
-    padding: 1.2rem;
-    min-height: 200px;
-  }
-
-  #gameTitle {
-    font-size: 1.3rem;
-  }
-}
-
-/* Móviles pequeños */
-@media (max-width: 480px) {
-  .games-container {
-    width: 95%;
-    padding: 1rem 0;
-  }
-
-  .carousel-premium-wrapper {
-    gap: 5px;
-  }
-
-  .carousel-nav-btn {
-    width: 32px;
-    height: 32px;
-    font-size: 1.2rem;
-  }
-
-  .carousel-slide {
-    height: 250px;
-    padding: 1.5rem 0.8rem;
-  }
-
-  .slide-icon {
-    font-size: 3rem;
-  }
-
-  .slide-content h3 {
-    font-size: 1.2rem;
-  }
-
-  .slide-content p {
-    font-size: 0.85rem;
-  }
-
-  .slide-stats {
-    font-size: 0.75rem;
-    padding: 0.3rem 1rem;
-  }
-
-  .play-area {
-    padding: 1rem;
-    min-height: 150px;
-  }
-
-  #gameTitle {
-    font-size: 1.1rem;
-  }
-
-  .play-placeholder i {
-    font-size: 2.5rem;
-  }
-
-  .play-placeholder p {
-    font-size: 1rem;
-  }
-
-  .play-hint {
-    font-size: 0.75rem;
-    padding: 0.2rem 0.8rem;
-  }
-}
-
-/* Orientación horizontal en móvil */
-@media (max-width: 768px) and (orientation: landscape) {
-  .carousel-slide {
-    height: 220px;
-    padding: 1rem;
-  }
-
-  .slide-icon {
-    font-size: 2.5rem;
-  }
-
-  .slide-content h3 {
-    font-size: 1.1rem;
-  }
-
-  .slide-content p {
-    font-size: 0.8rem;
-  }
-
-  .play-area {
-    min-height: 150px;
-  }
-}
-
-/* ==========================================================================
-   7. UTILIDADES Y ANIMACIONES
+   6. UTILIDADES Y ANIMACIONES
    ========================================================================== */
 
 /* Ajustes táctiles globales */
