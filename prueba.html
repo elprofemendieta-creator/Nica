@@ -55,7 +55,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(0, 0, 0, 0.25);
             pointer-events: none;
             z-index: 0;
         }
@@ -130,9 +130,11 @@
             font-size: 1.2rem;
         }
 
-        /* ===== ESPACIO NEGRO DE LA IMAGEN (DONDE VA EL DINERO) ===== */
+        /* ===== ESPACIO DEL DINERO (COLOR COMBINABLE) ===== */
         .prize-display {
-            background: transparent;
+            background: rgba(30, 20, 10, 0.75);
+            /* Marrón oscuro combinable */
+            backdrop-filter: blur(8px);
             border-radius: 15px;
             padding: 18px 15px 14px;
             text-align: center;
@@ -144,22 +146,24 @@
             justify-content: center;
             align-items: center;
             position: relative;
+            border: 1px solid #ffd70033;
+            box-shadow: inset 0 0 40px rgba(255, 215, 0, 0.05);
         }
 
         .prize-display .label {
-            color: #888;
+            color: #ccb088;
             font-size: 0.6rem;
             text-transform: uppercase;
             letter-spacing: 4px;
             margin-bottom: 2px;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
         }
 
         .prize-display .amount {
             color: #ffd700;
             font-size: 3.8rem;
             font-weight: 900;
-            text-shadow: 0 0 60px #ffd70044, 0 0 120px #ffd70022, 0 4px 20px rgba(0, 0, 0, 0.9);
+            text-shadow: 0 0 60px #ffd70044, 0 0 120px #ffd70022, 0 4px 20px rgba(0, 0, 0, 0.5);
             font-family: 'Courier New', monospace;
             letter-spacing: 3px;
             transition: all 0.3s ease;
@@ -186,11 +190,11 @@
         }
 
         .prize-display .sub-info {
-            color: #777;
+            color: #aa9a8a;
             font-size: 0.6rem;
             letter-spacing: 2px;
             margin-top: 4px;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
         }
 
         .prize-display .sub-info span {
@@ -201,7 +205,7 @@
         .progress-bar {
             width: 92%;
             height: 4px;
-            background: rgba(42, 42, 42, 0.7);
+            background: rgba(42, 32, 22, 0.7);
             border-radius: 10px;
             margin: 0 auto 12px;
             overflow: hidden;
@@ -219,7 +223,7 @@
 
         /* ===== PREGUNTA ===== */
         .question-area {
-            background: rgba(10, 10, 10, 0.75);
+            background: rgba(10, 8, 6, 0.8);
             backdrop-filter: blur(12px);
             border-radius: 18px;
             padding: 18px 20px 16px;
@@ -228,7 +232,7 @@
         }
 
         .question-number {
-            color: #999;
+            color: #aa9a8a;
             font-size: 0.7rem;
             letter-spacing: 2px;
             margin-bottom: 2px;
@@ -251,9 +255,9 @@
         }
 
         .option {
-            background: rgba(42, 42, 42, 0.8);
+            background: rgba(42, 32, 22, 0.8);
             backdrop-filter: blur(4px);
-            border: 2px solid #444;
+            border: 2px solid #5a4a3a;
             border-radius: 12px;
             padding: 10px 14px;
             font-size: 0.9rem;
@@ -269,7 +273,7 @@
 
         .option:hover {
             border-color: #ffd70088;
-            background: rgba(51, 51, 51, 0.9);
+            background: rgba(51, 41, 31, 0.9);
             transform: translateY(-2px);
             box-shadow: 0 4px 20px rgba(255, 215, 0, 0.1);
         }
@@ -279,7 +283,7 @@
         }
 
         .option .letter {
-            background: rgba(68, 68, 68, 0.8);
+            background: rgba(68, 58, 48, 0.8);
             color: #ffd700;
             border-radius: 50%;
             width: 26px;
@@ -339,7 +343,7 @@
             display: flex;
             align-items: center;
             gap: 6px;
-            background: rgba(26, 26, 26, 0.85);
+            background: rgba(26, 20, 14, 0.85);
             backdrop-filter: blur(4px);
             color: #f0e8d0;
             letter-spacing: 0.5px;
@@ -347,7 +351,7 @@
 
         .actions button:hover {
             border-color: #ffd700;
-            background: rgba(42, 42, 42, 0.9);
+            background: rgba(42, 32, 22, 0.9);
             transform: translateY(-2px);
             box-shadow: 0 4px 20px rgba(255, 215, 0, 0.1);
         }
@@ -384,14 +388,14 @@
 
         /* ===== PISTA ===== */
         .hint-box {
-            background: rgba(26, 26, 26, 0.8);
+            background: rgba(26, 20, 14, 0.8);
             backdrop-filter: blur(4px);
             border-left: 4px solid #ffd700;
             padding: 8px 14px;
             margin-top: 12px;
             border-radius: 10px;
             font-size: 0.85rem;
-            color: #aaa;
+            color: #bbaa9a;
             min-height: 38px;
             display: flex;
             align-items: center;
@@ -437,7 +441,7 @@
         }
 
         .modal-content {
-            background: #1a1a1a;
+            background: #1a1410;
             border-radius: 40px;
             padding: 35px 40px;
             max-width: 460px;
@@ -472,7 +476,7 @@
 
         .modal-content .subtitle {
             font-size: 1rem;
-            color: #aaa;
+            color: #bbaa9a;
             margin-bottom: 4px;
         }
 
@@ -487,7 +491,7 @@
 
         .modal-content .details {
             font-size: 0.85rem;
-            color: #888;
+            color: #998878;
             margin-bottom: 16px;
             line-height: 1.6;
         }
@@ -647,12 +651,12 @@
                 GANADORES: <span id="winnerCount">125</span>
             </div>
 
-            <!-- ===== ESPACIO NEGRO DE LA IMAGEN ===== -->
+            <!-- ===== ESPACIO DEL DINERO (COLOR COMBINABLE) ===== -->
             <div class="prize-display" id="prizeDisplay">
                 <div class="label">💰 DINERO ACUMULADO</div>
                 <div class="amount" id="currentPrizeDisplay">C$ 0</div>
                 <div class="sub-info">
-                    PREGUNTA <span id="currentQuestionDisplay">1</span> DE <span id="totalQuestionsDisplay">10</span>
+                    PREGUNTA <span id="currentQuestionDisplay">1</span> DE <span id="totalQuestionsDisplay">15</span>
                     &nbsp;•&nbsp; 💡 <span id="hintCountDisplay">3</span>
                 </div>
             </div>
@@ -664,7 +668,7 @@
 
             <!-- ===== PREGUNTA ===== -->
             <div class="question-area">
-                <div class="question-number" id="questionNumber">PREGUNTA 1 DE 10</div>
+                <div class="question-number" id="questionNumber">PREGUNTA 1 DE 15</div>
                 <div class="question-text" id="questionText">Cargando pregunta...</div>
 
                 <div class="options" id="optionsContainer">
@@ -706,71 +710,103 @@
         //  🏆 PINOLERO MILLONARIO - LÓGICA
         // ================================================================
 
-        // ===== BANCO DE PREGUNTAS =====
-        const QUESTIONS = [{
+        // ===== BANCO DE PREGUNTAS (15 preguntas) =====
+        const QUESTION_BANK = [{
             question: '¿En qué departamento se encuentra la ciudad de Granada?',
             options: ['Managua', 'Granada', 'León', 'Masaya'],
             correct: 1,
             hint: 'Es el mismo nombre del departamento.',
-            funFact: 'Granada fue fundada en 1524.'
+            funFact: 'Granada fue fundada en 1524 y es una de las ciudades más antiguas de América.'
         }, {
             question: '¿Cuál es el ave nacional de Nicaragua?',
             options: ['Quetzal', 'Guardabarranco', 'Loro', 'Colibrí'],
             correct: 1,
             hint: 'Su nombre significa "que barre el barranco".',
-            funFact: 'Es conocido como Eumomota superciliosa.'
+            funFact: 'El guardabarranco es conocido científicamente como Eumomota superciliosa.'
         }, {
             question: '¿Qué significa el término "Pinolero"?',
-            options: ['Come pinol', 'Nicaragüense', 'Un baile', 'Instrumento'],
+            options: ['Persona que come pinol', 'Habitante de Nicaragua', 'Un baile tradicional', 'Un instrumento musical'],
             correct: 1,
-            hint: 'Es un gentilicio.',
-            funFact: 'El pinol es una bebida de maíz y cacao.'
+            hint: 'Es un gentilicio muy usado por los nicaragüenses.',
+            funFact: 'El pinol es una bebida hecha de maíz tostado y cacao.'
         }, {
-            question: '¿Quién escribió "Azul"?',
+            question: '¿Quién escribió el poemario "Azul"?',
             options: ['Rubén Darío', 'Pablo Antonio Cuadra', 'Ernesto Cardenal', 'Salomón de la Selva'],
             correct: 0,
-            hint: 'El poeta más famoso de Nicaragua.',
-            funFact: 'Darío es padre del modernismo.'
+            hint: 'Es el poeta más famoso de Nicaragua.',
+            funFact: 'Rubén Darío es considerado el padre del modernismo en la literatura en español.'
         }, {
-            question: '¿Qué volcán es "El Coloso de Nicaragua"?',
+            question: '¿Qué volcán es conocido como "El Coloso de Nicaragua"?',
             options: ['Momotombo', 'Concepción', 'San Cristóbal', 'Telica'],
             correct: 2,
-            hint: 'Es el más alto de Nicaragua.',
-            funFact: 'Tiene 1,745 metros de altura.'
+            hint: 'Es el volcán más alto de Nicaragua.',
+            funFact: 'El San Cristóbal tiene 1,745 metros de altura y está activo.'
         }, {
-            question: '¿En qué año se firmó la paz con Honduras?',
+            question: '¿En qué año se firmó el Tratado de Paz y Amistad entre Nicaragua y Honduras?',
             options: ['1990', '1960', '2000', '1980'],
             correct: 0,
-            hint: 'Fue en los años 90.',
-            funFact: 'Puso fin a la disputa del Golfo de Fonseca.'
+            hint: 'Fue en la década de los 90.',
+            funFact: 'El tratado puso fin a la disputa territorial por el Golfo de Fonseca.'
         }, {
-            question: '¿Comida típica de las fiestas de Managua?',
+            question: '¿Cuál es la comida típica que se come en las fiestas patronales de Managua?',
             options: ['Nacatamal', 'Gallo pinto', 'Vigorón', 'Quesillo'],
             correct: 2,
-            hint: 'Lleva chicharrón, yuca y repollo.',
-            funFact: 'El vigorón es originario de Granada.'
+            hint: 'Lleva chicharrón, yuca y ensalada de repollo.',
+            funFact: 'El vigorón es originario de Granada y se come con chicharrón y yuca.'
         }, {
-            question: '¿"Cuna del Folclore" en Nicaragua?',
+            question: '¿Qué departamento es conocido como "La Cuna del Folclore" en Nicaragua?',
             options: ['León', 'Granada', 'Masaya', 'Rivas'],
             correct: 2,
-            hint: 'Ciudad de las artesanías.',
-            funFact: 'Masaya es la "Ciudad de las Flores".'
+            hint: 'Es famoso por sus artesanías y tradiciones.',
+            funFact: 'Masaya es conocida como la "Ciudad de las Flores".'
         }, {
             question: '¿Cuántos volcanes activos hay en Nicaragua?',
             options: ['19', '12', '25', '7'],
             correct: 0,
-            hint: 'Más de 15.',
-            funFact: 'Nicaragua tiene más de 50 volcanes en total.'
+            hint: 'Es un número mayor a 15.',
+            funFact: 'Nicaragua tiene más de 50 volcanes en total, muchos de ellos submarinos.'
         }, {
-            question: '¿Quién es el "Héroe Nacional"?',
-            options: ['Sandino', 'Zelaya', 'Chamorro', 'Pedro Joaquín'],
+            question: '¿Quién es conocido como "El Héroe Nacional de Nicaragua"?',
+            options: ['Augusto C. Sandino', 'José Santos Zelaya', 'Emiliano Chamorro', 'Pedro Joaquín Chamorro'],
             correct: 0,
-            hint: 'Luchó contra la ocupación de EE.UU.',
-            funFact: 'Sandino luchó en Las Segovias.'
+            hint: 'Luchó contra la ocupación estadounidense.',
+            funFact: 'Sandino es recordado por su lucha en Las Segovias.'
+        }, {
+            question: '¿Cuál es el lago más grande de Nicaragua?',
+            options: ['Lago de Managua', 'Lago de Nicaragua', 'Laguna de Apoyo', 'Lago de Apanás'],
+            correct: 1,
+            hint: 'También es conocido como Cocibolca.',
+            funFact: 'El Lago de Nicaragua es el único lago de agua dulce que contiene tiburones.'
+        }, {
+            question: '¿En qué ciudad se encuentra la Catedral de León, Patrimonio de la Humanidad?',
+            options: ['León', 'Granada', 'Managua', 'Masaya'],
+            correct: 0,
+            hint: 'Es la ciudad universitaria por excelencia.',
+            funFact: 'La Catedral de León es la más grande de Centroamérica.'
+        }, {
+            question: '¿Qué baile tradicional es Patrimonio Inmaterial de la Humanidad?',
+            options: ['Palo de Mayo', 'El Güegüense', 'La Gigantona', 'El Toro Huaco'],
+            correct: 1,
+            hint: 'Es una obra de teatro danzada de la época colonial.',
+            funFact: 'El Güegüense fue declarado Patrimonio de la Humanidad por la UNESCO en 2005.'
+        }, {
+            question: '¿En qué año se fundó la ciudad de Managua como capital?',
+            options: ['1821', '1846', '1852', '1893'],
+            correct: 2,
+            hint: 'Fue a mediados del siglo XIX.',
+            funFact: 'Managua fue elegida capital por su ubicación estratégica entre León y Granada.'
+        }, {
+            question: '¿Qué plato típico se consume tradicionalmente en Semana Santa?',
+            options: ['Gallo pinto', 'Sopa de pescado', 'Nacatamal', 'Quesillo'],
+            correct: 1,
+            hint: 'Es un plato a base de pescado y verduras.',
+            funFact: 'La sopa de pescado es tradición en la costa caribeña durante Semana Santa.'
         }];
 
-        const PRIZES = [1000, 2000, 3000, 5000, 10000, 20000, 35000, 50000, 75000, 100000];
+        // ===== PREMIOS (15 preguntas) =====
+        const PRIZES = [1000, 2000, 3000, 5000, 7000, 10000, 15000, 20000, 30000, 40000, 50000, 65000, 80000, 90000, 100000];
 
+        // ===== ESTADO DEL JUEGO =====
         const state = {
             currentIndex: 0,
             prize: 0,
@@ -779,6 +815,7 @@
             gameOver: false,
             answered: false,
             currentQuestion: null,
+            shuffledQuestions: [], // Preguntas en orden aleatorio
         };
 
         // ===== DOM =====
@@ -806,6 +843,16 @@
         const modalDetails = document.getElementById('modalDetails');
         const playAgainBtn = document.getElementById('playAgainBtn');
 
+        // ===== FUNCIÓN PARA MEZCLAR ARRAY (FISHER-YATES) =====
+        function shuffleArray(array) {
+            const arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
         function formatCurrency(amount) {
             return 'C$ ' + amount.toLocaleString();
         }
@@ -820,12 +867,12 @@
         }
 
         function loadQuestion(index) {
-            const q = QUESTIONS[index];
+            const q = state.shuffledQuestions[index];
             state.currentQuestion = q;
             state.answered = false;
 
             questionText.textContent = q.question;
-            questionNumber.textContent = `PREGUNTA ${index + 1} DE ${QUESTIONS.length}`;
+            questionNumber.textContent = `PREGUNTA ${index + 1} DE ${state.shuffledQuestions.length}`;
 
             const letters = ['A', 'B', 'C', 'D'];
             optionEls.forEach((el, i) => {
@@ -837,10 +884,10 @@
             });
 
             currentQuestionDisplay.textContent = index + 1;
-            totalQuestionsDisplay.textContent = QUESTIONS.length;
+            totalQuestionsDisplay.textContent = state.shuffledQuestions.length;
             hintCountDisplay.textContent = state.hints;
 
-            const progress = ((index) / QUESTIONS.length) * 100;
+            const progress = ((index) / state.shuffledQuestions.length) * 100;
             progressFill.style.width = `${progress}%`;
 
             nextBtn.disabled = true;
@@ -882,14 +929,14 @@
             state.answered = true;
             nextBtn.disabled = false;
 
-            if (state.currentIndex === QUESTIONS.length - 1 && isCorrect) {
+            if (state.currentIndex === state.shuffledQuestions.length - 1 && isCorrect) {
                 showFinalModal(true);
             }
         }
 
         function goToNext() {
             if (state.gameOver) return;
-            if (state.currentIndex < QUESTIONS.length - 1) {
+            if (state.currentIndex < state.shuffledQuestions.length - 1) {
                 state.currentIndex++;
                 loadQuestion(state.currentIndex);
             } else {
@@ -904,14 +951,14 @@
                 modalTitle.textContent = '¡Felicidades!';
                 modalSubtitle.textContent = 'Eres un Pinolero Millonario';
                 modalPrize.textContent = formatCurrency(state.prize);
-                modalDetails.textContent = `Respondiste todas las preguntas. ¡Únete a los ${parseInt(winnerCount.textContent) + 1} ganadores!`;
+                modalDetails.textContent = `Respondiste todas las ${state.shuffledQuestions.length} preguntas. ¡Únete a los ${parseInt(winnerCount.textContent) + 1} ganadores!`;
                 winnerCount.textContent = parseInt(winnerCount.textContent) + 1;
             } else {
                 modalIcon.textContent = '😔';
                 modalTitle.textContent = '¡Has perdido!';
                 modalSubtitle.textContent = 'Inténtalo de nuevo';
                 modalPrize.textContent = formatCurrency(state.prize);
-                modalDetails.textContent = `Respondiste ${state.currentIndex} de ${QUESTIONS.length} preguntas. ¡Sigue practicando!`;
+                modalDetails.textContent = `Respondiste ${state.currentIndex} de ${state.shuffledQuestions.length} preguntas. ¡Sigue practicando!`;
             }
             state.gameOver = true;
         }
@@ -954,6 +1001,9 @@
         }
 
         function resetGame() {
+            // MEZCLAR LAS PREGUNTAS ALEATORIAMENTE
+            state.shuffledQuestions = shuffleArray(QUESTION_BANK);
+
             state.currentIndex = 0;
             state.prize = 0;
             state.hints = 3;
@@ -962,6 +1012,7 @@
             state.answered = false;
 
             hintCountDisplay.textContent = state.hints;
+            totalQuestionsDisplay.textContent = state.shuffledQuestions.length;
             updatePrizeDisplay(false);
             modalOverlay.classList.remove('show');
 
@@ -973,7 +1024,7 @@
             fiftyBtn.disabled = false;
             nextBtn.disabled = true;
             loadQuestion(0);
-            showHint('🔄 Juego reiniciado. ¡Buena suerte!');
+            showHint('🔄 Juego reiniciado. ¡Buena suerte! Las preguntas están en orden aleatorio.');
         }
 
         // ===== EVENTOS =====
@@ -988,13 +1039,12 @@
         playAgainBtn.addEventListener('click', resetGame);
 
         // ===== INICIAR =====
-        totalQuestionsDisplay.textContent = QUESTIONS.length;
         winnerCount.textContent = 125;
         resetGame();
 
-        console.log('🏆 Pinolero Millonario - Con imagen como fondo');
-        console.log('📸 La imagen debe llamarse: 1782677408840.png');
-        console.log('📁 Coloca la imagen en la misma carpeta que este archivo');
+        console.log('🏆 Pinolero Millonario - Versión mejorada');
+        console.log(`📚 Banco de ${QUESTION_BANK.length} preguntas`);
+        console.log(`🎲 Se seleccionarán ${PRIZES.length} preguntas al azar`);
     </script>
 </body>
 </html>
