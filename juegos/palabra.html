@@ -2,147 +2,361 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
   <title>Ordena la Palabra - Nicaragua</title>
 
   <style>
-    *{
-      margin:0;
-      padding:0;
-      box-sizing:border-box;
+    /* ===== RESET Y BASE ===== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
 
-    body{
-      font-family: Arial, sans-serif;
-      min-height:100vh;
-      background: linear-gradient(135deg,#03045e,#0077b6,#00b4d8);
-      color:white;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      justify-content:center;
-      padding:20px;
-      overflow-x:hidden;
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(145deg, #0b1a3a 0%, #0d47a1 50%, #0288d1 100%);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      overflow-x: hidden;
+      background-attachment: fixed;
     }
 
-    h1{
-      font-size:3rem;
-      text-align:center;
+    /* ===== TÍTULOS ===== */
+    h1 {
+      font-size: clamp(2rem, 8vw, 3.8rem);
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      text-align: center;
+      margin-bottom: 6px;
+      background: linear-gradient(to right, #ffe082, #fff8e1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
 
-    .subtitle{
-      margin-top:10px;
-      margin-bottom:30px;
-      text-align:center;
-      max-width:700px;
-      opacity:0.9;
+    .subtitle {
+      font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+      text-align: center;
+      max-width: 600px;
+      opacity: 0.9;
+      margin-bottom: 28px;
+      font-weight: 300;
+      letter-spacing: 0.3px;
+      background: rgba(255, 255, 255, 0.08);
+      padding: 8px 24px;
+      border-radius: 40px;
+      backdrop-filter: blur(4px);
     }
 
-    .game-container{
-      width:100%;
-      max-width:700px;
-      background:rgba(255,255,255,0.12);
-      backdrop-filter:blur(10px);
-      border-radius:25px;
-      padding:35px;
-      text-align:center;
-      box-shadow:0 10px 30px rgba(0,0,0,0.3);
+    /* ===== CONTENEDOR PRINCIPAL ===== */
+    .game-container {
+      width: 100%;
+      max-width: 640px;
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-radius: 40px;
+      padding: clamp(24px, 5vw, 40px);
+      text-align: center;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      transition: all 0.3s ease;
     }
 
-    .scrambled-word{
-      margin-top:20px;
-      font-size:2.5rem;
-      letter-spacing:8px;
-      font-weight:bold;
-      color:#ffffff;
-      word-wrap:break-word;
+    .game-container h2 {
+      font-size: clamp(0.9rem, 2vw, 1.2rem);
+      font-weight: 400;
+      text-transform: uppercase;
+      letter-spacing: 4px;
+      opacity: 0.7;
+      margin-bottom: 10px;
     }
 
-    .input-word{
-      width:100%;
-      margin-top:25px;
-      padding:15px;
-      border:none;
-      border-radius:12px;
-      font-size:1rem;
-      outline:none;
+    /* ===== PALABRA DESORDENADA ===== */
+    .scrambled-word {
+      margin: 18px 0 10px 0;
+      font-size: clamp(2.2rem, 10vw, 3.8rem);
+      font-weight: 800;
+      letter-spacing: clamp(6px, 2vw, 14px);
+      color: #fff;
+      text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      word-break: break-word;
+      line-height: 1.3;
+      min-height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.15);
+      border-radius: 28px;
+      padding: 16px 12px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
     }
 
-    .buttons{
-      display:flex;
-      gap:15px;
-      justify-content:center;
-      flex-wrap:wrap;
-      margin-top:25px;
+    /* ===== INPUT ===== */
+    .input-word {
+      width: 100%;
+      margin-top: 22px;
+      padding: 16px 20px;
+      border: none;
+      border-radius: 60px;
+      font-size: 1rem;
+      font-weight: 500;
+      outline: none;
+      background: rgba(255, 255, 255, 0.92);
+      color: #0d2b4e;
+      text-align: center;
+      letter-spacing: 1px;
+      transition: all 0.25s ease;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
     }
 
-    button{
-      border:none;
-      padding:14px 25px;
-      border-radius:12px;
-      background:white;
-      color:#0077b6;
-      font-weight:bold;
-      cursor:pointer;
-      transition:0.3s;
+    .input-word:focus {
+      transform: scale(1.01);
+      box-shadow: 0 0 0 4px rgba(255, 215, 0, 0.5), 0 8px 25px rgba(0, 0, 0, 0.2);
+      background: #ffffff;
     }
 
-    button:hover{
-      transform:scale(1.05);
+    .input-word::placeholder {
+      color: #7a8ba3;
+      font-weight: 400;
+      letter-spacing: 0.5px;
     }
 
-    .message{
-      margin-top:25px;
-      font-size:1.1rem;
-      min-height:40px;
+    /* ===== BOTONES ===== */
+    .buttons {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 28px;
     }
 
-    .hint-box{
-      margin-top:20px;
-      background:rgba(255,255,255,0.15);
-      padding:18px;
-      border-radius:15px;
-      display:none;
-      line-height:1.6;
+    button {
+      border: none;
+      padding: 14px 22px;
+      border-radius: 60px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background: rgba(255, 255, 255, 0.92);
+      color: #0d47a1;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      flex: 1 1 auto;
+      min-width: 100px;
+      justify-content: center;
+      letter-spacing: 0.3px;
     }
 
-    .score{
-      margin-top:20px;
-      font-size:1rem;
+    button:hover {
+      transform: translateY(-3px) scale(1.02);
+      background: #ffffff;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.25);
     }
 
-    .back-btn{
-      margin-top:30px;
-      text-decoration:none;
-      background:white;
-      color:#0077b6;
-      padding:14px 25px;
-      border-radius:12px;
-      font-weight:bold;
-      transition:0.3s;
+    button:active {
+      transform: scale(0.96);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     }
 
-    .back-btn:hover{
-      transform:scale(1.05);
+    button:nth-child(2) {
+      background: rgba(255, 215, 0, 0.92);
+      color: #1a2a3a;
     }
 
-    @media(max-width:768px){
+    button:nth-child(2):hover {
+      background: #ffd54f;
+    }
 
-      h1{
-        font-size:2rem;
+    button:nth-child(3) {
+      background: rgba(0, 230, 118, 0.85);
+      color: #0a2e1a;
+    }
+
+    button:nth-child(3):hover {
+      background: #69f0ae;
+    }
+
+    /* ===== PISTA ===== */
+    .hint-box {
+      margin-top: 22px;
+      background: rgba(0, 0, 0, 0.25);
+      backdrop-filter: blur(6px);
+      padding: 18px 22px;
+      border-radius: 60px;
+      display: none;
+      font-size: 1rem;
+      line-height: 1.5;
+      border-left: 4px solid #ffd54f;
+      font-weight: 400;
+      letter-spacing: 0.3px;
+      color: #f5f5f5;
+      word-break: break-word;
+    }
+
+    .hint-box.show {
+      display: block;
+      animation: fadeSlide 0.3s ease;
+    }
+
+    @keyframes fadeSlide {
+      0% { opacity: 0; transform: translateY(-6px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ===== MENSAJE ===== */
+    .message {
+      margin-top: 20px;
+      font-size: 1.15rem;
+      font-weight: 600;
+      min-height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 6px 12px;
+    }
+
+    .message.correct {
+      color: #b9f6ca;
+    }
+    .message.incorrect {
+      color: #ffab91;
+    }
+
+    /* ===== PUNTUACIÓN ===== */
+    .score {
+      margin-top: 18px;
+      font-size: 1.1rem;
+      font-weight: 500;
+      background: rgba(0, 0, 0, 0.2);
+      padding: 10px 24px;
+      border-radius: 60px;
+      display: inline-block;
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      letter-spacing: 1px;
+    }
+
+    /* ===== BOTÓN VOLVER ===== */
+    .back-btn {
+      margin-top: 28px;
+      text-decoration: none;
+      background: rgba(255, 255, 255, 0.88);
+      color: #0d47a1;
+      padding: 14px 30px;
+      border-radius: 60px;
+      font-weight: 600;
+      transition: all 0.25s ease;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .back-btn:hover {
+      transform: translateY(-3px) scale(1.03);
+      background: #ffffff;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    .back-btn:active {
+      transform: scale(0.96);
+    }
+
+    /* ===== RESPONSIVE (celular + tablet) ===== */
+    @media (max-width: 640px) {
+      body {
+        padding: 16px;
+        justify-content: flex-start;
+        padding-top: 30px;
       }
 
-      .game-container{
-        padding:25px;
+      .game-container {
+        padding: 22px 18px;
+        border-radius: 32px;
       }
 
-      .scrambled-word{
-        font-size:1.8rem;
-        letter-spacing:5px;
+      .buttons {
+        gap: 10px;
       }
 
+      button {
+        padding: 13px 16px;
+        font-size: 0.85rem;
+        min-width: 80px;
+        flex: 1 1 40%;
+      }
+
+      .scrambled-word {
+        font-size: clamp(1.8rem, 8vw, 2.6rem);
+        letter-spacing: 4px;
+        padding: 14px 10px;
+        min-height: 70px;
+      }
+
+      .input-word {
+        padding: 14px 16px;
+        font-size: 0.95rem;
+      }
+
+      .hint-box {
+        padding: 14px 18px;
+        font-size: 0.9rem;
+        border-radius: 40px;
+      }
+
+      .back-btn {
+        padding: 12px 24px;
+        font-size: 0.9rem;
+      }
+
+      .score {
+        font-size: 0.95rem;
+        padding: 8px 18px;
+      }
+
+      .message {
+        font-size: 1rem;
+        min-height: 34px;
+      }
     }
 
+    @media (max-width: 380px) {
+      .game-container {
+        padding: 16px 12px;
+      }
+
+      button {
+        font-size: 0.75rem;
+        padding: 10px 12px;
+        min-width: 60px;
+      }
+
+      .scrambled-word {
+        font-size: 1.6rem;
+        letter-spacing: 3px;
+      }
+    }
+
+    /* ===== UTILITY ===== */
+    .flex-center {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
   </style>
 </head>
 <body>
@@ -166,22 +380,16 @@
       id="userInput"
       class="input-word"
       placeholder="Escribe la respuesta"
+      autocomplete="off"
+      autocorrect="off"
+      autocapitalize="characters"
+      spellcheck="false"
     >
 
     <div class="buttons">
-
-      <button onclick="checkWord()">
-        Verificar
-      </button>
-
-      <button onclick="showHint()">
-        💡 Pista
-      </button>
-
-      <button onclick="nextWord()">
-        ➡ Siguiente
-      </button>
-
+      <button onclick="checkWord()">✔ Verificar</button>
+      <button onclick="showHint()">💡 Pista</button>
+      <button onclick="nextWord()">➡ Siguiente</button>
     </div>
 
     <div class="hint-box" id="hintBox"></div>
@@ -189,7 +397,7 @@
     <div class="message" id="message"></div>
 
     <div class="score" id="score">
-      Puntos: 0
+      🏆 Puntos: 0
     </div>
 
   </div>
@@ -198,236 +406,264 @@
     ⬅ Volver a Juegos
   </a>
 
-  <script>
-
-    const lugares = [
-
-      {
-        palabra:"GRANADA",
-        pista:"Ciudad colonial famosa por su arquitectura histórica."
-      },
-
-      {
-        palabra:"LEON",
-        pista:"Ciudad reconocida por su cultura y volcanes."
-      },
-
-      {
-        palabra:"OMETEPE",
-        pista:"Isla formada por dos volcanes en el Lago Cocibolca."
-      },
-
-      {
-        palabra:"MASAYA",
-        pista:"Lugar famoso por su volcán activo y artesanías."
-      },
-
-      {
-        palabra:"MATAGALPA",
-        pista:"Región montañosa conocida por el café."
-      },
-
-      {
-        palabra:"ESTELI",
-        pista:"Ciudad rodeada de naturaleza y paisajes."
-      },
-
-      {
-        palabra:"BLUEFIELDS",
-        pista:"Ciudad caribeña con ambiente tropical."
-      },
-
-      {
-        palabra:"JINOTEGA",
-        pista:"Conocida como la ciudad de las brumas."
-      },
-
-      {
-        palabra:"CORNISLAND",
-        pista:"Destino paradisíaco del Caribe nicaragüense."
-      },
-
-      {
-        palabra:"SANJUANDELSUR",
-        pista:"Destino turístico famoso por playas y surf."
+  <!-- ====== SCRIPT (LÓGICA + FIREBASE) ====== -->
+  <!-- Firebase SDK con import map -->
+  <script type="importmap">
+    {
+      "imports": {
+        "firebase/app": "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js",
+        "firebase/auth": "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js",
+        "firebase/firestore": "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"
       }
+    }
+  </script>
 
+  <script type="module">
+    // ============================================================
+    // 1. IMPORTS Y CONFIGURACIÓN DE FIREBASE
+    // ============================================================
+    import { initializeApp } from "firebase/app";
+    import { getAuth, onAuthStateChanged } from "firebase/auth";
+    import {
+      getFirestore,
+      doc,
+      getDoc,
+      updateDoc,
+      collection,
+      addDoc,
+      query,
+      where,
+      getDocs
+    } from "firebase/firestore";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyA6jVICuE17KJcO34gE1brMxqWEfNd3Fy0",
+      authDomain: "mapa-41b00.firebaseapp.com",
+      projectId: "mapa-41b00",
+      storageBucket: "mapa-41b00.firebasestorage.app",
+      messagingSenderId: "535032835400",
+      appId: "1:535032835400:web:68c079cbc3f419eafd177d",
+      measurementId: "G-7R3DSH7PPN"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // ============================================================
+    // 2. EXPONER FUNCIONES Y VARIABLES AL SCOPE GLOBAL (window)
+    //    para que los onclick del HTML las encuentren.
+    // ============================================================
+
+    // --- DATOS DEL JUEGO ---
+    const lugares = [
+      { palabra: "GRANADA", pista: "Ciudad colonial famosa por su arquitectura histórica." },
+      { palabra: "LEON", pista: "Ciudad reconocida por su cultura y volcanes." },
+      { palabra: "OMETEPE", pista: "Isla formada por dos volcanes en el Lago Cocibolca." },
+      { palabra: "MASAYA", pista: "Lugar famoso por su volcán activo y artesanías." },
+      { palabra: "MATAGALPA", pista: "Región montañosa conocida por el café." },
+      { palabra: "ESTELI", pista: "Ciudad rodeada de naturaleza y paisajes." },
+      { palabra: "BLUEFIELDS", pista: "Ciudad caribeña con ambiente tropical." },
+      { palabra: "JINOTEGA", pista: "Conocida como la ciudad de las brumas." },
+      { palabra: "CORNISLAND", pista: "Destino paradisíaco del Caribe nicaragüense." },
+      { palabra: "SANJUANDELSUR", pista: "Destino turístico famoso por playas y surf." }
     ];
 
     let current = 0;
     let points = 0;
+    let gameCompleted = false;        // controla que no se dupliquen puntos
+    let currentUser = null;           // almacena el usuario autenticado
 
-    const scrambledWord = document.getElementById("scrambledWord");
-    const hintBox = document.getElementById("hintBox");
-    const message = document.getElementById("message");
-    const score = document.getElementById("score");
+    // Referencias a elementos DOM
+    const scrambledWordEl = document.getElementById("scrambledWord");
+    const hintBoxEl = document.getElementById("hintBox");
+    const messageEl = document.getElementById("message");
+    const scoreEl = document.getElementById("score");
+    const userInputEl = document.getElementById("userInput");
 
-    function shuffleWord(word){
+    // ============================================================
+    // 3. FUNCIONES DEL JUEGO (expuestas globalmente)
+    // ============================================================
 
+    // Función para desordenar palabra
+    function shuffleWord(word) {
       return word
         .split("")
         .sort(() => Math.random() - 0.5)
         .join("");
-
     }
 
-    function loadWord(){
-
+    // Cargar palabra actual
+    window.loadWord = function() {
       const actual = lugares[current];
+      scrambledWordEl.innerText = shuffleWord(actual.palabra);
+      hintBoxEl.innerText = actual.pista;
+      hintBoxEl.classList.remove("show");
+      hintBoxEl.style.display = "none";
+      messageEl.innerText = "";
+      messageEl.className = "message";
+      userInputEl.value = "";
+      userInputEl.focus();
+    };
 
-      scrambledWord.innerText =
-        shuffleWord(actual.palabra);
+    // Verificar respuesta
+    window.checkWord = function() {
+      const input = userInputEl.value.toUpperCase().replace(/\s/g, '');
+      const correct = lugares[current].palabra;
 
-      hintBox.style.display = "none";
-
-      hintBox.innerText = actual.pista;
-
-      message.innerText = "";
-
-      document.getElementById("userInput").value = "";
-
-    }
-
-    function checkWord(){
-
-      const input = document
-        .getElementById("userInput")
-        .value
-        .toUpperCase()
-        .replace(/\s/g,'');
-
-      const correct =
-        lugares[current].palabra;
-
-      if(input === correct){
-
+      if (input === correct) {
         points++;
-
-        score.innerText = `Puntos: ${points}`;
-
-        message.innerHTML =
-          "✅ ¡Correcto!";
-
+        scoreEl.innerText = `🏆 Puntos: ${points}`;
+        messageEl.innerHTML = "✅ ¡Correcto!";
+        messageEl.className = "message correct";
+        // Si el usuario está autenticado y aún no se han otorgado puntos por este juego,
+        // llamamos a awardPoints (definida más abajo)
+        if (currentUser && !gameCompleted) {
+          awardPoints(10, "ordena_palabra_nicaragua");
+        }
+      } else {
+        messageEl.innerHTML = "❌ Intenta nuevamente";
+        messageEl.className = "message incorrect";
       }
+    };
 
-      else{
+    // Mostrar pista
+    window.showHint = function() {
+      hintBoxEl.style.display = "block";
+      // Forzar reflujo para activar la animación
+      void hintBoxEl.offsetWidth;
+      hintBoxEl.classList.add("show");
+    };
 
-        message.innerHTML =
-          "❌ Intenta nuevamente";
-
-      }
-
-    }
-
-    function showHint(){
-
-      hintBox.style.display = "block";
-
-    }
-
-    function nextWord(){
-
-      current++;
-
-      if(current >= lugares.length){
-
-        current = 0;
-
-      }
-
+    // Siguiente palabra
+    window.nextWord = function() {
+      current = (current + 1) % lugares.length;
+      // Reiniciamos el estado de gameCompleted para la nueva ronda?
+      // Solo se otorgan puntos una vez por sesión, pero si el usuario quiere
+      // jugar de nuevo, mantenemos gameCompleted = true para que no sume otra vez.
+      // Si queremos que pueda sumar en cada ronda distinta, podemos resetearlo,
+      // pero por diseño solo suma una vez al completar la palabra correcta.
+      // Lo dejamos así.
       loadWord();
+      // reseteamos mensaje
+      messageEl.className = "message";
+    };
 
+    // ============================================================
+    // 4. FUNCIÓN PARA OTORGAR PUNTOS EN FIRESTORE
+    // ============================================================
+
+    async function awardPoints(pointsToAdd, gameId) {
+      if (!currentUser) {
+        // Si no hay usuario, mostramos mensaje pero no bloqueamos el juego
+        console.warn("No hay usuario autenticado. Puntos no guardados.");
+        return;
+      }
+
+      // Verificar si ya se otorgaron puntos antes (gameCompleted local)
+      if (gameCompleted) {
+        console.log("Puntos ya otorgados para este juego.");
+        return;
+      }
+
+      try {
+        const usersRef = collection(db, "usuarios");
+        const q = query(usersRef, where("uid", "==", currentUser.uid));
+        const querySnapshot = await getDocs(q);
+
+        if (querySnapshot.empty) {
+          console.error("Usuario no encontrado en Firestore");
+          return;
+        }
+
+        const userDoc = querySnapshot.docs[0];
+        const userDocRef = userDoc.ref;
+        const currentPoints = userDoc.data().puntos || 0;
+
+        // Verificar si ya completó este juego antes (colección 'progreso_juegos')
+        const progressRef = collection(db, "progreso_juegos");
+        const qProgress = query(
+          progressRef,
+          where("usuarioId", "==", currentUser.uid),
+          where("juegoId", "==", gameId)
+        );
+        const progressSnap = await getDocs(qProgress);
+
+        if (!progressSnap.empty) {
+          // Ya recibió puntos por este juego
+          alert("Ya recibiste los puntos por este juego anteriormente.");
+          gameCompleted = true;  // marcamos para no volver a intentar
+          return;
+        }
+
+        // Sumar puntos
+        const nuevosPuntos = currentPoints + pointsToAdd;
+        await updateDoc(userDocRef, { puntos: nuevosPuntos });
+
+        // Registrar progreso
+        await addDoc(progressRef, {
+          usuarioId: currentUser.uid,
+          juegoId: gameId,
+          puntosObtenidos: pointsToAdd,
+          completado: true,
+          fecha: new Date()
+        });
+
+        gameCompleted = true;
+        alert(`¡Felicidades! Has ganado ${pointsToAdd} puntos. Total: ${nuevosPuntos}`);
+        // Actualizar score visual (opcional)
+        scoreEl.innerText = `🏆 Puntos: ${points}`;
+
+      } catch (error) {
+        console.error("Error al guardar puntos:", error);
+        alert("Ocurrió un error al guardar los puntos. Intenta de nuevo.");
+      }
     }
 
-    loadWord();
-// Variable para controlar si ya sumó puntos este juego
-let gameCompleted = false;
+    // ============================================================
+    // 5. AUTENTICACIÓN Y CARGA INICIAL
+    // ============================================================
 
-async function awardPoints(pointsToAdd, gameId) {
-  // Verificar si ya se otorgaron puntos antes
-  if (gameCompleted) return;
+    // Escuchar cambios en el estado de autenticación
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        currentUser = user;
+        console.log("Usuario autenticado:", user.email);
+        // Podemos mostrar un mensaje o indicador visual
+        // También podríamos cargar los puntos desde Firestore si queremos.
+      } else {
+        currentUser = null;
+        console.log("Usuario no autenticado. Los puntos no se guardarán.");
+        // Mostrar un aviso sutil (opcional)
+        // messageEl.innerText = "🔐 Inicia sesión para guardar puntos";
+      }
+    });
 
-  const user = auth.currentUser;
-  if (!user) {
-    alert("Debes iniciar sesión para guardar puntos. Ve a la página principal.");
-    return;
-  }
+    // ============================================================
+    // 6. INICIALIZAR EL JUEGO
+    // ============================================================
 
-  // Buscar documento del usuario en Firestore (colección 'usuarios' con campo 'uid')
-  const usersRef = collection(db, "usuarios");
-  const q = query(usersRef, where("uid", "==", user.uid));
-  const querySnapshot = await getDocs(q);
-  
-  if (querySnapshot.empty) {
-    console.error("Usuario no encontrado en Firestore");
-    return;
-  }
+    // Cargar primera palabra al inicio
+    window.loadWord();
 
-  const userDoc = querySnapshot.docs[0];
-  const userDocRef = userDoc.ref;
-  const currentPoints = userDoc.data().puntos || 0;
+    // Enfocar el input al cargar
+    userInputEl.focus();
 
-  // Verificar si ya completó este juego antes (colección 'progreso_juegos')
-  const progressRef = collection(db, "progreso_juegos");
-  const qProgress = query(progressRef, where("usuarioId", "==", user.uid), where("juegoId", "==", gameId));
-  const progressSnap = await getDocs(qProgress);
-  
-  if (!progressSnap.empty) {
-    alert("Ya recibiste los puntos por este juego anteriormente.");
-    return;
-  }
+    // Permitir enviar con Enter
+    userInputEl.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        checkWord();
+      }
+    });
 
-  // Sumar puntos
-  const nuevosPuntos = currentPoints + pointsToAdd;
-  await updateDoc(userDocRef, { puntos: nuevosPuntos });
+    // ============================================================
+    // 7. EXPONER awardPoints al scope global por si se necesita
+    // ============================================================
+    window.awardPoints = awardPoints;
 
-  // Registrar progreso
-  await addDoc(progressRef, {
-    usuarioId: user.uid,
-    juegoId: gameId,
-    puntosObtenidos: pointsToAdd,
-    completado: true,
-    fecha: new Date()
-  });
-
-  gameCompleted = true;
-  alert(`¡Felicidades! Has ganado ${pointsToAdd} puntos. Total: ${nuevosPuntos}`);
-}
-awardPoints(10, "nombre_unico_del_juego");
-// Ejemplo: cuando el usuario completa el juego, llamas a awardPoints(10, "trivia_nicaragua")
+    console.log("¡Juego 'Ordena la Palabra' cargado correctamente!");
   </script>
 
-  <!-- Firebase SDK (poner antes de tu script del juego) -->
-<script type="importmap">
-  {
-    "imports": {
-      "firebase/app": "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js",
-      "firebase/auth": "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js",
-      "firebase/firestore": "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"
-    }
-  }
-</script>
-
-<script type="module">
-  import { initializeApp } from "firebase/app";
-  import { getAuth, onAuthStateChanged } from "firebase/auth";
-  import { getFirestore, doc, getDoc, updateDoc, collection, addDoc, query, where, getDocs } from "firebase/firestore";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyA6jVICuE17KJcO34gE1brMxqWEfNd3Fy0",
-    authDomain: "mapa-41b00.firebaseapp.com",
-    projectId: "mapa-41b00",
-    storageBucket: "mapa-41b00.firebasestorage.app",
-    messagingSenderId: "535032835400",
-    appId: "1:535032835400:web:68c079cbc3f419eafd177d",
-    measurementId: "G-7R3DSH7PPN"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
-
-  // Aquí irá el código específico del juego
-</script>
 </body>
 </html>
