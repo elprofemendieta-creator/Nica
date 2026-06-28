@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🏆 Pinolero Millonario</title>
+    <link rel="stylesheet" href="juegos/css/millonario.css" />
+</head>
+<body>
+
+    <div class="game-container">
+        <!-- ===== CONTENEDOR CON IMAGEN DE FONDO ===== -->
+        <div class="game-bg" style="background-image: url('1782677408840.png');">
+
+            <!-- ===== ENCABEZADO ===== -->
+            <div class="header">
+                <div class="title">🏆 PINOLERO</div>
+                <div class="subtitle">MILLONARIO</div>
+            </div>
+
+            <!-- ===== PREMIO MAYOR ===== -->
+            <div class="prize-mayor">
+                <div class="label">🎯 PREMIO MAYOR</div>
+                <div class="amount">C$ 1,000,000</div>
+            </div>
+
+            <!-- ===== GANADORES ===== -->
+            <div class="ganadores">
+                GANADORES: <span id="winnerCount">125</span>
+            </div>
+
+            <!-- ===== ESPACIO DEL DINERO (TRANSPARENTE) ===== -->
+            <div class="prize-display" id="prizeDisplay">
+                <div class="label">💰 DINERO ACUMULADO</div>
+                <div class="amount" id="currentPrizeDisplay">C$ 0</div>
+                <div class="sub-info">
+                    PREGUNTA <span id="currentQuestionDisplay">1</span> DE <span id="totalQuestionsDisplay">15</span>
+                    &nbsp;•&nbsp; 💡 <span id="hintCountDisplay">3</span>
+                </div>
+            </div>
+
+            <!-- ===== PROGRESO ===== -->
+            <div class="progress-bar">
+                <div class="fill" id="progressFill"></div>
+            </div>
+
+            <!-- ===== PREGUNTA ===== -->
+            <div class="question-area">
+                <div class="question-number" id="questionNumber">PREGUNTA 1 DE 15</div>
+                <div class="question-text" id="questionText">Cargando pregunta...</div>
+
+                <div class="options" id="optionsContainer">
+                    <div class="option" data-index="0"><span class="letter">A</span> <span class="text">Opción A</span></div>
+                    <div class="option" data-index="1"><span class="letter">B</span> <span class="text">Opción B</span></div>
+                    <div class="option" data-index="2"><span class="letter">C</span> <span class="text">Opción C</span></div>
+                    <div class="option" data-index="3"><span class="letter">D</span> <span class="text">Opción D</span></div>
+                </div>
+
+                <div class="actions">
+                    <button class="btn-50" id="fiftyBtn">🎲 50/50 <span class="cost">C$1,500</span></button>
+                    <button class="btn-hint" id="hintBtn">💡 Pista</button>
+                    <button class="btn-next" id="nextBtn" disabled>➡️ Siguiente</button>
+                    <button class="btn-reset" id="resetBtn">🔄 Reiniciar</button>
+                </div>
+
+                <div class="hint-box" id="hintBox">
+                    <span class="hint-icon">💬</span>
+                    <span class="hint-text" id="hintText">¡Responde correctamente para acumular dinero!</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== MODAL ===== -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-content">
+            <div class="icon" id="modalIcon">🏆</div>
+            <h2 id="modalTitle">¡Felicidades!</h2>
+            <div class="subtitle" id="modalSubtitle">Eres un Pinolero Millonario</div>
+            <div class="prize-amount" id="modalPrize">C$ 0</div>
+            <div class="details" id="modalDetails">Respondiste todas las preguntas correctamente.</div>
+            <button class="btn-play-again" id="playAgainBtn">🔄 Jugar de nuevo</button>
+        </div>
+    </div>
+
+    <script src="juegos/js/millonario.js"></script>
+</body>
+</html>
