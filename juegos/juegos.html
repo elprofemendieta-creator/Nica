@@ -4,8 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
   <title>Guía Pinolero - Juegos Turísticos</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-  <link rel="stylesheet" href="juegos.css">
+  <link rel="stylesheet" href="juegos.css" />
 </head>
 <body>
 
@@ -27,54 +28,114 @@
     </div>
   </header>
 
-  <!-- ===== CONTENIDO PRINCIPAL ===== -->
+  <!-- ===== CARRUSEL DE JUEGOS ===== -->
   <main class="games-container">
-    <section class="game-card">
-      <div class="emoji">🗺️</div>
-      <h2>El Gran Mapa Misterioso</h2>
-      <p>¿Reconoces los lugares de Nicaragua?</p>
-      <button><a href="mapamisterioso.html" class="boton">Jugar</a></button>
-    </section>
+    <div class="carousel-premium-container">
+      <div class="carousel-premium-wrapper">
+        <button class="carousel-nav-btn prev-btn">‹</button>
+        
+        <div class="carousel-track-wrapper">
+          <div class="carousel-track">
+            
+            <!-- Juego 1: Mapa Misterioso -->
+            <div class="carousel-slide" data-url="mapamisterioso.html" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+              <div class="slide-content">
+                <div class="slide-icon">🗺️</div>
+                <h3>El Gran Mapa Misterioso</h3>
+                <p>¿Reconoces los lugares de Nicaragua?</p>
+                <div class="slide-stats">🎯 1,234 jugadores</div>
+                <div class="slide-glow"></div>
+              </div>
+            </div>
 
-    <section class="game-card">
-      <div class="emoji">🛑</div>
-      <h2>Stopinolero</h2>
-      <p>Juega con amigos</p>
-      <button><a href="stop.html" class="boton">Jugar</a></button>
-    </section>
+            <!-- Juego 2: Pinolero Millonario -->
+            <div class="carousel-slide" data-url="millonario.html" style="background: linear-gradient(135deg, #FF758C 0%, #48BB78 100%);">
+              <div class="slide-content">
+                <div class="slide-icon">🫅</div>
+                <h3>Pinolero Millonario</h3>
+                <p>Conviértete en millonario respondiendo</p>
+                <div class="slide-stats">💰 567 jugadores</div>
+                <div class="slide-glow"></div>
+              </div>
+            </div>
 
-    <section class="game-card">
-      <div class="emoji">🃏</div>
-      <h2>Memoria de Cartas</h2>
-      <p>Encuentra las parejas correctas.</p>
-      <button><a href="pareja.html" class="boton">Jugar</a></button>
-    </section>
+            <!-- Juego 3: Stopinolero -->
+            <div class="carousel-slide" data-url="stop.html" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+              <div class="slide-content">
+                <div class="slide-icon">🛑</div>
+                <h3>Stopinolero</h3>
+                <p>Juega con amigos y demuestra tu conocimiento</p>
+                <div class="slide-stats">👥 890 jugadores</div>
+                <div class="slide-glow"></div>
+              </div>
+            </div>
 
-    <section class="game-card">
-      <div class="emoji">🔤</div>
-      <h2>Ordena la Palabra</h2>
-      <p>Ordena palabras relacionadas con Nicaragua.</p>
-      <button><a href="palabra.html" class="boton">Jugar</a></button>
-    </section>
+            <!-- Juego 4: Memoria -->
+            <div class="carousel-slide" data-url="pareja.html" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+              <div class="slide-content">
+                <div class="slide-icon">🃏</div>
+                <h3>Memoria de Cartas</h3>
+                <p>Encuentra las parejas correctas</p>
+                <div class="slide-stats">🧠 432 partidas</div>
+                <div class="slide-glow"></div>
+              </div>
+            </div>
 
-    <section class="game-card">
-      <div class="emoji">🌋</div>
-      <h2>Laberinto</h2>
-      <p>Encuentra la salida del destino turístico.</p>
-      <button><a href="laberinto.html" class="boton">Jugar</a></button>
-    </section>
+            <!-- Juego 5: Ordena Palabra -->
+            <div class="carousel-slide" data-url="palabra.html" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+              <div class="slide-content">
+                <div class="slide-icon">🔤</div>
+                <h3>Ordena la Palabra</h3>
+                <p>Ordena palabras relacionadas con Nicaragua</p>
+                <div class="slide-stats">📝 321 completados</div>
+                <div class="slide-glow"></div>
+              </div>
+            </div>
 
-    <section class="game-card">
-      <div class="emoji">🧐🧩</div>
-      <h2>Varios</h2>
-      <p></p>
-      <button><a href="SOPA.html" class="boton">Jugar</a></button>
-    </section>
+            <!-- Juego 6: Laberinto -->
+            <div class="carousel-slide" data-url="laberinto.html" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+              <div class="slide-content">
+                <div class="slide-icon">🌋</div>
+                <h3>Laberinto</h3>
+                <p>Encuentra la salida del destino turístico</p>
+                <div class="slide-stats">🏆 234 escapados</div>
+                <div class="slide-glow"></div>
+              </div>
+            </div>
+
+            <!-- Juego 7: Varios -->
+            <div class="carousel-slide" data-url="SOPA.html" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);">
+              <div class="slide-content">
+                <div class="slide-icon">🧩</div>
+                <h3>Varios</h3>
+                <p>Sopa de letras y más desafíos</p>
+                <div class="slide-stats">🎮 678 jugadores</div>
+                <div class="slide-glow"></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <button class="carousel-nav-btn next-btn">›</button>
+      </div>
+
+      <!-- Indicadores -->
+      <div class="carousel-indicators">
+        <span class="indicator-dot active" data-index="0"></span>
+        <span class="indicator-dot" data-index="1"></span>
+        <span class="indicator-dot" data-index="2"></span>
+        <span class="indicator-dot" data-index="3"></span>
+        <span class="indicator-dot" data-index="4"></span>
+        <span class="indicator-dot" data-index="5"></span>
+        <span class="indicator-dot" data-index="6"></span>
+      </div>
+    </div>
   </main>
 
   <!-- ===== ÁREA DE JUEGO ===== -->
   <section class="play-area">
-    <h2 id="gameTitle">Selecciona un juego</h2>
+    <h2 id="gameTitle">🎯 Selecciona un juego</h2>
     <div id="gameContent">
       <div class="play-placeholder">
         <i class="fas fa-gamepad"></i>
