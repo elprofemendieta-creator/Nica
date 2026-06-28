@@ -1,147 +1,292 @@
-// ===== FUNCIÓN PARA CARGAR JUEGOS =====
+// ================================================================
+//  🎠 CARRUSEL DE JUEGOS - GUÍA PINOLERO
+// ================================================================
+
+document.addEventListener('DOMContentLoaded', function() {
+  const track = document.querySelector('.carousel-track');
+  const slides = document.querySelectorAll('.carousel-slide');
+  const prevBtn = document.querySelector('.prev-btn');
+  const nextBtn = document.querySelector('.next-btn');
+  const dots = document.querySelectorAll('.indicator-dot');
+  const playArea = document.querySelector('.play-area');
+  const gameTitle = document.getElementById('gameTitle');
+  const gameContent = document.getElementById('gameContent');
+
+  // ===== VALIDAR QUE EXISTAN LOS ELEMENTOS =====
+  if (!track) {
+    console.error('❌ No se encontró el carrusel');
+    return;
+  }
+
+  let currentIndex = 0;
+  let slidesPerView = getSlidesPerView();
+  const totalSlides = slides.length;
+
+  // ===== FUNCIÓN PARA CALCULAR CUÁNTAS TARJETAS SE VEN =====
+  function getSlidesPerView() {
+    if (window.innerWidth < 600) return 1;
+    if (window.innerWidth < 900) return 2;
+    return 3;
+  }
+
+  // ===== FUNCIÓN PARA ACTUALIZAR EL CARRUSEL =====
+  function updateCarousel() {
+    if (totalSlides === 0) return;
+
+    const slideWidth = slides[0]?.offsetWidth || 280;
+    const gap = 20;
+    const offset = currentIndex * (slideWidth + gap);
+
+    track.style.transition = 'transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+    track.style.transform = `translateX(-${offset}px)`;
+
+    // Actualizar indicadores
+    dots.forEach((dot, index) => {
+      dot.classList.toggle('active', index === currentIndex);
+    });
+
+    // Mostrar/ocultar botones
+    if (prevBtn) prevBtn.style.display = currentIndex === 0 ? 'none' : 'flex';
+    if (nextBtn) {
+      const maxIndex = Math.max(0, totalSlides - slidesPerView);
+      nextBtn.style.display = currentIndex >= maxIndex ? 'none' : 'flex';
+    }
+  }
+
+  // ===== SIGUIENTE =====
+  function nextSlide() {
+    const maxIndex = Math.max(0, totalSlides - slidesPerView);
+    if (currentIndex < maxIndex) {
+      currentIndex++;
+      updateCarousel();
+    }
+  }
+
+  // ===== ANTERIOR =====
+  function prevSlide() {
+    if (currentIndex > 0) {
+      currentIndex--;
+      updateCarousel();
+    }
+  }
+
+  // ===== IR A UN SLIDE ESPECÍFICO (por indicador) =====
+  function goToSlide(index) {
+    const maxIndex = Math.max(0, totalSlides - slidesPerView);
+    if (index >= 0 && index <= maxIndex) {
+      currentIndex = index;
+      updateCarousel();
+    }
+  }
+
+  // ===== ASIGNAR EVENTOS A LOS BOTONES =====
+  if (prevBtn) {
+    prevBtn.addEventListener('click', prevSlide);
+    console.log('✅ Botón "Anterior" asignado');
+  }
+
+  if (nextBtn) {
+    nextBtn.addEventListener('click', nextSlide);
+    console.log('✅ Botón "Siguiente" asignado');
+  }
+
+  // ===== ASIGNAR EVENTOS A LOS INDICADORES =====
+  dots.forEach((dot, index) => {
+    dot.addEventListener('click', () => {
+      goToSlide(index);
+    });
+  });
+
+  // ===== RECALCULAR AL CAMBIAR EL TAMAÑO DE LA VENTANA =====
+  let resizeTimeout;
+  window.addEventListener('resize', function() {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+      const newSlidesPerView = getSlidesPerView();
+      if (newSlidesPerView !== slidesPerView) {
+        slidesPerView = newSlidesPerView;
+        // Asegurar que el índice actual no sea mayor al máximo
+        const maxIndex = Math.max(0, totalSlides - slidesPerView);
+        if (currentIndex > maxIndex) {
+          currentIndex = maxIndex;
+        }
+        updateCarousel();
+        console.log(`🔄 Vista cambiada a: ${slidesPerView} tarjetas`);
+      }
+    }, 250);
+  });
+
+  // ===== INICIALIZAR =====
+  setTimeout(() => {
+    slidesPerView = getSlidesPerView();
+    updateCarousel();
+    console.log(`🎠 Carrusel inicializado: ${totalSlides} tarjetas, ${slidesPerView} por vista`);
+  }, 300);
+
+  // ================================================================
+  //  🎯 CARGA DE JUEGOS AL HACER CLIC
+  // ================================================================
+
+  // ===== FUNCIÓN PARA CARGAR JUEGO =====
   function cargarJuego(nombre, icono, descripcion, url) {
     if (gameTitle) {
       gameTitle.textContent = `🎯 ${nombre}`;
     }
 
-    // Limpiar contenido anterior
-    gameContent.innerHTML = '';
+    if (gameContent) {
+      // Limpiar contenido anterior
+      gameContent.innerHTML = '';
 
-    // Identificar qué juego cargar según el nombre
-    const nombreLower = nombre.toLowerCase();
+      const nombreLower = nombre.toLowerCase();
 
-    if (nombreLower.includes('mapa misterioso') || nombreLower.includes('mapamisterioso')) {
-      // Juego: El Gran Mapa Misterioso
-      gameContent.innerHTML = `
-        <div style="padding: 1.5rem;">
-          <div style="font-size: 4rem; margin-bottom: 1rem;">🗺️</div>
-          <h3 style="font-family: 'Fredoka', sans-serif; font-size: 1.5rem; color: #028090;">El Gran Mapa Misterioso</h3>
-          <p style="color: #64748b; margin: 0.5rem 0 1.5rem;">${descripcion}</p>
-          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; max-width: 300px; margin: 1rem auto;">
-            <div style="background: #e8f8f5; padding: 1rem; border-radius: 12px; font-size: 2rem;">🌋</div>
-            <div style="background: #e8f8f5; padding: 1rem; border-radius: 12px; font-size: 2rem;">🌊</div>
-            <div style="background: #e8f8f5; padding: 1rem; border-radius: 12px; font-size: 2rem;">🏝️</div>
-            <div style="background: #e8f8f5; padding: 1rem; border-radius: 12px; font-size: 2rem;">🦎</div>
-            <div style="background: #e8f8f5; padding: 1rem; border-radius: 12px; font-size: 2rem;">🌴</div>
-            <div style="background: #e8f8f5; padding: 1rem; border-radius: 12px; font-size: 2rem;">🌽</div>
-          </div>
-          <a href="${url}" class="btn" style="display: inline-block; text-decoration: none; color: white; padding: 0.8rem 2.5rem; border-radius: 50px; background: linear-gradient(135deg, #00a896, #028090); font-weight: 600; transition: all 0.3s; box-shadow: 0 4px 15px rgba(0,168,150,0.3); margin-top: 1rem;">
-            🚀 Jugar Ahora
-          </a>
-        </div>
-      `;
-    } 
-    else if (nombreLower.includes('stopinolero')) {
-      // Juego: Stopinolero
-      gameContent.innerHTML = `
-        <div style="padding: 1.5rem;">
-          <div style="font-size: 4rem; margin-bottom: 1rem;">🛑</div>
-          <h3 style="font-family: 'Fredoka', sans-serif; font-size: 1.5rem; color: #028090;">Stopinolero</h3>
-          <p style="color: #64748b; margin: 0.5rem 0 1.5rem;">${descripcion}</p>
-          <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin: 1rem 0;">
-            <span style="background: #f0fdfa; padding: 0.5rem 1rem; border-radius: 12px;">🇳🇮</span>
-            <span style="background: #f0fdfa; padding: 0.5rem 1rem; border-radius: 12px;">🏛️</span>
-            <span style="background: #f0fdfa; padding: 0.5rem 1rem; border-radius: 12px;">🌋</span>
-          </div>
-          <a href="${url}" class="btn" style="display: inline-block; text-decoration: none; color: white; padding: 0.8rem 2.5rem; border-radius: 50px; background: linear-gradient(135deg, #00a896, #028090); font-weight: 600; transition: all 0.3s; box-shadow: 0 4px 15px rgba(0,168,150,0.3); margin-top: 1rem;">
-            🚀 Jugar Ahora
-          </a>
-        </div>
-      `;
-    }
-    else if (nombreLower.includes('memoria') || nombreLower.includes('pareja')) {
-      // Juego: Memoria de Cartas
-      gameContent.innerHTML = `
-        <div style="padding: 1.5rem;">
-          <div style="font-size: 4rem; margin-bottom: 1rem;">🃏</div>
-          <h3 style="font-family: 'Fredoka', sans-serif; font-size: 1.5rem; color: #028090;">Memoria de Cartas</h3>
-          <p style="color: #64748b; margin: 0.5rem 0 1.5rem;">${descripcion}</p>
-          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; max-width: 300px; margin: 1rem auto;">
-            <div style="background: #e8f8f5; padding: 0.8rem; border-radius: 12px; font-size: 1.5rem; text-align: center;">🌋</div>
-            <div style="background: #e8f8f5; padding: 0.8rem; border-radius: 12px; font-size: 1.5rem; text-align: center;">🌊</div>
-            <div style="background: #e8f8f5; padding: 0.8rem; border-radius: 12px; font-size: 1.5rem; text-align: center;">🌋</div>
-            <div style="background: #e8f8f5; padding: 0.8rem; border-radius: 12px; font-size: 1.5rem; text-align: center;">🏝️</div>
-            <div style="background: #e8f8f5; padding: 0.8rem; border-radius: 12px; font-size: 1.5rem; text-align: center;">🌊</div>
-            <div style="background: #e8f8f5; padding: 0.8rem; border-radius: 12px; font-size: 1.5rem; text-align: center;">🍽️</div>
-            <div style="background: #e8f8f5; padding: 0.8rem; border-radius: 12px; font-size: 1.5rem; text-align: center;">🏝️</div>
-            <div style="background: #e8f8f5; padding: 0.8rem; border-radius: 12px; font-size: 1.5rem; text-align: center;">🍽️</div>
-          </div>
-          <a href="${url}" class="btn" style="display: inline-block; text-decoration: none; color: white; padding: 0.8rem 2.5rem; border-radius: 50px; background: linear-gradient(135deg, #00a896, #028090); font-weight: 600; transition: all 0.3s; box-shadow: 0 4px 15px rgba(0,168,150,0.3); margin-top: 1rem;">
-            🚀 Jugar Ahora
-          </a>
-        </div>
-      `;
-    }
-    else if (nombreLower.includes('ordena') || nombreLower.includes('palabra')) {
-      // Juego: Ordena la Palabra
-      gameContent.innerHTML = `
-        <div style="padding: 1.5rem;">
-          <div style="font-size: 4rem; margin-bottom: 1rem;">🔤</div>
-          <h3 style="font-family: 'Fredoka', sans-serif; font-size: 1.5rem; color: #028090;">Ordena la Palabra</h3>
-          <p style="color: #64748b; margin: 0.5rem 0 1.5rem;">${descripcion}</p>
-          <div style="display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap; margin: 1rem 0;">
-            <span style="background: #f0fdfa; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600;">N</span>
-            <span style="background: #f0fdfa; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600;">I</span>
-            <span style="background: #f0fdfa; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600;">C</span>
-            <span style="background: #f0fdfa; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600;">A</span>
-            <span style="background: #f0fdfa; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600;">R</span>
-            <span style="background: #f0fdfa; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600;">A</span>
-            <span style="background: #f0fdfa; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600;">G</span>
-            <span style="background: #f0fdfa; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600;">U</span>
-            <span style="background: #f0fdfa; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600;">A</span>
-          </div>
-          <a href="${url}" class="btn" style="display: inline-block; text-decoration: none; color: white; padding: 0.8rem 2.5rem; border-radius: 50px; background: linear-gradient(135deg, #00a896, #028090); font-weight: 600; transition: all 0.3s; box-shadow: 0 4px 15px rgba(0,168,150,0.3); margin-top: 1rem;">
-            🚀 Jugar Ahora
-          </a>
-        </div>
-      `;
-    }
-    else if (nombreLower.includes('laberinto')) {
-      // Juego: Laberinto
-      gameContent.innerHTML = `
-        <div style="padding: 1.5rem;">
-          <div style="font-size: 4rem; margin-bottom: 1rem;">🌋</div>
-          <h3 style="font-family: 'Fredoka', sans-serif; font-size: 1.5rem; color: #028090;">Laberinto</h3>
-          <p style="color: #64748b; margin: 0.5rem 0 1.5rem;">${descripcion}</p>
-          <p style="color: #64748b; font-size: 0.9rem;">Usa las flechas del teclado para mover al explorador</p>
-          <canvas id="mazeCanvas" width="300" height="300" style="background:white; border-radius:15px; margin-top:20px; max-width: 100%; height: auto;"></canvas>
-          <div style="margin-top: 1rem;">
-            <a href="${url}" class="btn" style="display: inline-block; text-decoration: none; color: white; padding: 0.8rem 2.5rem; border-radius: 50px; background: linear-gradient(135deg, #00a896, #028090); font-weight: 600; transition: all 0.3s; box-shadow: 0 4px 15px rgba(0,168,150,0.3);">
+      // ===== PINOLERO MILLONARIO =====
+      if (nombreLower.includes('pinoleromillonario') || nombreLower.includes('pinolero millonario') || nombreLower.includes(
+          'millonario')) {
+        gameContent.innerHTML = `
+          <div style="padding: 1.5rem;">
+            <div style="font-size: 4rem; margin-bottom: 1rem;">🏆</div>
+            <h3 style="font-family: 'Fredoka', sans-serif; font-size: 1.5rem; color: #028090;">Pinolero Millonario</h3>
+            <p style="color: #64748b; margin: 0.5rem 0 1.5rem;">${descripcion}</p>
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin: 1rem 0;">
+              <span style="background: #fef9e8; padding: 0.5rem 1rem; border-radius: 12px; border: 2px solid #ffd700;">💰</span>
+              <span style="background: #fef9e8; padding: 0.5rem 1rem; border-radius: 12px; border: 2px solid #ffd700;">🎯</span>
+              <span style="background: #fef9e8; padding: 0.5rem 1rem; border-radius: 12px; border: 2px solid #ffd700;">🏅</span>
+            </div>
+            <a href="${url}" class="btn" style="display: inline-block; text-decoration: none; color: white; padding: 0.8rem 2.5rem; border-radius: 50px; background: linear-gradient(135deg, #ffd700, #f0a500); font-weight: 600; transition: all 0.3s; box-shadow: 0 4px 15px rgba(255,215,0,0.4); margin-top: 1rem;">
               🚀 Jugar Ahora
             </a>
           </div>
-        </div>
-      `;
-      
-      // Iniciar laberinto si existe la función
-      if (typeof iniciarLaberinto === 'function') {
-        setTimeout(iniciarLaberinto, 100);
+        `;
+      }
+      // ===== MAPA MISTERIOSO =====
+      else if (nombreLower.includes('mapa misterioso') || nombreLower.includes('mapamisterioso')) {
+        gameContent.innerHTML = `
+          <div style="padding: 1.5rem;">
+            <div style="font-size: 4rem; margin-bottom: 1rem;">🗺️</div>
+            <h3 style="font-family: 'Fredoka', sans-serif; font-size: 1.5rem; color: #028090;">El Gran Mapa Misterioso</h3>
+            <p style="color: #64748b; margin: 0.5rem 0 1.5rem;">${descripcion}</p>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; max-width: 300px; margin: 1rem auto;">
+              <div style="background: #e8f8f5; padding: 1rem; border-radius: 12px; font-size: 2rem;">🌋</div>
+              <div style="background: #e8f8f5; padding: 1rem; border-radius: 12px; font-size: 2rem;">🌊</div>
+              <div style="background: #e8f8f5; padding: 1rem; border-radius: 12px; font-size: 2rem;">🏝️</div>
+              <div style="background: #e8f8f5; padding: 1rem; border-radius: 12px; font-size: 2rem;">🦎</div>
+              <div style="background: #e8f8f5; padding: 1rem; border-radius: 12px; font-size: 2rem;">🌴</div>
+              <div style="background: #e8f8f5; padding: 1rem; border-radius: 12px; font-size: 2rem;">🌽</div>
+            </div>
+            <a href="${url}" class="btn" style="display: inline-block; text-decoration: none; color: white; padding: 0.8rem 2.5rem; border-radius: 50px; background: linear-gradient(135deg, #00a896, #028090); font-weight: 600; transition: all 0.3s; box-shadow: 0 4px 15px rgba(0,168,150,0.3); margin-top: 1rem;">
+              🚀 Jugar Ahora
+            </a>
+          </div>
+        `;
+      }
+      // ===== STOPINOLERO =====
+      else if (nombreLower.includes('stopinolero')) {
+        gameContent.innerHTML = `
+          <div style="padding: 1.5rem;">
+            <div style="font-size: 4rem; margin-bottom: 1rem;">🛑</div>
+            <h3 style="font-family: 'Fredoka', sans-serif; font-size: 1.5rem; color: #028090;">Stopinolero</h3>
+            <p style="color: #64748b; margin: 0.5rem 0 1.5rem;">${descripcion}</p>
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin: 1rem 0;">
+              <span style="background: #f0fdfa; padding: 0.5rem 1rem; border-radius: 12px;">🇳🇮</span>
+              <span style="background: #f0fdfa; padding: 0.5rem 1rem; border-radius: 12px;">🏛️</span>
+              <span style="background: #f0fdfa; padding: 0.5rem 1rem; border-radius: 12px;">🌋</span>
+            </div>
+            <a href="${url}" class="btn" style="display: inline-block; text-decoration: none; color: white; padding: 0.8rem 2.5rem; border-radius: 50px; background: linear-gradient(135deg, #00a896, #028090); font-weight: 600; transition: all 0.3s; box-shadow: 0 4px 15px rgba(0,168,150,0.3); margin-top: 1rem;">
+              🚀 Jugar Ahora
+            </a>
+          </div>
+        `;
+      }
+      // ===== MEMORIA =====
+      else if (nombreLower.includes('memoria') || nombreLower.includes('pareja')) {
+        gameContent.innerHTML = `
+          <div style="padding: 1.5rem;">
+            <div style="font-size: 4rem; margin-bottom: 1rem;">🃏</div>
+            <h3 style="font-family: 'Fredoka', sans-serif; font-size: 1.5rem; color: #028090;">Memoria de Cartas</h3>
+            <p style="color: #64748b; margin: 0.5rem 0 1.5rem;">${descripcion}</p>
+            <a href="${url}" class="btn" style="display: inline-block; text-decoration: none; color: white; padding: 0.8rem 2.5rem; border-radius: 50px; background: linear-gradient(135deg, #00a896, #028090); font-weight: 600; transition: all 0.3s; box-shadow: 0 4px 15px rgba(0,168,150,0.3); margin-top: 1rem;">
+              🚀 Jugar Ahora
+            </a>
+          </div>
+        `;
+      }
+      // ===== ORDENA PALABRA =====
+      else if (nombreLower.includes('ordena') || nombreLower.includes('palabra')) {
+        gameContent.innerHTML = `
+          <div style="padding: 1.5rem;">
+            <div style="font-size: 4rem; margin-bottom: 1rem;">🔤</div>
+            <h3 style="font-family: 'Fredoka', sans-serif; font-size: 1.5rem; color: #028090;">Ordena la Palabra</h3>
+            <p style="color: #64748b; margin: 0.5rem 0 1.5rem;">${descripcion}</p>
+            <a href="${url}" class="btn" style="display: inline-block; text-decoration: none; color: white; padding: 0.8rem 2.5rem; border-radius: 50px; background: linear-gradient(135deg, #00a896, #028090); font-weight: 600; transition: all 0.3s; box-shadow: 0 4px 15px rgba(0,168,150,0.3); margin-top: 1rem;">
+              🚀 Jugar Ahora
+            </a>
+          </div>
+        `;
+      }
+      // ===== LABERINTO =====
+      else if (nombreLower.includes('laberinto')) {
+        gameContent.innerHTML = `
+          <div style="padding: 1.5rem;">
+            <div style="font-size: 4rem; margin-bottom: 1rem;">🌋</div>
+            <h3 style="font-family: 'Fredoka', sans-serif; font-size: 1.5rem; color: #028090;">Laberinto</h3>
+            <p style="color: #64748b; margin: 0.5rem 0 1.5rem;">${descripcion}</p>
+            <a href="${url}" class="btn" style="display: inline-block; text-decoration: none; color: white; padding: 0.8rem 2.5rem; border-radius: 50px; background: linear-gradient(135deg, #00a896, #028090); font-weight: 600; transition: all 0.3s; box-shadow: 0 4px 15px rgba(0,168,150,0.3); margin-top: 1rem;">
+              🚀 Jugar Ahora
+            </a>
+          </div>
+        `;
+      }
+      // ===== VARIOS / SOPA =====
+      else if (nombreLower.includes('varios') || nombreLower.includes('sopa')) {
+        gameContent.innerHTML = `
+          <div style="padding: 1.5rem;">
+            <div style="font-size: 4rem; margin-bottom: 1rem;">🧩</div>
+            <h3 style="font-family: 'Fredoka', sans-serif; font-size: 1.5rem; color: #028090;">Varios - Sopa de Letras</h3>
+            <p style="color: #64748b; margin: 0.5rem 0 1.5rem;">${descripcion}</p>
+            <a href="${url}" class="btn" style="display: inline-block; text-decoration: none; color: white; padding: 0.8rem 2.5rem; border-radius: 50px; background: linear-gradient(135deg, #00a896, #028090); font-weight: 600; transition: all 0.3s; box-shadow: 0 4px 15px rgba(0,168,150,0.3); margin-top: 1rem;">
+              🚀 Jugar Ahora
+            </a>
+          </div>
+        `;
+      }
+      // ===== FALLBACK =====
+      else {
+        gameContent.innerHTML = `
+          <div style="padding: 1.5rem; text-align: center;">
+            <div style="font-size: 4rem; margin-bottom: 1rem;">🎮</div>
+            <h3 style="font-family: 'Fredoka', sans-serif; font-size: 1.5rem; color: #028090;">${nombre}</h3>
+            <p style="color: #64748b; margin: 0.5rem 0 1.5rem;">${descripcion}</p>
+            <a href="${url}" class="btn" style="display: inline-block; text-decoration: none; color: white; padding: 0.8rem 2.5rem; border-radius: 50px; background: linear-gradient(135deg, #00a896, #028090); font-weight: 600; transition: all 0.3s; box-shadow: 0 4px 15px rgba(0,168,150,0.3); margin-top: 1rem;">
+              🚀 Jugar Ahora
+            </a>
+          </div>
+        `;
       }
     }
-    else if (nombreLower.includes('varios') || nombreLower.includes('sopa')) {
-      // Juego: Varios / Sopa de Letras
-      gameContent.innerHTML = `
-        <div style="padding: 1.5rem;">
-          <div style="font-size: 4rem; margin-bottom: 1rem;">🧩</div>
-          <h3 style="font-family: 'Fredoka', sans-serif; font-size: 1.5rem; color: #028090;">Varios - Sopa de Letras</h3>
-          <p style="color: #64748b; margin: 0.5rem 0 1.5rem;">${descripcion}</p>
-          <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 0.3rem; max-width: 300px; margin: 1rem auto;">
-            <span style="background: #f0fdfa; padding: 0.4rem; border-radius: 4px; text-align: center; font-weight: 600;">N</span>
-            <span style="background: #f0fdfa; padding: 0.4rem; border-radius: 4px; text-align: center; font-weight: 600;">I</span>
-            <span style="background: #f0fdfa; padding: 0.4rem; border-radius: 4px; text-align: center; font-weight: 600;">C</span>
-            <span style="background: #f0fdfa; padding: 0.4rem; border-radius: 4px; text-align: center; font-weight: 600;">A</span>
-            <span style="background: #f0fdfa; padding: 0.4rem; border-radius: 4px; text-align: center; font-weight: 600;">R</span>
-            <span style="background: #f0fdfa; padding: 0.4rem; border-radius: 4px; text-align: center; font-weight: 600;">A</span>
-            <span style="background: #f0fdfa; padding: 0.4rem; border-radius: 4px; text-align: center; font-weight: 600;">G</span>
-            <span style="background: #f0fdfa; padding: 0.4rem; border-radius: 4px; text-align: center; font-weight: 600;">U</span>
-            <span style="background: #f0fdfa; padding: 0.4rem; border-radius: 4px; text-align: center; font-weight: 600;">A</span>
-            <span style="background: #f0fdfa; padding: 0.4rem; border-radius: 4px; text-align: center; font-weight: 600;">🌋</span>
-            <span style="background: #f0fdfa; padding: 0.4rem; border-radius: 4px; text-align: center; font-weight: 600;">🌊</span>
-            <span style="background: #f0fdfa; padding: 0.4rem; border-radius: 4px; text-align: center; font-weight: 600;">🏝️</span>
-          </div>
-          <a href="${url}" class="btn" style="display: inline-block; text-decoration: none; color: white; padding: 0.8rem 2.5rem; border-radius: 50px; background: linear-gradient(135deg, #00a896, #028090); font-weight: 600; transition: all 0.3s; box-shadow: 0 4px 15px rgba(0,168,150,0.3); margin-top: 1rem;">
-            🚀 Jugar Ahora
-          </a>
-        </div>
-      `;
-    }
+  }
+
+  // ===== ASIGNAR EVENTO DE CLIC A LAS TARJETAS =====
+  slides.forEach((slide) => {
+    slide.addEventListener('click', function() {
+      const url = this.dataset.url;
+      const nombre = this.querySelector('h3')?.textContent || 'Juego';
+      const icono = this.querySelector('.slide-icon')?.textContent || '🎮';
+      const descripcion = this.querySelector('p')?.textContent || 'Diviértete aprendiendo sobre Nicaragua';
+
+      // Redirigir si es un enlace externo
+      if (url && url.endsWith('.html')) {
+        // Si es Pinolero Millonario, redirige
+        if (nombre.toLowerCase().includes('millonario')) {
+          window.location.href = url;
+          return;
+        }
+        // Si no, carga en el área de juego
+        cargarJuego(nombre, icono, descripcion, url);
+      } else {
+        cargarJuego(nombre, icono, descripcion, url);
+      }
+    });
+  });
+
+  console.log('✅ Guía Pinolero - Juegos cargados correctamente');
+});
