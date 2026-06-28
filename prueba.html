@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>🏆 Pinolero Millonario</title>
     <style>
-        /* ===== ESTILOS GENERALES ===== */
+        /* ===== RESET ===== */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -14,7 +14,7 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, sans-serif;
-            background: linear-gradient(145deg, #0a1a2e, #1a3a5a);
+            background: #0a0a0a;
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -23,307 +23,398 @@
         }
 
         .game-container {
-            background: linear-gradient(180deg, #fef9e8, #f0dbb8);
-            border-radius: 40px;
-            padding: 30px 30px 35px;
-            max-width: 820px;
+            max-width: 750px;
             width: 100%;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), inset 0 0 0 2px #f0d5a8;
-            border-bottom: 8px solid #b68b5a;
+            background: #0a0a0a;
+            border-radius: 30px;
+            padding: 30px;
+            border: 3px solid #ffd700;
+            box-shadow: 0 0 60px #ffd70033, inset 0 0 60px #ffd70011;
         }
 
         /* ===== ENCABEZADO ===== */
         .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: linear-gradient(135deg, #1a3a6a, #0d2240);
-            padding: 12px 25px;
-            border-radius: 60px;
-            margin-bottom: 25px;
-            color: #ffd966;
-            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.5), 0 4px 0 #0a1a2e;
-        }
-
-        .header h1 {
-            font-size: 1.7rem;
-            font-weight: 900;
-            letter-spacing: 2px;
-            text-shadow: 2px 2px 0 #0a1a2e;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .header .stats {
-            display: flex;
-            gap: 25px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            background: #0d2240;
-            padding: 6px 20px;
-            border-radius: 40px;
-            border: 1px solid #ffd96655;
-        }
-
-        .header .stats span {
-            color: #fff;
-        }
-
-        .header .stats .value {
-            color: #ffd966;
-            font-size: 1.2rem;
-        }
-
-        /* ===== TABLERO DE PREMIOS ===== */
-        .prize-board {
-            display: flex;
-            justify-content: center;
-            gap: 6px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            background: #2a1a0a;
-            padding: 10px 15px;
-            border-radius: 30px;
-            border: 3px solid #b68b5a;
-        }
-
-        .prize-step {
-            font-size: 0.65rem;
-            padding: 4px 10px;
-            border-radius: 20px;
-            background: #4a3a2a;
-            color: #aa9a8a;
-            font-weight: bold;
-            transition: all 0.4s;
-            border: 2px solid transparent;
             text-align: center;
-            min-width: 50px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #ffd70044;
+            margin-bottom: 20px;
         }
 
-        .prize-step.active {
-            background: #ffd966;
-            color: #1a1a0a;
-            border-color: #ffaa00;
-            transform: scale(1.1);
-            box-shadow: 0 0 20px #ffd96688;
+        .header .title {
+            font-size: 2.8rem;
+            font-weight: 900;
+            color: #ffd700;
+            text-shadow: 0 0 30px #ffd70044, 0 4px 8px rgba(0, 0, 0, 0.8);
+            letter-spacing: 4px;
+            font-family: 'Arial Black', sans-serif;
         }
 
-        .prize-step.achieved {
-            background: #2d7a4a;
-            color: #fff;
-            border-color: #4aaa6a;
+        .header .subtitle {
+            color: #ffd700aa;
+            font-size: 0.9rem;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            margin-top: 2px;
         }
 
-        .prize-step .amount {
+        /* ===== PREMIO MAYOR ===== */
+        .prize-mayor {
+            background: #1a1a1a;
+            border: 2px solid #ffd70055;
+            border-radius: 15px;
+            padding: 10px 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .prize-mayor .label {
+            color: #aaa;
             font-size: 0.8rem;
-            display: block;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .prize-mayor .amount {
+            color: #ffd700;
+            font-size: 2.2rem;
+            font-weight: 900;
+            text-shadow: 0 0 40px #ffd70044;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 2px;
+        }
+
+        /* ===== GANADORES ===== */
+        .ganadores {
+            text-align: center;
+            color: #aaa;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            margin-bottom: 25px;
+        }
+
+        .ganadores span {
+            color: #ffd700;
+            font-weight: 900;
+            font-size: 1.4rem;
+        }
+
+        /* ===== ESPACIO NEGRO PRINCIPAL (DINERO) ===== */
+        .prize-display {
+            background: #000000;
+            border-radius: 20px;
+            padding: 40px 20px;
+            text-align: center;
+            border: 3px solid #ffd700;
+            box-shadow: inset 0 0 80px rgba(0, 0, 0, 0.9), 0 0 50px #ffd70022;
+            margin-bottom: 25px;
+            position: relative;
+            min-height: 180px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .prize-display .label {
+            color: #666;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            margin-bottom: 5px;
+        }
+
+        .prize-display .amount {
+            color: #ffd700;
+            font-size: 4.5rem;
+            font-weight: 900;
+            text-shadow: 0 0 60px #ffd70044, 0 0 120px #ffd70022;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 3px;
+            transition: all 0.3s ease;
+        }
+
+        .prize-display .amount.pulse {
+            animation: pulseGold 0.5s ease;
+        }
+
+        @keyframes pulseGold {
+            0% {
+                transform: scale(1);
+                text-shadow: 0 0 60px #ffd70044;
+            }
+            50% {
+                transform: scale(1.1);
+                text-shadow: 0 0 80px #ffd700aa, 0 0 160px #ffd70044;
+            }
+            100% {
+                transform: scale(1);
+                text-shadow: 0 0 60px #ffd70044;
+            }
+        }
+
+        .prize-display .sub-info {
+            color: #555;
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            margin-top: 8px;
+        }
+
+        .prize-display .sub-info span {
+            color: #ffd70088;
+        }
+
+        /* ===== EFECTO DE BRILLO ===== */
+        .prize-display::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at center, #ffd70008 0%, transparent 70%);
+            animation: glowMove 4s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes glowMove {
+            0%,
+            100% {
+                transform: translate(0, 0) scale(1);
+                opacity: 0.3;
+            }
+            50% {
+                transform: translate(10%, 10%) scale(1.2);
+                opacity: 0.8;
+            }
+        }
+
+        .prize-display * {
+            position: relative;
+            z-index: 1;
         }
 
         /* ===== PROGRESO ===== */
         .progress-bar {
             width: 100%;
-            height: 8px;
-            background: #4a3a2a;
+            height: 4px;
+            background: #2a2a2a;
             border-radius: 10px;
             margin-bottom: 20px;
             overflow: hidden;
-            border: 1px solid #b68b5a;
         }
 
         .progress-bar .fill {
             height: 100%;
-            background: linear-gradient(90deg, #ffd966, #ffaa00);
+            background: linear-gradient(90deg, #ffd700, #ffaa00);
             border-radius: 10px;
             transition: width 0.6s ease;
             width: 0%;
+            box-shadow: 0 0 20px #ffd70044;
         }
 
         /* ===== PREGUNTA ===== */
         .question-area {
-            background: #fef9e8;
-            border-radius: 30px;
-            padding: 25px 30px;
-            border: 4px solid #b68b5a;
-            box-shadow: inset 0 4px 20px rgba(0, 0, 0, 0.06);
-            min-height: 300px;
+            background: #1a1a1a;
+            border-radius: 20px;
+            padding: 25px;
+            border: 2px solid #ffd70033;
+            min-height: 250px;
         }
 
         .question-number {
-            font-size: 0.9rem;
-            color: #8a7a6a;
-            font-weight: bold;
-            margin-bottom: 6px;
+            color: #888;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            margin-bottom: 4px;
         }
 
         .question-text {
-            font-size: 1.5rem;
+            color: #f0e8d0;
+            font-size: 1.4rem;
             font-weight: 700;
-            color: #1a1a0a;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             line-height: 1.4;
-            min-height: 70px;
+            min-height: 60px;
         }
 
         .options {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
+            gap: 10px;
         }
 
         .option {
-            background: #f5ede0;
-            border: 3px solid #caba9a;
-            border-radius: 20px;
-            padding: 14px 18px;
-            font-size: 1.1rem;
+            background: #2a2a2a;
+            border: 2px solid #444;
+            border-radius: 14px;
+            padding: 12px 16px;
+            font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
-            color: #1a1a0a;
+            color: #f0e8d0;
             display: flex;
             align-items: center;
             gap: 10px;
-            box-shadow: 0 4px 0 #aa9a8a;
         }
 
         .option:hover {
+            border-color: #ffd70088;
+            background: #333;
             transform: translateY(-2px);
-            border-color: #b68b5a;
-            box-shadow: 0 6px 0 #aa9a8a;
+            box-shadow: 0 4px 20px rgba(255, 215, 0, 0.1);
         }
 
         .option:active {
-            transform: translateY(4px);
-            box-shadow: 0 2px 0 #aa9a8a;
+            transform: translateY(2px);
         }
 
         .option .letter {
-            background: #8a7a6a;
-            color: #fff;
+            background: #444;
+            color: #ffd700;
             border-radius: 50%;
-            width: 32px;
-            height: 32px;
+            width: 28px;
+            height: 28px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 800;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             flex-shrink: 0;
         }
 
         .option.correct {
-            background: #2d7a4a;
+            background: #1a5a3a;
             border-color: #4aaa6a;
             color: #fff;
         }
 
         .option.correct .letter {
-            background: #1a5a3a;
+            background: #0a3a2a;
+            color: #7aff7a;
         }
 
         .option.wrong {
-            background: #8a2a2a;
+            background: #5a1a1a;
             border-color: #aa4a4a;
             color: #fff;
         }
 
         .option.wrong .letter {
-            background: #6a1a1a;
+            background: #3a0a0a;
+            color: #ff7a7a;
         }
 
         .option.disabled {
             pointer-events: none;
-            opacity: 0.6;
-        }
-
-        .option.reveal-correct {
-            background: #2d7a4a;
-            border-color: #4aaa6a;
-            color: #fff;
-        }
-
-        .option.reveal-correct .letter {
-            background: #1a5a3a;
+            opacity: 0.4;
         }
 
         /* ===== BOTONES ===== */
         .actions {
             display: flex;
             justify-content: center;
-            gap: 14px;
-            margin-top: 20px;
+            gap: 10px;
+            margin-top: 18px;
             flex-wrap: wrap;
         }
 
         .actions button {
-            padding: 12px 30px;
-            font-size: 1.1rem;
+            padding: 10px 22px;
+            font-size: 0.9rem;
             font-weight: 800;
-            border: none;
+            border: 2px solid #ffd70055;
             border-radius: 50px;
             cursor: pointer;
             transition: all 0.2s;
             display: flex;
             align-items: center;
-            gap: 10px;
-            box-shadow: 0 6px 0 rgba(0, 0, 0, 0.3);
+            gap: 8px;
+            background: #1a1a1a;
+            color: #f0e8d0;
             letter-spacing: 0.5px;
         }
 
+        .actions button:hover {
+            border-color: #ffd700;
+            background: #2a2a2a;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(255, 215, 0, 0.1);
+        }
+
         .actions button:active {
-            transform: translateY(4px);
-            box-shadow: 0 2px 0 rgba(0, 0, 0, 0.3);
+            transform: translateY(2px);
         }
 
         .actions button:disabled {
-            opacity: 0.4;
-            transform: translateY(2px);
-            box-shadow: 0 3px 0 rgba(0, 0, 0, 0.2);
+            opacity: 0.3;
+            transform: translateY(0);
             pointer-events: none;
         }
 
         .btn-next {
-            background: #2d7a4a;
-            color: #fff;
+            background: #1a5a3a;
+            border-color: #4aaa6a;
         }
         .btn-next:hover {
-            background: #3a9a5a;
+            background: #2a7a4a;
         }
 
         .btn-reset {
-            background: #8a3a2a;
-            color: #fff;
+            background: #5a1a1a;
+            border-color: #aa4a4a;
         }
         .btn-reset:hover {
-            background: #aa4a3a;
+            background: #7a2a2a;
         }
 
         .btn-hint {
-            background: #3a6b8f;
-            color: #fff;
+            background: #1a3a5a;
+            border-color: #4a7a9a;
         }
         .btn-hint:hover {
-            background: #4a7f9f;
+            background: #2a4a7a;
         }
 
         .btn-50 {
-            background: #8a7a2a;
-            color: #fff;
+            background: #3a3a1a;
+            border-color: #9a9a4a;
         }
         .btn-50:hover {
-            background: #aa9a3a;
+            background: #5a5a2a;
         }
 
-        /* ===== MODAL FINAL ===== */
+        /* ===== PISTA ===== */
+        .hint-box {
+            background: #1a1a1a;
+            border-left: 4px solid #ffd700;
+            padding: 10px 16px;
+            margin-top: 14px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            color: #aaa;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .hint-box .hint-icon {
+            font-size: 1.2rem;
+        }
+        .hint-box .hint-text {
+            font-style: italic;
+        }
+
+        /* ===== MODAL ===== */
         .modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(6px);
+            background: rgba(0, 0, 0, 0.92);
+            backdrop-filter: blur(8px);
             display: none;
             justify-content: center;
             align-items: center;
@@ -338,7 +429,7 @@
         @keyframes fadeIn {
             0% {
                 opacity: 0;
-                transform: scale(0.8);
+                transform: scale(0.9);
             }
             100% {
                 opacity: 1;
@@ -347,104 +438,77 @@
         }
 
         .modal-content {
-            background: linear-gradient(180deg, #fef9e8, #f0dbb8);
-            border-radius: 50px;
-            padding: 40px 50px;
-            max-width: 550px;
+            background: #1a1a1a;
+            border-radius: 40px;
+            padding: 40px 45px;
+            max-width: 480px;
             width: 90%;
             text-align: center;
-            border: 6px solid #ffd966;
-            box-shadow: 0 0 60px #ffd96666;
+            border: 3px solid #ffd700;
+            box-shadow: 0 0 80px #ffd70033;
             animation: popModal 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
         @keyframes popModal {
             0% {
-                transform: scale(0.3) rotate(-10deg);
+                transform: scale(0.5);
                 opacity: 0;
             }
             100% {
-                transform: scale(1) rotate(0deg);
+                transform: scale(1);
                 opacity: 1;
             }
         }
 
         .modal-content .icon {
-            font-size: 5rem;
-            margin-bottom: 10px;
-        }
-
-        .modal-content h2 {
-            font-size: 2.2rem;
-            color: #1a1a0a;
-            margin-bottom: 8px;
-        }
-
-        .modal-content .subtitle {
-            font-size: 1.3rem;
-            color: #5a4a3a;
+            font-size: 4rem;
             margin-bottom: 6px;
         }
 
+        .modal-content h2 {
+            font-size: 2rem;
+            color: #ffd700;
+            margin-bottom: 4px;
+        }
+
+        .modal-content .subtitle {
+            font-size: 1.1rem;
+            color: #aaa;
+            margin-bottom: 4px;
+        }
+
         .modal-content .prize-amount {
-            font-size: 3rem;
+            font-size: 2.8rem;
             font-weight: 900;
-            color: #8a6a2a;
-            text-shadow: 2px 2px 0 #f0dbb8;
-            margin: 10px 0;
+            color: #ffd700;
+            text-shadow: 0 0 40px #ffd70044;
+            margin: 8px 0;
+            font-family: 'Courier New', monospace;
         }
 
         .modal-content .details {
-            font-size: 1rem;
-            color: #6a5a4a;
-            margin-bottom: 20px;
+            font-size: 0.9rem;
+            color: #888;
+            margin-bottom: 18px;
             line-height: 1.6;
         }
 
         .modal-content .btn-play-again {
-            background: #2d7a4a;
-            color: #fff;
+            background: #ffd700;
+            color: #0a0a0a;
             border: none;
-            padding: 14px 40px;
-            font-size: 1.2rem;
-            font-weight: 800;
+            padding: 12px 36px;
+            font-size: 1.1rem;
+            font-weight: 900;
             border-radius: 50px;
             cursor: pointer;
             transition: all 0.2s;
-            box-shadow: 0 6px 0 #1a5a3a;
+            box-shadow: 0 0 30px #ffd70044;
         }
 
         .modal-content .btn-play-again:hover {
-            background: #3a9a5a;
-            transform: translateY(-2px);
-        }
-
-        .modal-content .btn-play-again:active {
-            transform: translateY(4px);
-            box-shadow: 0 2px 0 #1a5a3a;
-        }
-
-        /* ===== PISTA ===== */
-        .hint-box {
-            background: #fef2d6;
-            border-left: 8px solid #d97747;
-            padding: 12px 20px;
-            margin-top: 18px;
-            border-radius: 16px;
-            font-size: 1rem;
-            color: #3f281c;
-            min-height: 50px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.06);
-        }
-
-        .hint-box .hint-icon {
-            font-size: 1.6rem;
-        }
-        .hint-box .hint-text {
-            font-style: italic;
+            transform: scale(1.05);
+            box-shadow: 0 0 50px #ffd70066;
         }
 
         /* ===== RESPONSIVE ===== */
@@ -452,85 +516,67 @@
             .game-container {
                 padding: 16px;
             }
-            .header {
-                flex-direction: column;
-                gap: 8px;
-                text-align: center;
-                padding: 10px 16px;
+            .header .title {
+                font-size: 2rem;
             }
-            .header h1 {
-                font-size: 1.3rem;
+            .prize-display .amount {
+                font-size: 3rem;
             }
-            .header .stats {
-                font-size: 0.9rem;
-                gap: 14px;
-                padding: 4px 14px;
+            .prize-mayor .amount {
+                font-size: 1.6rem;
             }
             .question-text {
-                font-size: 1.2rem;
+                font-size: 1.1rem;
             }
             .options {
                 grid-template-columns: 1fr;
             }
             .option {
-                padding: 12px 16px;
-                font-size: 1rem;
-            }
-            .prize-step {
-                font-size: 0.5rem;
-                padding: 2px 6px;
-                min-width: 35px;
-            }
-            .prize-step .amount {
-                font-size: 0.6rem;
-            }
-            .actions button {
-                padding: 10px 18px;
+                padding: 10px 14px;
                 font-size: 0.9rem;
             }
+            .actions button {
+                padding: 8px 14px;
+                font-size: 0.8rem;
+            }
             .modal-content {
-                padding: 30px 20px;
+                padding: 24px 18px;
             }
             .modal-content .prize-amount {
-                font-size: 2.2rem;
-            }
-            .modal-content h2 {
-                font-size: 1.6rem;
+                font-size: 2rem;
             }
         }
 
         @media (max-width: 450px) {
-            .header h1 {
-                font-size: 1.0rem;
+            .header .title {
+                font-size: 1.5rem;
+                letter-spacing: 2px;
             }
-            .header .stats {
-                font-size: 0.75rem;
-                gap: 8px;
+            .prize-display .amount {
+                font-size: 2.2rem;
+            }
+            .prize-mayor .amount {
+                font-size: 1.2rem;
             }
             .question-text {
-                font-size: 1.0rem;
+                font-size: 0.95rem;
                 min-height: 50px;
             }
             .option {
-                font-size: 0.85rem;
-                padding: 10px 12px;
+                font-size: 0.8rem;
+                padding: 8px 10px;
             }
             .option .letter {
-                width: 26px;
-                height: 26px;
-                font-size: 0.75rem;
+                width: 24px;
+                height: 24px;
+                font-size: 0.7rem;
             }
-            .prize-board {
-                gap: 3px;
-                padding: 6px 10px;
+            .prize-display {
+                padding: 25px 15px;
+                min-height: 130px;
             }
-            .prize-step {
-                min-width: 28px;
-                font-size: 0.4rem;
-                padding: 1px 4px;
-            }
-            .prize-step .amount {
-                font-size: 0.5rem;
+            .ganadores span {
+                font-size: 1.1rem;
             }
         }
     </style>
@@ -538,38 +584,41 @@
 <body>
 
     <div class="game-container">
-        <!-- ENCABEZADO -->
+        <!-- ===== ENCABEZADO ===== -->
         <div class="header">
-            <h1>🏆 Pinolero Millonario</h1>
-            <div class="stats">
-                <span>📝 <span class="value" id="currentQuestion">1</span>/10</span>
-                <span>💰 <span class="value" id="currentPrize">0</span> C$</span>
-                <span>💡 <span class="value" id="hintCount">3</span></span>
+            <div class="title">🏆 PINOLERO</div>
+            <div class="subtitle">MILLONARIO</div>
+        </div>
+
+        <!-- ===== PREMIO MAYOR ===== -->
+        <div class="prize-mayor">
+            <div class="label">🎯 PREMIO MAYOR</div>
+            <div class="amount">C$ 1,000,000</div>
+        </div>
+
+        <!-- ===== GANADORES ===== -->
+        <div class="ganadores">
+            GANADORES: <span id="winnerCount">125</span>
+        </div>
+
+        <!-- ===== ESPACIO NEGRO CON DINERO ===== -->
+        <div class="prize-display" id="prizeDisplay">
+            <div class="label">💰 DINERO ACUMULADO</div>
+            <div class="amount" id="currentPrizeDisplay">C$ 0</div>
+            <div class="sub-info">
+                PREGUNTA <span id="currentQuestionDisplay">1</span> DE <span id="totalQuestionsDisplay">10</span>
+                &nbsp;•&nbsp; 💡 <span id="hintCountDisplay">3</span>
             </div>
         </div>
 
-        <!-- TABLERO DE PREMIOS -->
-        <div class="prize-board" id="prizeBoard">
-            <div class="prize-step" data-step="0">10<br><span class="amount">100k</span></div>
-            <div class="prize-step" data-step="1">9<br><span class="amount">75k</span></div>
-            <div class="prize-step" data-step="2">8<br><span class="amount">50k</span></div>
-            <div class="prize-step" data-step="3">7<br><span class="amount">35k</span></div>
-            <div class="prize-step" data-step="4">6<br><span class="amount">20k</span></div>
-            <div class="prize-step" data-step="5">5<br><span class="amount">10k</span></div>
-            <div class="prize-step" data-step="6">4<br><span class="amount">5k</span></div>
-            <div class="prize-step" data-step="7">3<br><span class="amount">3k</span></div>
-            <div class="prize-step" data-step="8">2<br><span class="amount">2k</span></div>
-            <div class="prize-step" data-step="9">1<br><span class="amount">1k</span></div>
-        </div>
-
-        <!-- BARRA DE PROGRESO -->
+        <!-- ===== PROGRESO ===== -->
         <div class="progress-bar">
             <div class="fill" id="progressFill"></div>
         </div>
 
-        <!-- ÁREA DE PREGUNTA -->
-        <div class="question-area" id="questionArea">
-            <div class="question-number" id="questionNumber">Pregunta 1 de 10</div>
+        <!-- ===== PREGUNTA ===== -->
+        <div class="question-area">
+            <div class="question-number" id="questionNumber">PREGUNTA 1 DE 10</div>
             <div class="question-text" id="questionText">Cargando pregunta...</div>
 
             <div class="options" id="optionsContainer">
@@ -579,7 +628,6 @@
                 <div class="option" data-index="3"><span class="letter">D</span> <span class="text">Opción D</span></div>
             </div>
 
-            <!-- BOTONES -->
             <div class="actions">
                 <button class="btn-50" id="fiftyBtn">🎲 50/50</button>
                 <button class="btn-hint" id="hintBtn">💡 Pista</button>
@@ -587,120 +635,115 @@
                 <button class="btn-reset" id="resetBtn">🔄 Reiniciar</button>
             </div>
 
-            <!-- PISTA -->
             <div class="hint-box" id="hintBox">
                 <span class="hint-icon">💬</span>
-                <span class="hint-text" id="hintText">¡Bienvenido! Responde las preguntas para ganar Córdobas.</span>
+                <span class="hint-text" id="hintText">¡Responde correctamente para acumular dinero!</span>
             </div>
         </div>
     </div>
 
-    <!-- MODAL FINAL -->
+    <!-- ===== MODAL ===== -->
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal-content">
             <div class="icon" id="modalIcon">🏆</div>
             <h2 id="modalTitle">¡Felicidades!</h2>
-            <div class="subtitle" id="modalSubtitle">Has llegado al final</div>
-            <div class="prize-amount" id="modalPrize">100,000 C$</div>
-            <div class="details" id="modalDetails">Respondiste 10 de 10 preguntas correctamente.</div>
+            <div class="subtitle" id="modalSubtitle">Eres un Pinolero Millonario</div>
+            <div class="prize-amount" id="modalPrize">C$ 0</div>
+            <div class="details" id="modalDetails">Respondiste todas las preguntas correctamente.</div>
             <button class="btn-play-again" id="playAgainBtn">🔄 Jugar de nuevo</button>
         </div>
     </div>
 
     <script>
         // ================================================================
-        //  🏆 PINOLERO MILLONARIO - LÓGICA COMPLETA
+        //  🏆 PINOLERO MILLONARIO - LÓGICA
         // ================================================================
 
-        // ===== BANCO DE PREGUNTAS (10 preguntas) =====
         const QUESTIONS = [{
             question: '¿En qué departamento se encuentra la ciudad de Granada?',
             options: ['Managua', 'Granada', 'León', 'Masaya'],
             correct: 1,
             hint: 'Es el mismo nombre del departamento.',
-            funFact: 'Granada fue fundada en 1524 y es una de las ciudades coloniales más antiguas de América.'
+            funFact: 'Granada fue fundada en 1524.'
         }, {
             question: '¿Cuál es el ave nacional de Nicaragua?',
             options: ['Quetzal', 'Guardabarranco', 'Loro', 'Colibrí'],
             correct: 1,
             hint: 'Su nombre significa "que barre el barranco".',
-            funFact: 'El guardabarranco es conocido científicamente como Eumomota superciliosa.'
+            funFact: 'Es conocido como Eumomota superciliosa.'
         }, {
             question: '¿Qué significa el término "Pinolero"?',
-            options: ['Persona que come pinol', 'Habitante de Nicaragua', 'Un baile tradicional', 'Un instrumento musical'],
+            options: ['Come pinol', 'Nicaragüense', 'Un baile', 'Instrumento'],
             correct: 1,
-            hint: 'Es un gentilicio muy usado por los nicaragüenses.',
-            funFact: 'El pinol es una bebida hecha de maíz tostado y cacao.'
+            hint: 'Es un gentilicio.',
+            funFact: 'El pinol es una bebida de maíz y cacao.'
         }, {
-            question: '¿Quién escribió el poemario "Azul"?',
+            question: '¿Quién escribió "Azul"?',
             options: ['Rubén Darío', 'Pablo Antonio Cuadra', 'Ernesto Cardenal', 'Salomón de la Selva'],
             correct: 0,
-            hint: 'Es el poeta más famoso de Nicaragua.',
-            funFact: 'Rubén Darío es considerado el padre del modernismo en la literatura en español.'
+            hint: 'El poeta más famoso de Nicaragua.',
+            funFact: 'Darío es padre del modernismo.'
         }, {
-            question: '¿Qué volcán es conocido como "El Coloso de Nicaragua"?',
+            question: '¿Qué volcán es "El Coloso de Nicaragua"?',
             options: ['Momotombo', 'Concepción', 'San Cristóbal', 'Telica'],
             correct: 2,
-            hint: 'Es el volcán más alto de Nicaragua.',
-            funFact: 'El San Cristóbal tiene 1,745 metros de altura y está activo.'
+            hint: 'Es el más alto de Nicaragua.',
+            funFact: 'Tiene 1,745 metros de altura.'
         }, {
-            question: '¿En qué año se firmó el Tratado de Paz y Amistad entre Nicaragua y Honduras?',
+            question: '¿En qué año se firmó la paz con Honduras?',
             options: ['1990', '1960', '2000', '1980'],
             correct: 0,
-            hint: 'Fue en la década de los 90.',
-            funFact: 'El tratado puso fin a la disputa territorial por el Golfo de Fonseca.'
+            hint: 'Fue en los años 90.',
+            funFact: 'Puso fin a la disputa del Golfo de Fonseca.'
         }, {
-            question: '¿Cuál es la comida típica que se come en las fiestas patronales de Managua?',
+            question: '¿Comida típica de las fiestas de Managua?',
             options: ['Nacatamal', 'Gallo pinto', 'Vigorón', 'Quesillo'],
             correct: 2,
-            hint: 'Lleva chicharrón, yuca y ensalada de repollo.',
-            funFact: 'El vigorón es originario de Granada y se come con chicharrón y yuca.'
+            hint: 'Lleva chicharrón, yuca y repollo.',
+            funFact: 'El vigorón es originario de Granada.'
         }, {
-            question: '¿Qué departamento es conocido como "La Cuna del Folclore" en Nicaragua?',
+            question: '¿"Cuna del Folclore" en Nicaragua?',
             options: ['León', 'Granada', 'Masaya', 'Rivas'],
             correct: 2,
-            hint: 'Es famoso por sus artesanías y tradiciones.',
-            funFact: 'Masaya es conocida como la "Ciudad de las Flores".'
+            hint: 'Ciudad de las artesanías.',
+            funFact: 'Masaya es la "Ciudad de las Flores".'
         }, {
             question: '¿Cuántos volcanes activos hay en Nicaragua?',
             options: ['19', '12', '25', '7'],
             correct: 0,
-            hint: 'Es un número mayor a 15.',
-            funFact: 'Nicaragua tiene más de 50 volcanes en total, muchos de ellos submarinos.'
+            hint: 'Más de 15.',
+            funFact: 'Nicaragua tiene más de 50 volcanes en total.'
         }, {
-            question: '¿Qué personaje histórico es conocido como "El Héroe Nacional de Nicaragua"?',
-            options: ['Augusto C. Sandino', 'José Santos Zelaya', 'Emiliano Chamorro', 'Pedro Joaquín Chamorro'],
+            question: '¿Quién es el "Héroe Nacional"?',
+            options: ['Sandino', 'Zelaya', 'Chamorro', 'Pedro Joaquín'],
             correct: 0,
-            hint: 'Luchó contra la ocupación estadounidense.',
-            funFact: 'Sandino es recordado por su lucha en Las Segovias.'
+            hint: 'Luchó contra la ocupación de EE.UU.',
+            funFact: 'Sandino luchó en Las Segovias.'
         }];
 
-        // ===== PREMIOS =====
         const PRIZES = [1000, 2000, 3000, 5000, 10000, 20000, 35000, 50000, 75000, 100000];
 
-        // ===== ESTADO DEL JUEGO =====
         const state = {
-            currentIndex: 0, // 0 = pregunta 1
+            currentIndex: 0,
             prize: 0,
             hints: 3,
             fiftyUsed: false,
             gameOver: false,
             answered: false,
-            // Datos de la pregunta actual
             currentQuestion: null,
         };
 
-        // ===== REFERENCIAS DOM =====
+        // ===== DOM =====
         const questionText = document.getElementById('questionText');
         const questionNumber = document.getElementById('questionNumber');
-        const optionsContainer = document.getElementById('optionsContainer');
         const optionEls = document.querySelectorAll('.option');
-        const currentQuestionSpan = document.getElementById('currentQuestion');
-        const currentPrizeSpan = document.getElementById('currentPrize');
-        const hintCountSpan = document.getElementById('hintCount');
-        const hintText = document.getElementById('hintText');
+        const currentPrizeDisplay = document.getElementById('currentPrizeDisplay');
+        const currentQuestionDisplay = document.getElementById('currentQuestionDisplay');
+        const totalQuestionsDisplay = document.getElementById('totalQuestionsDisplay');
+        const hintCountDisplay = document.getElementById('hintCountDisplay');
         const progressFill = document.getElementById('progressFill');
-        const prizeSteps = document.querySelectorAll('.prize-step');
+        const winnerCount = document.getElementById('winnerCount');
+        const hintText = document.getElementById('hintText');
 
         const nextBtn = document.getElementById('nextBtn');
         const resetBtn = document.getElementById('resetBtn');
@@ -715,107 +758,74 @@
         const modalDetails = document.getElementById('modalDetails');
         const playAgainBtn = document.getElementById('playAgainBtn');
 
-        // ===== FUNCIONES PRINCIPALES =====
+        function formatCurrency(amount) {
+            return 'C$ ' + amount.toLocaleString();
+        }
 
-        // Cargar una pregunta
+        function updatePrizeDisplay(animate = false) {
+            currentPrizeDisplay.textContent = formatCurrency(state.prize);
+            if (animate) {
+                currentPrizeDisplay.classList.remove('pulse');
+                void currentPrizeDisplay.offsetWidth;
+                currentPrizeDisplay.classList.add('pulse');
+            }
+        }
+
         function loadQuestion(index) {
             const q = QUESTIONS[index];
             state.currentQuestion = q;
             state.answered = false;
 
-            // Actualizar UI
             questionText.textContent = q.question;
-            questionNumber.textContent = `Pregunta ${index + 1} de ${QUESTIONS.length}`;
+            questionNumber.textContent = `PREGUNTA ${index + 1} DE ${QUESTIONS.length}`;
 
-            // Opciones
             const letters = ['A', 'B', 'C', 'D'];
             optionEls.forEach((el, i) => {
-                const textSpan = el.querySelector('.text');
-                textSpan.textContent = q.options[i] || '---';
+                el.querySelector('.text').textContent = q.options[i] || '---';
                 el.className = 'option';
                 el.dataset.index = i;
                 el.style.display = '';
                 el.querySelector('.letter').textContent = letters[i];
             });
 
-            // Actualizar contadores
-            currentQuestionSpan.textContent = index + 1;
-            currentPrizeSpan.textContent = state.prize.toLocaleString();
-            hintCountSpan.textContent = state.hints;
+            currentQuestionDisplay.textContent = index + 1;
+            totalQuestionsDisplay.textContent = QUESTIONS.length;
+            hintCountDisplay.textContent = state.hints;
 
-            // Progreso
             const progress = ((index) / QUESTIONS.length) * 100;
             progressFill.style.width = `${progress}%`;
 
-            // Tablero de premios
-            prizeSteps.forEach((step, i) => {
-                step.classList.remove('active', 'achieved');
-                // El step 0 es la pregunta 10 (premio más alto)
-                const stepIndex = 9 - i;
-                if (stepIndex < index) {
-                    step.classList.add('achieved');
-                }
-                if (stepIndex === index) {
-                    step.classList.add('active');
-                }
-            });
-
-            // Resetear botones
             nextBtn.disabled = true;
             optionEls.forEach(el => el.classList.remove('disabled'));
-
-            // Resetear estado de 50/50 para cada pregunta
             state.fiftyUsed = false;
             fiftyBtn.disabled = false;
 
-            // Ocultar pista anterior
             clearTimeout(window.hintTimeout);
             hintText.textContent = 'Selecciona una opción. ¡Suerte!';
         }
 
-        // Manejar selección de opción
         function selectOption(index) {
             if (state.answered || state.gameOver) return;
 
             const q = state.currentQuestion;
-            const selected = index;
-            const isCorrect = (selected === q.correct);
+            const isCorrect = (index === q.correct);
 
-            // Deshabilitar todas las opciones
             optionEls.forEach(el => el.classList.add('disabled'));
 
-            // Marcar la correcta y la seleccionada
             optionEls.forEach((el, i) => {
-                if (i === q.correct) {
-                    el.classList.add('correct');
-                }
-                if (i === selected && !isCorrect) {
-                    el.classList.add('wrong');
-                }
-                // Si es correcta, la seleccionada ya tiene 'correct'
+                if (i === q.correct) el.classList.add('correct');
+                if (i === index && !isCorrect) el.classList.add('wrong');
             });
 
-            // Mostrar dato curioso
             if (isCorrect) {
                 showHint(`✅ ¡Correcto! ${q.funFact}`);
                 state.prize += PRIZES[state.currentIndex];
-                currentPrizeSpan.textContent = state.prize.toLocaleString();
-                // Marcar premio como alcanzado
-                prizeSteps.forEach((step, i) => {
-                    const stepIndex = 9 - i;
-                    if (stepIndex === state.currentIndex) {
-                        step.classList.add('achieved');
-                    }
-                });
+                updatePrizeDisplay(true);
             } else {
-                showHint(`❌ Incorrecto. La respuesta correcta era: ${q.options[q.correct]}`);
-                // Mostrar la correcta
+                showHint(`❌ Incorrecto. Respuesta: ${q.options[q.correct]}`);
                 optionEls.forEach((el, i) => {
-                    if (i === q.correct) {
-                        el.classList.add('correct');
-                    }
+                    if (i === q.correct) el.classList.add('correct');
                 });
-                // PERDER EL JUEGO
                 state.gameOver = true;
                 showFinalModal(false);
                 return;
@@ -824,89 +834,67 @@
             state.answered = true;
             nextBtn.disabled = false;
 
-            // Si es la última pregunta y es correcta, mostrar victoria
             if (state.currentIndex === QUESTIONS.length - 1 && isCorrect) {
                 showFinalModal(true);
             }
         }
 
-        // Siguiente pregunta
         function goToNext() {
             if (state.gameOver) return;
             if (state.currentIndex < QUESTIONS.length - 1) {
                 state.currentIndex++;
                 loadQuestion(state.currentIndex);
             } else {
-                // Ya en la última, no debería pasar si está deshabilitado
                 nextBtn.disabled = true;
             }
         }
 
-        // ===== MODAL FINAL =====
         function showFinalModal(won) {
             modalOverlay.classList.add('show');
             if (won) {
                 modalIcon.textContent = '🏆';
                 modalTitle.textContent = '¡Felicidades!';
-                modalSubtitle.textContent = 'Has respondido todas las preguntas correctamente.';
-                modalPrize.textContent = `${state.prize.toLocaleString()} C$`;
-                modalDetails.textContent = `Respondiste ${QUESTIONS.length} de ${QUESTIONS.length} preguntas. ¡Eres un verdadero Pinolero Millonario!`;
+                modalSubtitle.textContent = 'Eres un Pinolero Millonario';
+                modalPrize.textContent = formatCurrency(state.prize);
+                modalDetails.textContent = `Respondiste todas las preguntas. ¡Únete a los ${parseInt(winnerCount.textContent) + 1} ganadores!`;
+                winnerCount.textContent = parseInt(winnerCount.textContent) + 1;
             } else {
                 modalIcon.textContent = '😔';
                 modalTitle.textContent = '¡Has perdido!';
-                modalSubtitle.textContent = 'Pero no te rindas, inténtalo de nuevo.';
-                modalPrize.textContent = `${state.prize.toLocaleString()} C$`;
-                const answered = state.currentIndex;
-                modalDetails.textContent = `Respondiste correctamente ${answered} de ${QUESTIONS.length} preguntas. ¡Sigue practicando!`;
+                modalSubtitle.textContent = 'Inténtalo de nuevo';
+                modalPrize.textContent = formatCurrency(state.prize);
+                modalDetails.textContent = `Respondiste ${state.currentIndex} de ${QUESTIONS.length} preguntas. ¡Sigue practicando!`;
             }
             state.gameOver = true;
         }
 
-        // ===== COMODINES =====
-
-        // 50/50
         function useFifty() {
             if (state.fiftyUsed || state.answered || state.gameOver) return;
-
             const q = state.currentQuestion;
-            const correct = q.correct;
-
-            // Obtener índices incorrectos
             const wrongIndices = [];
             for (let i = 0; i < q.options.length; i++) {
-                if (i !== correct) wrongIndices.push(i);
+                if (i !== q.correct) wrongIndices.push(i);
             }
-
-            // Mezclar y elegir 2 incorrectos para ocultar
             const shuffled = wrongIndices.sort(() => Math.random() - 0.5);
             const toHide = shuffled.slice(0, 2);
-
-            // Ocultar esas opciones
             optionEls.forEach((el, i) => {
-                if (toHide.includes(i)) {
-                    el.style.display = 'none';
-                }
+                if (toHide.includes(i)) el.style.display = 'none';
             });
-
             state.fiftyUsed = true;
             fiftyBtn.disabled = true;
-            showHint('🎲 50/50 aplicado. Dos opciones han sido eliminadas.');
+            showHint('🎲 50/50 aplicado. Dos opciones eliminadas.');
         }
 
-        // Pista
         function useHint() {
             if (state.hints <= 0 || state.gameOver) {
                 showHint('❌ No te quedan pistas.');
                 return;
             }
-
-            const q = state.currentQuestion;
             state.hints--;
-            hintCountSpan.textContent = state.hints;
-            showHint(`💡 Pista: ${q.hint}`);
+            hintCountDisplay.textContent = state.hints;
+            showHint(`💡 Pista: ${state.currentQuestion.hint}`);
         }
 
-        // ===== MOSTRAR PISTA EN EL BOX =====
         function showHint(msg) {
             hintText.textContent = msg;
             clearTimeout(window.hintTimeout);
@@ -917,7 +905,6 @@
             }, 6000);
         }
 
-        // ===== REINICIAR =====
         function resetGame() {
             state.currentIndex = 0;
             state.prize = 0;
@@ -926,11 +913,10 @@
             state.gameOver = false;
             state.answered = false;
 
-            hintCountSpan.textContent = state.hints;
-            currentPrizeSpan.textContent = '0';
+            hintCountDisplay.textContent = state.hints;
+            updatePrizeDisplay(false);
             modalOverlay.classList.remove('show');
 
-            // Mostrar todas las opciones
             optionEls.forEach(el => {
                 el.style.display = '';
                 el.className = 'option';
@@ -942,25 +928,23 @@
             showHint('🔄 Juego reiniciado. ¡Buena suerte!');
         }
 
-        // ===== EVENT LISTENERS =====
-
-        // Opciones
+        // ===== EVENTOS =====
         optionEls.forEach((el, index) => {
             el.addEventListener('click', () => selectOption(index));
         });
 
-        // Botones
         nextBtn.addEventListener('click', goToNext);
         resetBtn.addEventListener('click', resetGame);
         hintBtn.addEventListener('click', useHint);
         fiftyBtn.addEventListener('click', useFifty);
         playAgainBtn.addEventListener('click', resetGame);
 
-        // ===== INICIALIZAR =====
+        // ===== INICIAR =====
+        totalQuestionsDisplay.textContent = QUESTIONS.length;
+        winnerCount.textContent = 125;
         resetGame();
 
-        console.log('🏆 Pinolero Millonario cargado correctamente.');
-        console.log('🎯 Responde 10 preguntas para ganar hasta 100,000 C$!');
+        console.log('🏆 Pinolero Millonario - Versión fiel a la imagen');
     </script>
 </body>
 </html>
