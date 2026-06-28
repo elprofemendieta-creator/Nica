@@ -1,337 +1,1210 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-<meta name="keywords" content=""/>
-<title>Sopa de Letras - Nicaragua</title>
-<link rel="stylesheet" href="./sclim/lim.css?5.6.4" type="text/css" ></link>
-<link rel="stylesheet" href="./sclim/lim-px.css?5.6.4" type="text/css" ></link>
-<script src="./sclim/lang.js?5.6.4" type="text/javascript"></script>
-<script src="./sclim/limjs.js?5.6.4" type="text/javascript"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>Sopa de Letras - Nicaragua</title>
 
-<style>
-  /* ===== MEJORAS SOLO PARA EL CONTENEDOR PRINCIPAL ===== */
-  body {
-    background: linear-gradient(145deg, #0b1a3a 0%, #0d47a1 50%, #0288d1 100%);
-    min-height: 100vh;
-    margin: 0;
-    padding: 16px;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-  }
-
-  .pcllim {
-    max-width: 850px;
-    width: 100%;
-    background: rgba(255, 255, 255, 0.06);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    border-radius: 32px;
-    padding: 20px;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-  }
-
-  /* ===== MEJORA DE LA BARRA DE NAVEGACIÓN ===== */
-  .pclbarra {
-    background: rgba(0, 0, 0, 0.2) !important;
-    border-radius: 60px !important;
-    padding: 8px 16px !important;
-    margin-bottom: 16px !important;
-    border: 1px solid rgba(255, 255, 255, 0.06) !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: space-between !important;
-    flex-wrap: wrap !important;
-    gap: 6px !important;
-  }
-
-  .pclbns, .pclbni {
-    display: flex !important;
-    gap: 4px !important;
-    align-items: center !important;
-  }
-
-  .pclbot {
-    background: rgba(255, 255, 255, 0.08) !important;
-    border: none !important;
-    color: white !important;
-    width: 38px !important;
-    height: 38px !important;
-    border-radius: 50% !important;
-    font-size: 1.1rem !important;
-    cursor: pointer !important;
-    transition: all 0.2s ease !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-  }
-
-  .pclbot:hover {
-    background: rgba(255, 255, 255, 0.2) !important;
-    transform: scale(1.05);
-  }
-
-  .pclbot.nav {
-    background: rgba(255, 215, 0, 0.15) !important;
-  }
-
-  .pclbot.nav:hover {
-    background: rgba(255, 215, 0, 0.3) !important;
-  }
-
-  .pclnum {
-    color: #ffd54f !important;
-    font-weight: 700 !important;
-    font-size: 1rem !important;
-    background: rgba(255, 215, 0, 0.1) !important;
-    padding: 2px 16px !important;
-    border-radius: 40px !important;
-    border: 1px solid rgba(255, 215, 0, 0.1) !important;
-    min-width: 30px !important;
-    text-align: center !important;
-  }
-
-  /* ===== MEJORA DEL CONTENEDOR DE JUEGOS ===== */
-  .pclcorpo {
-    background: rgba(0, 0, 0, 0.08) !important;
-    border-radius: 24px !important;
-    padding: 16px !important;
-    border: 1px solid rgba(255, 255, 255, 0.04) !important;
-  }
-
-  .pclcont {
-    background: rgba(255, 255, 255, 0.03) !important;
-    border-radius: 20px !important;
-    padding: 16px !important;
-    margin-bottom: 12px !important;
-    border: 1px solid rgba(255, 255, 255, 0.04) !important;
-  }
-
-  .pclcont:last-child {
-    margin-bottom: 0 !important;
-  }
-
-  /* ===== MEJORA DEL TEXTO ===== */
-  .pclsuper {
-    color: #ffffff !important;
-    font-weight: 700 !important;
-    text-shadow: 0 2px 10px rgba(0,0,0,0.3) !important;
-  }
-
-  .pclsubtx {
-    color: #e3f2fd !important;
-    font-weight: 500 !important;
-  }
-
-  /* ===== BOTÓN VOLVER ===== */
-  .volver {
-    display: inline-flex !important;
-    align-items: center !important;
-    gap: 8px !important;
-    margin-top: 16px !important;
-    padding: 10px 24px !important;
-    background: rgba(255, 255, 255, 0.9) !important;
-    color: #0d47a1 !important;
-    text-decoration: none !important;
-    border-radius: 60px !important;
-    font-weight: 600 !important;
-    font-size: 0.95rem !important;
-    transition: all 0.25s ease !important;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15) !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  }
-
-  .volver:hover {
-    transform: translateY(-2px) !important;
-    background: #ffffff !important;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25) !important;
-  }
-
-  /* ===== RESPONSIVE ===== */
-  @media (max-width: 768px) {
-    body {
-      padding: 12px;
+  <style>
+    /* ===== RESET Y BASE ===== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
 
-    .pcllim {
-      padding: 14px;
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(145deg, #0b1a3a 0%, #0d47a1 50%, #0288d1 100%);
+      color: white;
+      display: flex;
+      justify-content: center;
+      padding: 16px;
+      padding-top: 24px;
+      background-attachment: fixed;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 850px;
+      background: rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-radius: 32px;
+      padding: 24px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      align-self: flex-start;
+    }
+
+    /* ===== TÍTULO ===== */
+    h1 {
+      font-size: clamp(1.8rem, 6vw, 3rem);
+      font-weight: 800;
+      text-align: center;
+      background: linear-gradient(to right, #ffe082, #fff8e1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 4px;
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: clamp(0.8rem, 2vw, 1.05rem);
+      opacity: 0.9;
+      margin-bottom: 20px;
+      font-weight: 300;
+      background: rgba(255, 255, 255, 0.06);
+      padding: 6px 20px;
+      border-radius: 40px;
+      display: inline-block;
+      width: auto;
+      margin-left: auto;
+      margin-right: auto;
+      backdrop-filter: blur(4px);
+    }
+
+    /* ===== BARRA DE NAVEGACIÓN ===== */
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 60px;
+      padding: 8px 14px;
+      margin-bottom: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .navbar-left, .navbar-right {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+    }
+
+    .nav-btn {
+      background: rgba(255, 255, 255, 0.06);
+      border: none;
+      color: white;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+
+    .nav-btn:hover {
+      background: rgba(255, 255, 255, 0.18);
+      transform: scale(1.05);
+    }
+
+    .nav-btn:active {
+      transform: scale(0.92);
+    }
+
+    .nav-btn.arrow {
+      background: rgba(255, 215, 0, 0.12);
+    }
+
+    .nav-btn.arrow:hover {
+      background: rgba(255, 215, 0, 0.25);
+    }
+
+    .page-number {
+      color: #ffd54f;
+      font-weight: 700;
+      font-size: 1rem;
+      background: rgba(255, 215, 0, 0.08);
+      padding: 2px 16px;
+      border-radius: 40px;
+      border: 1px solid rgba(255, 215, 0, 0.08);
+      min-width: 30px;
+      text-align: center;
+    }
+
+    /* ===== CONTENEDOR DE JUEGOS ===== */
+    .game-area {
+      background: rgba(0, 0, 0, 0.06);
       border-radius: 24px;
+      padding: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      min-height: 400px;
+      position: relative;
     }
 
-    .pclbarra {
-      padding: 6px 12px !important;
-      border-radius: 40px !important;
+    .panel {
+      display: none;
+      animation: fadeIn 0.3s ease;
     }
 
-    .pclbot {
-      width: 32px !important;
-      height: 32px !important;
-      font-size: 0.9rem !important;
+    .panel.active {
+      display: block;
     }
 
-    .pclnum {
-      font-size: 0.85rem !important;
-      padding: 2px 12px !important;
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(10px); }
+      100% { opacity: 1; transform: translateY(0); }
     }
 
-    .pclcorpo {
-      padding: 12px !important;
-      border-radius: 18px !important;
+    .panel-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #ffd54f;
+      text-align: center;
+      margin-bottom: 12px;
+      letter-spacing: 2px;
     }
 
-    .pclcont {
-      padding: 12px !important;
-      border-radius: 16px !important;
+    .panel-desc {
+      text-align: center;
+      font-size: 0.95rem;
+      opacity: 0.8;
+      margin-bottom: 16px;
     }
 
-    .volver {
-      padding: 8px 18px !important;
-      font-size: 0.85rem !important;
-    }
-  }
-
-  @media (max-width: 480px) {
-    body {
-      padding: 8px;
-    }
-
-    .pcllim {
-      padding: 10px;
-      border-radius: 18px;
+    /* ===== SOPA DE LETRAS ===== */
+    .sopa-wrapper {
+      width: 100%;
+      max-width: 550px;
+      margin: 0 auto;
+      aspect-ratio: 1 / 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
-    .pclbarra {
-      padding: 4px 8px !important;
-      border-radius: 30px !important;
-      gap: 4px !important;
+    #sopaBoard {
+      display: grid;
+      grid-template-columns: repeat(15, 1fr);
+      gap: 2px;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.15);
+      border-radius: 12px;
+      padding: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
     }
 
-    .pclbot {
-      width: 28px !important;
-      height: 28px !important;
-      font-size: 0.75rem !important;
+    .cell {
+      aspect-ratio: 1 / 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(0.6rem, 3vw, 1.2rem);
+      font-weight: 700;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 4px;
+      color: #ffffff;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      user-select: none;
+      border: 1px solid rgba(255, 255, 255, 0.03);
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
     }
 
-    .pclnum {
-      font-size: 0.7rem !important;
-      padding: 2px 8px !important;
-      min-width: 24px !important;
+    .cell:active {
+      transform: scale(0.92);
     }
 
-    .pclcorpo {
-      padding: 8px !important;
-      border-radius: 14px !important;
+    .cell.selected {
+      background: rgba(255, 215, 0, 0.25);
+      border-color: #ffd54f;
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.1);
     }
 
-    .pclcont {
-      padding: 8px !important;
-      border-radius: 12px !important;
+    .cell.found {
+      background: rgba(76, 175, 80, 0.2);
+      color: #a5d6a7;
+      border-color: rgba(76, 175, 80, 0.15);
+      cursor: default;
     }
 
-    .volver {
-      padding: 6px 14px !important;
-      font-size: 0.75rem !important;
-      margin-top: 12px !important;
+    /* ===== LISTA DE PALABRAS ===== */
+    .word-list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 6px 12px;
+      margin-top: 16px;
+      padding: 8px 12px;
+      background: rgba(0, 0, 0, 0.12);
+      border-radius: 40px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
     }
 
-    .clim-tam {
-      width: 12px !important;
-      height: 12px !important;
+    .word-item {
+      font-size: clamp(0.65rem, 1.6vw, 0.85rem);
+      font-weight: 600;
+      background: rgba(255, 255, 255, 0.06);
+      padding: 4px 14px;
+      border-radius: 40px;
+      color: #e3f2fd;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      transition: all 0.3s ease;
     }
-  }
 
-  /* ===== CORRECCIÓN PARA QUE LOS PANELES SE VEA BIEN ===== */
-  [name="limpanel"] {
-    background: rgba(255, 255, 255, 0.03) !important;
-    border-radius: 12px !important;
-    padding: 8px !important;
-  }
-
-  /* Asegurar que el texto de la sopa sea visible */
-  .pclact {
-    color: #ffffff !important;
-  }
-
-  /* Mejorar visibilidad de las celdas de la sopa */
-  .pclcelda {
-    background: rgba(255, 255, 255, 0.08) !important;
-    border-radius: 4px !important;
-    color: #ffffff !important;
-    font-weight: 700 !important;
-  }
-
-  .pclcelda:hover {
-    background: rgba(255, 255, 255, 0.15) !important;
-  }
-
-  /* Ajustar el tamaño de la sopa en móviles */
-  @media (max-width: 480px) {
-    .pclcelda {
-      font-size: 12px !important;
-      padding: 2px !important;
+    .word-item.found {
+      background: rgba(76, 175, 80, 0.2);
+      color: #a5d6a7;
+      text-decoration: line-through;
+      text-decoration-color: #81c784;
+      border-color: rgba(76, 175, 80, 0.15);
+      opacity: 0.6;
     }
-  }
 
-  @media (max-width: 380px) {
-    .pclcelda {
-      font-size: 10px !important;
-      padding: 1px !important;
+    /* ===== BOTONES DE CONTROL ===== */
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin-top: 16px;
     }
-  }
-</style>
+
+    .btn {
+      border: none;
+      padding: 10px 20px;
+      border-radius: 60px;
+      font-weight: 700;
+      font-size: clamp(0.75rem, 1.6vw, 0.9rem);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      flex: 1 1 auto;
+      justify-content: center;
+      min-width: 60px;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+    }
+
+    .btn:active {
+      transform: scale(0.95);
+    }
+
+    .btn-verificar {
+      background: rgba(76, 175, 80, 0.85);
+      color: white;
+    }
+    .btn-verificar:hover {
+      background: #66bb6a;
+    }
+
+    .btn-pista {
+      background: rgba(255, 215, 0, 0.85);
+      color: #1a2a3a;
+    }
+    .btn-pista:hover {
+      background: #ffd54f;
+    }
+
+    .btn-siguiente {
+      background: rgba(33, 150, 243, 0.85);
+      color: white;
+    }
+    .btn-siguiente:hover {
+      background: #42a5f5;
+    }
+
+    .btn-reiniciar {
+      background: rgba(255, 152, 0, 0.85);
+      color: white;
+    }
+    .btn-reiniciar:hover {
+      background: #ffa726;
+    }
+
+    /* ===== ESTADO ===== */
+    .status {
+      margin-top: 12px;
+      text-align: center;
+      font-size: clamp(0.85rem, 1.8vw, 1rem);
+      font-weight: 500;
+      background: rgba(0, 0, 0, 0.12);
+      padding: 10px 16px;
+      border-radius: 60px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .status .counter {
+      background: rgba(255, 215, 0, 0.1);
+      padding: 2px 14px;
+      border-radius: 40px;
+      color: #ffd54f;
+      font-weight: 600;
+    }
+
+    .status .counter span {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .victory {
+      color: #ffd54f;
+      font-weight: 700;
+      animation: pulse 1s ease-in-out infinite alternate;
+    }
+
+    @keyframes pulse {
+      0% { text-shadow: 0 0 10px rgba(255, 215, 0, 0.2); }
+      100% { text-shadow: 0 0 30px rgba(255, 215, 0, 0.6); }
+    }
+
+    /* ===== BOTÓN VOLVER ===== */
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 20px;
+      padding: 10px 24px;
+      background: rgba(255, 255, 255, 0.9);
+      color: #0d47a1;
+      text-decoration: none;
+      border-radius: 60px;
+      font-weight: 600;
+      font-size: clamp(0.8rem, 1.4vw, 0.95rem);
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .back-btn:hover {
+      transform: translateY(-2px);
+      background: #ffffff;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+    }
+
+    .back-btn:active {
+      transform: scale(0.96);
+    }
+
+    .text-center {
+      text-align: center;
+    }
+
+    /* ===== PUZZLE ===== */
+    .puzzle-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 16px;
+      border: 2px dashed rgba(255, 255, 255, 0.1);
+      min-height: 250px;
+    }
+
+    .puzzle-placeholder .icon {
+      font-size: 4rem;
+      margin-bottom: 12px;
+      opacity: 0.5;
+    }
+
+    .puzzle-placeholder p {
+      opacity: 0.6;
+      font-size: 0.95rem;
+    }
+
+    /* ===== PALABRA SECRETA ===== */
+    .secreta-area {
+      text-align: center;
+      padding: 20px;
+    }
+
+    .secreta-area .hint {
+      font-size: 1.1rem;
+      margin-bottom: 16px;
+      color: #e3f2fd;
+      background: rgba(0, 0, 0, 0.15);
+      padding: 12px 20px;
+      border-radius: 40px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .secreta-area .letters {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin: 16px 0;
+    }
+
+    .secreta-area .letter-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.06);
+      color: white;
+      font-size: 1.2rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .secreta-area .letter-btn:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: scale(1.05);
+    }
+
+    .secreta-area .letter-btn:active {
+      transform: scale(0.92);
+    }
+
+    .secreta-area .letter-btn.used {
+      opacity: 0.3;
+      pointer-events: none;
+      transform: scale(0.9);
+    }
+
+    .secreta-area .word-display {
+      font-size: 2rem;
+      letter-spacing: 12px;
+      font-weight: 700;
+      color: #ffd54f;
+      margin: 16px 0;
+      min-height: 50px;
+      background: rgba(0, 0, 0, 0.15);
+      padding: 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      .container {
+        padding: 16px;
+        border-radius: 24px;
+      }
+
+      .navbar {
+        padding: 6px 10px;
+        border-radius: 40px;
+      }
+
+      .nav-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 0.9rem;
+      }
+
+      .page-number {
+        font-size: 0.85rem;
+        padding: 2px 12px;
+      }
+
+      .game-area {
+        padding: 12px;
+        border-radius: 18px;
+      }
+
+      #sopaBoard {
+        gap: 2px;
+        padding: 4px;
+      }
+
+      .secreta-area .letter-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 1rem;
+      }
+
+      .secreta-area .word-display {
+        font-size: 1.5rem;
+        letter-spacing: 8px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 10px;
+      }
+
+      .container {
+        padding: 12px;
+        border-radius: 18px;
+      }
+
+      .navbar {
+        padding: 4px 8px;
+        border-radius: 30px;
+      }
+
+      .nav-btn {
+        width: 28px;
+        height: 28px;
+        font-size: 0.75rem;
+      }
+
+      .page-number {
+        font-size: 0.7rem;
+        padding: 2px 8px;
+        min-width: 24px;
+      }
+
+      .game-area {
+        padding: 8px;
+        border-radius: 14px;
+        min-height: 300px;
+      }
+
+      #sopaBoard {
+        gap: 1.5px;
+        padding: 3px;
+        border-radius: 8px;
+      }
+
+      .cell {
+        font-size: clamp(0.4rem, 2.5vw, 0.65rem);
+        border-radius: 3px;
+        border-width: 0.5px;
+      }
+
+      .btn {
+        padding: 8px 12px;
+        font-size: 0.65rem;
+        min-width: 45px;
+      }
+
+      .secreta-area .letter-btn {
+        width: 30px;
+        height: 30px;
+        font-size: 0.85rem;
+      }
+
+      .secreta-area .word-display {
+        font-size: 1.2rem;
+        letter-spacing: 6px;
+        padding: 8px;
+      }
+
+      .secreta-area .hint {
+        font-size: 0.9rem;
+        padding: 8px 16px;
+      }
+
+      .puzzle-placeholder {
+        padding: 20px 12px;
+        min-height: 150px;
+      }
+
+      .puzzle-placeholder .icon {
+        font-size: 2.5rem;
+      }
+
+      .back-btn {
+        padding: 8px 16px;
+        font-size: 0.7rem;
+        margin-top: 14px;
+      }
+
+      .status {
+        font-size: 0.7rem;
+        padding: 6px 10px;
+        gap: 6px;
+      }
+
+      .word-item {
+        font-size: 0.5rem;
+        padding: 2px 8px;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .cell {
+        font-size: 0.35rem;
+        border-radius: 2px;
+      }
+
+      .secreta-area .letter-btn {
+        width: 26px;
+        height: 26px;
+        font-size: 0.7rem;
+      }
+
+      .secreta-area .word-display {
+        font-size: 1rem;
+        letter-spacing: 4px;
+      }
+
+      .btn {
+        font-size: 0.55rem;
+        padding: 6px 8px;
+        min-width: 35px;
+      }
+    }
+  </style>
 </head>
-<body >
-  <div class="pcllim" name='limbk' data-limc='{"version":"5.6","idioma":"ESP","licencia":"","corfondo":"ffffff","cormensaxes":"000000","cortexto":"000000","ben":"CORRECTO","mal":"INCORRECTO"}'>
-    <div class="pclpreload"></div>
-    <button class="pclbtbr"></button>
-    <div class="pclbarra">
-      <div class="pclbns">                         
-        <button class="pclbot lbt-full" >&#9713;</button>
-        <button class="pclbot lbt-infor" >i</button>
-        <button class="pclbot lbt-menu" >&#9636;</button>
-        <button class="pclbot lbt-axd" >?</button>
+<body>
+
+  <div class="container">
+    <h1>🔍 Sopa de Letras</h1>
+    <div class="text-center">
+      <span class="subtitle">Encuentra las ciudades y lugares turísticos de Nicaragua 🌋🌊</span>
+    </div>
+
+    <!-- ===== BARRA DE NAVEGACIÓN ===== -->
+    <div class="navbar">
+      <div class="navbar-left">
+        <button class="nav-btn" id="btnFull">&#9713;</button>
+        <button class="nav-btn" id="btnInfo">i</button>
+        <button class="nav-btn" id="btnMenu">&#9636;</button>
+        <button class="nav-btn" id="btnHelp">?</button>
       </div>
-      <div class="pclnum">1</div>
-      <div class="pclbni">
-        <button class="pclbot nav lbt-bck"><img src="./sclim/at.png" class="clim-tam" alt='&#10094;'></button>
-        <button class="pclbot nav lbt-frw"><img src="./sclim/ad.png" class="clim-tam" alt='&#10095;'></button>                                                              
+      <div class="page-number" id="pageNumber">1</div>
+      <div class="navbar-right">
+        <button class="nav-btn arrow" id="btnPrev">◀</button>
+        <button class="nav-btn arrow" id="btnNext">▶</button>
       </div>
     </div>
-    <div class="pclfondo"></div>
-    <div class="pclcorpo" >
-      <div class="pclsuper" ></div>
-      <div class="pclavance" ></div>
-      <div class="pclsub"  ><div class="pclsubtx"></div></div>
-      <div class="pclind"></div>
-      <div class="pclbase">
 
-        <!-- ===== PANEL 1: SOPA DE LETRAS ===== -->
-        <div name="limpax" class="pclcont">
-          <div name="limpanel" data-limc='{"properties": { "type":"sopa","id":"1","txcabe":"CIUDADES","modo":"1","enunciados":["Cuál es la capital de Nicaragua","En que lago esta la Isla de Ometepe","Ciudad colonial ","Ciudad conocida por su cultura y volcan","Lugar famoso por su volcán activo y arte"],"palabras":["MANAGUA","COCIBOLCA","GRANADA","MASAYA","LEON"],"enunciado":"1","colorea":"1","cadro":"0","fondo":"ASDFGLERTUIOPZXCVBNM","letras":"ASDFGLERTUIOPZXCVBNM","tam":"16"}}'>
-            <div name="limact"></div>
-          </div>
+    <!-- ===== ÁREA DE JUEGOS ===== -->
+    <div class="game-area">
+
+      <!-- ===== PANEL 1: SOPA DE LETRAS ===== -->
+      <div class="panel active" id="panel1">
+        <div class="panel-title">📝 CIUDADES</div>
+        <div class="panel-desc">Selecciona letras en orden para formar las palabras</div>
+
+        <div class="sopa-wrapper">
+          <div id="sopaBoard"></div>
         </div>
 
-        <!-- ===== PANEL 2: PUZZLE ===== -->
-        <div name="limpax" class="pclcont">
-          <div name="limpanel" data-limc='{"properties": { "type":"puzzle","id":"2","imaxe":"file.png","filas":"3","columnas":"3","reixa":"1","forma":"1"}}'>
-            <div name="limact"></div>
-          </div>
+        <div class="word-list" id="wordList"></div>
+
+        <div class="controls">
+          <button class="btn btn-verificar" id="btnVerificar">✅ Verificar</button>
+          <button class="btn btn-pista" id="btnPista">💡 Pista</button>
+          <button class="btn btn-siguiente" id="btnSiguienteJuego">➡ Siguiente</button>
+          <button class="btn btn-reiniciar" id="btnReiniciar">🔄 Reiniciar</button>
         </div>
 
-        <!-- ===== PANEL 3: PALABRA SECRETA ===== -->
-        <div name="limpax" class="pclcont">
-          <div name="limpanel" data-limc='{"properties": { "type":"secreta","id":"3","texto":"Lugar famoso por su volcán activo y artesanías","palabras":"MASAYA","letras":"ASDFGMNBVCERTYU","modo":"0","forma":"1"}}'>
-            <div name="limact"></div>
-            <a href="../juegos/juegos.html" class="volver">⬅ Inicio</a>
-          </div>
+        <div class="status" id="status">
+          <span>📌 Encuentra todas las palabras</span>
+          <span class="counter">🏷️ <span id="foundCount">0</span> / <span id="totalCount">5</span></span>
         </div>
-
       </div>
+
+      <!-- ===== PANEL 2: PUZZLE ===== -->
+      <div class="panel" id="panel2">
+        <div class="panel-title">🧩 PUZZLE</div>
+        <div class="panel-desc">Arma el rompecabezas de Nicaragua</div>
+        <div class="puzzle-placeholder">
+          <div class="icon">🧩</div>
+          <p>Próximamente: Rompecabezas turístico</p>
+          <p style="font-size:0.8rem;opacity:0.4;">¡Estamos trabajando en este juego!</p>
+        </div>
+      </div>
+
+      <!-- ===== PANEL 3: PALABRA SECRETA ===== -->
+      <div class="panel" id="panel3">
+        <div class="panel-title">🔤 PALABRA SECRETA</div>
+        <div class="panel-desc">Adivina la palabra con las letras disponibles</div>
+
+        <div class="secreta-area">
+          <div class="hint" id="secretaHint">💡 Lugar famoso por su volcán activo y artesanías</div>
+          <div class="word-display" id="secretaDisplay">_ _ _ _ _ _</div>
+          <div class="letters" id="secretaLetters"></div>
+          <div style="margin-top:12px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
+            <button class="btn btn-verificar" id="secretaVerificar">✅ Verificar</button>
+            <button class="btn btn-reiniciar" id="secretaReiniciar">🔄 Reiniciar</button>
+          </div>
+          <div style="margin-top:12px;font-size:0.9rem;opacity:0.7;" id="secretaStatus">Selecciona letras para formar la palabra</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== BOTÓN VOLVER ===== -->
+    <div class="text-center">
+      <a href="../juegos/juegos.html" class="back-btn">⬅ Volver a Juegos</a>
     </div>
   </div>
+
+  <script>
+    // ============================================================
+    // 1. DATOS DE LA SOPA DE LETRAS
+    // ============================================================
+    const palabrasData = [
+      { palabra: "MANAGUA", descripcion: "Capital de Nicaragua" },
+      { palabra: "COCIBOLCA", descripcion: "Lago de Ometepe" },
+      { palabra: "GRANADA", descripcion: "Ciudad colonial" },
+      { palabra: "MASAYA", descripcion: "Volcán activo y artesanías" },
+      { palabra: "LEON", descripcion: "Cultura y volcanes" }
+    ];
+
+    // ============================================================
+    // 2. SOPA DE LETRAS
+    // ============================================================
+    const SIZE = 15;
+    let board = [];
+    let selection = [];
+    let foundWords = new Set();
+    let wordPositions = [];
+    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+    const boardEl = document.getElementById('sopaBoard');
+    const wordListEl = document.getElementById('wordList');
+    const foundCountEl = document.getElementById('foundCount');
+    const totalCountEl = document.getElementById('totalCount');
+    const statusEl = document.getElementById('status');
+
+    totalCountEl.textContent = palabrasData.length;
+
+    function generateBoard() {
+      board = Array.from({ length: SIZE }, () => Array(SIZE).fill(''));
+      wordPositions = [];
+
+      const directions = [
+        [0, 1], [1, 0], [1, 1], [-1, 1]
+      ];
+
+      palabrasData.forEach((item) => {
+        const word = item.palabra;
+        let placed = false;
+        let attempts = 0;
+
+        while (!placed && attempts < 200) {
+          attempts++;
+          const row = Math.floor(Math.random() * SIZE);
+          const col = Math.floor(Math.random() * SIZE);
+          const dir = directions[Math.floor(Math.random() * directions.length)];
+          const [dr, dc] = dir;
+
+          let canPlace = true;
+          for (let i = 0; i < word.length; i++) {
+            const r = row + i * dr;
+            const c = col + i * dc;
+            if (r < 0 || r >= SIZE || c < 0 || c >= SIZE) {
+              canPlace = false;
+              break;
+            }
+            if (board[r][c] !== '' && board[r][c] !== word[i]) {
+              canPlace = false;
+              break;
+            }
+          }
+
+          if (canPlace) {
+            const positions = [];
+            for (let i = 0; i < word.length; i++) {
+              const r = row + i * dr;
+              const c = col + i * dc;
+              board[r][c] = word[i];
+              positions.push({ row: r, col: c });
+            }
+            wordPositions.push({ word, positions, found: false });
+            placed = true;
+          }
+        }
+
+        if (!placed) {
+          let row = Math.floor(Math.random() * SIZE);
+          let col = Math.floor(Math.random() * (SIZE - word.length + 1));
+          const positions = [];
+          for (let i = 0; i < word.length; i++) {
+            board[row][col + i] = word[i];
+            positions.push({ row, col: col + i });
+          }
+          wordPositions.push({ word, positions, found: false });
+        }
+      });
+
+      for (let r = 0; r < SIZE; r++) {
+        for (let c = 0; c < SIZE; c++) {
+          if (board[r][c] === '') {
+            board[r][c] = letters[Math.floor(Math.random() * letters.length)];
+          }
+        }
+      }
+    }
+
+    function renderBoard() {
+      boardEl.innerHTML = '';
+      for (let r = 0; r < SIZE; r++) {
+        for (let c = 0; c < SIZE; c++) {
+          const cell = document.createElement('div');
+          cell.className = 'cell';
+          cell.dataset.row = r;
+          cell.dataset.col = c;
+          cell.textContent = board[r][c];
+          cell.addEventListener('click', () => onCellClick(r, c));
+          boardEl.appendChild(cell);
+        }
+      }
+      updateFoundStyles();
+    }
+
+    function renderWordList() {
+      wordListEl.innerHTML = '';
+      palabrasData.forEach((item, index) => {
+        const span = document.createElement('span');
+        span.className = 'word-item';
+        span.id = `word-${index}`;
+        span.textContent = item.palabra + ' (' + item.descripcion + ')';
+        if (foundWords.has(item.palabra)) {
+          span.classList.add('found');
+        }
+        wordListEl.appendChild(span);
+      });
+    }
+
+    function updateFoundStyles() {
+      const cells = boardEl.querySelectorAll('.cell');
+      cells.forEach(cell => {
+        const r = parseInt(cell.dataset.row);
+        const c = parseInt(cell.dataset.col);
+        let isFound = false;
+        for (const wp of wordPositions) {
+          if (wp.found) {
+            for (const pos of wp.positions) {
+              if (pos.row === r && pos.col === c) {
+                isFound = true;
+                break;
+              }
+            }
+          }
+          if (isFound) break;
+        }
+        if (isFound) {
+          cell.classList.add('found');
+        } else {
+          cell.classList.remove('found');
+        }
+        cell.classList.remove('selected');
+      });
+
+      const items = wordListEl.querySelectorAll('.word-item');
+      items.forEach((item, index) => {
+        const palabra = palabrasData[index].palabra;
+        if (foundWords.has(palabra)) {
+          item.classList.add('found');
+        } else {
+          item.classList.remove('found');
+        }
+      });
+
+      foundCountEl.textContent = foundWords.size;
+
+      if (foundWords.size === palabrasData.length) {
+        statusEl.innerHTML = `
+          <span class="victory">🎉 ¡Felicidades! Encontraste todas las palabras.</span>
+          <span class="counter">🏆 <span>${foundWords.size}</span> / <span>${palabrasData.length}</span></span>
+        `;
+      } else {
+        const restante = palabrasData.length - foundWords.size;
+        const msg = statusEl.querySelector('span:first-child');
+        if (msg && !msg.classList.contains('victory')) {
+          msg.textContent = `📌 Encuentra ${restante} palabra${restante > 1 ? 's' : ''} más`;
+        }
+      }
+    }
+
+    function onCellClick(row, col) {
+      let isFoundCell = false;
+      for (const wp of wordPositions) {
+        if (wp.found) {
+          for (const pos of wp.positions) {
+            if (pos.row === row && pos.col === col) {
+              isFoundCell = true;
+              break;
+            }
+          }
+        }
+        if (isFoundCell) break;
+      }
+      if (isFoundCell) return;
+
+      if (selection.length > 0) {
+        const last = selection[selection.length - 1];
+        const dr = Math.abs(row - last.row);
+        const dc = Math.abs(col - last.col);
+        if ((dr === 0 && dc === 1) || (dr === 1 && dc === 0) || (dr === 1 && dc === 1)) {
+          const exists = selection.some(s => s.row === row && s.col === col);
+          if (!exists) {
+            selection.push({ row, col });
+            updateSelectionStyles();
+            return;
+          } else {
+            clearSelection();
+            return;
+          }
+        } else {
+          clearSelection();
+          selection.push({ row, col });
+          updateSelectionStyles();
+          return;
+        }
+      } else {
+        selection.push({ row, col });
+        updateSelectionStyles();
+      }
+    }
+
+    function updateSelectionStyles() {
+      const cells = boardEl.querySelectorAll('.cell');
+      cells.forEach(cell => cell.classList.remove('selected'));
+      selection.forEach(pos => {
+        const index = pos.row * SIZE + pos.col;
+        if (cells[index]) {
+          cells[index].classList.add('selected');
+        }
+      });
+    }
+
+    function clearSelection() {
+      selection = [];
+      const cells = boardEl.querySelectorAll('.cell');
+      cells.forEach(cell => cell.classList.remove('selected'));
+    }
+
+    function tryValidateWord() {
+      if (selection.length < 3) {
+        alert('Selecciona al menos 3 letras para formar una palabra.');
+        return false;
+      }
+
+      let word = '';
+      for (const pos of selection) {
+        word += board[pos.row][pos.col];
+      }
+
+      let foundWord = null;
+      let foundPositions = null;
+      for (const wp of wordPositions) {
+        if (wp.found) continue;
+        if (wp.word === word) {
+          foundWord = wp.word;
+          foundPositions = wp.positions;
+          break;
+        }
+        const reversed = word.split('').reverse().join('');
+        if (wp.word === reversed) {
+          foundWord = wp.word;
+          foundPositions = wp.positions.slice().reverse();
+          break;
+        }
+      }
+
+      if (foundWord && foundPositions) {
+        const match = selection.every((pos, idx) => {
+          return pos.row === foundPositions[idx].row && pos.col === foundPositions[idx].col;
+        });
+
+        if (match) {
+          for (const wp of wordPositions) {
+            if (wp.word === foundWord) {
+              wp.found = true;
+              foundWords.add(foundWord);
+              break;
+            }
+          }
+          clearSelection();
+          updateFoundStyles();
+          renderWordList();
+          return true;
+        }
+      }
+      alert('❌ Palabra incorrecta. Intenta de nuevo.');
+      clearSelection();
+      return false;
+    }
+
+    function resetSopa() {
+      foundWords = new Set();
+      selection = [];
+      for (const wp of wordPositions) {
+        wp.found = false;
+      }
+      generateBoard();
+      renderBoard();
+      renderWordList();
+      updateFoundStyles();
+      statusEl.innerHTML = `
+        <span>📌 Encuentra todas las palabras</span>
+        <span class="counter">🏷️ <span id="foundCount">0</span> / <span id="totalCount">${palabrasData.length}</span></span>
+      `;
+      document.getElementById('foundCount').textContent = '0';
+    }
+
+    function mostrarPistaSopa() {
+      for (const wp of wordPositions) {
+        if (!wp.found) {
+          const cells = boardEl.querySelectorAll('.cell');
+          wp.positions.forEach(pos => {
+            const index = pos.row * SIZE + pos.col;
+            if (cells[index]) {
+              cells[index].style.transition = 'background 0.3s';
+              cells[index].style.background = 'rgba(255, 215, 0, 0.4)';
+              setTimeout(() => {
+                cells[index].style.background = '';
+              }, 2000);
+            }
+          });
+          alert(`💡 Pista: busca "${wp.word}"`);
+          return;
+        }
+      }
+      alert('🎉 ¡Ya encontraste todas las palabras!');
+    }
+
+    // ============================================================
+    // 3. PALABRA SECRETA
+    // ============================================================
+    const secretaPalabra = "MASAYA";
+    const secretaLetras = ["A", "S", "D", "F", "G", "M", "N", "B", "V", "C", "E", "R", "T", "Y", "U"];
+    let secretaSeleccionadas = [];
+    let secretaLetrasUsadas = [];
+
+    function renderSecreta() {
+      const container = document.getElementById('secretaLetters');
+      container.innerHTML = '';
+      secretaLetras.forEach((letra, index) => {
+        const btn = document.createElement('button');
+        btn.className = 'letter-btn';
+        btn.textContent = letra;
+        btn.dataset.index = index;
+        if (secretaLetrasUsadas.includes(index)) {
+          btn.classList.add('used');
+        }
+        btn.addEventListener('click', () => {
+          if (secretaLetrasUsadas.includes(index)) return;
+          if (secretaSeleccionadas.length >= secretaPalabra.length) {
+            alert('Ya has seleccionado todas las letras necesarias.');
+            return;
+          }
+          secretaSeleccionadas.push(letra);
+          secretaLetrasUsadas.push(index);
+          actualizarSecretaDisplay();
+          renderSecreta();
+        });
+        container.appendChild(btn);
+      });
+    }
+
+    function actualizarSecretaDisplay() {
+      const display = document.getElementById('secretaDisplay');
+      if (secretaSeleccionadas.length === 0) {
+        display.textContent = '_ '.repeat(secretaPalabra.length).trim();
+        return;
+      }
+      let texto = '';
+      for (let i = 0; i < secretaPalabra.length; i++) {
+        if (i < secretaSeleccionadas.length) {
+          texto += secretaSeleccionadas[i] + ' ';
+        } else {
+          texto += '_ ';
+        }
+      }
+      display.textContent = texto.trim();
+    }
+
+    function verificarSecreta() {
+      const palabraFormada = secretaSeleccionadas.join('');
+      if (palabraFormada === secretaPalabra) {
+        document.getElementById('secretaStatus').innerHTML = '✅ ¡Correcto! Has adivinado la palabra. 🎉';
+        document.getElementById('secretaStatus').style.color = '#a5d6a7';
+      } else {
+        document.getElementById('secretaStatus').innerHTML = '❌ Incorrecto. Intenta de nuevo.';
+        document.getElementById('secretaStatus').style.color = '#ffab91';
+        // Reiniciar selección
+        secretaSeleccionadas = [];
+        secretaLetrasUsadas = [];
+        actualizarSecretaDisplay();
+        renderSecreta();
+        setTimeout(() => {
+          document.getElementById('secretaStatus').innerHTML = 'Selecciona letras para formar la palabra';
+          document.getElementById('secretaStatus').style.color = '';
+        }, 2000);
+      }
+    }
+
+    function reiniciarSecreta() {
+      secretaSeleccionadas = [];
+      secretaLetrasUsadas = [];
+      actualizarSecretaDisplay();
+      renderSecreta();
+      document.getElementById('secretaStatus').innerHTML = 'Selecciona letras para formar la palabra';
+      document.getElementById('secretaStatus').style.color = '';
+    }
+
+    // ============================================================
+    // 4. NAVEGACIÓN ENTRE PANELES
+    // ============================================================
+    let currentPanel = 1;
+    const totalPanels = 3;
+
+    function showPanel(index) {
+      document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+      document.getElementById(`panel${index}`).classList.add('active');
+      document.getElementById('pageNumber').textContent = index;
+      currentPanel = index;
+    }
+
+    function nextPanel() {
+      let next = currentPanel + 1;
+      if (next > totalPanels) next = 1;
+      showPanel(next);
+    }
+
+    function prevPanel() {
+      let prev = currentPanel - 1;
+      if (prev < 1) prev = totalPanels;
+      showPanel(prev);
+    }
+
+    // ============================================================
+    // 5. EVENTOS
+    // ============================================================
+    document.getElementById('btnVerificar').addEventListener('click', tryValidateWord);
+    document.getElementById('btnPista').addEventListener('click', mostrarPistaSopa);
+    document.getElementById('btnSiguienteJuego').addEventListener('click', nextPanel);
+    document.getElementById('btnReiniciar').addEventListener('click', resetSopa);
+    document.getElementById('btnNext').addEventListener('click', nextPanel);
+    document.getElementById('btnPrev').addEventListener('click', prevPanel);
+    document.getElementById('secretaVerificar').addEventListener('click', verificarSecreta);
+    document.getElementById('secretaReiniciar').addEventListener('click', reiniciarSecreta);
+
+    // Botones de la barra (funcionalidad decorativa)
+    document.getElementById('btnFull').addEventListener('click', () => alert('Pantalla completa'));
+    document.getElementById('btnInfo').addEventListener('click', () => alert('Información del juego'));
+    document.getElementById('btnMenu').addEventListener('click', () => alert('Menú de opciones'));
+    document.getElementById('btnHelp').addEventListener('click', () => alert('Ayuda: Selecciona letras en orden para formar palabras'));
+
+    // ============================================================
+    // 6. INICIALIZACIÓN
+    // ============================================================
+    generateBoard();
+    renderBoard();
+    renderWordList();
+    updateFoundStyles();
+    actualizarSecretaDisplay();
+    renderSecreta();
+    showPanel(1);
+
+    console.log('¡Juego de Sopa de Letras cargado correctamente!');
+  </script>
+
 </body>
 </html>
