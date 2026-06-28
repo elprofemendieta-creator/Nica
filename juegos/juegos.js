@@ -1,314 +1,645 @@
-// ================================================================
-//  🎠 CARRUSEL DE JUEGOS - GUÍA PINOLERO (VERSIÓN CORREGIDA)
-// ================================================================
+// ============================================
+// ===== CARRUSEL PREMIUM - JUEGOS =====
+// ============================================
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', () => {
+  // Seleccionar elementos del carrusel
   const track = document.querySelector('.carousel-track');
-  const slides = document.querySelectorAll('.carousel-slide');
+  const slides = Array.from(document.querySelectorAll('.carousel-slide'));
   const prevBtn = document.querySelector('.prev-btn');
   const nextBtn = document.querySelector('.next-btn');
-  const dots = document.querySelectorAll('.indicator-dot');
-  const playArea = document.querySelector('.play-area');
+  const dots = Array.from(document.querySelectorAll('.indicator-dot'));
+  const wrapper = document.querySelector('.carousel-track-wrapper');
   const gameTitle = document.getElementById('gameTitle');
   const gameContent = document.getElementById('gameContent');
-
-  // ===== VALIDAR QUE EXISTAN LOS ELEMENTOS =====
-  if (!track) {
-    console.error('❌ No se encontró el carrusel');
-    return;
-  }
-
-  console.log(`✅ Encontradas ${slides.length} tarjetas`);
-
+  
   let currentIndex = 0;
-  let slidesPerView = getSlidesPerView();
-  const totalSlides = slides.length;
+  let autoPlayInterval;
+  let isTransitioning = false;
+  let slideWidth = 0;
 
-  // ===== FUNCIÓN PARA CALCULAR CUÁNTAS TARJETAS SE VEN =====
-  function getSlidesPerView() {
-    if (window.innerWidth < 600) return 1;
-    if (window.innerWidth < 900) return 2;
-    return 3;
+  // Solo ejecutar si existe el carrusel
+  if (!track || slides.length === 0) return;
+
+  // Función para calcular el ancho real
+  function getSlideWidth() {
+    if (wrapper) {
+      return wrapper.getBoundingClientRect().width;
+    }
+    return slides[0]?.getBoundingClientRect().width || 0;
   }
 
-  // ===== FUNCIÓN PARA ACTUALIZAR EL CARRUSEL (CORREGIDA) =====
-  function updateCarousel() {
-    if (totalSlides === 0) return;
+  // Función para actualizar el carrusel
+  function updateCarousel(index, animate = true) {
+    if (isTransitioning) return;
+    isTransitioning = true;
 
-    // ✅ Usar getBoundingClientRect para obtener el ancho REAL
-    const firstSlide = slides[0];
-    if (!firstSlide) return;
+    if (index < 0) index = slides.length - 1;
+    if (index >= slides.length) index = 0;
     
-    const rect = firstSlide.getBoundingClientRect();
-    const slideWidth = rect.width;
-    const gap = 20; // Mismo gap que en CSS
-    const offset = currentIndex * (slideWidth + gap);
-
-    console.log(`📐 Ancho de tarjeta: ${slideWidth}px, offset: ${offset}px`);
-
-    track.style.transition = 'transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
-    track.style.transform = `translateX(-${offset}px)`;
-
-    // Actualizar indicadores
-    dots.forEach((dot, index) => {
-      dot.classList.toggle('active', index === currentIndex);
-    });
-
-    // Mostrar/ocultar botones
-    if (prevBtn) prevBtn.style.display = currentIndex === 0 ? 'none' : 'flex';
-    if (nextBtn) {
-      const maxIndex = Math.max(0, totalSlides - slidesPerView);
-      nextBtn.style.display = currentIndex >= maxIndex ? 'none' : 'flex';
+    slideWidth = getSlideWidth();
+    
+    if (slideWidth === 0) {
+      isTransitioning = false;
+      return;
     }
-  }
-
-  // ===== SIGUIENTE =====
-  function nextSlide() {
-    console.log('➡️ Siguiente');
-    const maxIndex = Math.max(0, totalSlides - slidesPerView);
-    if (currentIndex < maxIndex) {
-      currentIndex++;
-      updateCarousel();
+    
+    if (!animate) {
+      track.style.transition = 'none';
     } else {
-      console.log('⚠️ Ya estás en la última tarjeta');
+      track.style.transition = 'transform 0.7s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
     }
-  }
-
-  // ===== ANTERIOR =====
-  function prevSlide() {
-    console.log('⬅️ Anterior');
-    if (currentIndex > 0) {
-      currentIndex--;
-      updateCarousel();
-    } else {
-      console.log('⚠️ Ya estás en la primera tarjeta');
-    }
-  }
-
-  // ===== IR A UN SLIDE ESPECÍFICO (por indicador) =====
-  function goToSlide(index) {
-    console.log(`🎯 Ir a la tarjeta ${index}`);
-    const maxIndex = Math.max(0, totalSlides - slidesPerView);
-    if (index >= 0 && index <= maxIndex) {
-      currentIndex = index;
-      updateCarousel();
-    }
-  }
-
-  // ===== ASIGNAR EVENTOS A LOS BOTONES =====
-  if (prevBtn) {
-    prevBtn.addEventListener('click', function(e) {
-      e.preventDefault();
-      prevSlide();
+    
+    track.style.transform = `translateX(-${index * slideWidth}px)`;
+    
+    dots.forEach((dot, i) => {
+      dot.classList.toggle('active', i === index);
     });
-    console.log('✅ Botón "Anterior" asignado');
+    
+    slides.forEach((slide, i) => {
+      if (i === index) {
+        slide.style.opacity = '1';
+        slide.style.transform = 'scale(1)';
+        slide.style.filter = 'brightness(1)';
+      } else {
+        slide.style.opacity = '0.7';
+        slide.style.transform = 'scale(0.95)';
+        slide.style.filter = 'brightness(0.8)';
+      }
+    });
+    
+    currentIndex = index;
+    
+    if (!animate) {
+      track.offsetHeight;
+      track.style.transition = 'transform 0.7s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
+    }
+
+    setTimeout(() => {
+      isTransitioning = false;
+    }, 800);
+  }
+
+  // ===== NAVEGACIÓN =====
+  function goToNext() {
+    if (!isTransitioning) {
+      updateCarousel(currentIndex + 1);
+      resetAutoPlay();
+    }
+  }
+
+  function goToPrev() {
+    if (!isTransitioning) {
+      updateCarousel(currentIndex - 1);
+      resetAutoPlay();
+    }
   }
 
   if (nextBtn) {
-    nextBtn.addEventListener('click', function(e) {
-      e.preventDefault();
-      nextSlide();
+    nextBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      goToNext();
     });
-    console.log('✅ Botón "Siguiente" asignado');
   }
 
-  // ===== ASIGNAR EVENTOS A LOS INDICADORES =====
+  if (prevBtn) {
+    prevBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      goToPrev();
+    });
+  }
+
   dots.forEach((dot, index) => {
-    dot.addEventListener('click', function(e) {
-      e.preventDefault();
-      goToSlide(index);
+    dot.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (!isTransitioning && index !== currentIndex) {
+        updateCarousel(index);
+        resetAutoPlay();
+      }
     });
   });
 
-  // ===== RECALCULAR AL CAMBIAR EL TAMAÑO DE LA VENTANA =====
-  let resizeTimeout;
-  window.addEventListener('resize', function() {
-    clearTimeout(resizeTimeout);
-    resizeTimeout = setTimeout(() => {
-      const newSlidesPerView = getSlidesPerView();
-      if (newSlidesPerView !== slidesPerView) {
-        slidesPerView = newSlidesPerView;
-        const maxIndex = Math.max(0, totalSlides - slidesPerView);
-        if (currentIndex > maxIndex) {
-          currentIndex = maxIndex;
-        }
-        updateCarousel();
-        console.log(`🔄 Vista cambiada a: ${slidesPerView} tarjetas`);
-      }
-    }, 250);
+  // ===== CLICK EN SLIDES - CARGAR JUEGO =====
+  slides.forEach((slide) => {
+    slide.addEventListener('click', (e) => {
+      if (e.target.closest('.carousel-nav-btn')) return;
+      if (e.target.closest('.indicator-dot')) return;
+      
+      const url = slide.dataset.url;
+      const icon = slide.querySelector('.slide-icon')?.textContent || '🎮';
+      const title = slide.querySelector('h3')?.textContent || 'Juego';
+      const description = slide.querySelector('p')?.textContent || 'Disfruta de este juego turístico';
+      
+      // Cargar el juego correspondiente
+      cargarJuego(title, icon, description, url);
+      
+      // Efecto de click
+      slide.style.transform = 'scale(0.95)';
+      slide.style.transition = 'transform 0.2s ease';
+      setTimeout(() => {
+        slide.style.transform = '';
+      }, 200);
+    });
   });
 
-  // ===== INICIALIZAR =====
-  setTimeout(() => {
-    slidesPerView = getSlidesPerView();
-    updateCarousel();
-    console.log(`🎠 Carrusel inicializado: ${totalSlides} tarjetas, ${slidesPerView} por vista`);
-  }, 300);
-
-  // ================================================================
-  //  🎯 CARGA DE JUEGOS AL HACER CLIC
-  // ================================================================
-
-  // ===== FUNCIÓN PARA CARGAR JUEGO =====
+  // ===== FUNCIÓN PARA CARGAR JUEGOS =====
   function cargarJuego(nombre, icono, descripcion, url) {
     if (gameTitle) {
       gameTitle.textContent = `🎯 ${nombre}`;
     }
 
-    if (gameContent) {
-      // Limpiar contenido anterior
-      gameContent.innerHTML = '';
+    // Limpiar contenido anterior
+    gameContent.innerHTML = '';
 
-      const nombreLower = nombre.toLowerCase();
+    // Identificar qué juego cargar según el nombre
+    const nombreLower = nombre.toLowerCase();
 
-      // ===== PINOLERO MILLONARIO =====
-      if (nombreLower.includes('pinoleromillonario') || nombreLower.includes('pinolero millonario') || nombreLower.includes(
-          'millonario')) {
-        gameContent.innerHTML = `
-          <div style="padding: 1.5rem;">
-            <div style="font-size: 4rem; margin-bottom: 1rem;">🏆</div>
-            <h3 style="font-family: 'Fredoka', sans-serif; font-size: 1.5rem; color: #028090;">Pinolero Millonario</h3>
-            <p style="color: #64748b; margin: 0.5rem 0 1.5rem;">${descripcion}</p>
-            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin: 1rem 0;">
-              <span style="background: #fef9e8; padding: 0.5rem 1rem; border-radius: 12px; border: 2px solid #ffd700;">💰</span>
-              <span style="background: #fef9e8; padding: 0.5rem 1rem; border-radius: 12px; border: 2px solid #ffd700;">🎯</span>
-              <span style="background: #fef9e8; padding: 0.5rem 1rem; border-radius: 12px; border: 2px solid #ffd700;">🏅</span>
-            </div>
-            <a href="${url}" class="btn" style="display: inline-block; text-decoration: none; color: white; padding: 0.8rem 2.5rem; border-radius: 50px; background: linear-gradient(135deg, #ffd700, #f0a500); font-weight: 600; transition: all 0.3s; box-shadow: 0 4px 15px rgba(255,215,0,0.4); margin-top: 1rem;">
+    if (nombreLower.includes('mapa misterioso') || nombreLower.includes('mapamisterioso')) {
+      // Juego: El Gran Mapa Misterioso
+      gameContent.innerHTML = `
+        <div style="padding: 1.5rem;">
+          <div style="font-size: 4rem; margin-bottom: 1rem;">🗺️</div>
+          <h3 style="font-family: 'Fredoka', sans-serif; font-size: 1.5rem; color: #028090;">El Gran Mapa Misterioso</h3>
+          <p style="color: #64748b; margin: 0.5rem 0 1.5rem;">${descripcion}</p>
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; max-width: 300px; margin: 1rem auto;">
+            <div style="background: #e8f8f5; padding: 1rem; border-radius: 12px; font-size: 2rem;">🌋</div>
+            <div style="background: #e8f8f5; padding: 1rem; border-radius: 12px; font-size: 2rem;">🌊</div>
+            <div style="background: #e8f8f5; padding: 1rem; border-radius: 12px; font-size: 2rem;">🏝️</div>
+            <div style="background: #e8f8f5; padding: 1rem; border-radius: 12px; font-size: 2rem;">🦎</div>
+            <div style="background: #e8f8f5; padding: 1rem; border-radius: 12px; font-size: 2rem;">🌴</div>
+            <div style="background: #e8f8f5; padding: 1rem; border-radius: 12px; font-size: 2rem;">🌽</div>
+          </div>
+          <a href="${url}" class="btn" style="display: inline-block; text-decoration: none; color: white; padding: 0.8rem 2.5rem; border-radius: 50px; background: linear-gradient(135deg, #00a896, #028090); font-weight: 600; transition: all 0.3s; box-shadow: 0 4px 15px rgba(0,168,150,0.3); margin-top: 1rem;">
+            🚀 Jugar Ahora
+          </a>
+        </div>
+      `;
+    } 
+    else if (nombreLower.includes('stopinolero')) {
+      // Juego: Stopinolero
+      gameContent.innerHTML = `
+        <div style="padding: 1.5rem;">
+          <div style="font-size: 4rem; margin-bottom: 1rem;">🛑</div>
+          <h3 style="font-family: 'Fredoka', sans-serif; font-size: 1.5rem; color: #028090;">Stopinolero</h3>
+          <p style="color: #64748b; margin: 0.5rem 0 1.5rem;">${descripcion}</p>
+          <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin: 1rem 0;">
+            <span style="background: #f0fdfa; padding: 0.5rem 1rem; border-radius: 12px;">🇳🇮</span>
+            <span style="background: #f0fdfa; padding: 0.5rem 1rem; border-radius: 12px;">🏛️</span>
+            <span style="background: #f0fdfa; padding: 0.5rem 1rem; border-radius: 12px;">🌋</span>
+          </div>
+          <a href="${url}" class="btn" style="display: inline-block; text-decoration: none; color: white; padding: 0.8rem 2.5rem; border-radius: 50px; background: linear-gradient(135deg, #00a896, #028090); font-weight: 600; transition: all 0.3s; box-shadow: 0 4px 15px rgba(0,168,150,0.3); margin-top: 1rem;">
+            🚀 Jugar Ahora
+          </a>
+        </div>
+      `;
+    }
+    else if (nombreLower.includes('memoria') || nombreLower.includes('pareja')) {
+      // Juego: Memoria de Cartas
+      gameContent.innerHTML = `
+        <div style="padding: 1.5rem;">
+          <div style="font-size: 4rem; margin-bottom: 1rem;">🃏</div>
+          <h3 style="font-family: 'Fredoka', sans-serif; font-size: 1.5rem; color: #028090;">Memoria de Cartas</h3>
+          <p style="color: #64748b; margin: 0.5rem 0 1.5rem;">${descripcion}</p>
+          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; max-width: 300px; margin: 1rem auto;">
+            <div style="background: #e8f8f5; padding: 0.8rem; border-radius: 12px; font-size: 1.5rem; text-align: center;">🌋</div>
+            <div style="background: #e8f8f5; padding: 0.8rem; border-radius: 12px; font-size: 1.5rem; text-align: center;">🌊</div>
+            <div style="background: #e8f8f5; padding: 0.8rem; border-radius: 12px; font-size: 1.5rem; text-align: center;">🌋</div>
+            <div style="background: #e8f8f5; padding: 0.8rem; border-radius: 12px; font-size: 1.5rem; text-align: center;">🏝️</div>
+            <div style="background: #e8f8f5; padding: 0.8rem; border-radius: 12px; font-size: 1.5rem; text-align: center;">🌊</div>
+            <div style="background: #e8f8f5; padding: 0.8rem; border-radius: 12px; font-size: 1.5rem; text-align: center;">🍽️</div>
+            <div style="background: #e8f8f5; padding: 0.8rem; border-radius: 12px; font-size: 1.5rem; text-align: center;">🏝️</div>
+            <div style="background: #e8f8f5; padding: 0.8rem; border-radius: 12px; font-size: 1.5rem; text-align: center;">🍽️</div>
+          </div>
+          <a href="${url}" class="btn" style="display: inline-block; text-decoration: none; color: white; padding: 0.8rem 2.5rem; border-radius: 50px; background: linear-gradient(135deg, #00a896, #028090); font-weight: 600; transition: all 0.3s; box-shadow: 0 4px 15px rgba(0,168,150,0.3); margin-top: 1rem;">
+            🚀 Jugar Ahora
+          </a>
+        </div>
+      `;
+    }
+    else if (nombreLower.includes('ordena') || nombreLower.includes('palabra')) {
+      // Juego: Ordena la Palabra
+      gameContent.innerHTML = `
+        <div style="padding: 1.5rem;">
+          <div style="font-size: 4rem; margin-bottom: 1rem;">🔤</div>
+          <h3 style="font-family: 'Fredoka', sans-serif; font-size: 1.5rem; color: #028090;">Ordena la Palabra</h3>
+          <p style="color: #64748b; margin: 0.5rem 0 1.5rem;">${descripcion}</p>
+          <div style="display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap; margin: 1rem 0;">
+            <span style="background: #f0fdfa; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600;">N</span>
+            <span style="background: #f0fdfa; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600;">I</span>
+            <span style="background: #f0fdfa; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600;">C</span>
+            <span style="background: #f0fdfa; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600;">A</span>
+            <span style="background: #f0fdfa; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600;">R</span>
+            <span style="background: #f0fdfa; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600;">A</span>
+            <span style="background: #f0fdfa; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600;">G</span>
+            <span style="background: #f0fdfa; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600;">U</span>
+            <span style="background: #f0fdfa; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600;">A</span>
+          </div>
+          <a href="${url}" class="btn" style="display: inline-block; text-decoration: none; color: white; padding: 0.8rem 2.5rem; border-radius: 50px; background: linear-gradient(135deg, #00a896, #028090); font-weight: 600; transition: all 0.3s; box-shadow: 0 4px 15px rgba(0,168,150,0.3); margin-top: 1rem;">
+            🚀 Jugar Ahora
+          </a>
+        </div>
+      `;
+    }
+    else if (nombreLower.includes('laberinto')) {
+      // Juego: Laberinto
+      gameContent.innerHTML = `
+        <div style="padding: 1.5rem;">
+          <div style="font-size: 4rem; margin-bottom: 1rem;">🌋</div>
+          <h3 style="font-family: 'Fredoka', sans-serif; font-size: 1.5rem; color: #028090;">Laberinto</h3>
+          <p style="color: #64748b; margin: 0.5rem 0 1.5rem;">${descripcion}</p>
+          <p style="color: #64748b; font-size: 0.9rem;">Usa las flechas del teclado para mover al explorador</p>
+          <canvas id="mazeCanvas" width="300" height="300" style="background:white; border-radius:15px; margin-top:20px; max-width: 100%; height: auto;"></canvas>
+          <div style="margin-top: 1rem;">
+            <a href="${url}" class="btn" style="display: inline-block; text-decoration: none; color: white; padding: 0.8rem 2.5rem; border-radius: 50px; background: linear-gradient(135deg, #00a896, #028090); font-weight: 600; transition: all 0.3s; box-shadow: 0 4px 15px rgba(0,168,150,0.3);">
               🚀 Jugar Ahora
             </a>
           </div>
-        `;
+        </div>
+      `;
+      
+      // Iniciar laberinto si existe la función
+      if (typeof iniciarLaberinto === 'function') {
+        setTimeout(iniciarLaberinto, 100);
       }
-      // ===== MAPA MISTERIOSO =====
-      else if (nombreLower.includes('mapa misterioso') || nombreLower.includes('mapamisterioso')) {
-        gameContent.innerHTML = `
-          <div style="padding: 1.5rem;">
-            <div style="font-size: 4rem; margin-bottom: 1rem;">🗺️</div>
-            <h3 style="font-family: 'Fredoka', sans-serif; font-size: 1.5rem; color: #028090;">El Gran Mapa Misterioso</h3>
-            <p style="color: #64748b; margin: 0.5rem 0 1.5rem;">${descripcion}</p>
-            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; max-width: 300px; margin: 1rem auto;">
-              <div style="background: #e8f8f5; padding: 1rem; border-radius: 12px; font-size: 2rem;">🌋</div>
-              <div style="background: #e8f8f5; padding: 1rem; border-radius: 12px; font-size: 2rem;">🌊</div>
-              <div style="background: #e8f8f5; padding: 1rem; border-radius: 12px; font-size: 2rem;">🏝️</div>
-              <div style="background: #e8f8f5; padding: 1rem; border-radius: 12px; font-size: 2rem;">🦎</div>
-              <div style="background: #e8f8f5; padding: 1rem; border-radius: 12px; font-size: 2rem;">🌴</div>
-              <div style="background: #e8f8f5; padding: 1rem; border-radius: 12px; font-size: 2rem;">🌽</div>
-            </div>
-            <a href="${url}" class="btn" style="display: inline-block; text-decoration: none; color: white; padding: 0.8rem 2.5rem; border-radius: 50px; background: linear-gradient(135deg, #00a896, #028090); font-weight: 600; transition: all 0.3s; box-shadow: 0 4px 15px rgba(0,168,150,0.3); margin-top: 1rem;">
-              🚀 Jugar Ahora
-            </a>
+    }
+    else if (nombreLower.includes('varios') || nombreLower.includes('sopa')) {
+      // Juego: Varios / Sopa de Letras
+      gameContent.innerHTML = `
+        <div style="padding: 1.5rem;">
+          <div style="font-size: 4rem; margin-bottom: 1rem;">🧩</div>
+          <h3 style="font-family: 'Fredoka', sans-serif; font-size: 1.5rem; color: #028090;">Varios - Sopa de Letras</h3>
+          <p style="color: #64748b; margin: 0.5rem 0 1.5rem;">${descripcion}</p>
+          <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 0.3rem; max-width: 300px; margin: 1rem auto;">
+            <span style="background: #f0fdfa; padding: 0.4rem; border-radius: 4px; text-align: center; font-weight: 600;">N</span>
+            <span style="background: #f0fdfa; padding: 0.4rem; border-radius: 4px; text-align: center; font-weight: 600;">I</span>
+            <span style="background: #f0fdfa; padding: 0.4rem; border-radius: 4px; text-align: center; font-weight: 600;">C</span>
+            <span style="background: #f0fdfa; padding: 0.4rem; border-radius: 4px; text-align: center; font-weight: 600;">A</span>
+            <span style="background: #f0fdfa; padding: 0.4rem; border-radius: 4px; text-align: center; font-weight: 600;">R</span>
+            <span style="background: #f0fdfa; padding: 0.4rem; border-radius: 4px; text-align: center; font-weight: 600;">A</span>
+            <span style="background: #f0fdfa; padding: 0.4rem; border-radius: 4px; text-align: center; font-weight: 600;">G</span>
+            <span style="background: #f0fdfa; padding: 0.4rem; border-radius: 4px; text-align: center; font-weight: 600;">U</span>
+            <span style="background: #f0fdfa; padding: 0.4rem; border-radius: 4px; text-align: center; font-weight: 600;">A</span>
+            <span style="background: #f0fdfa; padding: 0.4rem; border-radius: 4px; text-align: center; font-weight: 600;">🌋</span>
+            <span style="background: #f0fdfa; padding: 0.4rem; border-radius: 4px; text-align: center; font-weight: 600;">🌊</span>
+            <span style="background: #f0fdfa; padding: 0.4rem; border-radius: 4px; text-align: center; font-weight: 600;">🏝️</span>
           </div>
-        `;
-      }
-      // ===== STOPINOLERO =====
-      else if (nombreLower.includes('stopinolero')) {
-        gameContent.innerHTML = `
-          <div style="padding: 1.5rem;">
-            <div style="font-size: 4rem; margin-bottom: 1rem;">🛑</div>
-            <h3 style="font-family: 'Fredoka', sans-serif; font-size: 1.5rem; color: #028090;">Stopinolero</h3>
-            <p style="color: #64748b; margin: 0.5rem 0 1.5rem;">${descripcion}</p>
-            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin: 1rem 0;">
-              <span style="background: #f0fdfa; padding: 0.5rem 1rem; border-radius: 12px;">🇳🇮</span>
-              <span style="background: #f0fdfa; padding: 0.5rem 1rem; border-radius: 12px;">🏛️</span>
-              <span style="background: #f0fdfa; padding: 0.5rem 1rem; border-radius: 12px;">🌋</span>
-            </div>
-            <a href="${url}" class="btn" style="display: inline-block; text-decoration: none; color: white; padding: 0.8rem 2.5rem; border-radius: 50px; background: linear-gradient(135deg, #00a896, #028090); font-weight: 600; transition: all 0.3s; box-shadow: 0 4px 15px rgba(0,168,150,0.3); margin-top: 1rem;">
-              🚀 Jugar Ahora
-            </a>
-          </div>
-        `;
-      }
-      // ===== MEMORIA =====
-      else if (nombreLower.includes('memoria') || nombreLower.includes('pareja')) {
-        gameContent.innerHTML = `
-          <div style="padding: 1.5rem;">
-            <div style="font-size: 4rem; margin-bottom: 1rem;">🃏</div>
-            <h3 style="font-family: 'Fredoka', sans-serif; font-size: 1.5rem; color: #028090;">Memoria de Cartas</h3>
-            <p style="color: #64748b; margin: 0.5rem 0 1.5rem;">${descripcion}</p>
-            <a href="${url}" class="btn" style="display: inline-block; text-decoration: none; color: white; padding: 0.8rem 2.5rem; border-radius: 50px; background: linear-gradient(135deg, #00a896, #028090); font-weight: 600; transition: all 0.3s; box-shadow: 0 4px 15px rgba(0,168,150,0.3); margin-top: 1rem;">
-              🚀 Jugar Ahora
-            </a>
-          </div>
-        `;
-      }
-      // ===== ORDENA PALABRA =====
-      else if (nombreLower.includes('ordena') || nombreLower.includes('palabra')) {
-        gameContent.innerHTML = `
-          <div style="padding: 1.5rem;">
-            <div style="font-size: 4rem; margin-bottom: 1rem;">🔤</div>
-            <h3 style="font-family: 'Fredoka', sans-serif; font-size: 1.5rem; color: #028090;">Ordena la Palabra</h3>
-            <p style="color: #64748b; margin: 0.5rem 0 1.5rem;">${descripcion}</p>
-            <a href="${url}" class="btn" style="display: inline-block; text-decoration: none; color: white; padding: 0.8rem 2.5rem; border-radius: 50px; background: linear-gradient(135deg, #00a896, #028090); font-weight: 600; transition: all 0.3s; box-shadow: 0 4px 15px rgba(0,168,150,0.3); margin-top: 1rem;">
-              🚀 Jugar Ahora
-            </a>
-          </div>
-        `;
-      }
-      // ===== LABERINTO =====
-      else if (nombreLower.includes('laberinto')) {
-        gameContent.innerHTML = `
-          <div style="padding: 1.5rem;">
-            <div style="font-size: 4rem; margin-bottom: 1rem;">🌋</div>
-            <h3 style="font-family: 'Fredoka', sans-serif; font-size: 1.5rem; color: #028090;">Laberinto</h3>
-            <p style="color: #64748b; margin: 0.5rem 0 1.5rem;">${descripcion}</p>
-            <a href="${url}" class="btn" style="display: inline-block; text-decoration: none; color: white; padding: 0.8rem 2.5rem; border-radius: 50px; background: linear-gradient(135deg, #00a896, #028090); font-weight: 600; transition: all 0.3s; box-shadow: 0 4px 15px rgba(0,168,150,0.3); margin-top: 1rem;">
-              🚀 Jugar Ahora
-            </a>
-          </div>
-        `;
-      }
-      // ===== VARIOS / SOPA =====
-      else if (nombreLower.includes('varios') || nombreLower.includes('sopa')) {
-        gameContent.innerHTML = `
-          <div style="padding: 1.5rem;">
-            <div style="font-size: 4rem; margin-bottom: 1rem;">🧩</div>
-            <h3 style="font-family: 'Fredoka', sans-serif; font-size: 1.5rem; color: #028090;">Varios - Sopa de Letras</h3>
-            <p style="color: #64748b; margin: 0.5rem 0 1.5rem;">${descripcion}</p>
-            <a href="${url}" class="btn" style="display: inline-block; text-decoration: none; color: white; padding: 0.8rem 2.5rem; border-radius: 50px; background: linear-gradient(135deg, #00a896, #028090); font-weight: 600; transition: all 0.3s; box-shadow: 0 4px 15px rgba(0,168,150,0.3); margin-top: 1rem;">
-              🚀 Jugar Ahora
-            </a>
-          </div>
-        `;
-      }
-      // ===== FALLBACK =====
-      else {
-        gameContent.innerHTML = `
-          <div style="padding: 1.5rem; text-align: center;">
-            <div style="font-size: 4rem; margin-bottom: 1rem;">🎮</div>
-            <h3 style="font-family: 'Fredoka', sans-serif; font-size: 1.5rem; color: #028090;">${nombre}</h3>
-            <p style="color: #64748b; margin: 0.5rem 0 1.5rem;">${descripcion}</p>
-            <a href="${url}" class="btn" style="display: inline-block; text-decoration: none; color: white; padding: 0.8rem 2.5rem; border-radius: 50px; background: linear-gradient(135deg, #00a896, #028090); font-weight: 600; transition: all 0.3s; box-shadow: 0 4px 15px rgba(0,168,150,0.3); margin-top: 1rem;">
-              🚀 Jugar Ahora
-            </a>
-          </div>
-        `;
-      }
+          <a href="${url}" class="btn" style="display: inline-block; text-decoration: none; color: white; padding: 0.8rem 2.5rem; border-radius: 50px; background: linear-gradient(135deg, #00a896, #028090); font-weight: 600; transition: all 0.3s; box-shadow: 0 4px 15px rgba(0,168,150,0.3); margin-top: 1rem;">
+            🚀 Jugar Ahora
+          </a>
+        </div>
+      `;
+    }
+    else {
+      // Juego genérico
+      gameContent.innerHTML = `
+        <div style="padding: 1.5rem;">
+          <div style="font-size: 4rem; margin-bottom: 1rem;">${icono}</div>
+          <h3 style="font-family: 'Fredoka', sans-serif; font-size: 1.5rem; color: #028090;">${nombre}</h3>
+          <p style="color: #64748b; margin: 0.5rem 0 1.5rem;">${descripcion}</p>
+          <a href="${url}" class="btn" style="display: inline-block; text-decoration: none; color: white; padding: 0.8rem 2.5rem; border-radius: 50px; background: linear-gradient(135deg, #00a896, #028090); font-weight: 600; transition: all 0.3s; box-shadow: 0 4px 15px rgba(0,168,150,0.3);">
+            🚀 Jugar Ahora
+          </a>
+        </div>
+      `;
     }
   }
 
-  // ===== ASIGNAR EVENTO DE CLIC A LAS TARJETAS =====
-  slides.forEach((slide) => {
-    slide.addEventListener('click', function() {
-      const url = this.dataset.url;
-      const nombre = this.querySelector('h3')?.textContent || 'Juego';
-      const icono = this.querySelector('.slide-icon')?.textContent || '🎮';
-      const descripcion = this.querySelector('p')?.textContent || 'Diviértete aprendiendo sobre Nicaragua';
-
-      // Redirigir si es un enlace externo
-      if (url && url.endsWith('.html')) {
-        // Si es Pinolero Millonario, redirige
-        if (nombre.toLowerCase().includes('millonario')) {
-          window.location.href = url;
-          return;
-        }
-        // Si no, carga en el área de juego
-        cargarJuego(nombre, icono, descripcion, url);
-      } else {
-        cargarJuego(nombre, icono, descripcion, url);
+  // ===== AUTOPLAY =====
+  function startAutoPlay() {
+    if (autoPlayInterval) clearInterval(autoPlayInterval);
+    autoPlayInterval = setInterval(() => {
+      if (!isTransitioning) {
+        goToNext();
       }
+    }, 5000);
+  }
+
+  function resetAutoPlay() {
+    clearInterval(autoPlayInterval);
+    startAutoPlay();
+  }
+
+  const carouselWrapper = document.querySelector('.carousel-premium-wrapper');
+  if (carouselWrapper) {
+    carouselWrapper.addEventListener('mouseenter', () => {
+      clearInterval(autoPlayInterval);
     });
+    carouselWrapper.addEventListener('mouseleave', () => {
+      startAutoPlay();
+    });
+  }
+
+  // ===== RESPONSIVE =====
+  let resizeTimeout;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+      if (!isTransitioning) {
+        slideWidth = getSlideWidth();
+        if (slideWidth > 0) {
+          track.style.transition = 'none';
+          track.style.transform = `translateX(-${currentIndex * slideWidth}px)`;
+          track.offsetHeight;
+          track.style.transition = 'transform 0.7s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
+        }
+      }
+    }, 200);
   });
 
-  console.log('✅ Guía Pinolero - Juegos cargados correctamente');
+  // ===== TECLADO =====
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      goToNext();
+    } else if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      goToPrev();
+    }
+  });
+
+  // ===== TOUCH =====
+  let touchStartX = 0;
+  let touchEndX = 0;
+  let isSwiping = false;
+
+  if (wrapper) {
+    wrapper.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+      isSwiping = true;
+    }, { passive: true });
+
+    wrapper.addEventListener('touchmove', (e) => {
+      if (isSwiping) {
+        e.preventDefault();
+      }
+    }, { passive: false });
+
+    wrapper.addEventListener('touchend', (e) => {
+      if (!isSwiping) return;
+      touchEndX = e.changedTouches[0].screenX;
+      const diff = touchStartX - touchEndX;
+      
+      if (Math.abs(diff) > 50) {
+        if (diff > 0 && !isTransitioning) {
+          goToNext();
+        } else if (diff < 0 && !isTransitioning) {
+          goToPrev();
+        }
+      }
+      isSwiping = false;
+    }, { passive: true });
+  }
+
+  // ===== INICIALIZAR =====
+  function initializeCarousel() {
+    setTimeout(() => {
+      slideWidth = getSlideWidth();
+      if (slideWidth > 0) {
+        updateCarousel(0, false);
+        setTimeout(startAutoPlay, 1500);
+      } else {
+        setTimeout(initializeCarousel, 300);
+      }
+    }, 100);
+  }
+
+  setTimeout(initializeCarousel, 600);
+
+  // ===== WHATSAPP =====
+  const whatsappBtn = document.getElementById('whatsappBtn');
+  if (whatsappBtn) {
+    whatsappBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.open('https://wa.me/50588170531?text=¡Hola!%20Estoy%20explorando%20los%20juegos%20de%20Guía%20Pinolero%20🎮', '_blank');
+    });
+  }
+
+  console.log('🎠 Carrusel de Juegos inicializado correctamente');
 });
+
+// ============================================
+// ===== FUNCIONES DE JUEGOS EXISTENTES =====
+// ============================================
+
+// ===== VARIABLES GLOBALES PARA JUEGOS =====
+const lugaresRuleta = [
+  "🌋 Volcán Masaya",
+  "🌊 Lago de Nicaragua",
+  "🏝️ Isla de Ometepe",
+  "🦎 Mombacho",
+  "🌴 San Juan del Sur",
+  "🌽 Maíz",
+  "🏛️ Granada",
+  "⛪ León",
+  "🌋 Cerro Negro",
+  "🏄 Playa Maderas"
+];
+
+// ===== FUNCIÓN LABERINTO =====
+function iniciarLaberinto() {
+  const canvas = document.getElementById('mazeCanvas');
+  if (!canvas) return;
+  
+  const ctx = canvas.getContext('2d');
+  const maze = [
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+    [1, 0, 1, 0, 1, 0, 1, 1, 0, 1],
+    [1, 0, 1, 0, 0, 0, 0, 1, 0, 1],
+    [1, 0, 1, 1, 1, 1, 0, 1, 0, 1],
+    [1, 0, 0, 0, 0, 1, 0, 0, 0, 1],
+    [1, 1, 1, 1, 0, 1, 1, 1, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 1, 0, 1],
+    [1, 0, 1, 1, 1, 1, 0, 0, 0, 1],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+  ];
+  
+  let playerX = 1;
+  let playerY = 1;
+  const goalX = 8;
+  const goalY = 8;
+  const cellSize = canvas.width / maze.length;
+  
+  function drawMaze() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // Dibujar laberinto
+    for (let row = 0; row < maze.length; row++) {
+      for (let col = 0; col < maze[row].length; col++) {
+        if (maze[row][col] === 1) {
+          ctx.fillStyle = '#2d3748';
+          ctx.fillRect(col * cellSize, row * cellSize, cellSize, cellSize);
+        } else {
+          ctx.fillStyle = '#f7fafc';
+          ctx.fillRect(col * cellSize, row * cellSize, cellSize, cellSize);
+        }
+      }
+    }
+    
+    // Dibujar meta
+    ctx.fillStyle = '#48bb78';
+    ctx.beginPath();
+    ctx.arc(goalX * cellSize + cellSize/2, goalY * cellSize + cellSize/2, cellSize/3, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#22543d';
+    ctx.font = `${cellSize/2}px Arial`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('🏆', goalX * cellSize + cellSize/2, goalY * cellSize + cellSize/2);
+    
+    // Dibujar jugador
+    ctx.fillStyle = '#f56565';
+    ctx.beginPath();
+    ctx.arc(playerX * cellSize + cellSize/2, playerY * cellSize + cellSize/2, cellSize/3, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#c53030';
+    ctx.font = `${cellSize/2}px Arial`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('🦎', playerX * cellSize + cellSize/2, playerY * cellSize + cellSize/2);
+  }
+  
+  function movePlayer(dx, dy) {
+    const newX = playerX + dx;
+    const newY = playerY + dy;
+    
+    if (maze[newY] && maze[newY][newX] === 0) {
+      playerX = newX;
+      playerY = newY;
+      drawMaze();
+      
+      if (playerX === goalX && playerY === goalY) {
+        alert('🎉 ¡Ganaste! Has encontrado el volcán 🌋');
+        // Reiniciar posición
+        playerX = 1;
+        playerY = 1;
+        drawMaze();
+      }
+    }
+  }
+  
+  // Eventos de teclado
+  const handleKeyDown = (e) => {
+    switch(e.key) {
+      case 'ArrowUp': e.preventDefault(); movePlayer(0, -1); break;
+      case 'ArrowDown': e.preventDefault(); movePlayer(0, 1); break;
+      case 'ArrowLeft': e.preventDefault(); movePlayer(-1, 0); break;
+      case 'ArrowRight': e.preventDefault(); movePlayer(1, 0); break;
+    }
+  };
+  
+  // Remover event listener anterior si existe
+  document.removeEventListener('keydown', handleKeyDown);
+  document.addEventListener('keydown', handleKeyDown);
+  
+  drawMaze();
+}
+
+// ===== FUNCIÓN RULETA =====
+function girarRuleta() {
+  const resultado = document.getElementById('resultadoRuleta');
+  if (!resultado) return;
+  
+  const randomIndex = Math.floor(Math.random() * lugaresRuleta.length);
+  resultado.textContent = `🎉 ¡Has ganado: ${lugaresRuleta[randomIndex]}! 🎉`;
+  resultado.style.color = '#00a896';
+  resultado.style.fontWeight = 'bold';
+  resultado.style.fontSize = '1.2rem';
+}
+
+// ===== JUEGO DE MEMORIA =====
+let memoryCards = [];
+let flippedCards = [];
+let matchedPairs = 0;
+
+function iniciarMemoria() {
+  const grid = document.querySelector('.card-grid');
+  if (!grid) return;
+  
+  const emojis = ['🌋', '🌊', '🏝️', '🍽️', '🦎', '🌴'];
+  const cards = [...emojis, ...emojis];
+  
+  // Barajar
+  for (let i = cards.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [cards[i], cards[j]] = [cards[j], cards[i]];
+  }
+  
+  memoryCards = cards;
+  flippedCards = [];
+  matchedPairs = 0;
+  
+  grid.innerHTML = '';
+  cards.forEach((emoji, index) => {
+    const card = document.createElement('div');
+    card.className = 'memory-card';
+    card.dataset.index = index;
+    card.dataset.emoji = emoji;
+    card.textContent = '❓';
+    card.style.fontSize = '2rem';
+    card.style.cursor = 'pointer';
+    card.style.transition = 'all 0.3s';
+    card.addEventListener('click', () => voltearCarta(card));
+    grid.appendChild(card);
+  });
+}
+
+function voltearCarta(card) {
+  if (flippedCards.length >= 2) return;
+  if (card.textContent !== '❓') return;
+  if (flippedCards.includes(card)) return;
+  
+  card.textContent = card.dataset.emoji;
+  card.style.transform = 'rotateY(180deg)';
+  flippedCards.push(card);
+  
+  if (flippedCards.length === 2) {
+    setTimeout(() => {
+      const card1 = flippedCards[0];
+      const card2 = flippedCards[1];
+      
+      if (card1.dataset.emoji === card2.dataset.emoji) {
+        card1.style.background = '#48bb78';
+        card2.style.background = '#48bb78';
+        matchedPairs++;
+        
+        if (matchedPairs === 6) {
+          setTimeout(() => {
+            alert('🎉 ¡Felicidades! Has encontrado todas las parejas');
+          }, 300);
+        }
+      } else {
+        card1.textContent = '❓';
+        card2.textContent = '❓';
+        card1.style.transform = '';
+        card2.style.transform = '';
+      }
+      
+      flippedCards = [];
+    }, 800);
+  }
+}
+
+// ===== INICIALIZAR JUEGOS ESPECÍFICOS =====
+document.addEventListener('DOMContentLoaded', () => {
+  // Si hay un grid de memoria en la página, iniciar el juego
+  if (document.querySelector('.card-grid')) {
+    iniciarMemoria();
+  }
+  
+  // Si hay un botón de ruleta, agregar evento
+  const ruletaBtn = document.getElementById('ruletaBtn');
+  if (ruletaBtn) {
+    ruletaBtn.addEventListener('click', girarRuleta);
+  }
+  
+  // Iniciar laberinto si existe el canvas
+  if (document.getElementById('mazeCanvas')) {
+    setTimeout(iniciarLaberinto, 100);
+  }
+});
+
+// Exportar funciones para uso en otros scripts
+window.iniciarLaberinto = iniciarLaberinto;
+window.girarRuleta = girarRuleta;
+window.iniciarMemoria = iniciarMemoria;
