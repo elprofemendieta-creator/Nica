@@ -1,104 +1,118 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Comunidad - Guía Pinolero</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
-<link rel="stylesheet" href="/css/comunidad.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Comunidad - Guía Pinolero</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+  <link rel="stylesheet" href="/css/comunidad.css">
 </head>
 <body>
 
 <div class="container">
-<div class="card">
-<div class="profile-header">
-<div class="avatar">
-<img id="userPhoto" src="" alt="Foto perfil" style="display:none;">
-<i id="defaultAvatar" class="fas fa-user"></i>
-</div>
-<div class="stats">
-<h3 id="userDisplayName">Cargando...</h3>
-<p><i class="fas fa-star"></i> Puntos: <span id="userPoints">0</span></p>
-<p id="globalPosition" class="position-badge">
-<i class="fas fa-chart-line"></i> 
-<span id="positionText">Calculando posición...</span>
-</p>
-</div>
-</div>
+  <!-- Dashboard en rejilla -->
+  <div class="comunidad-dashboard">
 
-<div class="tabs">
-<button class="tab-btn active" data-tab="ranking">🏆 Ranking</button>
-<button class="tab-btn" data-tab="amigos">👥 Amigos</button>
-<button class="tab-btn" data-tab="buscar">🔍 Buscar</button>
-<button class="tab-btn" data-tab="compartir">📲 Compartir</button>
-<button class="tab-btn" data-tab="foro">🧭 Foro</button>
-</div>
+    <!-- COLUMNA IZQUIERDA: Perfil, Buscar, Compartir -->
+    <aside class="sidebar-left">
+      <!-- Tarjeta de Perfil -->
+      <div class="card card-perfil">
+        <div class="profile-header">
+          <div class="avatar">
+            <img id="userPhoto" src="" alt="Foto perfil" style="display:none;">
+            <i id="defaultAvatar" class="fas fa-user"></i>
+          </div>
+          <div class="stats">
+            <h3 id="userDisplayName">Cargando...</h3>
+            <p><i class="fas fa-star" style="color:#F9A826;"></i> Puntos: <span id="userPoints">0</span></p>
+            <p id="globalPosition" class="position-badge">
+              <i class="fas fa-chart-line"></i> 
+              <span id="positionText">Calculando posición...</span>
+            </p>
+          </div>
+        </div>
+      </div>
 
-<div id="rankingPane" class="tab-pane active">
-<h2><i class="fas fa-chart-line"></i> Ranking Global</h2>
-<table class="ranking-table">
-<thead>
-<tr>
-<th>#</th>
-<th>Usuario</th>
-<th>Puntos</th>
-</tr>
-</thead>
-<tbody id="rankingBody"></tbody>
-</table>
-</div>
+      <!-- Tarjeta de Buscar -->
+      <div class="card card-buscar">
+        <h2><i class="fas fa-user-plus"></i> Buscar usuarios</h2>
+        <div class="search-box">
+          <input type="text" id="searchUserInput" placeholder="Buscar por nombre...">
+          <button class="btn" id="searchUserBtn">Buscar</button>
+        </div>
+        <div id="searchResults"></div>
+      </div>
 
-<div id="amigosPane" class="tab-pane">
-<h2><i class="fas fa-users"></i> Mis Amigos</h2>
-<div id="solicitudesPendientes"></div>
-<div id="amigosList"></div>
-</div>
+      <!-- Tarjeta de Compartir -->
+      <div class="card card-compartir">
+        <h2><i class="fas fa-qrcode"></i> Compartir perfil</h2>
+        <div class="qr-container">
+          <div id="qrCode"></div>
+          <button id="shareWhatsAppBtn" class="btn"><i class="fab fa-whatsapp"></i> Compartir</button>
+          <button id="copyLinkBtn" class="btn btn-outline">Copiar enlace</button>
+        </div>
+      </div>
+    </aside>
 
-<div id="buscarPane" class="tab-pane">
-<h2><i class="fas fa-user-plus"></i> Buscar usuarios</h2>
-<div class="search-box">
-<input type="text" id="searchUserInput" placeholder="Buscar por nombre...">
-<button class="btn" id="searchUserBtn">Buscar</button>
-</div>
-<div id="searchResults"></div>
-</div>
+    <!-- COLUMNA CENTRAL: Muro de Consejos -->
+    <main class="main-muro">
+      <div class="card card-muro">
+        <h2><i class="fas fa-comments"></i> Muro de Consejos</h2>
+        <div class="search-box" style="margin-bottom:20px;">
+          <input type="text" id="mensajeForo" placeholder="Pregunta sobre buses, seguridad o consejos...">
+          <button class="btn" id="publicarForoBtn">Publicar</button>
+        </div>
+        <div id="foroMensajes"></div>
+      </div>
+    </main>
 
-<div id="compartirPane" class="tab-pane">
-<h2><i class="fas fa-qrcode"></i> Compartir perfil</h2>
-<div class="qr-container">
-<div id="qrCode"></div>
-<button id="shareWhatsAppBtn" class="btn"><i class="fab fa-whatsapp"></i> Compartir</button>
-<button id="copyLinkBtn" class="btn btn-outline">Copiar enlace</button>
-</div>
-</div>
+    <!-- COLUMNA DERECHA: Ranking y Amigos -->
+    <aside class="sidebar-right">
+      <!-- Tarjeta de Ranking -->
+      <div class="card card-ranking">
+        <h2><i class="fas fa-chart-line"></i> Ranking Global</h2>
+        <table class="ranking-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Usuario</th>
+              <th>Puntos</th>
+            </tr>
+          </thead>
+          <tbody id="rankingBody"></tbody>
+        </table>
+      </div>
 
-<div id="foroPane" class="tab-pane">
-<h2><i class="fas fa-comments"></i> Muro de Consejos</h2>
-<div class="search-box">
-<input type="text" id="mensajeForo" placeholder="Pregunta sobre buses, seguridad o consejos...">
-<button class="btn" id="publicarForoBtn">Publicar</button>
-</div>
-<div id="foroMensajes"></div>
-</div>
-</div>
-</div>
+      <!-- Tarjeta de Amigos -->
+      <div class="card card-amigos">
+        <h2><i class="fas fa-users"></i> Mis Amigos</h2>
+        <div id="solicitudesPendientes"></div>
+        <div id="amigosList"></div>
+      </div>
+    </aside>
 
+  </div> <!-- fin comunidad-dashboard -->
+</div> <!-- fin container -->
+
+<!-- Botón Volver (fuera del grid) -->
 <a href="index.html" class="back-btn">
-<i class="fas fa-arrow-left"></i> Volver
+  <i class="fas fa-arrow-left"></i> Volver
 </a>
 
+<!-- Firebase Import Map -->
 <script type="importmap">
 {
-"imports": {
-"firebase/app": "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js",
-"firebase/auth": "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js",
-"firebase/firestore": "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"
-}
+  "imports": {
+    "firebase/app": "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js",
+    "firebase/auth": "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js",
+    "firebase/firestore": "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"
+  }
 }
 </script>
 
+<!-- ====== EL MISMO CÓDIGO JS DE ANTES (sin cambios) ====== -->
 <script type="module">
 import { initializeApp } from "firebase/app";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -118,18 +132,6 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 let currentUser = null;
 let usuariosCache = new Map();
-
-const tabs = document.querySelectorAll(".tab-btn");
-const panes = document.querySelectorAll(".tab-pane");
-tabs.forEach(btn=>{
-btn.addEventListener("click",()=>{
-const id = btn.dataset.tab;
-tabs.forEach(t=>t.classList.remove("active"));
-panes.forEach(p=>p.classList.remove("active"));
-btn.classList.add("active");
-document.getElementById(`${id}Pane`).classList.add("active");
-});
-});
 
 function toast(msg, isError = false){
 const div = document.createElement("div");
@@ -621,5 +623,6 @@ cargarAmigos();
 });
 });
 </script>
+
 </body>
 </html>
