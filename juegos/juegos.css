@@ -19,16 +19,9 @@
   --text-muted: #94a3b8;
   --font-title: 'Fredoka', sans-serif;
   --font-body: 'Poppins', sans-serif;
-
-  --color-trivia: #ff9f1c;
-  --color-ruleta: #2ec4b6;
-  --color-memoria: #e71d36;
-  --color-palabra: #011627;
-  --color-laberinto: #7209b7;
-  --color-varios: #9c27b0;
 }
 
-/* ===== FONDO OSCURO CON GRADIENTE Y TEXTURA ===== */
+/* ===== FONDO OSCURO CON GRADIENTE ===== */
 body {
   font-family: var(--font-body);
   min-height: 100vh;
@@ -208,138 +201,261 @@ body::after {
 }
 
 /* ==========================================================================
-   3. CONTENEDOR DE JUEGOS - TARJETAS OSCURAS
+   3. CARRUSEL PREMIUM
    ========================================================================== */
 .games-container {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1.5rem;
   width: 90%;
-  max-width: 1200px;
+  max-width: 1100px;
   padding: 2rem 0;
   margin: 0 auto;
   position: relative;
   z-index: 1;
 }
 
-@media (min-width: 768px) {
-  .games-container {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 2rem;
-  }
+.carousel-premium-container {
+  width: 100%;
+  margin: 0 auto;
 }
 
-@media (min-width: 1024px) {
-  .games-container {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-.game-card {
-  background: rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(10px);
-  padding: 1.8rem 1.5rem;
-  border-radius: 32px;
-  text-align: center;
-  transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+.carousel-premium-wrapper {
   position: relative;
-  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
 }
 
-.game-card::before {
+.carousel-track-wrapper {
+  flex: 1;
+  overflow: hidden;
+  border-radius: 24px;
+  box-shadow: 
+    0 20px 60px rgba(0, 0, 0, 0.4),
+    inset 0 0 60px rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  min-width: 0;
+  position: relative;
+}
+
+.carousel-track {
+  display: flex;
+  width: 100%;
+  transition: transform 0.7s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  will-change: transform;
+}
+
+/* Cada slide */
+.carousel-slide {
+  flex: 0 0 100%;
+  min-width: 100%;
+  width: 100%;
+  height: 340px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  cursor: pointer;
+  transition: all 0.4s;
+  border-radius: 24px;
+  box-sizing: border-box;
+  pointer-events: auto;
+}
+
+.carousel-slide:hover {
+  transform: scale(1.02);
+  filter: brightness(1.1);
+}
+
+.carousel-slide::before {
   content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+  animation: rotateGlow 20s linear infinite;
   opacity: 0;
-  transition: opacity 0.3s;
+  transition: opacity 0.6s;
+  pointer-events: none;
 }
 
-.game-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.4);
-  border-color: rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.08);
-}
-
-.game-card:hover::before {
+.carousel-slide:hover::before {
   opacity: 1;
 }
 
-/* Colores específicos por juego en hover */
-.game-card:nth-child(1):hover { border-color: var(--color-trivia); }
-.game-card:nth-child(2):hover { border-color: var(--color-ruleta); }
-.game-card:nth-child(3):hover { border-color: var(--color-memoria); }
-.game-card:nth-child(4):hover { border-color: var(--color-palabra); }
-.game-card:nth-child(5):hover { border-color: var(--color-laberinto); }
-.game-card:nth-child(6):hover { border-color: var(--color-varios); }
-
-.game-card .emoji {
-  font-size: 4rem;
-  margin-bottom: 1rem;
-  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.2));
-  transition: transform 0.2s;
+@keyframes rotateGlow {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
-.game-card:hover .emoji {
-  transform: scale(1.05);
-}
-
-.game-card h2 {
-  font-family: var(--font-title);
-  font-size: 1.5rem;
-  background: linear-gradient(135deg, #FFE259, #FFA751);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  margin-bottom: 0.6rem;
-}
-
-.game-card p {
-  font-size: 0.9rem;
-  color: var(--text-muted);
-  margin-bottom: 1.2rem;
-  line-height: 1.4;
-}
-
-.game-card button {
-  font-family: var(--font-title);
-  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+/* Contenido del slide */
+.slide-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
   color: white;
-  border: none;
-  padding: 0.9rem;
-  border-radius: 60px;
+  text-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+  transform: scale(1);
+  transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  width: 100%;
+  max-width: 100%;
+  padding: 0 1rem;
+  box-sizing: border-box;
+  pointer-events: none;
+}
+
+.slide-content * {
+  pointer-events: none;
+}
+
+.carousel-slide:hover .slide-content {
+  transform: scale(1.08);
+}
+
+/* Ícono animado */
+.slide-icon {
+  font-size: 4.5rem;
+  display: inline-block;
+  animation: floatIcon 3s ease-in-out infinite;
+  filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3));
+  margin-bottom: 0.5rem;
+}
+
+@keyframes floatIcon {
+  0%, 100% { 
+    transform: translateY(0) rotate(0deg) scale(1);
+  }
+  33% { 
+    transform: translateY(-15px) rotate(5deg) scale(1.05);
+  }
+  66% { 
+    transform: translateY(10px) rotate(-5deg) scale(0.95);
+  }
+}
+
+.slide-content h3 {
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin: 0.3rem 0;
+  letter-spacing: 1px;
+}
+
+.slide-content p {
   font-size: 1rem;
-  cursor: pointer;
-  width: 100%;
-  min-height: 52px;
+  opacity: 0.9;
+  margin-bottom: 0.8rem;
+  font-weight: 400;
+}
+
+.slide-stats {
+  display: inline-block;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  padding: 0.4rem 1.2rem;
+  border-radius: 50px;
+  font-size: 0.85rem;
   font-weight: 600;
-  transition: all 0.2s;
-  box-shadow: 0 4px 20px rgba(0, 168, 150, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  animation: pulseStat 2s ease-in-out infinite;
 }
 
-.game-card button:hover {
-  transform: scale(1.02);
-  box-shadow: 0 6px 30px rgba(0, 168, 150, 0.3);
+@keyframes pulseStat {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
 }
 
-.boton {
-  text-decoration: none;
+/* Efecto glow */
+.slide-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 250px;
+  height: 250px;
+  background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(60px);
+  animation: glowPulse 3s ease-in-out infinite;
+  z-index: 0;
+  pointer-events: none;
+}
+
+@keyframes glowPulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
+  50% { transform: translate(-50%, -50%) scale(1.3); opacity: 1; }
+}
+
+/* Botones de navegación */
+.carousel-nav-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(10px);
   color: white;
-  display: block;
-  width: 100%;
+  font-size: 1.8rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  flex-shrink: 0;
+  position: relative;
+  z-index: 10;
+  pointer-events: auto;
+}
+
+.carousel-nav-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: scale(1.15);
+  box-shadow: 0 0 40px rgba(255, 255, 255, 0.1);
+}
+
+.carousel-nav-btn:active {
+  transform: scale(0.9);
+}
+
+/* Indicadores */
+.carousel-indicators {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 1.5rem;
+}
+
+.indicator-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  border: 2px solid transparent;
+  pointer-events: auto;
+  position: relative;
+  z-index: 5;
+}
+
+.indicator-dot.active {
+  background: #FFD54F;
+  transform: scale(1.4);
+  box-shadow: 0 0 25px rgba(255, 213, 79, 0.4);
+  border-color: rgba(255, 213, 79, 0.3);
+}
+
+.indicator-dot:hover {
+  transform: scale(1.2);
+  background: rgba(255, 213, 79, 0.6);
 }
 
 /* ==========================================================================
-   4. ÁREA DE JUEGO - FONDO OSCURO
+   4. ÁREA DE JUEGO
    ========================================================================== */
 .play-area {
   width: 90%;
@@ -419,31 +535,6 @@ body::after {
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-/* Estilos para contenido de juegos dentro del área */
-#gameContent h3 {
-  color: #FFD54F;
-  font-family: var(--font-title);
-}
-
-#gameContent .btn {
-  display: inline-block;
-  text-decoration: none;
-  color: white;
-  padding: 0.8rem 2.5rem;
-  border-radius: 50px;
-  background: linear-gradient(135deg, #00a896, #028090);
-  font-weight: 600;
-  transition: all 0.3s;
-  box-shadow: 0 4px 25px rgba(0, 168, 150, 0.3);
-  border: none;
-  cursor: pointer;
-}
-
-#gameContent .btn:hover {
-  transform: scale(1.05);
-  box-shadow: 0 6px 35px rgba(0, 168, 150, 0.4);
-}
-
 /* ==========================================================================
    5. WHATSAPP FLOTANTE
    ========================================================================== */
@@ -482,49 +573,7 @@ body::after {
 }
 
 /* ==========================================================================
-   6. JUEGOS ESPECÍFICOS - ESTILOS OSCUROS
-   ========================================================================== */
-
-/* Grid de memoria */
-.card-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
-  max-width: 350px;
-  margin: 1.5rem auto;
-}
-
-.memory-card {
-  aspect-ratio: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 2.5rem;
-  background: rgba(255, 255, 255, 0.08);
-  border-radius: 16px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  border: 2px solid rgba(255, 255, 255, 0.06);
-  user-select: none;
-}
-
-.memory-card:hover {
-  transform: scale(1.05);
-  border-color: rgba(255, 213, 79, 0.3);
-  background: rgba(255, 255, 255, 0.12);
-}
-
-/* Canvas del laberinto */
-#mazeCanvas {
-  background: rgba(255, 255, 255, 0.06) !important;
-  border-radius: 16px !important;
-  border: 2px solid rgba(255, 255, 255, 0.06);
-  max-width: 100%;
-  height: auto;
-}
-
-/* ==========================================================================
-   7. MEDIA QUERIES
+   6. MEDIA QUERIES
    ========================================================================== */
 @media (max-width: 768px) {
   .topbar {
@@ -549,30 +598,26 @@ body::after {
 
   .games-container {
     width: 92%;
-    gap: 1rem;
     padding: 1.5rem 0;
   }
 
-  .game-card {
-    padding: 1.2rem;
+  .carousel-slide {
+    height: 280px;
+    padding: 2rem 1rem;
   }
 
-  .game-card .emoji {
-    font-size: 3rem;
+  .slide-icon {
+    font-size: 3.5rem;
   }
 
-  .game-card h2 {
-    font-size: 1.3rem;
+  .slide-content h3 {
+    font-size: 1.4rem;
   }
 
-  .game-card p {
-    font-size: 0.85rem;
-  }
-
-  .game-card button {
-    font-size: 0.9rem;
-    padding: 0.8rem;
-    min-height: 48px;
+  .carousel-nav-btn {
+    width: 38px;
+    height: 38px;
+    font-size: 1.4rem;
   }
 
   .play-area {
@@ -589,23 +634,39 @@ body::after {
 @media (max-width: 480px) {
   .games-container {
     width: 95%;
-    gap: 0.8rem;
+    padding: 1rem 0;
   }
 
-  .game-card {
-    padding: 1rem;
+  .carousel-premium-wrapper {
+    gap: 5px;
   }
 
-  .game-card .emoji {
-    font-size: 2.5rem;
+  .carousel-nav-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 1.2rem;
   }
 
-  .game-card h2 {
-    font-size: 1.1rem;
+  .carousel-slide {
+    height: 250px;
+    padding: 1.5rem 0.8rem;
   }
 
-  .game-card p {
-    font-size: 0.8rem;
+  .slide-icon {
+    font-size: 3rem;
+  }
+
+  .slide-content h3 {
+    font-size: 1.2rem;
+  }
+
+  .slide-content p {
+    font-size: 0.85rem;
+  }
+
+  .slide-stats {
+    font-size: 0.75rem;
+    padding: 0.3rem 1rem;
   }
 
   .play-area {
@@ -617,8 +678,17 @@ body::after {
     font-size: 1.1rem;
   }
 
-  #gameContent p {
-    font-size: 0.85rem;
+  .play-placeholder i {
+    font-size: 2.5rem;
+  }
+
+  .play-placeholder p {
+    font-size: 1rem;
+  }
+
+  .play-hint {
+    font-size: 0.75rem;
+    padding: 0.2rem 0.8rem;
   }
 
   .volver,
@@ -631,21 +701,25 @@ body::after {
 
 /* Orientación horizontal en móvil */
 @media (max-width: 768px) and (orientation: landscape) {
-  .games-container {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
+  .carousel-slide {
+    height: 220px;
+    padding: 1rem;
   }
 
-  .game-card {
-    padding: 0.8rem;
+  .slide-icon {
+    font-size: 2.5rem;
   }
 
-  .game-card .emoji {
-    font-size: 2rem;
+  .slide-content h3 {
+    font-size: 1.1rem;
+  }
+
+  .slide-content p {
+    font-size: 0.8rem;
   }
 
   .play-area {
-    min-height: 180px;
+    min-height: 150px;
   }
 
   .topbar {
@@ -659,17 +733,15 @@ body::after {
 }
 
 /* ==========================================================================
-   8. UTILIDADES Y ANIMACIONES
+   7. UTILIDADES Y ANIMACIONES
    ========================================================================== */
 
 /* Ajustes táctiles globales */
 button, 
 .volver,
-.game-card button,
-.boton,
-.btn-admin,
-.whatsapp-float,
-.memory-card {
+.carousel-nav-btn,
+.indicator-dot,
+.whatsapp-float {
   touch-action: manipulation;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
