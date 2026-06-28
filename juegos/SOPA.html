@@ -11,17 +11,21 @@
 <script src="./sclim/limjs.js?5.6.4" type="text/javascript"></script>
 
 <style>
-  /* ===== MEJORAS DE DISEÑO ===== */
+  /* ===== MEJORAS SOLO PARA EL CONTENEDOR PRINCIPAL ===== */
   body {
     background: linear-gradient(145deg, #0b1a3a 0%, #0d47a1 50%, #0288d1 100%);
     min-height: 100vh;
-    padding: 10px;
+    margin: 0;
+    padding: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
   }
 
   .pcllim {
-    max-width: 800px;
-    margin: 0 auto;
-    background: rgba(255, 255, 255, 0.08);
+    max-width: 850px;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.06);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
     border-radius: 32px;
@@ -30,220 +34,252 @@
     border: 1px solid rgba(255, 255, 255, 0.06);
   }
 
-  /* ===== BARRA DE NAVEGACIÓN MEJORADA ===== */
+  /* ===== MEJORA DE LA BARRA DE NAVEGACIÓN ===== */
   .pclbarra {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: rgba(0, 0, 0, 0.2);
-    border-radius: 60px;
-    padding: 8px 16px;
-    margin-bottom: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.04);
-    flex-wrap: wrap;
-    gap: 8px;
+    background: rgba(0, 0, 0, 0.2) !important;
+    border-radius: 60px !important;
+    padding: 8px 16px !important;
+    margin-bottom: 16px !important;
+    border: 1px solid rgba(255, 255, 255, 0.06) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    flex-wrap: wrap !important;
+    gap: 6px !important;
   }
 
   .pclbns, .pclbni {
-    display: flex;
-    gap: 6px;
-    align-items: center;
+    display: flex !important;
+    gap: 4px !important;
+    align-items: center !important;
   }
 
   .pclbot {
-    background: rgba(255, 255, 255, 0.1);
-    border: none;
-    color: white;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    font-size: 1.2rem;
-    cursor: pointer;
-    transition: all 0.25s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: none !important;
+    color: white !important;
+    width: 38px !important;
+    height: 38px !important;
+    border-radius: 50% !important;
+    font-size: 1.1rem !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
   }
 
   .pclbot:hover {
-    background: rgba(255, 255, 255, 0.25);
+    background: rgba(255, 255, 255, 0.2) !important;
     transform: scale(1.05);
   }
 
-  .pclbot:active {
-    transform: scale(0.92);
-  }
-
   .pclbot.nav {
-    background: rgba(255, 215, 0, 0.2);
+    background: rgba(255, 215, 0, 0.15) !important;
   }
 
   .pclbot.nav:hover {
-    background: rgba(255, 215, 0, 0.4);
+    background: rgba(255, 215, 0, 0.3) !important;
   }
 
   .pclnum {
-    color: #ffd54f;
-    font-weight: 700;
-    font-size: 1.1rem;
-    background: rgba(255, 215, 0, 0.1);
-    padding: 4px 16px;
-    border-radius: 40px;
-    border: 1px solid rgba(255, 215, 0, 0.1);
+    color: #ffd54f !important;
+    font-weight: 700 !important;
+    font-size: 1rem !important;
+    background: rgba(255, 215, 0, 0.1) !important;
+    padding: 2px 16px !important;
+    border-radius: 40px !important;
+    border: 1px solid rgba(255, 215, 0, 0.1) !important;
+    min-width: 30px !important;
+    text-align: center !important;
   }
 
-  /* ===== CONTENEDOR DE JUEGOS ===== */
+  /* ===== MEJORA DEL CONTENEDOR DE JUEGOS ===== */
   .pclcorpo {
-    background: rgba(0, 0, 0, 0.1);
-    border-radius: 24px;
-    padding: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.04);
+    background: rgba(0, 0, 0, 0.08) !important;
+    border-radius: 24px !important;
+    padding: 16px !important;
+    border: 1px solid rgba(255, 255, 255, 0.04) !important;
   }
 
   .pclcont {
-    background: rgba(255, 255, 255, 0.03);
-    border-radius: 20px;
-    padding: 16px;
-    margin-bottom: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.04);
+    background: rgba(255, 255, 255, 0.03) !important;
+    border-radius: 20px !important;
+    padding: 16px !important;
+    margin-bottom: 12px !important;
+    border: 1px solid rgba(255, 255, 255, 0.04) !important;
   }
 
-  /* ===== ESTILO PARA LA SOPA DE LETRAS ===== */
-  [name="limpanel"] {
-    background: rgba(255, 255, 255, 0.03);
-    border-radius: 16px;
-    padding: 12px;
+  .pclcont:last-child {
+    margin-bottom: 0 !important;
+  }
+
+  /* ===== MEJORA DEL TEXTO ===== */
+  .pclsuper {
+    color: #ffffff !important;
+    font-weight: 700 !important;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.3) !important;
+  }
+
+  .pclsubtx {
+    color: #e3f2fd !important;
+    font-weight: 500 !important;
   }
 
   /* ===== BOTÓN VOLVER ===== */
   .volver {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    margin-top: 16px;
-    padding: 12px 24px;
-    background: rgba(255, 255, 255, 0.9);
-    color: #0d47a1;
-    text-decoration: none;
-    border-radius: 60px;
-    font-weight: 600;
-    font-size: clamp(0.85rem, 1.6vw, 1rem);
-    transition: all 0.25s ease;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    margin-top: 16px !important;
+    padding: 10px 24px !important;
+    background: rgba(255, 255, 255, 0.9) !important;
+    color: #0d47a1 !important;
+    text-decoration: none !important;
+    border-radius: 60px !important;
+    font-weight: 600 !important;
+    font-size: 0.95rem !important;
+    transition: all 0.25s ease !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
   }
 
   .volver:hover {
-    transform: translateY(-3px) scale(1.03);
-    background: #ffffff;
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
-  }
-
-  .volver:active {
-    transform: scale(0.96);
+    transform: translateY(-2px) !important;
+    background: #ffffff !important;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25) !important;
   }
 
   /* ===== RESPONSIVE ===== */
-  @media (max-width: 700px) {
-    .pcllim {
+  @media (max-width: 768px) {
+    body {
       padding: 12px;
+    }
+
+    .pcllim {
+      padding: 14px;
       border-radius: 24px;
     }
 
     .pclbarra {
-      padding: 6px 12px;
-      border-radius: 40px;
-      gap: 4px;
+      padding: 6px 12px !important;
+      border-radius: 40px !important;
     }
 
     .pclbot {
-      width: 34px;
-      height: 34px;
-      font-size: 1rem;
+      width: 32px !important;
+      height: 32px !important;
+      font-size: 0.9rem !important;
     }
 
     .pclnum {
-      font-size: 0.9rem;
-      padding: 2px 12px;
+      font-size: 0.85rem !important;
+      padding: 2px 12px !important;
     }
 
     .pclcorpo {
-      padding: 10px;
-      border-radius: 18px;
+      padding: 12px !important;
+      border-radius: 18px !important;
     }
 
     .pclcont {
-      padding: 10px;
-      border-radius: 14px;
+      padding: 12px !important;
+      border-radius: 16px !important;
     }
 
-    [name="limpanel"] {
-      padding: 8px;
+    .volver {
+      padding: 8px 18px !important;
+      font-size: 0.85rem !important;
     }
   }
 
   @media (max-width: 480px) {
-    .pcllim {
+    body {
       padding: 8px;
+    }
+
+    .pcllim {
+      padding: 10px;
       border-radius: 18px;
     }
 
     .pclbarra {
-      padding: 4px 8px;
-      border-radius: 30px;
+      padding: 4px 8px !important;
+      border-radius: 30px !important;
+      gap: 4px !important;
     }
 
     .pclbot {
-      width: 28px;
-      height: 28px;
-      font-size: 0.8rem;
+      width: 28px !important;
+      height: 28px !important;
+      font-size: 0.75rem !important;
     }
 
     .pclnum {
-      font-size: 0.75rem;
-      padding: 2px 8px;
+      font-size: 0.7rem !important;
+      padding: 2px 8px !important;
+      min-width: 24px !important;
     }
 
     .pclcorpo {
-      padding: 6px;
-      border-radius: 12px;
+      padding: 8px !important;
+      border-radius: 14px !important;
     }
 
     .pclcont {
-      padding: 6px;
-      border-radius: 10px;
-    }
-
-    [name="limpanel"] {
-      padding: 4px;
+      padding: 8px !important;
+      border-radius: 12px !important;
     }
 
     .volver {
-      padding: 8px 16px;
-      font-size: 0.75rem;
+      padding: 6px 14px !important;
+      font-size: 0.75rem !important;
+      margin-top: 12px !important;
+    }
+
+    .clim-tam {
+      width: 12px !important;
+      height: 12px !important;
     }
   }
 
-  /* ===== AJUSTES PARA EL TAMAÑO DE LA SOPA ===== */
-  .clim-tam {
-    width: 16px;
-    height: 16px;
+  /* ===== CORRECCIÓN PARA QUE LOS PANELES SE VEA BIEN ===== */
+  [name="limpanel"] {
+    background: rgba(255, 255, 255, 0.03) !important;
+    border-radius: 12px !important;
+    padding: 8px !important;
   }
 
-  /* Mejorar legibilidad del texto en la sopa */
-  .pclsuper {
-    color: #fff;
+  /* Asegurar que el texto de la sopa sea visible */
+  .pclact {
+    color: #ffffff !important;
   }
 
-  .pclsubtx {
-    color: #e3f2fd;
+  /* Mejorar visibilidad de las celdas de la sopa */
+  .pclcelda {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border-radius: 4px !important;
+    color: #ffffff !important;
+    font-weight: 700 !important;
   }
 
-  /* Estilo para el panel de la sopa */
-  [name="limpanel"] .pclact {
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 12px;
+  .pclcelda:hover {
+    background: rgba(255, 255, 255, 0.15) !important;
+  }
+
+  /* Ajustar el tamaño de la sopa en móviles */
+  @media (max-width: 480px) {
+    .pclcelda {
+      font-size: 12px !important;
+      padding: 2px !important;
+    }
+  }
+
+  @media (max-width: 380px) {
+    .pclcelda {
+      font-size: 10px !important;
+      padding: 1px !important;
+    }
   }
 </style>
 </head>
@@ -271,6 +307,7 @@
       <div class="pclsub"  ><div class="pclsubtx"></div></div>
       <div class="pclind"></div>
       <div class="pclbase">
+
         <!-- ===== PANEL 1: SOPA DE LETRAS ===== -->
         <div name="limpax" class="pclcont">
           <div name="limpanel" data-limc='{"properties": { "type":"sopa","id":"1","txcabe":"CIUDADES","modo":"1","enunciados":["Cuál es la capital de Nicaragua","En que lago esta la Isla de Ometepe","Ciudad colonial ","Ciudad conocida por su cultura y volcan","Lugar famoso por su volcán activo y arte"],"palabras":["MANAGUA","COCIBOLCA","GRANADA","MASAYA","LEON"],"enunciado":"1","colorea":"1","cadro":"0","fondo":"ASDFGLERTUIOPZXCVBNM","letras":"ASDFGLERTUIOPZXCVBNM","tam":"16"}}'>
