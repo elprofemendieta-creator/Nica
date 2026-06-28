@@ -17,6 +17,7 @@
 <!-- Pantalla de introducción animada con tu Logo -->
 <div class="intro-screen">
   <div class="intro-content">
+    <!-- Reemplaza "tu-logo.png" por la ruta real de tu imagen -->
     <img src="logo.gif" alt="Guía Pinolera" class="intro-logo-img">
     <p class="intro-subtitle">Bienvenido Explorador Pinolero </p>
     <p class="intro-subtitle">Cargando sistema...</p>
@@ -63,6 +64,7 @@
 
     <!-- ===== MENÚ CON CARRUSEL ===== -->
     <div id="menuSection" class="menu-section" style="display:none;">
+      <!-- Header con animación -->
       <div class="welcome-header">
         <h2 class="welcome-title">¡Bienvenido, <span id="userName"></span>!</h2>
         <div class="user-badge">
@@ -71,12 +73,13 @@
         </div>
       </div>
 
+      <!-- Perfil interactivo -->
       <div class="profile-header-enhanced">
         <div class="profile-info-enhanced" id="profileTrigger">
           <img id="profileAvatar" class="profile-avatar-enhanced" src="" alt="Avatar" />
           <div class="profile-details">
             <div class="profile-name-enhanced" id="profileNameDisplay">Usuario</div>
-            <div class="profile-level">⭐ 250 puntos</div>
+            <div class="profile-level">⭐ 25 puntos</div>
           </div>
         </div>
         <button id="editProfileBtn" class="btn-edit-enhanced">
@@ -88,6 +91,7 @@
       <div class="carousel-premium-container">
         <div class="carousel-premium-wrapper">
           <button class="carousel-nav-btn prev-btn">‹</button>
+          
           <div class="carousel-track-wrapper">
             <div class="carousel-track">
               <!-- Slide 1: Juegos -->
@@ -96,7 +100,7 @@
                   <div class="slide-icon">🎮</div>
                   <h3>Juegos Turísticos</h3>
                   <p>Conviértete en el mejor explorador</p>
-                  <div class="slide-stats">🔥 <span id="jugadoresCount">0</span> jugando</div>
+                  <div class="slide-stats">🔥 1,234 jugando</div>
                   <div class="slide-glow"></div>
                 </div>
               </div>
@@ -107,7 +111,7 @@
                   <div class="slide-icon">🗺️</div>
                   <h3>Mapa Interactivo</h3>
                   <p>Descubre lugares secretos</p>
-                  <div class="slide-stats">📍 <span id="ubicacionesCount">0</span> ubicaciones</div>
+                  <div class="slide-stats">📍 567 ubicaciones</div>
                   <div class="slide-glow"></div>
                 </div>
               </div>
@@ -118,7 +122,7 @@
                   <div class="slide-icon">👥</div>
                   <h3>Comunidad</h3>
                   <p>Conecta con viajeros</p>
-                  <div class="slide-stats">💬 <span id="miembrosCount">0</span> miembros</div>
+                  <div class="slide-stats">💬 3,456 miembros</div>
                   <div class="slide-glow"></div>
                 </div>
               </div>
@@ -129,7 +133,7 @@
                   <div class="slide-icon">📌</div>
                   <h3>Visitas Virtuales</h3>
                   <p>Experiencias 360°</p>
-                  <div class="slide-stats">🎥 <span id="visitasCount">0</span> recorridos</div>
+                  <div class="slide-stats">🎥 89 recorridos</div>
                   <div class="slide-glow"></div>
                 </div>
               </div>
@@ -157,9 +161,11 @@
               </div>
             </div>
           </div>
+
           <button class="carousel-nav-btn next-btn">›</button>
         </div>
 
+        <!-- Indicadores -->
         <div class="carousel-indicators">
           <span class="indicator-dot active" data-index="0"></span>
           <span class="indicator-dot" data-index="1"></span>
@@ -170,6 +176,7 @@
         </div>
       </div>
 
+      <!-- Botón Cerrar sesión -->
       <div class="logout-wrapper">
         <button id="logoutBtn" class="btn-logout">
           <i class="fas fa-sign-out-alt"></i> Cerrar sesión
@@ -181,6 +188,7 @@
   <div id="editProfileModal" class="modal">
     <div class="modal-content">
       <h3><i class="fas fa-user-edit"></i> Editar perfil</h3>
+
       <div class="profile-pic-edit">
         <img id="modalProfileImage" src="" alt="Foto" />
         <div class="camera-icon" id="uploadPhotoIcon">
@@ -188,12 +196,15 @@
         </div>
       </div>
       <input type="file" id="uploadPhoto" accept="image/*" style="display: none;" />
+
       <div class="input-group">
         <label style="color:white;">Nombre completo:</label>
         <input type="text" id="editNameInput" placeholder="Tu nombre" />
       </div>
+
       <label style="color:white;">O elige una foto predeterminada:</label>
       <div class="avatar-grid" id="avatarGrid"></div>
+
       <button id="saveProfileBtn" class="btn btn-primary">Guardar cambios</button>
       <button id="closeModalBtn" class="btn btn-outline">Cancelar</button>
     </div>
@@ -218,81 +229,7 @@
     }
   </script>
 
-  <!-- ====== TU SCRIPT DE AUTENTICACIÓN (inicio.js) ====== -->
   <script type="module" src="js/inicio.js"></script>
-
-  <!-- ====== SCRIPT PARA ACTUALIZAR ESTADÍSTICAS DESDE FIRESTORE ====== -->
-  <script type="module">
-    // Importamos Firebase (usamos la misma app que inicio.js, o inicializamos si no existe)
-    import { initializeApp, getApp, getApps } from 'firebase/app';
-    import { getFirestore, collection, getDocs } from 'firebase/firestore';
-    import { getAuth, onAuthStateChanged } from 'firebase/auth';
-
-    // 🔥 CONFIGURACIÓN DE FIREBASE 
-    const firebaseConfig = {
-      apiKey: "AIzaSyA6jVICuE17KJcO34gE1brMxqWEfNd3Fy0",
-  authDomain: "mapa-41b00.firebaseapp.com",
-  projectId: "mapa-41b00",
-  storageBucket: "mapa-41b00.firebasestorage.app",
-  messagingSenderId: "535032835400",
-  appId: "1:535032835400:web:68c079cbc3f419eafd177d"
-};
-
-
-    // Inicializar solo si no hay ninguna app
-    let app;
-    if (getApps().length === 0) {
-      app = initializeApp(firebaseConfig);
-      console.log('Firebase inicializada desde el script de estadísticas.');
-    } else {
-      app = getApp();
-    }
-
-    const db = getFirestore(app);
-    const auth = getAuth(app);
-
-    // Función que obtiene los conteos y actualiza los spans
-    async function updateStats() {
-      try {
-        // ⚠️ CAMBIA LOS NOMBRES DE COLECCIONES SEGÚN TU BASE DE DATOS
-        const usuariosSnap = await getDocs(collection(db, 'usuarios'));
-        const lugaresSnap = await getDocs(collection(db, 'lugares'));
-        const visitasSnap = await getDocs(collection(db, 'visitas_virtuales'));
-
-        const totalUsuarios = usuariosSnap.size;
-        const totalLugares = lugaresSnap.size;
-        const totalVisitas = visitasSnap.size;
-
-        const jugadores = Math.floor(totalUsuarios * 0.5); // 50%
-
-        document.getElementById('jugadoresCount').textContent = jugadores;
-        document.getElementById('ubicacionesCount').textContent = totalLugares;
-        document.getElementById('miembrosCount').textContent = totalUsuarios;
-        document.getElementById('visitasCount').textContent = totalVisitas;
-
-        console.log('Estadísticas actualizadas:', { jugadores, totalLugares, totalUsuarios, totalVisitas });
-      } catch (error) {
-        console.error('Error al obtener estadísticas:', error);
-        // Puedes mostrar un mensaje de error o dejar los ceros
-      }
-    }
-
-    // Escuchar cambios en autenticación
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        // Usuario logueado → actualizar
-        updateStats();
-      } else {
-        // Opcional: si quieres mostrar datos aunque no esté logueado, llama a updateStats() también
-        // updateStats(); 
-      }
-    });
-
-    // También ejecutar una vez al cargar por si ya hay usuario (la primera vez)
-    if (auth.currentUser) {
-      updateStats();
-    }
-  </script>
 
   <!-- Statcounter -->
   <script type="text/javascript">
