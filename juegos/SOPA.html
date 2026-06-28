@@ -404,27 +404,86 @@
     }
 
     /* ===== PUZZLE ===== */
-    .puzzle-placeholder {
+    .puzzle-container {
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      padding: 40px 20px;
-      background: rgba(255, 255, 255, 0.03);
-      border-radius: 16px;
+      gap: 16px;
+      padding: 8px;
+    }
+
+    .puzzle-board {
+      display: grid;
+      gap: 3px;
+      width: 100%;
+      max-width: 500px;
+      aspect-ratio: 1 / 1;
+      margin: 0 auto;
+      background: rgba(0, 0, 0, 0.15);
+      border-radius: 12px;
+      padding: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .puzzle-piece {
+      background-size: cover;
+      background-position: center;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      position: relative;
+      min-height: 60px;
+    }
+
+    .puzzle-piece:hover {
+      transform: scale(1.02);
+      border-color: rgba(255, 215, 0, 0.3);
+      z-index: 2;
+    }
+
+    .puzzle-piece:active {
+      transform: scale(0.95);
+    }
+
+    .puzzle-piece.empty {
+      background: rgba(255, 255, 255, 0.03) !important;
       border: 2px dashed rgba(255, 255, 255, 0.1);
-      min-height: 250px;
+      cursor: default;
     }
 
-    .puzzle-placeholder .icon {
-      font-size: 4rem;
-      margin-bottom: 12px;
-      opacity: 0.5;
+    .puzzle-piece.empty:hover {
+      transform: none;
+      border-color: rgba(255, 255, 255, 0.1);
     }
 
-    .puzzle-placeholder p {
-      opacity: 0.6;
-      font-size: 0.95rem;
+    .puzzle-piece .piece-number {
+      position: absolute;
+      top: 4px;
+      left: 6px;
+      font-size: clamp(0.5rem, 1vw, 0.7rem);
+      font-weight: 700;
+      color: rgba(255, 255, 255, 0.4);
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+      pointer-events: none;
+    }
+
+    .puzzle-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin-top: 8px;
+    }
+
+    .puzzle-status {
+      text-align: center;
+      font-size: 0.9rem;
+      opacity: 0.8;
+      padding: 8px 16px;
+      background: rgba(0, 0, 0, 0.1);
+      border-radius: 40px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
     }
 
     /* ===== PALABRA SECRETA ===== */
@@ -535,6 +594,10 @@
         font-size: 1.5rem;
         letter-spacing: 8px;
       }
+
+      .puzzle-board {
+        max-width: 400px;
+      }
     }
 
     @media (max-width: 480px) {
@@ -605,15 +668,6 @@
         padding: 8px 16px;
       }
 
-      .puzzle-placeholder {
-        padding: 20px 12px;
-        min-height: 150px;
-      }
-
-      .puzzle-placeholder .icon {
-        font-size: 2.5rem;
-      }
-
       .back-btn {
         padding: 8px 16px;
         font-size: 0.7rem;
@@ -629,6 +683,23 @@
       .word-item {
         font-size: 0.5rem;
         padding: 2px 8px;
+      }
+
+      .puzzle-board {
+        max-width: 320px;
+        gap: 2px;
+        padding: 4px;
+      }
+
+      .puzzle-piece {
+        border-radius: 4px;
+        border-width: 1.5px;
+        min-height: 40px;
+      }
+
+      .puzzle-status {
+        font-size: 0.75rem;
+        padding: 6px 12px;
       }
     }
 
@@ -653,6 +724,17 @@
         font-size: 0.55rem;
         padding: 6px 8px;
         min-width: 35px;
+      }
+
+      .puzzle-board {
+        max-width: 260px;
+        gap: 1.5px;
+        padding: 3px;
+      }
+
+      .puzzle-piece {
+        min-height: 30px;
+        border-radius: 3px;
       }
     }
   </style>
@@ -709,12 +791,20 @@
 
       <!-- ===== PANEL 2: PUZZLE ===== -->
       <div class="panel" id="panel2">
-        <div class="panel-title">🧩 PUZZLE</div>
-        <div class="panel-desc">Arma el rompecabezas de Nicaragua</div>
-        <div class="puzzle-placeholder">
-          <div class="icon">🧩</div>
-          <p>Próximamente: Rompecabezas turístico</p>
-          <p style="font-size:0.8rem;opacity:0.4;">¡Estamos trabajando en este juego!</p>
+        <div class="panel-title">🧩 PUZZLE DE NICARAGUA</div>
+        <div class="panel-desc">Arma el rompecabezas arrastrando las piezas</div>
+
+        <div class="puzzle-container">
+          <div class="puzzle-board" id="puzzleBoard"></div>
+
+          <div class="puzzle-controls">
+            <button class="btn btn-reiniciar" id="puzzleReiniciar">🔄 Reiniciar Puzzle</button>
+            <button class="btn btn-verificar" id="puzzleVerificar">✅ Verificar</button>
+          </div>
+
+          <div class="puzzle-status" id="puzzleStatus">
+            🧩 Arrastra las piezas para completar el mapa
+          </div>
         </div>
       </div>
 
@@ -1070,7 +1160,144 @@
     }
 
     // ============================================================
-    // 3. PALABRA SECRETA
+    // 3. PUZZLE
+    // ============================================================
+    const PUZZLE_SIZE = 3; // 3x3
+    let puzzlePieces = [];
+    let puzzleEmptyIndex = 8;
+    let puzzleSolved = false;
+
+    // Imagen de Nicaragua (usamos una imagen de placeholder con colores representativos)
+    // En un caso real, usarías la imagen real: "file.png"
+    const IMAGE_URL = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Crect width='400' height='400' fill='%230d47a1'/%3E%3Ccircle cx='200' cy='200' r='120' fill='%2300b4d8'/%3E%3Ccircle cx='200' cy='200' r='60' fill='%23ffd54f'/%3E%3Ctext x='200' y='210' text-anchor='middle' fill='white' font-size='40' font-weight='bold'%3ENicaragua%3C/text%3E%3C/svg%3E";
+
+    function initPuzzle() {
+      // Crear piezas del puzzle (0-8, donde 8 es el espacio vacío)
+      puzzlePieces = [];
+      for (let i = 0; i < 9; i++) {
+        puzzlePieces.push(i);
+      }
+      puzzleEmptyIndex = 8;
+      puzzleSolved = false;
+      // Mezclar
+      shufflePuzzle();
+      renderPuzzle();
+      document.getElementById('puzzleStatus').innerHTML = '🧩 Arrastra las piezas para completar el mapa';
+      document.getElementById('puzzleStatus').style.color = '';
+    }
+
+    function shufflePuzzle() {
+      // Realizar movimientos aleatorios para mezclar
+      for (let i = 0; i < 100; i++) {
+        const emptyRow = Math.floor(puzzleEmptyIndex / PUZZLE_SIZE);
+        const emptyCol = puzzleEmptyIndex % PUZZLE_SIZE;
+        const neighbors = [];
+        if (emptyRow > 0) neighbors.push(puzzleEmptyIndex - PUZZLE_SIZE);
+        if (emptyRow < PUZZLE_SIZE - 1) neighbors.push(puzzleEmptyIndex + PUZZLE_SIZE);
+        if (emptyCol > 0) neighbors.push(puzzleEmptyIndex - 1);
+        if (emptyCol < PUZZLE_SIZE - 1) neighbors.push(puzzleEmptyIndex + 1);
+        const randomNeighbor = neighbors[Math.floor(Math.random() * neighbors.length)];
+        // Intercambiar
+        puzzlePieces[puzzleEmptyIndex] = puzzlePieces[randomNeighbor];
+        puzzlePieces[randomNeighbor] = 8;
+        puzzleEmptyIndex = randomNeighbor;
+      }
+      // Asegurar que no esté resuelto
+      if (isPuzzleSolved()) {
+        // Si está resuelto, hacer un intercambio simple
+        if (puzzleEmptyIndex !== 0) {
+          puzzlePieces[puzzleEmptyIndex] = puzzlePieces[0];
+          puzzlePieces[0] = 8;
+          puzzleEmptyIndex = 0;
+        } else {
+          puzzlePieces[puzzleEmptyIndex] = puzzlePieces[1];
+          puzzlePieces[1] = 8;
+          puzzleEmptyIndex = 1;
+        }
+      }
+    }
+
+    function isPuzzleSolved() {
+      for (let i = 0; i < 9; i++) {
+        if (puzzlePieces[i] !== i) return false;
+      }
+      return true;
+    }
+
+    function renderPuzzle() {
+      const board = document.getElementById('puzzleBoard');
+      board.style.gridTemplateColumns = `repeat(${PUZZLE_SIZE}, 1fr)`;
+      board.innerHTML = '';
+
+      const pieceSize = 100 / PUZZLE_SIZE;
+
+      for (let i = 0; i < 9; i++) {
+        const piece = document.createElement('div');
+        piece.className = 'puzzle-piece';
+        piece.dataset.index = i;
+
+        if (puzzlePieces[i] === 8) {
+          piece.classList.add('empty');
+          piece.style.background = 'rgba(255,255,255,0.03)';
+        } else {
+          const originalIndex = puzzlePieces[i];
+          const row = Math.floor(originalIndex / PUZZLE_SIZE);
+          const col = originalIndex % PUZZLE_SIZE;
+          // Usar background image con la imagen dividida
+          piece.style.backgroundImage = `url('${IMAGE_URL}')`;
+          piece.style.backgroundSize = `${PUZZLE_SIZE * 100}% ${PUZZLE_SIZE * 100}%`;
+          piece.style.backgroundPosition = `-${col * 100}% -${row * 100}%`;
+          piece.style.border = '2px solid rgba(255,255,255,0.15)';
+
+          const number = document.createElement('span');
+          number.className = 'piece-number';
+          number.textContent = originalIndex + 1;
+          piece.appendChild(number);
+
+          piece.addEventListener('click', () => movePiece(i));
+        }
+
+        board.appendChild(piece);
+      }
+
+      // Verificar si está resuelto
+      if (isPuzzleSolved() && !puzzleSolved) {
+        puzzleSolved = true;
+        document.getElementById('puzzleStatus').innerHTML = '🎉 ¡Felicidades! Completaste el puzzle de Nicaragua!';
+        document.getElementById('puzzleStatus').style.color = '#ffd54f';
+      }
+    }
+
+    function movePiece(index) {
+      if (puzzleSolved) return;
+
+      const emptyRow = Math.floor(puzzleEmptyIndex / PUZZLE_SIZE);
+      const emptyCol = puzzleEmptyIndex % PUZZLE_SIZE;
+      const clickedRow = Math.floor(index / PUZZLE_SIZE);
+      const clickedCol = index % PUZZLE_SIZE;
+
+      // Verificar si la pieza clickeada está adyacente al espacio vacío
+      const isAdjacent = (Math.abs(emptyRow - clickedRow) + Math.abs(emptyCol - clickedCol)) === 1;
+
+      if (isAdjacent) {
+        // Intercambiar
+        puzzlePieces[puzzleEmptyIndex] = puzzlePieces[index];
+        puzzlePieces[index] = 8;
+        puzzleEmptyIndex = index;
+        renderPuzzle();
+      }
+    }
+
+    function verificarPuzzle() {
+      if (isPuzzleSolved()) {
+        alert('🎉 ¡El puzzle ya está completo!');
+      } else {
+        alert('❌ El puzzle no está completo. Sigue moviendo las piezas.');
+      }
+    }
+
+    // ============================================================
+    // 4. PALABRA SECRETA
     // ============================================================
     const secretaPalabra = "MASAYA";
     const secretaLetras = ["A", "S", "D", "F", "G", "M", "N", "B", "V", "C", "E", "R", "T", "Y", "U"];
@@ -1150,7 +1377,7 @@
     }
 
     // ============================================================
-    // 4. NAVEGACIÓN ENTRE PANELES
+    // 5. NAVEGACIÓN ENTRE PANELES
     // ============================================================
     let currentPanel = 1;
     const totalPanels = 3;
@@ -1175,7 +1402,7 @@
     }
 
     // ============================================================
-    // 5. EVENTOS
+    // 6. EVENTOS
     // ============================================================
     document.getElementById('btnVerificar').addEventListener('click', tryValidateWord);
     document.getElementById('btnPista').addEventListener('click', mostrarPistaSopa);
@@ -1185,6 +1412,8 @@
     document.getElementById('btnPrev').addEventListener('click', prevPanel);
     document.getElementById('secretaVerificar').addEventListener('click', verificarSecreta);
     document.getElementById('secretaReiniciar').addEventListener('click', reiniciarSecreta);
+    document.getElementById('puzzleReiniciar').addEventListener('click', initPuzzle);
+    document.getElementById('puzzleVerificar').addEventListener('click', verificarPuzzle);
 
     // Botones de la barra (funcionalidad decorativa)
     document.getElementById('btnFull').addEventListener('click', () => alert('Pantalla completa'));
@@ -1193,7 +1422,7 @@
     document.getElementById('btnHelp').addEventListener('click', () => alert('Ayuda: Selecciona letras en orden para formar palabras'));
 
     // ============================================================
-    // 6. INICIALIZACIÓN
+    // 7. INICIALIZACIÓN
     // ============================================================
     generateBoard();
     renderBoard();
@@ -1201,6 +1430,7 @@
     updateFoundStyles();
     actualizarSecretaDisplay();
     renderSecreta();
+    initPuzzle();
     showPanel(1);
 
     console.log('¡Juego de Sopa de Letras cargado correctamente!');
