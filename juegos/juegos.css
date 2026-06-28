@@ -28,8 +28,9 @@
 
 body {
   font-family: var(--font-body);
-  background: linear-gradient(145deg, #0a2a1f 0%, #1a4a2a 50%, #0d331f 100%);
-  background-image: radial-gradient(#bae6fd 0.8px, transparent 0.8px);
+ background: radial-gradient(circle at top, #1a2a3a 0%, #0d131a 100%);
+   background-attachment: fixed;
+  
   background-size: 30px 30px;
   color: #334155;
   margin: 0;
