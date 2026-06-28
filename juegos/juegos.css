@@ -28,10 +28,12 @@
 
 body {
   font-family: var(--font-body);
-  background: linear-gradient(145deg, #e8f8f5 0%, #f0fdfa 100%);
-  background-image: radial-gradient(#bae6fd 0.8px, transparent 0.8px);
-  background-size: 30px 30px;
-  color: #334155;
+  background: linear-gradient(145deg, #0a2a1f 0%, #1a4a2a 50%, #0d331f 100%);
+  background-image: 
+    radial-gradient(circle at 20% 30%, rgba(0, 168, 150, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(242, 100, 25, 0.06) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(255, 215, 0, 0.04) 0%, transparent 70%);
+  color: #e2e8f0;
   margin: 0;
   padding: 0;
   display: flex;
@@ -49,9 +51,10 @@ body::before {
   bottom: 20px;
   right: 10px;
   font-size: 50px;
-  opacity: 0.04;
+  opacity: 0.06;
   pointer-events: none;
   z-index: 0;
+  animation: floatDecor 20s ease-in-out infinite;
 }
 
 body::after {
@@ -60,9 +63,48 @@ body::after {
   top: 20px;
   left: 20px;
   font-size: 80px;
-  opacity: 0.03;
+  opacity: 0.04;
   pointer-events: none;
   z-index: 0;
+}
+
+@keyframes floatDecor {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-20px) rotate(5deg); }
+}
+
+/* Partículas animadas de fondo */
+.particles-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: radial-gradient(circle, rgba(255,255,255,0.4), transparent);
+  border-radius: 50%;
+  animation: floatParticle linear infinite;
+}
+
+@keyframes floatParticle {
+  0% {
+    transform: translateY(100vh) rotate(0deg);
+    opacity: 0;
+  }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% {
+    transform: translateY(-10vh) rotate(720deg);
+    opacity: 0;
+  }
 }
 
 /* ==========================================================================
@@ -70,24 +112,25 @@ body::after {
    ========================================================================== */
 .topbar {
   width: 100%;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
+  background: rgba(10, 42, 31, 0.85);
+  backdrop-filter: blur(16px);
   padding: 1rem 1.5rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 4px 20px rgba(2, 128, 144, 0.15);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
   position: sticky;
   top: 0;
   z-index: 100;
   flex-wrap: wrap;
   gap: 0.8rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .topbar h1 {
   font-family: var(--font-title);
   font-size: 1.5rem;
-  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  background: linear-gradient(135deg, #FFE259, #FFA751, #FFD54F);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -121,19 +164,19 @@ body::after {
   gap: 8px;
   font-size: 0.95rem;
   min-height: 48px;
-  box-shadow: 0 4px 10px rgba(0, 168, 150, 0.3);
+  box-shadow: 0 4px 20px rgba(0, 168, 150, 0.25);
 }
 
 .volver:hover {
-  transform: translateX(-3px);
-  box-shadow: 0 6px 15px rgba(0, 168, 150, 0.4);
+  transform: translateX(-3px) scale(1.02);
+  box-shadow: 0 6px 30px rgba(0, 168, 150, 0.35);
 }
 
 .btn {
   text-decoration: none;
   font-family: var(--font-title);
-  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-  color: white;
+  background: rgba(255, 215, 0, 0.15);
+  color: #FFD54F;
   font-weight: 600;
   padding: 0.7rem 1.3rem;
   border-radius: 50px;
@@ -143,12 +186,13 @@ body::after {
   gap: 8px;
   font-size: 0.95rem;
   min-height: 48px;
-  box-shadow: 0 4px 10px rgba(0, 168, 150, 0.3);
+  border: 1px solid rgba(255, 215, 0, 0.2);
 }
 
 .btn:hover {
-  transform: translateX(-3px);
-  box-shadow: 0 6px 15px rgba(0, 168, 150, 0.4);
+  background: rgba(255, 215, 0, 0.25);
+  transform: scale(1.05);
+  box-shadow: 0 4px 20px rgba(255, 215, 0, 0.15);
 }
 
 /* ==========================================================================
@@ -181,11 +225,11 @@ body::after {
   overflow: hidden;
   border-radius: 24px;
   box-shadow: 
-    0 20px 60px rgba(0, 0, 0, 0.15),
+    0 20px 60px rgba(0, 0, 0, 0.4),
     inset 0 0 60px rgba(255, 255, 255, 0.05);
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   min-width: 0;
   position: relative;
 }
@@ -226,7 +270,7 @@ body::after {
   left: -50%;
   width: 200%;
   height: 200%;
-  background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
   animation: rotateGlow 20s linear infinite;
   opacity: 0;
   transition: opacity 0.6s;
@@ -248,7 +292,7 @@ body::after {
   z-index: 2;
   text-align: center;
   color: white;
-  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  text-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
   transform: scale(1);
   transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   width: 100%;
@@ -303,13 +347,13 @@ body::after {
 
 .slide-stats {
   display: inline-block;
-  background: rgba(0, 0, 0, 0.25);
+  background: rgba(0, 0, 0, 0.3);
   backdrop-filter: blur(10px);
   padding: 0.4rem 1.2rem;
   border-radius: 50px;
   font-size: 0.85rem;
   font-weight: 600;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   animation: pulseStat 2s ease-in-out infinite;
 }
 
@@ -326,7 +370,7 @@ body::after {
   transform: translate(-50%, -50%);
   width: 250px;
   height: 250px;
-  background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
   border-radius: 50%;
   filter: blur(60px);
   animation: glowPulse 3s ease-in-out infinite;
@@ -345,17 +389,17 @@ body::after {
   height: 48px;
   border-radius: 50%;
   border: none;
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.12);
   backdrop-filter: blur(10px);
-  color: var(--secondary-color);
+  color: white;
   font-size: 1.8rem;
   cursor: pointer;
   transition: all 0.3s;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgba(0, 168, 150, 0.2);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
   flex-shrink: 0;
   position: relative;
   z-index: 10;
@@ -363,9 +407,9 @@ body::after {
 }
 
 .carousel-nav-btn:hover {
-  background: white;
+  background: rgba(255, 255, 255, 0.25);
   transform: scale(1.15);
-  box-shadow: 0 0 40px rgba(0, 168, 150, 0.3);
+  box-shadow: 0 0 40px rgba(255, 255, 255, 0.1);
 }
 
 .carousel-nav-btn:active {
@@ -384,7 +428,7 @@ body::after {
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  background: rgba(0, 168, 150, 0.3);
+  background: rgba(255, 255, 255, 0.2);
   cursor: pointer;
   transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   border: 2px solid transparent;
@@ -394,15 +438,15 @@ body::after {
 }
 
 .indicator-dot.active {
-  background: var(--primary-color);
+  background: #FFD54F;
   transform: scale(1.4);
-  box-shadow: 0 0 25px rgba(0, 168, 150, 0.5);
-  border-color: rgba(0, 168, 150, 0.3);
+  box-shadow: 0 0 25px rgba(255, 213, 79, 0.4);
+  border-color: rgba(255, 213, 79, 0.3);
 }
 
 .indicator-dot:hover {
   transform: scale(1.2);
-  background: var(--secondary-color);
+  background: rgba(255, 213, 79, 0.6);
 }
 
 /* ==========================================================================
@@ -411,11 +455,12 @@ body::after {
 .play-area {
   width: 90%;
   max-width: 1100px;
-  background: var(--white);
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(16px);
   margin: 1rem auto 2rem auto;
   padding: 2rem;
   border-radius: 32px;
-  border: 2px solid rgba(0, 168, 150, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   text-align: center;
   min-height: 250px;
   display: flex;
@@ -424,14 +469,19 @@ body::after {
   align-items: center;
   position: relative;
   z-index: 1;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-  background: linear-gradient(145deg, var(--white), #f8fffc);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  transition: all 0.5s ease;
+}
+
+.play-area:hover {
+  border-color: rgba(255, 213, 79, 0.15);
+  box-shadow: 0 10px 50px rgba(0, 0, 0, 0.3);
 }
 
 #gameTitle {
   font-family: var(--font-title);
   font-size: 1.8rem;
-  background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
+  background: linear-gradient(135deg, #FFE259, #FFA751);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -440,13 +490,14 @@ body::after {
 
 #gameContent {
   font-size: 1rem;
-  color: #475569;
+  color: #e2e8f0;
   width: 100%;
   line-height: 1.6;
 }
 
 #gameContent p {
   font-size: 1rem;
+  color: #cbd5e1;
 }
 
 /* Placeholder del área de juego */
@@ -460,22 +511,49 @@ body::after {
 .play-placeholder i {
   font-size: 4rem;
   opacity: 0.3;
-  color: var(--primary-color);
+  color: #FFD54F;
+  animation: floatIcon 3s ease-in-out infinite;
 }
 
 .play-placeholder p {
   font-size: 1.2rem;
   opacity: 0.6;
-  color: #64748b;
+  color: #94a3b8;
 }
 
 .play-hint {
   font-size: 0.9rem;
-  opacity: 0.5;
-  background: rgba(0, 168, 150, 0.08);
+  opacity: 0.4;
+  background: rgba(255, 255, 255, 0.05);
   padding: 0.3rem 1.2rem;
   border-radius: 50px;
-  color: var(--secondary-color);
+  color: #cbd5e1;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Estilos para contenido de juegos dentro del área */
+#gameContent .btn {
+  display: inline-block;
+  text-decoration: none;
+  color: white;
+  padding: 0.8rem 2.5rem;
+  border-radius: 50px;
+  background: linear-gradient(135deg, #00a896, #028090);
+  font-weight: 600;
+  transition: all 0.3s;
+  box-shadow: 0 4px 25px rgba(0, 168, 150, 0.3);
+  border: none;
+  cursor: pointer;
+}
+
+#gameContent .btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 35px rgba(0, 168, 150, 0.4);
+}
+
+#gameContent h3 {
+  color: #FFD54F;
+  font-family: var(--font-title);
 }
 
 /* ==========================================================================
@@ -500,17 +578,17 @@ body::after {
   font-size: 32px;
   text-decoration: none;
   animation: whatsappPulse 2s infinite;
-  box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
+  box-shadow: 0 4px 30px rgba(37, 211, 102, 0.3);
   transition: all 0.3s;
 }
 
 .whatsapp-float:hover {
   transform: scale(1.1);
-  box-shadow: 0 6px 30px rgba(37, 211, 102, 0.5);
+  box-shadow: 0 6px 40px rgba(37, 211, 102, 0.4);
 }
 
 @keyframes whatsappPulse {
-  0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.6); }
+  0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.5); }
   70% { box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); }
   100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
 }
@@ -672,7 +750,7 @@ button,
 }
 
 input, textarea, select {
-  font-size: 16px; /* Previene zoom en iOS */
+  font-size: 16px;
 }
 
 img, canvas, iframe {
@@ -703,7 +781,7 @@ img, canvas, iframe {
 }
 
 ::-webkit-scrollbar-track {
-  background: #f0fdfa;
+  background: #0a2a1f;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -713,4 +791,46 @@ img, canvas, iframe {
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--secondary-color);
+}
+
+/* ==========================================================================
+   8. JUEGOS ESPECÍFICOS - ESTILOS MEJORADOS
+   ========================================================================== */
+
+/* Grid de memoria */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  max-width: 350px;
+  margin: 1.5rem auto;
+}
+
+.memory-card {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid rgba(255, 255, 255, 0.06);
+  user-select: none;
+}
+
+.memory-card:hover {
+  transform: scale(1.05);
+  border-color: rgba(255, 213, 79, 0.3);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* Canvas del laberinto */
+#mazeCanvas {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border-radius: 16px !important;
+  border: 2px solid rgba(255, 255, 255, 0.06);
+  max-width: 100%;
+  height: auto;
 }
