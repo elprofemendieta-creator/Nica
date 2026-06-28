@@ -4,84 +4,152 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
   <title>Guía Pinolero - Juegos Turísticos</title>
-  <link rel="stylesheet" href="juegos.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <link rel="stylesheet" href="juegos.css" />
 </head>
 <body>
 
+  <!-- ===== TOPBAR ===== -->
   <header class="topbar">
+    <div class="topbar-left">
+      <a href="../index.html" class="volver">
+        <i class="fas fa-arrow-left"></i> Inicio
+      </a>
+    </div>
     <h1>🎮 Juegos Turísticos</h1>
-    <a href="../index.html" class="volver">⬅ Inicio</a>
-     <a href="../estadisticas.html" class="btn">Admin</a>
+    <div class="topbar-right">
+      <a href="../estadisticas.html" class="btn-admin">
+        <i class="fas fa-chart-bar"></i> Admin
+      </a>
+    </div>
   </header>
 
+  <!-- ===== CARRUSEL DE JUEGOS ===== -->
   <main class="games-container">
-    <section class="game-card">
-      <div class="emoji">🗺️</div>
-      <h2>El Gran Mapa Misterioso</h2>
-      <p>¿Reconoces los lugares de Nicaragua?</p>
-      <button><a href="mapamisterioso.html" class="boton">Jugar</a></button>
-    </section>
+    <div class="carousel-premium-container">
+      <div class="carousel-premium-wrapper">
+        <button class="carousel-nav-btn prev-btn">‹</button>
+        
+        <div class="carousel-track-wrapper">
+          <div class="carousel-track">
+            <!-- Juego 1: Mapa Misterioso -->
+            <div class="carousel-slide" data-url="mapamisterioso.html" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+              <div class="slide-content">
+                <div class="slide-icon">🗺️</div>
+                <h3>El Gran Mapa Misterioso</h3>
+                <p>¿Reconoces los lugares de Nicaragua?</p>
+                <div class="slide-stats">🎯 1,234 jugadores</div>
+                <div class="slide-glow"></div>
+              </div>
+            </div>
 
-    <section class="game-card">
-      <div class="emoji">🛑</div>
-      <h2>Stopinolero</h2>
-      <p>Juega con amigos</p>
-      <button><a href="stop.html" class="boton">Jugar</a></button>
-    </section>
+            <!-- Juego 2: Stopinolero -->
+            <div class="carousel-slide" data-url="stop.html" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+              <div class="slide-content">
+                <div class="slide-icon">🛑</div>
+                <h3>Stopinolero</h3>
+                <p>Juega con amigos y demuestra tu conocimiento</p>
+                <div class="slide-stats">👥 567 jugando</div>
+                <div class="slide-glow"></div>
+              </div>
+            </div>
 
-    <section class="game-card">
-      <div class="emoji">🃏</div>
-      <h2>Memoria de Cartas</h2>
-      <p>Encuentra las parejas correctas.</p>
-      <button><a href="pareja.html" class="boton">Jugar</a></button>
-    </section>
+            <!-- Juego 3: Memoria -->
+            <div class="carousel-slide" data-url="pareja.html" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+              <div class="slide-content">
+                <div class="slide-icon">🃏</div>
+                <h3>Memoria de Cartas</h3>
+                <p>Encuentra las parejas correctas</p>
+                <div class="slide-stats">🧠 890 partidas</div>
+                <div class="slide-glow"></div>
+              </div>
+            </div>
 
-    <section class="game-card">
-      <div class="emoji">🔤</div>
-      <h2>Ordena la Palabra</h2>
-      <p>Ordena palabras relacionadas con Nicaragua.</p>
-      <button><a href="palabra.html" class="boton">Jugar</a></button>
-    </section>
+            <!-- Juego 4: Ordena Palabra -->
+            <div class="carousel-slide" data-url="palabra.html" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+              <div class="slide-content">
+                <div class="slide-icon">🔤</div>
+                <h3>Ordena la Palabra</h3>
+                <p>Ordena palabras relacionadas con Nicaragua</p>
+                <div class="slide-stats">📝 432 completados</div>
+                <div class="slide-glow"></div>
+              </div>
+            </div>
 
-    <section class="game-card">
-      <div class="emoji">🌋</div>
-      <h2>Laberinto</h2>
-      <p>Encuentra la salida del destino turístico.</p>
-      <button><a href="laberinto.html" class="boton">Jugar</a></button>
-    </section>
-    
-    <section class="game-card">
-      <div class="emoji">🧐🧩</div>
-      <h2>Varios</h2>
-      <p></p>
-      <button><a href="SOPA.html" class="boton">Jugar</a></button>
-    </section>
+            <!-- Juego 5: Laberinto -->
+            <div class="carousel-slide" data-url="laberinto.html" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+              <div class="slide-content">
+                <div class="slide-icon">🌋</div>
+                <h3>Laberinto</h3>
+                <p>Encuentra la salida del destino turístico</p>
+                <div class="slide-stats">🏆 321 escapados</div>
+                <div class="slide-glow"></div>
+              </div>
+            </div>
+
+            <!-- Juego 6: Varios -->
+            <div class="carousel-slide" data-url="SOPA.html" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);">
+              <div class="slide-content">
+                <div class="slide-icon">🧩</div>
+                <h3>Varios</h3>
+                <p>Sopa de letras y más desafíos</p>
+                <div class="slide-stats">🎮 678 jugadores</div>
+                <div class="slide-glow"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button class="carousel-nav-btn next-btn">›</button>
+      </div>
+
+      <!-- Indicadores -->
+      <div class="carousel-indicators">
+        <span class="indicator-dot active" data-index="0"></span>
+        <span class="indicator-dot" data-index="1"></span>
+        <span class="indicator-dot" data-index="2"></span>
+        <span class="indicator-dot" data-index="3"></span>
+        <span class="indicator-dot" data-index="4"></span>
+        <span class="indicator-dot" data-index="5"></span>
+      </div>
+    </div>
   </main>
-  
+
+  <!-- ===== ÁREA DE JUEGO SELECCIONADO ===== -->
   <section class="play-area">
-    <h2 id="gameTitle">Selecciona un juego</h2>
+    <h2 id="gameTitle">🎯 Selecciona un juego</h2>
     <div id="gameContent">
-      <p>Elige un juego para comenzar 😄</p>
+      <div class="play-placeholder">
+        <i class="fas fa-gamepad"></i>
+        <p>Elige un juego para comenzar 😄</p>
+        <span class="play-hint">Haz clic en cualquier tarjeta arriba</span>
+      </div>
     </div>
   </section>
 
+  <!-- ===== WHATSAPP FLOTANTE ===== -->
+  <div class="whatsapp-container">
+    <a href="#" class="whatsapp-float" id="whatsappBtn">
+      <i class="fab fa-whatsapp"></i>
+    </a>
+  </div>
+
   <script src="juegos.js"></script>
-  <!-- Default Statcounter code for juegos pinoleros
-https://guiapinolero.netlify.app/juegos/juegos -->
-<script type="text/javascript">
-var sc_project=13287221; 
-var sc_invisible=1; 
-var sc_security="8334d0d3"; 
-</script>
-<script type="text/javascript"
-src="https://www.statcounter.com/counter/counter.js"
-async></script>
-<noscript><div class="statcounter"><a title="Web Analytics"
-href="https://statcounter.com/" target="_blank"><img
-class="statcounter"
-src="https://c.statcounter.com/13287221/0/8334d0d3/1/"
-alt="Web Analytics"
-referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
-<!-- End of Statcounter Code -->
+
+  <!-- Statcounter -->
+  <script type="text/javascript">
+    var sc_project = 13287221;
+    var sc_invisible = 1;
+    var sc_security = "8334d0d3";
+  </script>
+  <script type="text/javascript" src="https://www.statcounter.com/counter/counter.js" async></script>
+  <noscript>
+    <div class="statcounter">
+      <a title="Web Analytics" href="https://statcounter.com/" target="_blank">
+        <img class="statcounter" src="https://c.statcounter.com/13287221/0/8334d0d3/1/" alt="Web Analytics" referrerpolicy="no-referrer-when-downgrade">
+      </a>
+    </div>
+  </noscript>
 </body>
 </html>
