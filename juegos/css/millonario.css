@@ -31,7 +31,7 @@ body {
     position: relative;
     width: 100%;
     /* ✅ RUTA CORREGIDA: sube un nivel con ../ */
-    background-image: url('../1782677408840.png');
+    background-image: url('../../1782677408840.png');
     background-size: 100% 100%;
     background-position: center;
     background-repeat: no-repeat;
