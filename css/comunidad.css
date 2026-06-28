@@ -1,14 +1,14 @@
 /* ===== VARIABLES ===== */
 :root {
-  --primary-blue: #0056b3;
-  --accent-cyan: #00b4d8;
-  --bg-light: #f4f7fc;
-  --surface: #ffffff;
-  --text-dark: #212529;
-  --text-muted: #6c757d;
+  --primary-blue: #00b4d8; /* Ajustamos el azul a uno más brillante para contraste */
+  --accent-cyan: #00e5ff;
+  --bg-light: rgba(255, 255, 255, 0.08); /* Fondo de tarjetas semitransparente */
+  --surface: rgba(255, 255, 255, 0.1);
+  --text-dark: #ffffff; /* Texto blanco */
+  --text-muted: #cfd8dc;
   --nav-height: 65px;
   --border-radius: 16px;
-  --shadow-card: 0 4px 16px rgba(0, 0, 0, 0.04);
+  --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
 /* ===== RESET Y BASE ===== */
@@ -19,7 +19,7 @@
 }
 
 body {
-  background-color: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
   color: var(--text-dark);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   padding-bottom: calc(var(--nav-height) + 24px);
@@ -49,11 +49,13 @@ body {
 /* ===== TARJETAS ===== */
 .mobile-card {
   background: var(--surface);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: var(--border-radius);
   padding: 20px;
   margin-bottom: 16px;
   box-shadow: var(--shadow-card);
-  border: 1px solid rgba(0, 0, 0, 0.03);
   transition: box-shadow 0.2s ease;
 }
 .mobile-card:hover {
