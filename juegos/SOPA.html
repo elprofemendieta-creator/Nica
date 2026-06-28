@@ -175,7 +175,7 @@
     /* ===== SOPA DE LETRAS ===== */
     .sopa-wrapper {
       width: 100%;
-      max-width: 550px;
+      max-width: 500px;
       margin: 0 auto;
       aspect-ratio: 1 / 1;
       display: flex;
@@ -185,8 +185,8 @@
 
     #sopaBoard {
       display: grid;
-      grid-template-columns: repeat(15, 1fr);
-      gap: 2px;
+      grid-template-columns: repeat(10, 1fr);
+      gap: 3px;
       width: 100%;
       height: 100%;
       background: rgba(0, 0, 0, 0.15);
@@ -200,7 +200,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: clamp(0.6rem, 3vw, 1.2rem);
+      font-size: clamp(0.7rem, 3.5vw, 1.4rem);
       font-weight: 700;
       background: rgba(255, 255, 255, 0.06);
       border-radius: 4px;
@@ -553,10 +553,9 @@
       transform: scale(0.92);
     }
 
-    .secreta-area .letter-btn.used {
-      opacity: 0.3;
-      pointer-events: none;
-      transform: scale(0.9);
+    .secreta-area .letter-btn.selected {
+      background: rgba(255, 215, 0, 0.25);
+      border-color: #ffd54f;
     }
 
     .secreta-area .word-display {
@@ -657,13 +656,13 @@
       }
 
       #sopaBoard {
-        gap: 1.5px;
+        gap: 2px;
         padding: 3px;
         border-radius: 8px;
       }
 
       .cell {
-        font-size: clamp(0.4rem, 2.5vw, 0.65rem);
+        font-size: clamp(0.5rem, 3vw, 0.8rem);
         border-radius: 3px;
         border-width: 0.5px;
       }
@@ -736,7 +735,7 @@
 
     @media (max-width: 380px) {
       .cell {
-        font-size: 0.35rem;
+        font-size: 0.45rem;
         border-radius: 2px;
       }
 
@@ -878,9 +877,9 @@
     ];
 
     // ============================================================
-    // 2. SOPA DE LETRAS
+    // 2. SOPA DE LETRAS (10x10)
     // ============================================================
-    const SIZE = 15;
+    const SIZE = 10;
     let board = [];
     let selection = [];
     let foundWords = new Set();
@@ -1193,20 +1192,18 @@
     }
 
     // ============================================================
-    // 3. PUZZLE - VERSIÓN CORREGIDA CON IMAGEN REAL
+    // 3. PUZZLE
     // ============================================================
-    const PUZZLE_SIZE = 3; // 3x3
+    const PUZZLE_SIZE = 3;
     let puzzlePieces = [];
     let puzzleEmptyIndex = 8;
     let puzzleSolved = false;
     let puzzleMovements = 0;
-    let puzzleImageLoaded = false;
 
-    // IMAGEN REAL
+    // IMAGEN REAL - Cambia esta ruta según donde tengas tu imagen
     const IMAGE_URL = "file.png";
 
     function initPuzzle() {
-      // Crear piezas del puzzle (0-8, donde 8 es el espacio vacío)
       puzzlePieces = [];
       for (let i = 0; i < 9; i++) {
         puzzlePieces.push(i);
@@ -1216,7 +1213,6 @@
       puzzleMovements = 0;
       document.getElementById('puzzleMovements').textContent = '0';
 
-      // Mezclar
       shufflePuzzle();
       renderPuzzle();
 
@@ -1229,7 +1225,6 @@
     }
 
     function shufflePuzzle() {
-      // Realizar movimientos aleatorios para mezclar
       for (let i = 0; i < 150; i++) {
         const emptyRow = Math.floor(puzzleEmptyIndex / PUZZLE_SIZE);
         const emptyCol = puzzleEmptyIndex % PUZZLE_SIZE;
@@ -1239,12 +1234,10 @@
         if (emptyCol > 0) neighbors.push(puzzleEmptyIndex - 1);
         if (emptyCol < PUZZLE_SIZE - 1) neighbors.push(puzzleEmptyIndex + 1);
         const randomNeighbor = neighbors[Math.floor(Math.random() * neighbors.length)];
-        // Intercambiar
         puzzlePieces[puzzleEmptyIndex] = puzzlePieces[randomNeighbor];
         puzzlePieces[randomNeighbor] = 8;
         puzzleEmptyIndex = randomNeighbor;
       }
-      // Asegurar que no esté resuelto
       if (isPuzzleSolved()) {
         if (puzzleEmptyIndex !== 0) {
           puzzlePieces[puzzleEmptyIndex] = puzzlePieces[0];
@@ -1271,19 +1264,17 @@
       board.style.gridTemplateColumns = `repeat(${PUZZLE_SIZE}, 1fr)`;
       board.innerHTML = '';
 
-      // Pre-cargar imagen para saber si existe
+      // Verificar si la imagen existe
       const img = new Image();
       img.onload = function() {
-        puzzleImageLoaded = true;
-        renderPieces();
+        renderPieces(true);
       };
       img.onerror = function() {
-        puzzleImageLoaded = false;
-        renderPieces();
+        renderPieces(false);
       };
       img.src = IMAGE_URL;
 
-      function renderPieces() {
+      function renderPieces(imageLoaded) {
         board.innerHTML = '';
         for (let i = 0; i < 9; i++) {
           const piece = document.createElement('div');
@@ -1298,13 +1289,12 @@
             const row = Math.floor(originalIndex / PUZZLE_SIZE);
             const col = originalIndex % PUZZLE_SIZE;
 
-            if (puzzleImageLoaded) {
+            if (imageLoaded) {
               piece.style.backgroundImage = `url('${IMAGE_URL}')`;
               piece.style.backgroundSize = `${PUZZLE_SIZE * 100}% ${PUZZLE_SIZE * 100}%`;
               piece.style.backgroundPosition = `-${col * 100}% -${row * 100}%`;
             } else {
-              // Imagen de respaldo con colores
-              const colors = ['#e53935', '#d81b60', '#8e24aa', '#5e35b1', '#1e88e5', '#00897b', '#43a047', '#fdd835', '#fb8c00'];
+              const colors = ['#e53935', '#d81b60', '#8e24aa', '#5e35b1', '#1e88e5', '#00897b', '#43a047', '#fdd835'];
               piece.style.background = colors[originalIndex];
               piece.style.color = 'white';
               piece.style.display = 'flex';
@@ -1328,7 +1318,6 @@
           board.appendChild(piece);
         }
 
-        // Verificar si está resuelto
         if (isPuzzleSolved() && !puzzleSolved) {
           puzzleSolved = true;
           const status = document.getElementById('puzzleStatus');
@@ -1337,14 +1326,12 @@
         }
       }
 
-      // Si la imagen ya está cargada, renderizar directamente
       if (img.complete) {
         if (img.naturalWidth > 0) {
-          puzzleImageLoaded = true;
+          renderPieces(true);
         } else {
-          puzzleImageLoaded = false;
+          renderPieces(false);
         }
-        renderPieces();
       }
     }
 
@@ -1377,12 +1364,11 @@
     }
 
     // ============================================================
-    // 4. PALABRA SECRETA
+    // 4. PALABRA SECRETA - CORREGIDA (NO descarta letras)
     // ============================================================
     const secretaPalabra = "MASAYA";
     const secretaLetras = ["A", "S", "D", "F", "G", "M", "N", "B", "V", "C", "E", "R", "T", "Y", "U"];
     let secretaSeleccionadas = [];
-    let secretaLetrasUsadas = [];
 
     function renderSecreta() {
       const container = document.getElementById('secretaLetters');
@@ -1392,17 +1378,23 @@
         btn.className = 'letter-btn';
         btn.textContent = letra;
         btn.dataset.index = index;
-        if (secretaLetrasUsadas.includes(index)) {
-          btn.classList.add('used');
+        // Marcar si ya fue seleccionada
+        if (secretaSeleccionadas.includes(index)) {
+          btn.classList.add('selected');
         }
         btn.addEventListener('click', () => {
-          if (secretaLetrasUsadas.includes(index)) return;
-          if (secretaSeleccionadas.length >= secretaPalabra.length) {
-            alert('Ya has seleccionado todas las letras necesarias.');
-            return;
+          // Si ya está seleccionada, la deseleccionamos
+          if (secretaSeleccionadas.includes(index)) {
+            secretaSeleccionadas = secretaSeleccionadas.filter(i => i !== index);
+          } else {
+            // Si no está seleccionada y hay espacio, la añadimos
+            if (secretaSeleccionadas.length < secretaPalabra.length) {
+              secretaSeleccionadas.push(index);
+            } else {
+              alert('Ya has seleccionado todas las letras necesarias.');
+              return;
+            }
           }
-          secretaSeleccionadas.push(letra);
-          secretaLetrasUsadas.push(index);
           actualizarSecretaDisplay();
           renderSecreta();
         });
@@ -1412,14 +1404,12 @@
 
     function actualizarSecretaDisplay() {
       const display = document.getElementById('secretaDisplay');
-      if (secretaSeleccionadas.length === 0) {
-        display.textContent = '_ '.repeat(secretaPalabra.length).trim();
-        return;
-      }
+      // Mostrar las letras seleccionadas en orden
       let texto = '';
       for (let i = 0; i < secretaPalabra.length; i++) {
         if (i < secretaSeleccionadas.length) {
-          texto += secretaSeleccionadas[i] + ' ';
+          const letra = secretaLetras[secretaSeleccionadas[i]];
+          texto += letra + ' ';
         } else {
           texto += '_ ';
         }
@@ -1428,17 +1418,13 @@
     }
 
     function verificarSecreta() {
-      const palabraFormada = secretaSeleccionadas.join('');
+      const palabraFormada = secretaSeleccionadas.map(i => secretaLetras[i]).join('');
       if (palabraFormada === secretaPalabra) {
         document.getElementById('secretaStatus').innerHTML = '✅ ¡Correcto! Has adivinado la palabra. 🎉';
         document.getElementById('secretaStatus').style.color = '#a5d6a7';
       } else {
         document.getElementById('secretaStatus').innerHTML = '❌ Incorrecto. Intenta de nuevo.';
         document.getElementById('secretaStatus').style.color = '#ffab91';
-        secretaSeleccionadas = [];
-        secretaLetrasUsadas = [];
-        actualizarSecretaDisplay();
-        renderSecreta();
         setTimeout(() => {
           document.getElementById('secretaStatus').innerHTML = 'Selecciona letras para formar la palabra';
           document.getElementById('secretaStatus').style.color = '';
@@ -1448,7 +1434,6 @@
 
     function reiniciarSecreta() {
       secretaSeleccionadas = [];
-      secretaLetrasUsadas = [];
       actualizarSecretaDisplay();
       renderSecreta();
       document.getElementById('secretaStatus').innerHTML = 'Selecciona letras para formar la palabra';
@@ -1494,7 +1479,7 @@
     document.getElementById('puzzleReiniciar').addEventListener('click', initPuzzle);
     document.getElementById('puzzleVerificar').addEventListener('click', verificarPuzzle);
 
-    // Botones de la barra (funcionalidad decorativa)
+    // Botones de la barra
     document.getElementById('btnFull').addEventListener('click', () => alert('Pantalla completa'));
     document.getElementById('btnInfo').addEventListener('click', () => alert('Información del juego'));
     document.getElementById('btnMenu').addEventListener('click', () => alert('Menú de opciones'));
