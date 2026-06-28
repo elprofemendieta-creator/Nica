@@ -739,3 +739,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   console.log('🎠 Carrusel Premium inicializado correctamente');
 });
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js');
+}
