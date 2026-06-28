@@ -1,75 +1,805 @@
-﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8"/>
-<meta name="keywords" content=""/>
-<title></title>
-<link rel="stylesheet" href="./sclim/lim.css?5.6.4" type="text/css" ></link>
-<link rel="stylesheet" href="./sclim/lim-px.css?5.6.4" type="text/css" ></link>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>Sopa de Letras - Nicaragua</title>
 
-<script src="./sclim/lang.js?5.6.4" type="text/javascript"></script>
-<script src="./sclim/limjs.js?5.6.4" type="text/javascript"></script>
+  <style>
+    /* ===== RESET Y BASE ===== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(145deg, #0b1a3a 0%, #0d47a1 50%, #0288d1 100%);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 16px 12px;
+      padding-top: 20px;
+      overflow-x: hidden;
+      background-attachment: fixed;
+    }
+
+    /* ===== TÍTULOS Y DESCRIPCIÓN ===== */
+    h1 {
+      font-size: clamp(1.8rem, 7vw, 3.2rem);
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      text-align: center;
+      background: linear-gradient(to right, #ffe082, #fff8e1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 2px;
+    }
+
+    .subtitle {
+      font-size: clamp(0.8rem, 2.2vw, 1.1rem);
+      text-align: center;
+      max-width: 600px;
+      opacity: 0.9;
+      margin-bottom: 20px;
+      font-weight: 300;
+      background: rgba(255, 255, 255, 0.08);
+      padding: 6px 18px;
+      border-radius: 40px;
+      backdrop-filter: blur(4px);
+      letter-spacing: 0.3px;
+    }
+
+    /* ===== CONTENEDOR PRINCIPAL ===== */
+    .game-wrapper {
+      width: 100%;
+      max-width: 750px;
+      background: rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-radius: 32px;
+      padding: clamp(14px, 3vw, 28px);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    /* ===== LISTA DE PALABRAS ===== */
+    .word-list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px 14px;
+      margin-bottom: 18px;
+      padding: 10px 6px;
+      background: rgba(0, 0, 0, 0.15);
+      border-radius: 60px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .word-item {
+      font-size: clamp(0.7rem, 1.8vw, 0.95rem);
+      font-weight: 600;
+      background: rgba(255, 255, 255, 0.08);
+      padding: 4px 14px;
+      border-radius: 40px;
+      letter-spacing: 0.5px;
+      color: #e3f2fd;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      transition: all 0.3s ease;
+    }
+
+    .word-item.found {
+      background: rgba(76, 175, 80, 0.3);
+      color: #a5d6a7;
+      text-decoration: line-through;
+      text-decoration-color: #81c784;
+      border-color: rgba(76, 175, 80, 0.2);
+      opacity: 0.7;
+    }
+
+    /* ===== TABLERO DE LA SOPA ===== */
+    .sopa-container {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      max-width: 650px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #sopaBoard {
+      display: grid;
+      grid-template-columns: repeat(15, 1fr);
+      gap: 3px;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.1);
+      border-radius: 16px;
+      padding: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .cell {
+      aspect-ratio: 1 / 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(0.7rem, 3.2vw, 1.4rem);
+      font-weight: 700;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 6px;
+      color: #ffffff;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      user-select: none;
+      border: 1px solid rgba(255, 255, 255, 0.02);
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .cell:active {
+      transform: scale(0.92);
+    }
+
+    .cell.selected {
+      background: rgba(255, 215, 0, 0.3);
+      border-color: #ffd54f;
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.15);
+    }
+
+    .cell.found {
+      background: rgba(76, 175, 80, 0.25);
+      color: #a5d6a7;
+      border-color: rgba(76, 175, 80, 0.2);
+      cursor: default;
+    }
+
+    /* ===== CONTROLES Y ESTADO ===== */
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 20px;
+      margin-bottom: 6px;
+    }
+
+    button {
+      border: none;
+      padding: 12px 28px;
+      border-radius: 60px;
+      font-weight: 700;
+      font-size: clamp(0.85rem, 1.8vw, 1rem);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background: rgba(255, 255, 255, 0.92);
+      color: #0d47a1;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      letter-spacing: 0.3px;
+      flex: 1 1 auto;
+      justify-content: center;
+      min-width: 80px;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      background: #ffffff;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.25);
+    }
+
+    button:active {
+      transform: scale(0.96);
+    }
+
+    button.reset-btn {
+      background: rgba(255, 215, 0, 0.9);
+      color: #1a2a3a;
+    }
+
+    button.reset-btn:hover {
+      background: #ffd54f;
+    }
+
+    .status {
+      margin-top: 12px;
+      text-align: center;
+      font-size: clamp(0.9rem, 2vw, 1.1rem);
+      font-weight: 500;
+      background: rgba(0, 0, 0, 0.15);
+      padding: 10px 18px;
+      border-radius: 60px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .status .counter {
+      background: rgba(255, 215, 0, 0.15);
+      padding: 2px 16px;
+      border-radius: 40px;
+      color: #ffd54f;
+      font-weight: 600;
+    }
+
+    .status .counter span {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    /* ===== BOTÓN VOLVER ===== */
+    .back-btn {
+      margin-top: 22px;
+      margin-bottom: 6px;
+      text-decoration: none;
+      background: rgba(255, 255, 255, 0.88);
+      color: #0d47a1;
+      padding: 13px 28px;
+      border-radius: 60px;
+      font-weight: 600;
+      transition: all 0.25s ease;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      font-size: clamp(0.8rem, 1.6vw, 1rem);
+    }
+
+    .back-btn:hover {
+      transform: translateY(-3px) scale(1.03);
+      background: #ffffff;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    .back-btn:active {
+      transform: scale(0.96);
+    }
+
+    /* ===== RESPONSIVE: MÓVILES ===== */
+    @media (max-width: 700px) {
+      body {
+        padding: 12px 8px;
+        padding-top: 16px;
+      }
+
+      .game-wrapper {
+        padding: 12px 10px;
+        border-radius: 24px;
+      }
+
+      .word-list {
+        gap: 4px 10px;
+        padding: 8px 4px;
+        border-radius: 40px;
+      }
+
+      .word-item {
+        font-size: clamp(0.55rem, 2vw, 0.8rem);
+        padding: 3px 10px;
+      }
+
+      #sopaBoard {
+        gap: 2px;
+        padding: 4px;
+        border-radius: 12px;
+      }
+
+      .cell {
+        border-radius: 4px;
+        font-size: clamp(0.5rem, 2.8vw, 0.9rem);
+      }
+
+      .controls {
+        gap: 8px;
+        margin-top: 14px;
+      }
+
+      button {
+        padding: 10px 16px;
+        font-size: clamp(0.7rem, 2vw, 0.85rem);
+        min-width: 60px;
+      }
+
+      .status {
+        font-size: clamp(0.75rem, 2vw, 0.9rem);
+        padding: 8px 12px;
+        gap: 10px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .game-wrapper {
+        padding: 8px 6px;
+        border-radius: 18px;
+      }
+
+      .word-list {
+        gap: 3px 6px;
+        padding: 6px 2px;
+        border-radius: 30px;
+      }
+
+      .word-item {
+        font-size: 0.5rem;
+        padding: 2px 8px;
+        border-radius: 30px;
+      }
+
+      #sopaBoard {
+        gap: 1.5px;
+        padding: 3px;
+        border-radius: 8px;
+      }
+
+      .cell {
+        border-radius: 3px;
+        font-size: clamp(0.4rem, 2.5vw, 0.7rem);
+        border-width: 0.5px;
+      }
+
+      .controls {
+        gap: 6px;
+        margin-top: 10px;
+      }
+
+      button {
+        padding: 8px 12px;
+        font-size: 0.65rem;
+        min-width: 50px;
+        border-radius: 40px;
+      }
+
+      .status {
+        font-size: 0.65rem;
+        padding: 6px 10px;
+        gap: 6px;
+        border-radius: 40px;
+      }
+
+      .back-btn {
+        padding: 10px 18px;
+        font-size: 0.7rem;
+        margin-top: 16px;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .cell {
+        font-size: 0.35rem;
+        border-radius: 2px;
+      }
+
+      .word-item {
+        font-size: 0.45rem;
+        padding: 1px 6px;
+      }
+
+      button {
+        padding: 6px 10px;
+        font-size: 0.6rem;
+        min-width: 40px;
+      }
+    }
+
+    /* ===== ANIMACIONES ===== */
+    @keyframes popIn {
+      0% { transform: scale(0.8); opacity: 0.3; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .cell {
+      animation: popIn 0.2s ease forwards;
+    }
+
+    .cell:nth-child(1) { animation-delay: 0.01s; }
+    .cell:nth-child(2) { animation-delay: 0.02s; }
+    /* Se aplica a todas las celdas de forma general */
+  </style>
 </head>
-<body >
-   <div class="pcllim" name='limbk' data-limc='{"version":"5.6","idioma":"ESP","licencia":"","corfondo":"ffffff","cormensaxes":"000000","cortexto":"000000","ben":"CORRECTO","mal":"INCORRECTO"}'>
-      <div class="pclpreload"></div>
-   <button class="pclbtbr"></button>
-   <div class="pclbarra">
-      <div class="pclbns">			 
-         <button class="pclbot lbt-full" >&#9713;</button>
-         <button class="pclbot lbt-infor" >i</button>
-         <button class="pclbot lbt-menu" >&#9636;</button>
-         <button class="pclbot lbt-axd" >?</button>
-      </div>
-      <div class="pclnum">1</div>
-      <div class="pclbni">
-         <button class="pclbot nav lbt-bck"><img src="./sclim/at.png" class="clim-tam" alt='&#10094;'></button>
-         <button class="pclbot nav lbt-frw"><img src="./sclim/ad.png" class="clim-tam" alt='&#10095;'></button>  						            
-      </div>
-   </div>
-   <div class="pclfondo"></div>
-   <div class="pclcorpo" >
-      <div class="pclsuper" ></div>
-      <div class="pclavance" ></div>
-      <div class="pclsub"  ><div class="pclsubtx"></div></div>
-      <div class="pclind"></div>
-      <div class="pclbase">
-<!-- pi -->
-	  
-         
-	<!-- 1 -->
-         <div name="limpax"  class="pclcont">
-            <div name="limpanel" data-limc='{"properties": { "type":"sopa","id":"1","txcabe":"CIUDADES","modo":"1","enunciados":["Cuál es la capital de Nicaragua","En que lago esta la Isla de Ometepe","Ciudad colonial ","Ciudad conocida por su cultura y volcan","Lugar famoso por su volcán activo y arte"],"palabras":["MANAGUA","COCIBOLCA","GRANADA","MASAYA","LEON"],"enunciado":"1","colorea":"1","cadro":"0","fondo":"ASDFGLERTUIOPZXCVBNM","letras":"ASDFGLERTUIOPZXCVBNM","tam":"16"}}'>
-               <div name="limact" >
-		
-	       </div>
-            </div>
-         </div>
-	<!--  -->
-<!-- 2 -->
-         <div name="limpax"  class="pclcont">
-            <div name="limpanel" data-limc='{"properties": { "type":"puzzle","id":"2","imaxe":"file.png","filas":"3","columnas":"3","reixa":"1","forma":"1"}}'>
-               <div name="limact" >
-		
-	       </div>
-            </div>
-         </div>
-	<!--  -->
-<!-- 3 -->
-         <div name="limpax"  class="pclcont">
-            <div name="limpanel" data-limc='{"properties": { "type":"secreta","id":"3","texto":"Lugar famoso por su volcán activo y artesanías","palabras":"MASAYA","letras":"ASDFGMNBVCERTYU","modo":"0","forma":"1"}}'>
-               <div name="limact" >
-		
-	       </div>
-				<a href="../juegos/juegos.html" class="volver">
-      ⬅ Inicio
-    </a>
-            </div>
-         </div>
-	<!--  -->
+<body>
 
-      </div>
-   </div>
-</div>
+  <h1>🔍 Sopa de Letras</h1>
+  <p class="subtitle">Encuentra las ciudades y lugares turísticos de Nicaragua 🌋🌊</p>
+
+  <div class="game-wrapper">
+    <!-- Lista de palabras a encontrar -->
+    <div class="word-list" id="wordList"></div>
+
+    <!-- Tablero de la sopa de letras -->
+    <div class="sopa-container">
+      <div id="sopaBoard"></div>
+    </div>
+
+    <!-- Controles -->
+    <div class="controls">
+      <button id="resetBtn" class="reset-btn">🔄 Reiniciar</button>
+    </div>
+
+    <!-- Estado / Puntuación -->
+    <div class="status" id="status">
+      <span>📌 Encuentra todas las palabras</span>
+      <span class="counter">🏷️ <span id="foundCount">0</span> / <span id="totalCount">6</span></span>
+    </div>
+  </div>
+
+  <a href="../juegos.html" class="back-btn">⬅ Volver a Juegos</a>
+
+  <script>
+    // ============================================================
+    // 1. DATOS DE LA SOPA DE LETRAS
+    // ============================================================
+    const palabras = [
+      { palabra: "GRANADA", descripcion: "Ciudad colonial" },
+      { palabra: "MANAGUA", descripcion: "Capital de Nicaragua" },
+      { palabra: "OMETEPE", descripcion: "Isla en el Lago Cocibolca" },
+      { palabra: "LEON", descripcion: "Ciudad cultura y volcanes" },
+      { palabra: "MASAYA", descripcion: "Volcán activo y artesanías" },
+      { palabra: "COCIBOLCA", descripcion: "Lago de Ometepe" }
+    ];
+
+    // ============================================================
+    // 2. GENERAR SOPA DE LETRAS (15x15)
+    // ============================================================
+    const SIZE = 15;
+    let board = [];
+    let selectedCells = [];
+    let foundWords = new Set();
+    let wordPositions = [];
+
+    // Letras para rellenar (vocales y consonantes comunes)
+    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+    function generateBoard() {
+      // Inicializar tablero vacío
+      board = Array.from({ length: SIZE }, () => Array(SIZE).fill(''));
+      wordPositions = [];
+
+      // Colocar palabras (horizontal, vertical, diagonal)
+      const directions = [
+        [0, 1], [1, 0], [1, 1], [-1, 1] // derecha, abajo, diagonal abajo-derecha, diagonal arriba-derecha
+      ];
+
+      palabras.forEach((item, idx) => {
+        const word = item.palabra;
+        let placed = false;
+        let attempts = 0;
+
+        while (!placed && attempts < 200) {
+          attempts++;
+          const row = Math.floor(Math.random() * SIZE);
+          const col = Math.floor(Math.random() * SIZE);
+          const dir = directions[Math.floor(Math.random() * directions.length)];
+          const [dr, dc] = dir;
+
+          // Verificar si cabe
+          let canPlace = true;
+          for (let i = 0; i < word.length; i++) {
+            const r = row + i * dr;
+            const c = col + i * dc;
+            if (r < 0 || r >= SIZE || c < 0 || c >= SIZE) {
+              canPlace = false;
+              break;
+            }
+            if (board[r][c] !== '' && board[r][c] !== word[i]) {
+              canPlace = false;
+              break;
+            }
+          }
+
+          if (canPlace) {
+            const positions = [];
+            for (let i = 0; i < word.length; i++) {
+              const r = row + i * dr;
+              const c = col + i * dc;
+              board[r][c] = word[i];
+              positions.push({ row: r, col: c });
+            }
+            wordPositions.push({ word, positions, found: false });
+            placed = true;
+          }
+        }
+
+        // Si no se pudo colocar (fallback), se coloca horizontal
+        if (!placed) {
+          let row = Math.floor(Math.random() * SIZE);
+          let col = Math.floor(Math.random() * (SIZE - word.length + 1));
+          const positions = [];
+          for (let i = 0; i < word.length; i++) {
+            board[row][col + i] = word[i];
+            positions.push({ row, col: col + i });
+          }
+          wordPositions.push({ word, positions, found: false });
+        }
+      });
+
+      // Rellenar espacios vacíos con letras aleatorias
+      for (let r = 0; r < SIZE; r++) {
+        for (let c = 0; c < SIZE; c++) {
+          if (board[r][c] === '') {
+            board[r][c] = letters[Math.floor(Math.random() * letters.length)];
+          }
+        }
+      }
+    }
+
+    // ============================================================
+    // 3. RENDERIZAR TABLERO Y LISTA DE PALABRAS
+    // ============================================================
+    const boardEl = document.getElementById('sopaBoard');
+    const wordListEl = document.getElementById('wordList');
+    const foundCountEl = document.getElementById('foundCount');
+    const totalCountEl = document.getElementById('totalCount');
+    const statusEl = document.getElementById('status');
+
+    totalCountEl.textContent = palabras.length;
+
+    function renderBoard() {
+      boardEl.innerHTML = '';
+      for (let r = 0; r < SIZE; r++) {
+        for (let c = 0; c < SIZE; c++) {
+          const cell = document.createElement('div');
+          cell.className = 'cell';
+          cell.dataset.row = r;
+          cell.dataset.col = c;
+          cell.textContent = board[r][c];
+          cell.addEventListener('click', () => onCellClick(r, c));
+          boardEl.appendChild(cell);
+        }
+      }
+      // Aplicar estilos de palabras encontradas
+      updateFoundStyles();
+    }
+
+    function renderWordList() {
+      wordListEl.innerHTML = '';
+      palabras.forEach((item, index) => {
+        const span = document.createElement('span');
+        span.className = 'word-item';
+        span.id = `word-${index}`;
+        span.textContent = item.palabra + ' (' + item.descripcion + ')';
+        if (foundWords.has(item.palabra)) {
+          span.classList.add('found');
+        }
+        wordListEl.appendChild(span);
+      });
+    }
+
+    function updateFoundStyles() {
+      // Actualizar celdas
+      const cells = boardEl.querySelectorAll('.cell');
+      cells.forEach(cell => {
+        const r = parseInt(cell.dataset.row);
+        const c = parseInt(cell.dataset.col);
+        let isFound = false;
+        for (const wp of wordPositions) {
+          if (wp.found) {
+            for (const pos of wp.positions) {
+              if (pos.row === r && pos.col === c) {
+                isFound = true;
+                break;
+              }
+            }
+          }
+          if (isFound) break;
+        }
+        if (isFound) {
+          cell.classList.add('found');
+        } else {
+          cell.classList.remove('found');
+        }
+        cell.classList.remove('selected');
+      });
+
+      // Actualizar lista de palabras
+      const items = wordListEl.querySelectorAll('.word-item');
+      items.forEach((item, index) => {
+        const palabra = palabras[index].palabra;
+        if (foundWords.has(palabra)) {
+          item.classList.add('found');
+        } else {
+          item.classList.remove('found');
+        }
+      });
+
+      // Actualizar contador
+      foundCountEl.textContent = foundWords.size;
+
+      // Verificar victoria
+      if (foundWords.size === palabras.length) {
+        statusEl.innerHTML = `
+          <span class="victory" style="color:#ffd54f;font-weight:700;">🎉 ¡Felicidades! Encontraste todas las palabras.</span>
+          <span class="counter">🏆 <span>${foundWords.size}</span> / <span>${palabras.length}</span></span>
+        `;
+      } else {
+        const restante = palabras.length - foundWords.size;
+        const msg = statusEl.querySelector('span:first-child');
+        if (msg) {
+          msg.textContent = `📌 Encuentra ${restante} palabra${restante > 1 ? 's' : ''} más`;
+        }
+      }
+    }
+
+    // ============================================================
+    // 4. LÓGICA DE SELECCIÓN Y VALIDACIÓN
+    // ============================================================
+    let selection = [];
+
+    function onCellClick(row, col) {
+      // Si la celda ya está encontrada, ignorar
+      let isFoundCell = false;
+      for (const wp of wordPositions) {
+        if (wp.found) {
+          for (const pos of wp.positions) {
+            if (pos.row === row && pos.col === col) {
+              isFoundCell = true;
+              break;
+            }
+          }
+        }
+        if (isFoundCell) break;
+      }
+      if (isFoundCell) return;
+
+      // Si ya hay selección, verificar si la celda es adyacente a la última seleccionada
+      if (selection.length > 0) {
+        const last = selection[selection.length - 1];
+        const dr = Math.abs(row - last.row);
+        const dc = Math.abs(col - last.col);
+        // Solo permitir movimiento en línea recta (horizontal, vertical o diagonal)
+        if ((dr === 0 && dc === 1) || (dr === 1 && dc === 0) || (dr === 1 && dc === 1)) {
+          // Verificar que no se repita
+          const exists = selection.some(s => s.row === row && s.col === col);
+          if (!exists) {
+            selection.push({ row, col });
+            updateSelectionStyles();
+            // Intentar validar la palabra formada
+            tryValidateWord();
+            return;
+          } else {
+            // Si se hace clic en una celda ya seleccionada, limpiar selección (reiniciar)
+            clearSelection();
+            return;
+          }
+        } else {
+          // Si no es adyacente, limpiar selección y comenzar de nuevo
+          clearSelection();
+          // Seleccionar la nueva celda
+          selection.push({ row, col });
+          updateSelectionStyles();
+          return;
+        }
+      } else {
+        // Primera selección
+        selection.push({ row, col });
+        updateSelectionStyles();
+      }
+    }
+
+    function updateSelectionStyles() {
+      // Limpiar estilos de selección
+      const cells = boardEl.querySelectorAll('.cell');
+      cells.forEach(cell => cell.classList.remove('selected'));
+
+      // Marcar celdas seleccionadas
+      selection.forEach(pos => {
+        const index = pos.row * SIZE + pos.col;
+        if (cells[index]) {
+          cells[index].classList.add('selected');
+        }
+      });
+    }
+
+    function clearSelection() {
+      selection = [];
+      const cells = boardEl.querySelectorAll('.cell');
+      cells.forEach(cell => cell.classList.remove('selected'));
+    }
+
+    function tryValidateWord() {
+      if (selection.length < 3) return; // mínimo 3 letras
+
+      // Obtener la palabra seleccionada
+      let word = '';
+      for (const pos of selection) {
+        word += board[pos.row][pos.col];
+      }
+
+      // Buscar si coincide con alguna palabra (en orden normal o inverso)
+      let foundWord = null;
+      let foundPositions = null;
+      for (const wp of wordPositions) {
+        if (wp.found) continue;
+        if (wp.word === word) {
+          foundWord = wp.word;
+          foundPositions = wp.positions;
+          break;
+        }
+        // También revisar al revés (por si el usuario seleccionó en orden inverso)
+        const reversed = word.split('').reverse().join('');
+        if (wp.word === reversed) {
+          foundWord = wp.word;
+          foundPositions = wp.positions.slice().reverse();
+          break;
+        }
+      }
+
+      if (foundWord && foundPositions) {
+        // Verificar que las posiciones coincidan exactamente
+        const match = selection.every((pos, idx) => {
+          return pos.row === foundPositions[idx].row && pos.col === foundPositions[idx].col;
+        });
+
+        if (match) {
+          // Marcar como encontrada
+          for (const wp of wordPositions) {
+            if (wp.word === foundWord) {
+              wp.found = true;
+              foundWords.add(foundWord);
+              break;
+            }
+          }
+          clearSelection();
+          updateFoundStyles();
+          renderWordList();
+          return;
+        }
+      }
+
+      // Si no coincide, mantenemos la selección para que el usuario siga agregando letras
+    }
+
+    // ============================================================
+    // 5. REINICIAR JUEGO
+    // ============================================================
+    function resetGame() {
+      foundWords = new Set();
+      selection = [];
+      for (const wp of wordPositions) {
+        wp.found = false;
+      }
+      generateBoard();
+      renderBoard();
+      renderWordList();
+      updateFoundStyles();
+      // Restaurar mensaje de estado
+      statusEl.innerHTML = `
+        <span>📌 Encuentra todas las palabras</span>
+        <span class="counter">🏷️ <span id="foundCount">0</span> / <span id="totalCount">${palabras.length}</span></span>
+      `;
+      // Reasignar referencias después de re-renderizar
+      document.getElementById('foundCount').textContent = '0';
+    }
+
+    // ============================================================
+    // 6. INICIALIZACIÓN Y EVENTOS
+    // ============================================================
+    document.getElementById('resetBtn').addEventListener('click', resetGame);
+
+    // Iniciar juego
+    generateBoard();
+    renderBoard();
+    renderWordList();
+    updateFoundStyles();
+
+    // Para móviles: permitir selección táctil con un toque
+    // (ya manejado con click)
+
+    console.log('¡Sopa de Letras cargada correctamente!');
+  </script>
+
 </body>
 </html>
