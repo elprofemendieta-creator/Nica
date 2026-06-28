@@ -1,1486 +1,1440 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-  <title>Sopa de Letras - Nicaragua</title>
-
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-      min-height: 100vh;
-      background: linear-gradient(145deg, #0b1a3a 0%, #0d47a1 50%, #0288d1 100%);
-      color: white;
-      display: flex;
-      justify-content: center;
-      padding: 16px;
-      padding-top: 24px;
-      background-attachment: fixed;
-    }
-
-    .container {
-      width: 100%;
-      max-width: 850px;
-      background: rgba(255, 255, 255, 0.06);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-      border-radius: 32px;
-      padding: 24px;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      align-self: flex-start;
-    }
-
-    h1 {
-      font-size: clamp(1.8rem, 6vw, 3rem);
-      font-weight: 800;
-      text-align: center;
-      background: linear-gradient(to right, #ffe082, #fff8e1);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      margin-bottom: 4px;
-      letter-spacing: -0.5px;
-    }
-
-    .subtitle {
-      text-align: center;
-      font-size: clamp(0.8rem, 2vw, 1.05rem);
-      opacity: 0.9;
-      margin-bottom: 20px;
-      font-weight: 300;
-      background: rgba(255, 255, 255, 0.06);
-      padding: 6px 20px;
-      border-radius: 40px;
-      display: inline-block;
-      width: auto;
-      margin-left: auto;
-      margin-right: auto;
-      backdrop-filter: blur(4px);
-    }
-
-    .navbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: rgba(0, 0, 0, 0.2);
-      border-radius: 60px;
-      padding: 8px 14px;
-      margin-bottom: 18px;
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      flex-wrap: wrap;
-      gap: 6px;
-    }
-
-    .navbar-left,
-    .navbar-right {
-      display: flex;
-      gap: 4px;
-      align-items: center;
-    }
-
-    .nav-btn {
-      background: rgba(255, 255, 255, 0.06);
-      border: none;
-      color: white;
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      font-size: 1.1rem;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-    }
-
-    .nav-btn:hover {
-      background: rgba(255, 255, 255, 0.18);
-      transform: scale(1.05);
-    }
-
-    .nav-btn:active {
-      transform: scale(0.92);
-    }
-
-    .nav-btn.arrow {
-      background: rgba(255, 215, 0, 0.12);
-    }
-
-    .nav-btn.arrow:hover {
-      background: rgba(255, 215, 0, 0.25);
-    }
-
-    .page-number {
-      color: #ffd54f;
-      font-weight: 700;
-      font-size: 1rem;
-      background: rgba(255, 215, 0, 0.08);
-      padding: 2px 16px;
-      border-radius: 40px;
-      border: 1px solid rgba(255, 215, 0, 0.08);
-      min-width: 30px;
-      text-align: center;
-    }
-
-    .game-area {
-      background: rgba(0, 0, 0, 0.06);
-      border-radius: 24px;
-      padding: 16px;
-      border: 1px solid rgba(255, 255, 255, 0.04);
-      min-height: 400px;
-      position: relative;
-    }
-
-    .panel {
-      display: none;
-      animation: fadeIn 0.3s ease;
-    }
-
-    .panel.active {
-      display: block;
-    }
-
-    @keyframes fadeIn {
-      0% {
-        opacity: 0;
-        transform: translateY(10px);
-      }
-      100% {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .panel-title {
-      font-size: 1.4rem;
-      font-weight: 700;
-      color: #ffd54f;
-      text-align: center;
-      margin-bottom: 12px;
-      letter-spacing: 2px;
-    }
-
-    .panel-desc {
-      text-align: center;
-      font-size: 0.95rem;
-      opacity: 0.8;
-      margin-bottom: 16px;
-    }
-
-    .sopa-wrapper {
-      width: 100%;
-      max-width: 550px;
-      margin: 0 auto;
-      aspect-ratio: 1 / 1;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    #sopaBoard {
-      display: grid;
-      grid-template-columns: repeat(12, 1fr);
-      gap: 3px;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.15);
-      border-radius: 12px;
-      padding: 6px;
-      border: 1px solid rgba(255, 255, 255, 0.04);
-    }
-
-    .cell {
-      aspect-ratio: 1 / 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: clamp(0.6rem, 3vw, 1.2rem);
-      font-weight: 700;
-      background: rgba(255, 255, 255, 0.06);
-      border-radius: 4px;
-      color: #ffffff;
-      cursor: pointer;
-      transition: all 0.15s ease;
-      user-select: none;
-      border: 1px solid rgba(255, 255, 255, 0.03);
-      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
-    }
-
-    .cell:active {
-      transform: scale(0.92);
-    }
-
-    .cell.selected {
-      background: rgba(255, 215, 0, 0.35);
-      border-color: #ffd54f;
-      box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
-      transform: scale(1.05);
-    }
-
-    .cell.found {
-      background: rgba(76, 175, 80, 0.15);
-      color: #a5d6a7;
-      border-color: rgba(76, 175, 80, 0.2);
-      cursor: pointer;
-    }
-
-    .word-list {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 6px 12px;
-      margin-top: 16px;
-      padding: 8px 12px;
-      background: rgba(0, 0, 0, 0.12);
-      border-radius: 40px;
-      border: 1px solid rgba(255, 255, 255, 0.04);
-    }
-
-    .word-item {
-      font-size: clamp(0.65rem, 1.6vw, 0.85rem);
-      font-weight: 600;
-      background: rgba(255, 255, 255, 0.06);
-      padding: 4px 14px;
-      border-radius: 40px;
-      color: #e3f2fd;
-      border: 1px solid rgba(255, 255, 255, 0.04);
-      transition: all 0.3s ease;
-    }
-
-    .word-item.found {
-      background: rgba(76, 175, 80, 0.25);
-      color: #a5d6a7;
-      text-decoration: line-through;
-      text-decoration-color: #81c784;
-      border-color: rgba(76, 175, 80, 0.3);
-      opacity: 0.7;
-    }
-
-    .controls {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      justify-content: center;
-      margin-top: 16px;
-    }
-
-    .btn {
-      border: none;
-      padding: 10px 20px;
-      border-radius: 60px;
-      font-weight: 700;
-      font-size: clamp(0.75rem, 1.6vw, 0.9rem);
-      cursor: pointer;
-      transition: all 0.2s ease;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      flex: 1 1 auto;
-      justify-content: center;
-      min-width: 60px;
-    }
-
-    .btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
-    }
-
-    .btn:active {
-      transform: scale(0.95);
-    }
-
-    .btn-verificar {
-      background: rgba(76, 175, 80, 0.85);
-      color: white;
-    }
-    .btn-verificar:hover {
-      background: #66bb6a;
-    }
-
-    .btn-pista {
-      background: rgba(255, 215, 0, 0.85);
-      color: #1a2a3a;
-    }
-    .btn-pista:hover {
-      background: #ffd54f;
-    }
-
-    .btn-siguiente {
-      background: rgba(33, 150, 243, 0.85);
-      color: white;
-    }
-    .btn-siguiente:hover {
-      background: #42a5f5;
-    }
-
-    .btn-reiniciar {
-      background: rgba(255, 152, 0, 0.85);
-      color: white;
-    }
-    .btn-reiniciar:hover {
-      background: #ffa726;
-    }
-
-    .status {
-      margin-top: 12px;
-      text-align: center;
-      font-size: clamp(0.85rem, 1.8vw, 1rem);
-      font-weight: 500;
-      background: rgba(0, 0, 0, 0.12);
-      padding: 10px 16px;
-      border-radius: 60px;
-      border: 1px solid rgba(255, 255, 255, 0.04);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
-    .status .counter {
-      background: rgba(255, 215, 0, 0.1);
-      padding: 2px 14px;
-      border-radius: 40px;
-      color: #ffd54f;
-      font-weight: 600;
-    }
-
-    .status .counter span {
-      font-size: 1.2rem;
-      font-weight: 800;
-      color: #fff;
-    }
-
-    .victory {
-      color: #ffd54f;
-      font-weight: 700;
-      animation: pulse 1s ease-in-out infinite alternate;
-    }
-
-    @keyframes pulse {
-      0% {
-        text-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
-      }
-      100% {
-        text-shadow: 0 0 30px rgba(255, 215, 0, 0.6);
-      }
-    }
-
-    .back-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      margin-top: 20px;
-      padding: 10px 24px;
-      background: rgba(255, 255, 255, 0.9);
-      color: #0d47a1;
-      text-decoration: none;
-      border-radius: 60px;
-      font-weight: 600;
-      font-size: clamp(0.8rem, 1.4vw, 0.95rem);
-      transition: all 0.25s ease;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .back-btn:hover {
-      transform: translateY(-2px);
-      background: #ffffff;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
-    }
-
-    .back-btn:active {
-      transform: scale(0.96);
-    }
-
-    .text-center {
-      text-align: center;
-    }
-
-    /* Puzzle styles */
-    .puzzle-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 16px;
-      padding: 8px;
-    }
-
-    .puzzle-board {
-      display: grid;
-      gap: 4px;
-      width: 100%;
-      max-width: 480px;
-      aspect-ratio: 1 / 1;
-      margin: 0 auto;
-      background: rgba(0, 0, 0, 0.2);
-      border-radius: 16px;
-      padding: 8px;
-      border: 2px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .puzzle-piece {
-      background-size: cover;
-      background-position: center;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      border: 2px solid rgba(255, 255, 255, 0.1);
-      position: relative;
-      min-height: 50px;
-      background-color: rgba(255, 255, 255, 0.05);
-    }
-
-    .puzzle-piece:hover {
-      transform: scale(1.03);
-      border-color: rgba(255, 215, 0, 0.3);
-      z-index: 2;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-    }
-
-    .puzzle-piece:active {
-      transform: scale(0.95);
-    }
-
-    .puzzle-piece.empty {
-      background: rgba(255, 255, 255, 0.03) !important;
-      border: 2px dashed rgba(255, 255, 255, 0.15);
-      cursor: default;
-      box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.1);
-    }
-
-    .puzzle-piece.empty:hover {
-      transform: none;
-      border-color: rgba(255, 255, 255, 0.15);
-      box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.1);
-    }
-
-    .puzzle-piece .piece-number {
-      position: absolute;
-      bottom: 4px;
-      right: 6px;
-      font-size: clamp(0.5rem, 1vw, 0.8rem);
-      font-weight: 700;
-      color: rgba(255, 255, 255, 0.6);
-      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
-      pointer-events: none;
-      background: rgba(0, 0, 0, 0.3);
-      padding: 1px 6px;
-      border-radius: 4px;
-    }
-
-    .puzzle-controls {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      justify-content: center;
-      margin-top: 8px;
-    }
-
-    .puzzle-status {
-      text-align: center;
-      font-size: 0.95rem;
-      opacity: 0.9;
-      padding: 10px 20px;
-      background: rgba(0, 0, 0, 0.1);
-      border-radius: 40px;
-      border: 1px solid rgba(255, 255, 255, 0.04);
-      min-height: 44px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .puzzle-status .movements {
-      background: rgba(255, 215, 0, 0.1);
-      padding: 2px 14px;
-      border-radius: 40px;
-      color: #ffd54f;
-      font-weight: 600;
-    }
-
-    /* Palabra secreta styles */
-    .secreta-area {
-      text-align: center;
-      padding: 20px;
-    }
-
-    .secreta-area .hint {
-      font-size: 1.1rem;
-      margin-bottom: 16px;
-      color: #e3f2fd;
-      background: rgba(0, 0, 0, 0.15);
-      padding: 12px 20px;
-      border-radius: 40px;
-      border: 1px solid rgba(255, 255, 255, 0.04);
-    }
-
-    .secreta-area .letters {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 8px;
-      margin: 16px 0;
-    }
-
-    .secreta-area .letter-btn {
-      width: 44px;
-      height: 44px;
-      border-radius: 12px;
-      border: 2px solid rgba(255, 255, 255, 0.1);
-      background: rgba(255, 255, 255, 0.06);
-      color: white;
-      font-size: 1.2rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .secreta-area .letter-btn:hover {
-      background: rgba(255, 255, 255, 0.15);
-      transform: scale(1.05);
-    }
-
-    .secreta-area .letter-btn:active {
-      transform: scale(0.92);
-    }
-
-    .secreta-area .letter-btn.selected {
-      background: rgba(255, 215, 0, 0.3);
-      border-color: #ffd54f;
-      transform: scale(1.1);
-    }
-
-    .secreta-area .letter-btn.used {
-      opacity: 0.3;
-      cursor: not-allowed;
-      pointer-events: none;
-    }
-
-    .secreta-area .word-display {
-      font-size: 2rem;
-      letter-spacing: 12px;
-      font-weight: 700;
-      color: #ffd54f;
-      margin: 16px 0;
-      min-height: 50px;
-      background: rgba(0, 0, 0, 0.15);
-      padding: 12px;
-      border-radius: 16px;
-      border: 1px solid rgba(255, 255, 255, 0.04);
-    }
-
-    @media (max-width: 768px) {
-      .container {
-        padding: 16px;
-        border-radius: 24px;
-      }
-      .navbar {
-        padding: 6px 10px;
-        border-radius: 40px;
-      }
-      .nav-btn {
-        width: 32px;
-        height: 32px;
-        font-size: 0.9rem;
-      }
-      .page-number {
-        font-size: 0.85rem;
-        padding: 2px 12px;
-      }
-      .game-area {
-        padding: 12px;
-        border-radius: 18px;
-      }
-      #sopaBoard {
-        gap: 2px;
-        padding: 4px;
-      }
-      .secreta-area .letter-btn {
-        width: 36px;
-        height: 36px;
-        font-size: 1rem;
-      }
-      .secreta-area .word-display {
-        font-size: 1.5rem;
-        letter-spacing: 8px;
-      }
-      .puzzle-board {
-        max-width: 400px;
-        padding: 6px;
-        gap: 3px;
-      }
-    }
-
-    @media (max-width: 480px) {
-      body {
-        padding: 10px;
-      }
-      .container {
-        padding: 12px;
-        border-radius: 18px;
-      }
-      .navbar {
-        padding: 4px 8px;
-        border-radius: 30px;
-      }
-      .nav-btn {
-        width: 28px;
-        height: 28px;
-        font-size: 0.75rem;
-      }
-      .page-number {
-        font-size: 0.7rem;
-        padding: 2px 8px;
-        min-width: 24px;
-      }
-      .game-area {
-        padding: 8px;
-        border-radius: 14px;
-        min-height: 300px;
-      }
-      #sopaBoard {
-        gap: 2px;
-        padding: 3px;
-        border-radius: 8px;
-      }
-      .cell {
-        font-size: clamp(0.5rem, 3vw, 0.8rem);
-        border-radius: 3px;
-        border-width: 0.5px;
-      }
-      .btn {
-        padding: 8px 12px;
-        font-size: 0.65rem;
-        min-width: 45px;
-      }
-      .secreta-area .letter-btn {
-        width: 30px;
-        height: 30px;
-        font-size: 0.85rem;
-      }
-      .secreta-area .word-display {
-        font-size: 1.2rem;
-        letter-spacing: 6px;
-        padding: 8px;
-      }
-      .secreta-area .hint {
-        font-size: 0.9rem;
-        padding: 8px 16px;
-      }
-      .back-btn {
-        padding: 8px 16px;
-        font-size: 0.7rem;
-        margin-top: 14px;
-      }
-      .status {
-        font-size: 0.7rem;
-        padding: 6px 10px;
-        gap: 6px;
-      }
-      .word-item {
-        font-size: 0.5rem;
-        padding: 2px 8px;
-      }
-      .puzzle-board {
-        max-width: 320px;
-        padding: 4px;
-        gap: 2px;
-        border-radius: 12px;
-      }
-      .puzzle-piece {
-        border-radius: 4px;
-        border-width: 1.5px;
-        min-height: 35px;
-      }
-      .puzzle-status {
-        font-size: 0.8rem;
-        padding: 6px 12px;
-      }
-      .puzzle-piece .piece-number {
-        font-size: 0.4rem;
-        bottom: 2px;
-        right: 3px;
-        padding: 1px 4px;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Sopa de Letras - Nicaragua</title>
+    <style>
+        /* ===== TODOS LOS ESTILOS ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(145deg, #0b1a3a 0%, #0d47a1 50%, #0288d1 100%);
+            color: white;
+            display: flex;
+            justify-content: center;
+            padding: 16px;
+            padding-top: 24px;
+            background-attachment: fixed;
+        }
+        .container {
+            width: 100%;
+            max-width: 850px;
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border-radius: 32px;
+            padding: 24px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            align-self: flex-start;
+        }
+        h1 {
+            font-size: clamp(1.8rem, 6vw, 3rem);
+            font-weight: 800;
+            text-align: center;
+            background: linear-gradient(to right, #ffe082, #fff8e1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 4px;
+            letter-spacing: -0.5px;
+        }
+        .subtitle {
+            text-align: center;
+            font-size: clamp(0.8rem, 2vw, 1.05rem);
+            opacity: 0.9;
+            margin-bottom: 20px;
+            font-weight: 300;
+            background: rgba(255, 255, 255, 0.06);
+            padding: 6px 20px;
+            border-radius: 40px;
+            display: inline-block;
+            width: auto;
+            margin-left: auto;
+            margin-right: auto;
+            backdrop-filter: blur(4px);
+        }
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 60px;
+            padding: 8px 14px;
+            margin-bottom: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .navbar-left,
+        .navbar-right {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.06);
+            border: none;
+            color: white;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.18);
+            transform: scale(1.05);
+        }
+        .nav-btn:active {
+            transform: scale(0.92);
+        }
+        .nav-btn.arrow {
+            background: rgba(255, 215, 0, 0.12);
+        }
+        .nav-btn.arrow:hover {
+            background: rgba(255, 215, 0, 0.25);
+        }
+        .page-number {
+            color: #ffd54f;
+            font-weight: 700;
+            font-size: 1rem;
+            background: rgba(255, 215, 0, 0.08);
+            padding: 2px 16px;
+            border-radius: 40px;
+            border: 1px solid rgba(255, 215, 0, 0.08);
+            min-width: 30px;
+            text-align: center;
+        }
+        .game-area {
+            background: rgba(0, 0, 0, 0.06);
+            border-radius: 24px;
+            padding: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            min-height: 400px;
+            position: relative;
+        }
+        .panel {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        .panel.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .panel-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #ffd54f;
+            text-align: center;
+            margin-bottom: 12px;
+            letter-spacing: 2px;
+        }
+        .panel-desc {
+            text-align: center;
+            font-size: 0.95rem;
+            opacity: 0.8;
+            margin-bottom: 16px;
+        }
+        .sopa-wrapper {
+            width: 100%;
+            max-width: 550px;
+            margin: 0 auto;
+            aspect-ratio: 1 / 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #sopaBoard {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 3px;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.15);
+            border-radius: 12px;
+            padding: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+        .cell {
+            aspect-ratio: 1 / 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(0.6rem, 3vw, 1.2rem);
+            font-weight: 700;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 4px;
+            color: #ffffff;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            user-select: none;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+        }
+        .cell:active {
+            transform: scale(0.92);
+        }
+        .cell.selected {
+            background: rgba(255, 215, 0, 0.35);
+            border-color: #ffd54f;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+            transform: scale(1.05);
+        }
+        .cell.found {
+            background: rgba(76, 175, 80, 0.25);
+            color: #a5d6a7;
+            border-color: rgba(76, 175, 80, 0.3);
+            cursor: pointer;
+        }
+        .word-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 6px 12px;
+            margin-top: 16px;
+            padding: 8px 12px;
+            background: rgba(0, 0, 0, 0.12);
+            border-radius: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+        .word-item {
+            font-size: clamp(0.65rem, 1.6vw, 0.85rem);
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.06);
+            padding: 4px 14px;
+            border-radius: 40px;
+            color: #e3f2fd;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            transition: all 0.3s ease;
+        }
+        .word-item.found {
+            background: rgba(76, 175, 80, 0.25);
+            color: #a5d6a7;
+            text-decoration: line-through;
+            text-decoration-color: #81c784;
+            border-color: rgba(76, 175, 80, 0.3);
+            opacity: 0.7;
+        }
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 16px;
+        }
+        .btn {
+            border: none;
+            padding: 10px 20px;
+            border-radius: 60px;
+            font-weight: 700;
+            font-size: clamp(0.75rem, 1.6vw, 0.9rem);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            flex: 1 1 auto;
+            justify-content: center;
+            min-width: 60px;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+        }
+        .btn:active {
+            transform: scale(0.95);
+        }
+        .btn-verificar {
+            background: rgba(76, 175, 80, 0.85);
+            color: white;
+        }
+        .btn-verificar:hover {
+            background: #66bb6a;
+        }
+        .btn-pista {
+            background: rgba(255, 215, 0, 0.85);
+            color: #1a2a3a;
+        }
+        .btn-pista:hover {
+            background: #ffd54f;
+        }
+        .btn-siguiente {
+            background: rgba(33, 150, 243, 0.85);
+            color: white;
+        }
+        .btn-siguiente:hover {
+            background: #42a5f5;
+        }
+        .btn-reiniciar {
+            background: rgba(255, 152, 0, 0.85);
+            color: white;
+        }
+        .btn-reiniciar:hover {
+            background: #ffa726;
+        }
+        .status {
+            margin-top: 12px;
+            text-align: center;
+            font-size: clamp(0.85rem, 1.8vw, 1rem);
+            font-weight: 500;
+            background: rgba(0, 0, 0, 0.12);
+            padding: 10px 16px;
+            border-radius: 60px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .status .counter {
+            background: rgba(255, 215, 0, 0.1);
+            padding: 2px 14px;
+            border-radius: 40px;
+            color: #ffd54f;
+            font-weight: 600;
+        }
+        .status .counter span {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: #fff;
+        }
+        .victory {
+            color: #ffd54f;
+            font-weight: 700;
+            animation: pulse 1s ease-in-out infinite alternate;
+        }
+        @keyframes pulse {
+            0% {
+                text-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+            }
+            100% {
+                text-shadow: 0 0 30px rgba(255, 215, 0, 0.6);
+            }
+        }
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 20px;
+            padding: 10px 24px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #0d47a1;
+            text-decoration: none;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: clamp(0.8rem, 1.4vw, 0.95rem);
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .back-btn:hover {
+            transform: translateY(-2px);
+            background: #ffffff;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+        }
+        .back-btn:active {
+            transform: scale(0.96);
+        }
+        .text-center {
+            text-align: center;
+        }
+
+        /* Puzzle */
+        .puzzle-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            padding: 8px;
+        }
+        .puzzle-board {
+            display: grid;
+            gap: 4px;
+            width: 100%;
+            max-width: 480px;
+            aspect-ratio: 1 / 1;
+            margin: 0 auto;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 16px;
+            padding: 8px;
+            border: 2px solid rgba(255, 255, 255, 0.08);
+        }
+        .puzzle-piece {
+            background-size: cover;
+            background-position: center;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            min-height: 50px;
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+        .puzzle-piece:hover {
+            transform: scale(1.03);
+            border-color: rgba(255, 215, 0, 0.3);
+            z-index: 2;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+        .puzzle-piece:active {
+            transform: scale(0.95);
+        }
+        .puzzle-piece.empty {
+            background: rgba(255, 255, 255, 0.03) !important;
+            border: 2px dashed rgba(255, 255, 255, 0.15);
+            cursor: default;
+            box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.1);
+        }
+        .puzzle-piece.empty:hover {
+            transform: none;
+            border-color: rgba(255, 255, 255, 0.15);
+            box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.1);
+        }
+        .puzzle-piece .piece-number {
+            position: absolute;
+            bottom: 4px;
+            right: 6px;
+            font-size: clamp(0.5rem, 1vw, 0.8rem);
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.6);
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+            pointer-events: none;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1px 6px;
+            border-radius: 4px;
+        }
+        .puzzle-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 8px;
+        }
+        .puzzle-status {
+            text-align: center;
+            font-size: 0.95rem;
+            opacity: 0.9;
+            padding: 10px 20px;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .puzzle-status .movements {
+            background: rgba(255, 215, 0, 0.1);
+            padding: 2px 14px;
+            border-radius: 40px;
+            color: #ffd54f;
+            font-weight: 600;
+        }
+
+        /* Palabra Secreta */
+        .secreta-area {
+            text-align: center;
+            padding: 20px;
+        }
+        .secreta-area .hint {
+            font-size: 1.1rem;
+            margin-bottom: 16px;
+            color: #e3f2fd;
+            background: rgba(0, 0, 0, 0.15);
+            padding: 12px 20px;
+            border-radius: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+        .secreta-area .letters {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            margin: 16px 0;
+        }
+        .secreta-area .letter-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.06);
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .secreta-area .letter-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: scale(1.05);
+        }
+        .secreta-area .letter-btn:active {
+            transform: scale(0.92);
+        }
+        .secreta-area .letter-btn.selected {
+            background: rgba(255, 215, 0, 0.3);
+            border-color: #ffd54f;
+            transform: scale(1.1);
+        }
+        .secreta-area .letter-btn.used {
+            opacity: 0.3;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+        .secreta-area .word-display {
+            font-size: 2rem;
+            letter-spacing: 12px;
+            font-weight: 700;
+            color: #ffd54f;
+            margin: 16px 0;
+            min-height: 50px;
+            background: rgba(0, 0, 0, 0.15);
+            padding: 12px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 16px;
+                border-radius: 24px;
+            }
+            .navbar {
+                padding: 6px 10px;
+                border-radius: 40px;
+            }
+            .nav-btn {
+                width: 32px;
+                height: 32px;
+                font-size: 0.9rem;
+            }
+            .page-number {
+                font-size: 0.85rem;
+                padding: 2px 12px;
+            }
+            .game-area {
+                padding: 12px;
+                border-radius: 18px;
+            }
+            #sopaBoard {
+                gap: 2px;
+                padding: 4px;
+            }
+            .secreta-area .letter-btn {
+                width: 36px;
+                height: 36px;
+                font-size: 1rem;
+            }
+            .secreta-area .word-display {
+                font-size: 1.5rem;
+                letter-spacing: 8px;
+            }
+            .puzzle-board {
+                max-width: 400px;
+                padding: 6px;
+                gap: 3px;
+            }
+        }
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            .container {
+                padding: 12px;
+                border-radius: 18px;
+            }
+            .navbar {
+                padding: 4px 8px;
+                border-radius: 30px;
+            }
+            .nav-btn {
+                width: 28px;
+                height: 28px;
+                font-size: 0.75rem;
+            }
+            .page-number {
+                font-size: 0.7rem;
+                padding: 2px 8px;
+                min-width: 24px;
+            }
+            .game-area {
+                padding: 8px;
+                border-radius: 14px;
+                min-height: 300px;
+            }
+            #sopaBoard {
+                gap: 2px;
+                padding: 3px;
+                border-radius: 8px;
+            }
+            .cell {
+                font-size: clamp(0.5rem, 3vw, 0.8rem);
+                border-radius: 3px;
+                border-width: 0.5px;
+            }
+            .btn {
+                padding: 8px 12px;
+                font-size: 0.65rem;
+                min-width: 45px;
+            }
+            .secreta-area .letter-btn {
+                width: 30px;
+                height: 30px;
+                font-size: 0.85rem;
+            }
+            .secreta-area .word-display {
+                font-size: 1.2rem;
+                letter-spacing: 6px;
+                padding: 8px;
+            }
+            .secreta-area .hint {
+                font-size: 0.9rem;
+                padding: 8px 16px;
+            }
+            .back-btn {
+                padding: 8px 16px;
+                font-size: 0.7rem;
+                margin-top: 14px;
+            }
+            .status {
+                font-size: 0.7rem;
+                padding: 6px 10px;
+                gap: 6px;
+            }
+            .word-item {
+                font-size: 0.5rem;
+                padding: 2px 8px;
+            }
+            .puzzle-board {
+                max-width: 320px;
+                padding: 4px;
+                gap: 2px;
+                border-radius: 12px;
+            }
+            .puzzle-piece {
+                border-radius: 4px;
+                border-width: 1.5px;
+                min-height: 35px;
+            }
+            .puzzle-status {
+                font-size: 0.8rem;
+                padding: 6px 12px;
+            }
+            .puzzle-piece .piece-number {
+                font-size: 0.4rem;
+                bottom: 2px;
+                right: 3px;
+                padding: 1px 4px;
+            }
+        }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <h1>🔍 Sopa de Letras</h1>
+        <div class="text-center">
+            <span class="subtitle">Encuentra las ciudades y lugares turísticos de Nicaragua 🌋🌊</span>
+        </div>
 
-  <div class="container">
-    <h1>🔍 Sopa de Letras</h1>
-    <div class="text-center">
-      <span class="subtitle">Encuentra las ciudades y lugares turísticos de Nicaragua 🌋🌊</span>
+        <div class="navbar">
+            <div class="navbar-left">
+                <button class="nav-btn" id="btnFull">⛶</button>
+                <button class="nav-btn" id="btnInfo">i</button>
+                <button class="nav-btn" id="btnMenu">☰</button>
+                <button class="nav-btn" id="btnHelp">?</button>
+            </div>
+            <div class="page-number" id="pageNumber">1</div>
+            <div class="navbar-right">
+                <button class="nav-btn arrow" id="btnPrev">◀</button>
+                <button class="nav-btn arrow" id="btnNext">▶</button>
+            </div>
+        </div>
+
+        <div class="game-area">
+            <!-- PANEL 1: SOPA -->
+            <div class="panel active" id="panel1">
+                <div class="panel-title">📝 CIUDADES</div>
+                <div class="panel-desc">Selecciona letras en orden para formar las palabras</div>
+                <div class="sopa-wrapper">
+                    <div id="sopaBoard"></div>
+                </div>
+                <div class="word-list" id="wordList"></div>
+                <div class="controls">
+                    <button class="btn btn-verificar" id="btnVerificar">✅ Verificar</button>
+                    <button class="btn btn-pista" id="btnPista">💡 Pista</button>
+                    <button class="btn btn-siguiente" id="btnSiguienteJuego">➡ Siguiente</button>
+                    <button class="btn btn-reiniciar" id="btnReiniciar">🔄 Reiniciar</button>
+                </div>
+                <div class="status" id="status">
+                    <span>📌 Encuentra todas las palabras</span>
+                    <span class="counter">🏷️ <span id="foundCount">0</span> / <span id="totalCount">5</span></span>
+                </div>
+            </div>
+
+            <!-- PANEL 2: PUZZLE -->
+            <div class="panel" id="panel2">
+                <div class="panel-title">🧩 PUZZLE DE NICARAGUA</div>
+                <div class="panel-desc">Haz clic en una pieza adyacente al espacio vacío para moverla</div>
+                <div class="puzzle-container">
+                    <div class="puzzle-board" id="puzzleBoard"></div>
+                    <div class="puzzle-controls">
+                        <button class="btn btn-reiniciar" id="puzzleReiniciar">🔄 Reiniciar</button>
+                        <button class="btn btn-verificar" id="puzzleVerificar">✅ Verificar</button>
+                    </div>
+                    <div class="puzzle-status" id="puzzleStatus">
+                        🧩 Mueve las piezas para completar el mapa
+                        <span class="movements">Movimientos: <span id="puzzleMovements">0</span></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PANEL 3: PALABRA SECRETA -->
+            <div class="panel" id="panel3">
+                <div class="panel-title">🔤 PALABRA SECRETA</div>
+                <div class="panel-desc">Selecciona las letras en el orden correcto para formar la palabra</div>
+                <div class="secreta-area">
+                    <div class="hint" id="secretaHint">💡 Lugar famoso por su volcán activo y artesanías</div>
+                    <div class="word-display" id="secretaDisplay">_ _ _ _ _ _</div>
+                    <div class="letters" id="secretaLetters"></div>
+                    <div style="margin-top:12px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
+                        <button class="btn btn-verificar" id="secretaVerificar">✅ Verificar</button>
+                        <button class="btn btn-reiniciar" id="secretaReiniciar">🔄 Reiniciar</button>
+                    </div>
+                    <div style="margin-top:12px;font-size:0.9rem;opacity:0.9;" id="secretaStatus">Selecciona 6 letras en el orden correcto</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center">
+            <a href="../juegos/juegos.html" class="back-btn">⬅ Volver a Juegos</a>
+        </div>
     </div>
 
-    <div class="navbar">
-      <div class="navbar-left">
-        <button class="nav-btn" id="btnFull">⛶</button>
-        <button class="nav-btn" id="btnInfo">i</button>
-        <button class="nav-btn" id="btnMenu">☰</button>
-        <button class="nav-btn" id="btnHelp">?</button>
-      </div>
-      <div class="page-number" id="pageNumber">1</div>
-      <div class="navbar-right">
-        <button class="nav-btn arrow" id="btnPrev">◀</button>
-        <button class="nav-btn arrow" id="btnNext">▶</button>
-      </div>
-    </div>
+    <script>
+        // ============================================================
+        // 1. SOPA DE LETRAS - SIN CRUCES
+        // ============================================================
+        const palabrasData = [
+            { palabra: "MANAGUA", descripcion: "Capital de Nicaragua" },
+            { palabra: "COCIBOLCA", descripcion: "Lago de Ometepe" },
+            { palabra: "GRANADA", descripcion: "Ciudad colonial" },
+            { palabra: "MASAYA", descripcion: "Volcán activo y artesanías" },
+            { palabra: "LEON", descripcion: "Cultura y volcanes" }
+        ];
 
-    <div class="game-area">
+        const SIZE = 12;
+        let board = [];
+        let selection = [];
+        let foundWords = new Set();
+        let wordPositions = [];
+        const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-      <!-- PANEL 1: SOPA DE LETRAS -->
-      <div class="panel active" id="panel1">
-        <div class="panel-title">📝 CIUDADES</div>
-        <div class="panel-desc">Selecciona letras en orden para formar las palabras</div>
-        <div class="sopa-wrapper">
-          <div id="sopaBoard"></div>
-        </div>
-        <div class="word-list" id="wordList"></div>
-        <div class="controls">
-          <button class="btn btn-verificar" id="btnVerificar">✅ Verificar</button>
-          <button class="btn btn-pista" id="btnPista">💡 Pista</button>
-          <button class="btn btn-siguiente" id="btnSiguienteJuego">➡ Siguiente</button>
-          <button class="btn btn-reiniciar" id="btnReiniciar">🔄 Reiniciar</button>
-        </div>
-        <div class="status" id="status">
-          <span>📌 Encuentra todas las palabras</span>
-          <span class="counter">🏷️ <span id="foundCount">0</span> / <span id="totalCount">5</span></span>
-        </div>
-      </div>
+        const boardEl = document.getElementById('sopaBoard');
+        const wordListEl = document.getElementById('wordList');
+        const foundCountEl = document.getElementById('foundCount');
+        const totalCountEl = document.getElementById('totalCount');
+        const statusEl = document.getElementById('status');
 
-      <!-- PANEL 2: PUZZLE -->
-      <div class="panel" id="panel2">
-        <div class="panel-title">🧩 PUZZLE DE NICARAGUA</div>
-        <div class="panel-desc">Haz clic en una pieza adyacente al espacio vacío para moverla</div>
-        <div class="puzzle-container">
-          <div class="puzzle-board" id="puzzleBoard"></div>
-          <div class="puzzle-controls">
-            <button class="btn btn-reiniciar" id="puzzleReiniciar">🔄 Reiniciar</button>
-            <button class="btn btn-verificar" id="puzzleVerificar">✅ Verificar</button>
-          </div>
-          <div class="puzzle-status" id="puzzleStatus">
-            🧩 Mueve las piezas para completar el mapa
-            <span class="movements">Movimientos: <span id="puzzleMovements">0</span></span>
-          </div>
-        </div>
-      </div>
+        totalCountEl.textContent = palabrasData.length;
 
-      <!-- PANEL 3: PALABRA SECRETA -->
-      <div class="panel" id="panel3">
-        <div class="panel-title">🔤 PALABRA SECRETA</div>
-        <div class="panel-desc">Selecciona las letras en el orden correcto para formar la palabra</div>
-        <div class="secreta-area">
-          <div class="hint" id="secretaHint">💡 Lugar famoso por su volcán activo y artesanías</div>
-          <div class="word-display" id="secretaDisplay">_ _ _ _ _ _</div>
-          <div class="letters" id="secretaLetters"></div>
-          <div style="margin-top:12px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
-            <button class="btn btn-verificar" id="secretaVerificar">✅ Verificar</button>
-            <button class="btn btn-reiniciar" id="secretaReiniciar">🔄 Reiniciar</button>
-          </div>
-          <div style="margin-top:12px;font-size:0.9rem;opacity:0.9;" id="secretaStatus">Selecciona 6 letras en el orden correcto</div>
-        </div>
-      </div>
-    </div>
+        // ============================================================
+        // ✅ FUNCIÓN GENERAR BOARD - SIN CRUCES
+        // ============================================================
+        function generateBoard() {
+            board = Array.from({ length: SIZE }, () => Array(SIZE).fill(''));
+            wordPositions = [];
 
-    <div class="text-center">
-      <a href="../juegos/juegos.html" class="back-btn">⬅ Volver a Juegos</a>
-    </div>
-  </div>
+            const directions = [
+                [0, 1],   // horizontal
+                [1, 0],   // vertical
+                [1, 1],   // diagonal
+                [-1, 1]   // diagonal inversa
+            ];
 
-  <script>
-    // ============================================================
-    // 1. SOPA DE LETRAS (12x12)
-    // ============================================================
-    const palabrasData = [
-      { palabra: "MANAGUA", descripcion: "Capital de Nicaragua" },
-      { palabra: "COCIBOLCA", descripcion: "Lago de Ometepe" },
-      { palabra: "GRANADA", descripcion: "Ciudad colonial" },
-      { palabra: "MASAYA", descripcion: "Volcán activo y artesanías" },
-      { palabra: "LEON", descripcion: "Cultura y volcanes" }
-    ];
+            // Ordenar palabras de mayor a menor
+            const sortedWords = [...palabrasData].sort((a, b) => b.palabra.length - a.palabra.length);
 
-    const SIZE = 12;
-    let board = [];
-    let selection = [];
-    let foundWords = new Set();
-    let wordPositions = [];
-    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            sortedWords.forEach((item) => {
+                const word = item.palabra;
+                let placed = false;
+                let attempts = 0;
+                const maxAttempts = 500;
 
-    const boardEl = document.getElementById('sopaBoard');
-    const wordListEl = document.getElementById('wordList');
-    const foundCountEl = document.getElementById('foundCount');
-    const totalCountEl = document.getElementById('totalCount');
-    const statusEl = document.getElementById('status');
+                while (!placed && attempts < maxAttempts) {
+                    attempts++;
+                    const row = Math.floor(Math.random() * SIZE);
+                    const col = Math.floor(Math.random() * SIZE);
+                    const dir = directions[Math.floor(Math.random() * directions.length)];
+                    const [dr, dc] = dir;
 
-    totalCountEl.textContent = palabrasData.length;
+                    let canPlace = true;
+                    const positions = [];
 
-    function generateBoard() {
-      board = Array.from({ length: SIZE }, () => Array(SIZE).fill(''));
-      wordPositions = [];
+                    for (let i = 0; i < word.length; i++) {
+                        const r = row + i * dr;
+                        const c = col + i * dc;
+                        
+                        if (r < 0 || r >= SIZE || c < 0 || c >= SIZE) {
+                            canPlace = false;
+                            break;
+                        }
+                        
+                        // ✅ CRUZAR: Solo permite celdas vacías
+                        if (board[r][c] !== '') {
+                            canPlace = false;
+                            break;
+                        }
+                        
+                        positions.push({ row: r, col: c });
+                    }
 
-      const directions = [
-        [0, 1],
-        [1, 0],
-        [1, 1],
-        [-1, 1]
-      ];
+                    if (canPlace) {
+                        for (let i = 0; i < positions.length; i++) {
+                            board[positions[i].row][positions[i].col] = word[i];
+                        }
+                        wordPositions.push({ word, positions, found: false });
+                        placed = true;
+                    }
+                }
 
-      palabrasData.forEach((item) => {
-        const word = item.palabra;
-        let placed = false;
-        let attempts = 0;
+                // Plan B: buscar espacio secuencialmente
+                if (!placed) {
+                    let placedFallback = false;
+                    // Buscar horizontal
+                    for (let r = 0; r < SIZE && !placedFallback; r++) {
+                        for (let c = 0; c <= SIZE - word.length && !placedFallback; c++) {
+                            let canPlace = true;
+                            const positions = [];
+                            for (let i = 0; i < word.length; i++) {
+                                if (board[r][c + i] !== '') {
+                                    canPlace = false;
+                                    break;
+                                }
+                                positions.push({ row: r, col: c + i });
+                            }
+                            if (canPlace) {
+                                for (let i = 0; i < positions.length; i++) {
+                                    board[positions[i].row][positions[i].col] = word[i];
+                                }
+                                wordPositions.push({ word, positions, found: false });
+                                placedFallback = true;
+                            }
+                        }
+                    }
+                    // Buscar vertical
+                    for (let r = 0; r <= SIZE - word.length && !placedFallback; r++) {
+                        for (let c = 0; c < SIZE && !placedFallback; c++) {
+                            let canPlace = true;
+                            const positions = [];
+                            for (let i = 0; i < word.length; i++) {
+                                if (board[r + i][c] !== '') {
+                                    canPlace = false;
+                                    break;
+                                }
+                                positions.push({ row: r + i, col: c });
+                            }
+                            if (canPlace) {
+                                for (let i = 0; i < positions.length; i++) {
+                                    board[positions[i].row][positions[i].col] = word[i];
+                                }
+                                wordPositions.push({ word, positions, found: false });
+                                placedFallback = true;
+                            }
+                        }
+                    }
+                    if (!placedFallback) {
+                        console.warn(`⚠️ No se pudo colocar: ${word}`);
+                    }
+                }
+            });
 
-        while (!placed && attempts < 300) {
-          attempts++;
-          const row = Math.floor(Math.random() * SIZE);
-          const col = Math.floor(Math.random() * SIZE);
-          const dir = directions[Math.floor(Math.random() * directions.length)];
-          const [dr, dc] = dir;
-
-          let canPlace = true;
-          for (let i = 0; i < word.length; i++) {
-            const r = row + i * dr;
-            const c = col + i * dc;
-            if (r < 0 || r >= SIZE || c < 0 || c >= SIZE) {
-              canPlace = false;
-              break;
+            // Rellenar celdas vacías
+            for (let r = 0; r < SIZE; r++) {
+                for (let c = 0; c < SIZE; c++) {
+                    if (board[r][c] === '') {
+                        board[r][c] = letters[Math.floor(Math.random() * letters.length)];
+                    }
+                }
             }
-            if (board[r][c] !== '' && board[r][c] !== word[i]) {
-              canPlace = false;
-              break;
+        }
+
+        function renderBoard() {
+            boardEl.innerHTML = '';
+            boardEl.style.gridTemplateColumns = `repeat(${SIZE}, 1fr)`;
+            for (let r = 0; r < SIZE; r++) {
+                for (let c = 0; c < SIZE; c++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'cell';
+                    cell.dataset.row = r;
+                    cell.dataset.col = c;
+                    cell.textContent = board[r][c];
+                    cell.addEventListener('click', () => onCellClick(r, c));
+                    boardEl.appendChild(cell);
+                }
             }
-          }
+            updateFoundStyles();
+        }
 
-          if (canPlace) {
-            const positions = [];
-            for (let i = 0; i < word.length; i++) {
-              const r = row + i * dr;
-              const c = col + i * dc;
-              board[r][c] = word[i];
-              positions.push({ row: r, col: c });
+        function renderWordList() {
+            wordListEl.innerHTML = '';
+            palabrasData.forEach((item, index) => {
+                const span = document.createElement('span');
+                span.className = 'word-item';
+                span.id = `word-${index}`;
+                span.textContent = item.palabra + ' (' + item.descripcion + ')';
+                if (foundWords.has(item.palabra)) {
+                    span.classList.add('found');
+                }
+                wordListEl.appendChild(span);
+            });
+        }
+
+        function updateFoundStyles() {
+            const cells = boardEl.querySelectorAll('.cell');
+            cells.forEach(cell => {
+                const r = parseInt(cell.dataset.row);
+                const c = parseInt(cell.dataset.col);
+                let isFound = false;
+                for (const wp of wordPositions) {
+                    if (wp.found) {
+                        for (const pos of wp.positions) {
+                            if (pos.row === r && pos.col === c) {
+                                isFound = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (isFound) break;
+                }
+                if (isFound) {
+                    cell.classList.add('found');
+                } else {
+                    cell.classList.remove('found');
+                }
+            });
+
+            // Actualizar selección
+            cells.forEach(cell => cell.classList.remove('selected'));
+            selection.forEach(pos => {
+                const index = pos.row * SIZE + pos.col;
+                if (cells[index]) {
+                    cells[index].classList.add('selected');
+                }
+            });
+
+            const items = wordListEl.querySelectorAll('.word-item');
+            items.forEach((item, index) => {
+                const palabra = palabrasData[index].palabra;
+                if (foundWords.has(palabra)) {
+                    item.classList.add('found');
+                } else {
+                    item.classList.remove('found');
+                }
+            });
+
+            foundCountEl.textContent = foundWords.size;
+
+            if (foundWords.size === palabrasData.length) {
+                statusEl.innerHTML = `
+                    <span class="victory">🎉 ¡Felicidades! Encontraste todas las palabras.</span>
+                    <span class="counter">🏆 <span>${foundWords.size}</span> / <span>${palabrasData.length}</span></span>
+                `;
+            } else {
+                const restante = palabrasData.length - foundWords.size;
+                statusEl.innerHTML = `
+                    <span>📌 Encuentra ${restante} palabra${restante > 1 ? 's' : ''} más</span>
+                    <span class="counter">🏷️ <span>${foundWords.size}</span> / <span>${palabrasData.length}</span></span>
+                `;
             }
-            wordPositions.push({ word, positions, found: false });
-            placed = true;
-          }
         }
 
-        if (!placed) {
-          let row = Math.floor(Math.random() * (SIZE - 2));
-          let col = Math.floor(Math.random() * (SIZE - word.length));
-          const positions = [];
-          for (let i = 0; i < word.length; i++) {
-            board[row][col + i] = word[i];
-            positions.push({ row, col: col + i });
-          }
-          wordPositions.push({ word, positions, found: false });
-        }
-      });
-
-      for (let r = 0; r < SIZE; r++) {
-        for (let c = 0; c < SIZE; c++) {
-          if (board[r][c] === '') {
-            board[r][c] = letters[Math.floor(Math.random() * letters.length)];
-          }
-        }
-      }
-    }
-
-    function renderBoard() {
-      boardEl.innerHTML = '';
-      boardEl.style.gridTemplateColumns = `repeat(${SIZE}, 1fr)`;
-      for (let r = 0; r < SIZE; r++) {
-        for (let c = 0; c < SIZE; c++) {
-          const cell = document.createElement('div');
-          cell.className = 'cell';
-          cell.dataset.row = r;
-          cell.dataset.col = c;
-          cell.textContent = board[r][c];
-          cell.addEventListener('click', () => onCellClick(r, c));
-          boardEl.appendChild(cell);
-        }
-      }
-      updateFoundStyles();
-    }
-
-    function renderWordList() {
-      wordListEl.innerHTML = '';
-      palabrasData.forEach((item, index) => {
-        const span = document.createElement('span');
-        span.className = 'word-item';
-        span.id = `word-${index}`;
-        span.textContent = item.palabra + ' (' + item.descripcion + ')';
-        if (foundWords.has(item.palabra)) {
-          span.classList.add('found');
-        }
-        wordListEl.appendChild(span);
-      });
-    }
-
-    function updateFoundStyles() {
-      const cells = boardEl.querySelectorAll('.cell');
-      cells.forEach(cell => {
-        const r = parseInt(cell.dataset.row);
-        const c = parseInt(cell.dataset.col);
-        let isFound = false;
-        for (const wp of wordPositions) {
-          if (wp.found) {
-            for (const pos of wp.positions) {
-              if (pos.row === r && pos.col === c) {
-                isFound = true;
-                break;
-              }
+        function onCellClick(row, col) {
+            // ✅ Permitir seleccionar TODAS las celdas (incluso las encontradas)
+            const indexInSelection = selection.findIndex(s => s.row === row && s.col === col);
+            
+            if (indexInSelection !== -1) {
+                if (indexInSelection === selection.length - 1) {
+                    selection.pop();
+                    updateFoundStyles();
+                }
+                return;
             }
-          }
-          if (isFound) break;
-        }
-        if (isFound) {
-          cell.classList.add('found');
-          cell.classList.remove('selected');
-        } else {
-          cell.classList.remove('found');
-        }
-      });
 
-      // Limpiar selección si alguna celda seleccionada ahora es found
-      selection = selection.filter(pos => {
-        let isFound = false;
-        for (const wp of wordPositions) {
-          if (wp.found) {
-            for (const p of wp.positions) {
-              if (p.row === pos.row && p.col === pos.col) {
-                isFound = true;
-                break;
-              }
-            }
-          }
-          if (isFound) break;
-        }
-        return !isFound;
-      });
-
-      // Actualizar selección visual
-      cells.forEach(cell => cell.classList.remove('selected'));
-      selection.forEach(pos => {
-        const index = pos.row * SIZE + pos.col;
-        if (cells[index]) {
-          cells[index].classList.add('selected');
-        }
-      });
-
-      // Actualizar lista de palabras
-      const items = wordListEl.querySelectorAll('.word-item');
-      items.forEach((item, index) => {
-        const palabra = palabrasData[index].palabra;
-        if (foundWords.has(palabra)) {
-          item.classList.add('found');
-        } else {
-          item.classList.remove('found');
-        }
-      });
-
-      foundCountEl.textContent = foundWords.size;
-
-      if (foundWords.size === palabrasData.length) {
-        statusEl.innerHTML = `
-          <span class="victory">🎉 ¡Felicidades! Encontraste todas las palabras.</span>
-          <span class="counter">🏆 <span>${foundWords.size}</span> / <span>${palabrasData.length}</span></span>
-        `;
-      } else {
-        const restante = palabrasData.length - foundWords.size;
-        statusEl.innerHTML = `
-          <span>📌 Encuentra ${restante} palabra${restante > 1 ? 's' : ''} más</span>
-          <span class="counter">🏷️ <span>${foundWords.size}</span> / <span>${palabrasData.length}</span></span>
-        `;
-      }
-    }
-
-    function onCellClick(row, col) {
-      // Verificar si la celda está en una palabra ya encontrada
-      let isFoundCell = false;
-      for (const wp of wordPositions) {
-        if (wp.found) {
-          for (const pos of wp.positions) {
-            if (pos.row === row && pos.col === col) {
-              isFoundCell = true;
-              break;
-            }
-          }
-        }
-        if (isFoundCell) break;
-      }
-
-      const indexInSelection = selection.findIndex(s => s.row === row && s.col === col);
-      
-      if (indexInSelection !== -1) {
-        if (indexInSelection === selection.length - 1) {
-          selection.pop();
-          updateFoundStyles();
-        }
-        return;
-      }
-
-      if (selection.length === 0) {
-        selection.push({ row, col });
-        updateFoundStyles();
-        return;
-      }
-
-      const last = selection[selection.length - 1];
-      const dr = Math.abs(row - last.row);
-      const dc = Math.abs(col - last.col);
-      
-      if ((dr === 0 && dc === 1) || (dr === 1 && dc === 0) || (dr === 1 && dc === 1)) {
-        selection.push({ row, col });
-        updateFoundStyles();
-      }
-    }
-
-    function clearSelection() {
-      selection = [];
-      updateFoundStyles();
-    }
-
-    function tryValidateWord() {
-      if (selection.length < 3) {
-        alert('Selecciona al menos 3 letras para formar una palabra.');
-        return false;
-      }
-
-      let word = '';
-      for (const pos of selection) {
-        word += board[pos.row][pos.col];
-      }
-
-      let foundWord = null;
-      let foundPositions = null;
-      for (const wp of wordPositions) {
-        if (wp.found) continue;
-        if (wp.word === word) {
-          foundWord = wp.word;
-          foundPositions = wp.positions;
-          break;
-        }
-        const reversed = word.split('').reverse().join('');
-        if (wp.word === reversed) {
-          foundWord = wp.word;
-          foundPositions = wp.positions.slice().reverse();
-          break;
-        }
-      }
-
-      if (foundWord && foundPositions) {
-        const match = selection.every((pos, idx) => {
-          return pos.row === foundPositions[idx].row && pos.col === foundPositions[idx].col;
-        });
-
-        if (match) {
-          for (const wp of wordPositions) {
-            if (wp.word === foundWord) {
-              wp.found = true;
-              foundWords.add(foundWord);
-              break;
-            }
-          }
-          clearSelection();
-          updateFoundStyles();
-          renderWordList();
-          
-          const statusMsg = document.querySelector('.status span:first-child');
-          if (statusMsg) {
-            statusMsg.textContent = `✅ ¡Encontraste "${foundWord}"!`;
-            setTimeout(() => {
-              const restante = palabrasData.length - foundWords.size;
-              if (restante > 0) {
-                statusMsg.textContent = `📌 Encuentra ${restante} palabra${restante > 1 ? 's' : ''} más`;
-              }
-            }, 2000);
-          }
-          return true;
-        }
-      }
-      alert('❌ Palabra incorrecta. Las letras seleccionadas no forman una palabra válida.');
-      clearSelection();
-      return false;
-    }
-
-    function resetSopa() {
-      foundWords = new Set();
-      selection = [];
-      for (const wp of wordPositions) {
-        wp.found = false;
-      }
-      generateBoard();
-      renderBoard();
-      renderWordList();
-      updateFoundStyles();
-    }
-
-    function mostrarPistaSopa() {
-      for (const wp of wordPositions) {
-        if (!wp.found) {
-          const cells = boardEl.querySelectorAll('.cell');
-          wp.positions.forEach(pos => {
-            const index = pos.row * SIZE + pos.col;
-            if (cells[index]) {
-              cells[index].style.transition = 'background 0.3s';
-              cells[index].style.background = 'rgba(255, 215, 0, 0.5)';
-              setTimeout(() => {
-                cells[index].style.background = '';
+            if (selection.length === 0) {
+                selection.push({ row, col });
                 updateFoundStyles();
-              }, 2500);
+                return;
             }
-          });
-          alert(`💡 Pista: busca "${wp.word}"`);
-          return;
+
+            const last = selection[selection.length - 1];
+            const dr = Math.abs(row - last.row);
+            const dc = Math.abs(col - last.col);
+            
+            if ((dr === 0 && dc === 1) || (dr === 1 && dc === 0) || (dr === 1 && dc === 1)) {
+                selection.push({ row, col });
+                updateFoundStyles();
+            }
         }
-      }
-      alert('🎉 ¡Ya encontraste todas las palabras!');
-    }
 
-    // ============================================================
-    // 2. PUZZLE
-    // ============================================================
-    const PUZZLE_SIZE = 3;
-    let puzzlePieces = [];
-    let puzzleEmptyIndex = 8;
-    let puzzleSolved = false;
-    let puzzleMovements = 0;
-    const IMAGE_URL = "file.png";
-
-    function initPuzzle() {
-      puzzlePieces = [];
-      for (let i = 0; i < 9; i++) {
-        puzzlePieces.push(i);
-      }
-      puzzleEmptyIndex = 8;
-      puzzleSolved = false;
-      puzzleMovements = 0;
-      document.getElementById('puzzleMovements').textContent = '0';
-      shufflePuzzle();
-      renderPuzzle();
-      const status = document.getElementById('puzzleStatus');
-      status.innerHTML =
-        `
-        🧩 Mueve las piezas para completar el mapa
-        <span class="movements">Movimientos: <span id="puzzleMovements">0</span></span>
-        `;
-      status.style.color = '';
-    }
-
-    function shufflePuzzle() {
-      for (let i = 0; i < 150; i++) {
-        const emptyRow = Math.floor(puzzleEmptyIndex / PUZZLE_SIZE);
-        const emptyCol = puzzleEmptyIndex % PUZZLE_SIZE;
-        const neighbors = [];
-        if (emptyRow > 0) neighbors.push(puzzleEmptyIndex - PUZZLE_SIZE);
-        if (emptyRow < PUZZLE_SIZE - 1) neighbors.push(puzzleEmptyIndex + PUZZLE_SIZE);
-        if (emptyCol > 0) neighbors.push(puzzleEmptyIndex - 1);
-        if (emptyCol < PUZZLE_SIZE - 1) neighbors.push(puzzleEmptyIndex + 1);
-        const randomNeighbor = neighbors[Math.floor(Math.random() * neighbors.length)];
-        puzzlePieces[puzzleEmptyIndex] = puzzlePieces[randomNeighbor];
-        puzzlePieces[randomNeighbor] = 8;
-        puzzleEmptyIndex = randomNeighbor;
-      }
-      if (isPuzzleSolved()) {
-        if (puzzleEmptyIndex !== 0) {
-          puzzlePieces[puzzleEmptyIndex] = puzzlePieces[0];
-          puzzlePieces[0] = 8;
-          puzzleEmptyIndex = 0;
-        } else {
-          puzzlePieces[puzzleEmptyIndex] = puzzlePieces[1];
-          puzzlePieces[1] = 8;
-          puzzleEmptyIndex = 1;
+        function clearSelection() {
+            selection = [];
+            updateFoundStyles();
         }
-      }
-      puzzleMovements = 0;
-    }
 
-    function isPuzzleSolved() {
-      for (let i = 0; i < 9; i++) {
-        if (puzzlePieces[i] !== i) return false;
-      }
-      return true;
-    }
+        function tryValidateWord() {
+            if (selection.length < 3) {
+                alert('Selecciona al menos 3 letras para formar una palabra.');
+                return false;
+            }
 
-    function renderPuzzle() {
-      const board = document.getElementById('puzzleBoard');
-      board.style.gridTemplateColumns = `repeat(${PUZZLE_SIZE}, 1fr)`;
-      board.innerHTML = '';
+            let word = '';
+            for (const pos of selection) {
+                word += board[pos.row][pos.col];
+            }
 
-      const img = new Image();
-      img.onload = function() {
-        renderPieces(true);
-      };
-      img.onerror = function() {
-        renderPieces(false);
-      };
-      img.src = IMAGE_URL;
+            let foundWord = null;
+            let foundPositions = null;
+            for (const wp of wordPositions) {
+                if (wp.found) continue;
+                if (wp.word === word) {
+                    foundWord = wp.word;
+                    foundPositions = wp.positions;
+                    break;
+                }
+                const reversed = word.split('').reverse().join('');
+                if (wp.word === reversed) {
+                    foundWord = wp.word;
+                    foundPositions = wp.positions.slice().reverse();
+                    break;
+                }
+            }
 
-      function renderPieces(imageLoaded) {
-        board.innerHTML = '';
-        for (let i = 0; i < 9; i++) {
-          const piece = document.createElement('div');
-          piece.className = 'puzzle-piece';
-          piece.dataset.index = i;
+            if (foundWord && foundPositions) {
+                const match = selection.every((pos, idx) => {
+                    return pos.row === foundPositions[idx].row && pos.col === foundPositions[idx].col;
+                });
 
-          if (puzzlePieces[i] === 8) {
-            piece.classList.add('empty');
-            piece.style.background = 'rgba(255,255,255,0.03)';
-          } else {
-            const originalIndex = puzzlePieces[i];
-            const row = Math.floor(originalIndex / PUZZLE_SIZE);
-            const col = originalIndex % PUZZLE_SIZE;
+                if (match) {
+                    for (const wp of wordPositions) {
+                        if (wp.word === foundWord) {
+                            wp.found = true;
+                            foundWords.add(foundWord);
+                            break;
+                        }
+                    }
+                    clearSelection();
+                    updateFoundStyles();
+                    renderWordList();
+                    
+                    const statusMsg = document.querySelector('.status span:first-child');
+                    if (statusMsg) {
+                        statusMsg.textContent = `✅ ¡Encontraste "${foundWord}"!`;
+                        setTimeout(() => {
+                            const restante = palabrasData.length - foundWords.size;
+                            if (restante > 0) {
+                                statusMsg.textContent = `📌 Encuentra ${restante} palabra${restante > 1 ? 's' : ''} más`;
+                            }
+                        }, 2000);
+                    }
+                    return true;
+                }
+            }
+            alert('❌ Palabra incorrecta. Las letras seleccionadas no forman una palabra válida.');
+            clearSelection();
+            return false;
+        }
 
-            if (imageLoaded) {
-              piece.style.backgroundImage = `url('${IMAGE_URL}')`;
-              piece.style.backgroundSize = `${PUZZLE_SIZE * 100}% ${PUZZLE_SIZE * 100}%`;
-              piece.style.backgroundPosition = `-${col * 100}% -${row * 100}%`;
+        function resetSopa() {
+            foundWords = new Set();
+            selection = [];
+            for (const wp of wordPositions) {
+                wp.found = false;
+            }
+            generateBoard();
+            renderBoard();
+            renderWordList();
+            updateFoundStyles();
+        }
+
+        function mostrarPistaSopa() {
+            for (const wp of wordPositions) {
+                if (!wp.found) {
+                    const cells = boardEl.querySelectorAll('.cell');
+                    wp.positions.forEach(pos => {
+                        const index = pos.row * SIZE + pos.col;
+                        if (cells[index]) {
+                            cells[index].style.transition = 'background 0.3s';
+                            cells[index].style.background = 'rgba(255, 215, 0, 0.5)';
+                            setTimeout(() => {
+                                cells[index].style.background = '';
+                                updateFoundStyles();
+                            }, 2500);
+                        }
+                    });
+                    alert(`💡 Pista: busca "${wp.word}"`);
+                    return;
+                }
+            }
+            alert('🎉 ¡Ya encontraste todas las palabras!');
+        }
+
+        // ============================================================
+        // 2. PUZZLE
+        // ============================================================
+        const PUZZLE_SIZE = 3;
+        let puzzlePieces = [];
+        let puzzleEmptyIndex = 8;
+        let puzzleSolved = false;
+        let puzzleMovements = 0;
+        const IMAGE_URL = "file.png";
+
+        function initPuzzle() {
+            puzzlePieces = [];
+            for (let i = 0; i < 9; i++) {
+                puzzlePieces.push(i);
+            }
+            puzzleEmptyIndex = 8;
+            puzzleSolved = false;
+            puzzleMovements = 0;
+            document.getElementById('puzzleMovements').textContent = '0';
+            shufflePuzzle();
+            renderPuzzle();
+            const status = document.getElementById('puzzleStatus');
+            status.innerHTML =
+                `
+                🧩 Mueve las piezas para completar el mapa
+                <span class="movements">Movimientos: <span id="puzzleMovements">0</span></span>
+                `;
+            status.style.color = '';
+        }
+
+        function shufflePuzzle() {
+            for (let i = 0; i < 150; i++) {
+                const emptyRow = Math.floor(puzzleEmptyIndex / PUZZLE_SIZE);
+                const emptyCol = puzzleEmptyIndex % PUZZLE_SIZE;
+                const neighbors = [];
+                if (emptyRow > 0) neighbors.push(puzzleEmptyIndex - PUZZLE_SIZE);
+                if (emptyRow < PUZZLE_SIZE - 1) neighbors.push(puzzleEmptyIndex + PUZZLE_SIZE);
+                if (emptyCol > 0) neighbors.push(puzzleEmptyIndex - 1);
+                if (emptyCol < PUZZLE_SIZE - 1) neighbors.push(puzzleEmptyIndex + 1);
+                const randomNeighbor = neighbors[Math.floor(Math.random() * neighbors.length)];
+                puzzlePieces[puzzleEmptyIndex] = puzzlePieces[randomNeighbor];
+                puzzlePieces[randomNeighbor] = 8;
+                puzzleEmptyIndex = randomNeighbor;
+            }
+            if (isPuzzleSolved()) {
+                if (puzzleEmptyIndex !== 0) {
+                    puzzlePieces[puzzleEmptyIndex] = puzzlePieces[0];
+                    puzzlePieces[0] = 8;
+                    puzzleEmptyIndex = 0;
+                } else {
+                    puzzlePieces[puzzleEmptyIndex] = puzzlePieces[1];
+                    puzzlePieces[1] = 8;
+                    puzzleEmptyIndex = 1;
+                }
+            }
+            puzzleMovements = 0;
+        }
+
+        function isPuzzleSolved() {
+            for (let i = 0; i < 9; i++) {
+                if (puzzlePieces[i] !== i) return false;
+            }
+            return true;
+        }
+
+        function renderPuzzle() {
+            const board = document.getElementById('puzzleBoard');
+            board.style.gridTemplateColumns = `repeat(${PUZZLE_SIZE}, 1fr)`;
+            board.innerHTML = '';
+
+            const img = new Image();
+            img.onload = function() {
+                renderPieces(true);
+            };
+            img.onerror = function() {
+                renderPieces(false);
+            };
+            img.src = IMAGE_URL;
+
+            function renderPieces(imageLoaded) {
+                board.innerHTML = '';
+                for (let i = 0; i < 9; i++) {
+                    const piece = document.createElement('div');
+                    piece.className = 'puzzle-piece';
+                    piece.dataset.index = i;
+
+                    if (puzzlePieces[i] === 8) {
+                        piece.classList.add('empty');
+                        piece.style.background = 'rgba(255,255,255,0.03)';
+                    } else {
+                        const originalIndex = puzzlePieces[i];
+                        const row = Math.floor(originalIndex / PUZZLE_SIZE);
+                        const col = originalIndex % PUZZLE_SIZE;
+
+                        if (imageLoaded) {
+                            piece.style.backgroundImage = `url('${IMAGE_URL}')`;
+                            piece.style.backgroundSize = `${PUZZLE_SIZE * 100}% ${PUZZLE_SIZE * 100}%`;
+                            piece.style.backgroundPosition = `-${col * 100}% -${row * 100}%`;
+                        } else {
+                            const colors = ['#e53935', '#d81b60', '#8e24aa', '#5e35b1', '#1e88e5', '#00897b', '#43a047', '#fdd835'];
+                            piece.style.background = colors[originalIndex];
+                            piece.style.color = 'white';
+                            piece.style.display = 'flex';
+                            piece.style.alignItems = 'center';
+                            piece.style.justifyContent = 'center';
+                            piece.style.fontSize = '1.5rem';
+                            piece.style.fontWeight = 'bold';
+                            piece.textContent = originalIndex + 1;
+                        }
+
+                        piece.style.border = '2px solid rgba(255,255,255,0.15)';
+
+                        const number = document.createElement('span');
+                        number.className = 'piece-number';
+                        number.textContent = originalIndex + 1;
+                        piece.appendChild(number);
+
+                        piece.addEventListener('click', () => movePiece(i));
+                    }
+
+                    board.appendChild(piece);
+                }
+
+                if (isPuzzleSolved() && !puzzleSolved) {
+                    puzzleSolved = true;
+                    const status = document.getElementById('puzzleStatus');
+                    status.innerHTML = '🎉 ¡Felicidades! Completaste el puzzle de Nicaragua! 🎉';
+                    status.style.color = '#ffd54f';
+                }
+            }
+
+            if (img.complete) {
+                if (img.naturalWidth > 0) {
+                    renderPieces(true);
+                } else {
+                    renderPieces(false);
+                }
+            }
+        }
+
+        function movePiece(index) {
+            if (puzzleSolved) return;
+
+            const emptyRow = Math.floor(puzzleEmptyIndex / PUZZLE_SIZE);
+            const emptyCol = puzzleEmptyIndex % PUZZLE_SIZE;
+            const clickedRow = Math.floor(index / PUZZLE_SIZE);
+            const clickedCol = index % PUZZLE_SIZE;
+
+            const isAdjacent = (Math.abs(emptyRow - clickedRow) + Math.abs(emptyCol - clickedCol)) === 1;
+
+            if (isAdjacent) {
+                puzzlePieces[puzzleEmptyIndex] = puzzlePieces[index];
+                puzzlePieces[index] = 8;
+                puzzleEmptyIndex = index;
+                puzzleMovements++;
+                document.getElementById('puzzleMovements').textContent = puzzleMovements;
+                renderPuzzle();
+            }
+        }
+
+        function verificarPuzzle() {
+            if (isPuzzleSolved()) {
+                alert('🎉 ¡El puzzle ya está completo! Lo lograste en ' + puzzleMovements + ' movimientos.');
             } else {
-              const colors = ['#e53935', '#d81b60', '#8e24aa', '#5e35b1', '#1e88e5', '#00897b', '#43a047', '#fdd835'];
-              piece.style.background = colors[originalIndex];
-              piece.style.color = 'white';
-              piece.style.display = 'flex';
-              piece.style.alignItems = 'center';
-              piece.style.justifyContent = 'center';
-              piece.style.fontSize = '1.5rem';
-              piece.style.fontWeight = 'bold';
-              piece.textContent = originalIndex + 1;
+                alert('❌ El puzzle no está completo. Sigue moviendo las piezas.');
+            }
+        }
+
+        // ============================================================
+        // 3. PALABRA SECRETA
+        // ============================================================
+        const secretaPalabra = "MASAYA";
+        const secretaLetrasDisponibles = ["M", "A", "A", "A", "S", "Y", "D", "F", "G", "N", "B", "V", "C", "E", "R", "T", "U"];
+        let secretaSeleccionadas = [];
+        let secretaCompletada = false;
+
+        function renderSecreta() {
+            const container = document.getElementById('secretaLetters');
+            container.innerHTML = '';
+
+            secretaLetrasDisponibles.forEach((letra, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'letter-btn';
+                btn.textContent = letra;
+                btn.dataset.index = index;
+
+                if (secretaCompletada) {
+                    btn.classList.add('used');
+                }
+
+                if (secretaSeleccionadas.includes(index)) {
+                    btn.classList.add('selected');
+                }
+
+                btn.addEventListener('click', () => {
+                    if (secretaCompletada) return;
+
+                    if (secretaSeleccionadas.includes(index)) {
+                        secretaSeleccionadas = secretaSeleccionadas.filter(i => i !== index);
+                    } else {
+                        if (secretaSeleccionadas.length < secretaPalabra.length) {
+                            secretaSeleccionadas.push(index);
+                        } else {
+                            alert('Ya has seleccionado todas las letras necesarias (6 letras).');
+                            return;
+                        }
+                    }
+                    actualizarSecretaDisplay();
+                    renderSecreta();
+                });
+
+                container.appendChild(btn);
+            });
+        }
+
+        function actualizarSecretaDisplay() {
+            const display = document.getElementById('secretaDisplay');
+            let texto = '';
+            for (let i = 0; i < secretaPalabra.length; i++) {
+                if (i < secretaSeleccionadas.length) {
+                    const letra = secretaLetrasDisponibles[secretaSeleccionadas[i]];
+                    texto += letra + ' ';
+                } else {
+                    texto += '_ ';
+                }
+            }
+            display.textContent = texto.trim();
+        }
+
+        function verificarSecreta() {
+            if (secretaCompletada) {
+                document.getElementById('secretaStatus').innerHTML = '✅ ¡Ya has completado la palabra!';
+                document.getElementById('secretaStatus').style.color = '#a5d6a7';
+                return;
             }
 
-            piece.style.border = '2px solid rgba(255,255,255,0.15)';
+            const palabraFormada = secretaSeleccionadas.map(i => secretaLetrasDisponibles[i]).join('');
 
-            const number = document.createElement('span');
-            number.className = 'piece-number';
-            number.textContent = originalIndex + 1;
-            piece.appendChild(number);
+            if (palabraFormada.length !== secretaPalabra.length) {
+                document.getElementById('secretaStatus').innerHTML = `❌ Selecciona ${secretaPalabra.length} letras (tienes ${palabraFormada.length})`;
+                document.getElementById('secretaStatus').style.color = '#ffab91';
+                return;
+            }
 
-            piece.addEventListener('click', () => movePiece(i));
-          }
-
-          board.appendChild(piece);
-        }
-
-        if (isPuzzleSolved() && !puzzleSolved) {
-          puzzleSolved = true;
-          const status = document.getElementById('puzzleStatus');
-          status.innerHTML = '🎉 ¡Felicidades! Completaste el puzzle de Nicaragua! 🎉';
-          status.style.color = '#ffd54f';
-        }
-      }
-
-      if (img.complete) {
-        if (img.naturalWidth > 0) {
-          renderPieces(true);
-        } else {
-          renderPieces(false);
-        }
-      }
-    }
-
-    function movePiece(index) {
-      if (puzzleSolved) return;
-
-      const emptyRow = Math.floor(puzzleEmptyIndex / PUZZLE_SIZE);
-      const emptyCol = puzzleEmptyIndex % PUZZLE_SIZE;
-      const clickedRow = Math.floor(index / PUZZLE_SIZE);
-      const clickedCol = index % PUZZLE_SIZE;
-
-      const isAdjacent = (Math.abs(emptyRow - clickedRow) + Math.abs(emptyCol - clickedCol)) === 1;
-
-      if (isAdjacent) {
-        puzzlePieces[puzzleEmptyIndex] = puzzlePieces[index];
-        puzzlePieces[index] = 8;
-        puzzleEmptyIndex = index;
-        puzzleMovements++;
-        document.getElementById('puzzleMovements').textContent = puzzleMovements;
-        renderPuzzle();
-      }
-    }
-
-    function verificarPuzzle() {
-      if (isPuzzleSolved()) {
-        alert('🎉 ¡El puzzle ya está completo! Lo lograste en ' + puzzleMovements + ' movimientos.');
-      } else {
-        alert('❌ El puzzle no está completo. Sigue moviendo las piezas.');
-      }
-    }
-
-    // ============================================================
-    // 3. PALABRA SECRETA
-    // ============================================================
-    const secretaPalabra = "MASAYA";
-    const secretaLetrasDisponibles = ["M", "A", "A", "A", "S", "Y", "D", "F", "G", "N", "B", "V", "C", "E", "R", "T", "U"];
-    let secretaSeleccionadas = [];
-    let secretaCompletada = false;
-
-    function renderSecreta() {
-      const container = document.getElementById('secretaLetters');
-      container.innerHTML = '';
-      
-      secretaLetrasDisponibles.forEach((letra, index) => {
-        const btn = document.createElement('button');
-        btn.className = 'letter-btn';
-        btn.textContent = letra;
-        btn.dataset.index = index;
-
-        if (secretaCompletada) {
-          btn.classList.add('used');
-        }
-
-        if (secretaSeleccionadas.includes(index)) {
-          btn.classList.add('selected');
-        }
-
-        btn.addEventListener('click', () => {
-          if (secretaCompletada) return;
-          
-          if (secretaSeleccionadas.includes(index)) {
-            secretaSeleccionadas = secretaSeleccionadas.filter(i => i !== index);
-          } else {
-            if (secretaSeleccionadas.length < secretaPalabra.length) {
-              secretaSeleccionadas.push(index);
+            if (palabraFormada === secretaPalabra) {
+                secretaCompletada = true;
+                document.getElementById('secretaStatus').innerHTML = '✅ ¡Correcto! Has adivinado la palabra. 🎉';
+                document.getElementById('secretaStatus').style.color = '#a5d6a7';
+                renderSecreta();
+                document.getElementById('secretaDisplay').textContent = 'M A S A Y A';
             } else {
-              alert('Ya has seleccionado todas las letras necesarias (6 letras).');
-              return;
+                document.getElementById('secretaStatus').innerHTML = `❌ "${palabraFormada}" no es correcto. Intenta de nuevo.`;
+                document.getElementById('secretaStatus').style.color = '#ffab91';
+                setTimeout(() => {
+                    if (!secretaCompletada) {
+                        secretaSeleccionadas = [];
+                        actualizarSecretaDisplay();
+                        renderSecreta();
+                        document.getElementById('secretaStatus').innerHTML = 'Selecciona 6 letras en el orden correcto';
+                        document.getElementById('secretaStatus').style.color = '';
+                    }
+                }, 2000);
             }
-          }
-          actualizarSecretaDisplay();
-          renderSecreta();
-        });
-
-        container.appendChild(btn);
-      });
-    }
-
-    function actualizarSecretaDisplay() {
-      const display = document.getElementById('secretaDisplay');
-      let texto = '';
-      for (let i = 0; i < secretaPalabra.length; i++) {
-        if (i < secretaSeleccionadas.length) {
-          const letra = secretaLetrasDisponibles[secretaSeleccionadas[i]];
-          texto += letra + ' ';
-        } else {
-          texto += '_ ';
         }
-      }
-      display.textContent = texto.trim();
-    }
 
-    function verificarSecreta() {
-      if (secretaCompletada) {
-        document.getElementById('secretaStatus').innerHTML = '✅ ¡Ya has completado la palabra!';
-        document.getElementById('secretaStatus').style.color = '#a5d6a7';
-        return;
-      }
-
-      const palabraFormada = secretaSeleccionadas.map(i => secretaLetrasDisponibles[i]).join('');
-      
-      if (palabraFormada.length !== secretaPalabra.length) {
-        document.getElementById('secretaStatus').innerHTML = `❌ Selecciona ${secretaPalabra.length} letras (tienes ${palabraFormada.length})`;
-        document.getElementById('secretaStatus').style.color = '#ffab91';
-        return;
-      }
-
-      if (palabraFormada === secretaPalabra) {
-        secretaCompletada = true;
-        document.getElementById('secretaStatus').innerHTML = '✅ ¡Correcto! Has adivinado la palabra. 🎉';
-        document.getElementById('secretaStatus').style.color = '#a5d6a7';
-        renderSecreta();
-        document.getElementById('secretaDisplay').textContent = 'M A S A Y A';
-      } else {
-        document.getElementById('secretaStatus').innerHTML = `❌ "${palabraFormada}" no es correcto. Intenta de nuevo.`;
-        document.getElementById('secretaStatus').style.color = '#ffab91';
-        setTimeout(() => {
-          if (!secretaCompletada) {
+        function reiniciarSecreta() {
             secretaSeleccionadas = [];
+            secretaCompletada = false;
             actualizarSecretaDisplay();
             renderSecreta();
             document.getElementById('secretaStatus').innerHTML = 'Selecciona 6 letras en el orden correcto';
             document.getElementById('secretaStatus').style.color = '';
-          }
-        }, 2000);
-      }
-    }
+        }
 
-    function reiniciarSecreta() {
-      secretaSeleccionadas = [];
-      secretaCompletada = false;
-      actualizarSecretaDisplay();
-      renderSecreta();
-      document.getElementById('secretaStatus').innerHTML = 'Selecciona 6 letras en el orden correcto';
-      document.getElementById('secretaStatus').style.color = '';
-    }
+        // ============================================================
+        // 4. NAVEGACIÓN
+        // ============================================================
+        let currentPanel = 1;
+        const totalPanels = 3;
 
-    // ============================================================
-    // 4. NAVEGACIÓN
-    // ============================================================
-    let currentPanel = 1;
-    const totalPanels = 3;
+        function showPanel(index) {
+            document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+            document.getElementById(`panel${index}`).classList.add('active');
+            document.getElementById('pageNumber').textContent = index;
+            currentPanel = index;
+        }
 
-    function showPanel(index) {
-      document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-      document.getElementById(`panel${index}`).classList.add('active');
-      document.getElementById('pageNumber').textContent = index;
-      currentPanel = index;
-    }
+        function nextPanel() {
+            let next = currentPanel + 1;
+            if (next > totalPanels) next = 1;
+            showPanel(next);
+        }
 
-    function nextPanel() {
-      let next = currentPanel + 1;
-      if (next > totalPanels) next = 1;
-      showPanel(next);
-    }
+        function prevPanel() {
+            let prev = currentPanel - 1;
+            if (prev < 1) prev = totalPanels;
+            showPanel(prev);
+        }
 
-    function prevPanel() {
-      let prev = currentPanel - 1;
-      if (prev < 1) prev = totalPanels;
-      showPanel(prev);
-    }
+        // ============================================================
+        // 5. EVENTOS
+        // ============================================================
+        document.getElementById('btnVerificar').addEventListener('click', tryValidateWord);
+        document.getElementById('btnPista').addEventListener('click', mostrarPistaSopa);
+        document.getElementById('btnSiguienteJuego').addEventListener('click', nextPanel);
+        document.getElementById('btnReiniciar').addEventListener('click', resetSopa);
+        document.getElementById('btnNext').addEventListener('click', nextPanel);
+        document.getElementById('btnPrev').addEventListener('click', prevPanel);
+        document.getElementById('secretaVerificar').addEventListener('click', verificarSecreta);
+        document.getElementById('secretaReiniciar').addEventListener('click', reiniciarSecreta);
+        document.getElementById('puzzleReiniciar').addEventListener('click', initPuzzle);
+        document.getElementById('puzzleVerificar').addEventListener('click', verificarPuzzle);
 
-    // ============================================================
-    // 5. EVENTOS
-    // ============================================================
-    document.getElementById('btnVerificar').addEventListener('click', tryValidateWord);
-    document.getElementById('btnPista').addEventListener('click', mostrarPistaSopa);
-    document.getElementById('btnSiguienteJuego').addEventListener('click', nextPanel);
-    document.getElementById('btnReiniciar').addEventListener('click', resetSopa);
-    document.getElementById('btnNext').addEventListener('click', nextPanel);
-    document.getElementById('btnPrev').addEventListener('click', prevPanel);
-    document.getElementById('secretaVerificar').addEventListener('click', verificarSecreta);
-    document.getElementById('secretaReiniciar').addEventListener('click', reiniciarSecreta);
-    document.getElementById('puzzleReiniciar').addEventListener('click', initPuzzle);
-    document.getElementById('puzzleVerificar').addEventListener('click', verificarPuzzle);
+        document.getElementById('btnFull').addEventListener('click', () => alert('Pantalla completa'));
+        document.getElementById('btnInfo').addEventListener('click', () => alert('Información del juego'));
+        document.getElementById('btnMenu').addEventListener('click', () => alert('Menú de opciones'));
+        document.getElementById('btnHelp').addEventListener('click', () => alert('Ayuda: Selecciona letras en orden para formar palabras'));
 
-    document.getElementById('btnFull').addEventListener('click', () => alert('Pantalla completa'));
-    document.getElementById('btnInfo').addEventListener('click', () => alert('Información del juego'));
-    document.getElementById('btnMenu').addEventListener('click', () => alert('Menú de opciones'));
-    document.getElementById('btnHelp').addEventListener('click', () => alert('Ayuda: Selecciona letras en orden para formar palabras'));
+        // ============================================================
+        // 6. INICIALIZACIÓN
+        // ============================================================
+        generateBoard();
+        renderBoard();
+        renderWordList();
+        updateFoundStyles();
+        actualizarSecretaDisplay();
+        renderSecreta();
+        initPuzzle();
+        showPanel(1);
 
-    // ============================================================
-    // 6. INICIALIZACIÓN
-    // ============================================================
-    generateBoard();
-    renderBoard();
-    renderWordList();
-    updateFoundStyles();
-    actualizarSecretaDisplay();
-    renderSecreta();
-    initPuzzle();
-    showPanel(1);
-
-    console.log('¡Juego de Sopa de Letras cargado correctamente!');
-  </script>
+        console.log('✅ ¡Juego de Sopa de Letras cargado correctamente!');
+        console.log('💡 Las palabras NO comparten letras entre sí');
+    </script>
 </body>
 </html>
