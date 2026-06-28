@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Guía Pinolero - Descubre Nicaragua</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <link rel="stylesheet" href="prueba.css" />
+</head>
+<body>
+  <div class="wave-bg">
+    <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
+      <path fill="rgba(255,255,255,0.08)" d="M0,192L48,197.3C96,203,192,213,288,208C384,203,480,181,576,176C672,171,768,181,864,197.3C960,213,1056,235,1152,224C1248,213,1344,171,1392,149.3L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+    </svg>
+  </div>
+
+  <div class="container">
+    <div id="authCard" class="glass-card">
+      <div class="mascota">
+        <img src="https://cdn-icons-png.flaticon.com/512/4712/4712109.png" alt="Mascota" />
+      </div>
+      <h1>Guía Pinolero</h1>
+      <p class="subtitle">🌋 Explora Nicaragua jugando 🌊</p>
+
+      <div id="loginForm">
+        <div class="input-group">
+          <input type="email" id="loginEmail" placeholder="📧 Correo electrónico" />
+        </div>
+        <div class="input-group">
+          <input type="password" id="loginPassword" placeholder="🔒 Contraseña" />
+        </div>
+        <button id="doLoginBtn" class="btn btn-primary">Iniciar sesión</button>
+        <div class="link">
+          <a href="#" id="forgotPasswordLink">¿Olvidaste tu contraseña?</a>
+        </div>
+        <div class="divider"><span>o</span></div>
+        <button id="showRegisterBtn" class="btn btn-outline">✨ Crear cuenta nueva</button>
+      </div>
+
+      <div id="registerForm" style="display:none;">
+        <div class="input-group">
+          <input type="text" id="regName" placeholder="👤 Nombre completo" />
+        </div>
+        <div class="input-group">
+          <input type="email" id="regEmail" placeholder="📧 Correo electrónico" />
+        </div>
+        <div class="input-group">
+          <input type="password" id="regPassword" placeholder="🔒 Contraseña (mínimo 6 caracteres)" />
+        </div>
+        <button id="doRegisterBtn" class="btn btn-primary">Registrarse</button>
+        <button id="backToLoginBtn" class="btn btn-outline">← Volver</button>
+      </div>
+    </div>
+
+    <!-- ===== MENÚ CON CARRUSEL ===== -->
+    <div id="menuSection" class="menu-section" style="display:none;">
+      <!-- Header con animación -->
+      <div class="welcome-header">
+        <h2 class="welcome-title">¡Bienvenido, <span id="userName"></span>!</h2>
+        <div class="user-badge">
+          <span class="badge-icon">🏆</span>
+          <span class="badge-text">Explorador Nivel 3</span>
+        </div>
+      </div>
+
+      <!-- Perfil interactivo -->
+      <div class="profile-header-enhanced">
+        <div class="profile-info-enhanced" id="profileTrigger">
+          <img id="profileAvatar" class="profile-avatar-enhanced" src="" alt="Avatar" />
+          <div class="profile-details">
+            <div class="profile-name-enhanced" id="profileNameDisplay">Usuario</div>
+            <div class="profile-level">⭐ 250 puntos</div>
+          </div>
+        </div>
+        <button id="editProfileBtn" class="btn-edit-enhanced">
+          <i class="fas fa-pen"></i>
+        </button>
+      </div>
+
+      <!-- CARRUSEL PREMIUM -->
+      <div class="carousel-premium-container">
+        <div class="carousel-premium-wrapper">
+          <button class="carousel-nav-btn prev-btn">‹</button>
+          
+          <div class="carousel-track-wrapper">
+            <div class="carousel-track">
+              <!-- Slide 1: Juegos -->
+              <div class="carousel-slide" data-url="../juegos/juegos.html" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <div class="slide-content">
+                  <div class="slide-icon">🎮</div>
+                  <h3>Juegos Turísticos</h3>
+                  <p>Conviértete en el mejor explorador</p>
+                  <div class="slide-stats">🔥 1,234 jugando</div>
+                  <div class="slide-glow"></div>
+                </div>
+              </div>
+
+              <!-- Slide 2: Mapa -->
+              <div class="carousel-slide" data-url="mapa.html" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                <div class="slide-content">
+                  <div class="slide-icon">🗺️</div>
+                  <h3>Mapa Interactivo</h3>
+                  <p>Descubre lugares secretos</p>
+                  <div class="slide-stats">📍 567 ubicaciones</div>
+                  <div class="slide-glow"></div>
+                </div>
+              </div>
+
+              <!-- Slide 3: Comunidad -->
+              <div class="carousel-slide" data-url="comunidad.html" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                <div class="slide-content">
+                  <div class="slide-icon">👥</div>
+                  <h3>Comunidad</h3>
+                  <p>Conecta con viajeros</p>
+                  <div class="slide-stats">💬 3,456 miembros</div>
+                  <div class="slide-glow"></div>
+                </div>
+              </div>
+
+              <!-- Slide 4: Visitas Virtuales -->
+              <div class="carousel-slide" data-url="visitas/index.html" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+                <div class="slide-content">
+                  <div class="slide-icon">📌</div>
+                  <h3>Visitas Virtuales</h3>
+                  <p>Experiencias 360°</p>
+                  <div class="slide-stats">🎥 89 recorridos</div>
+                  <div class="slide-glow"></div>
+                </div>
+              </div>
+
+              <!-- Slide 5: Escanea -->
+              <div class="carousel-slide" data-url="https://nicaguia.base44.app" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+                <div class="slide-content">
+                  <div class="slide-icon">🔍</div>
+                  <h3>Escanea y aprende</h3>
+                  <p>Realidad aumentada</p>
+                  <div class="slide-stats">📱 AR activo</div>
+                  <div class="slide-glow"></div>
+                </div>
+              </div>
+
+              <!-- Slide 6: Promociones -->
+              <div class="carousel-slide" data-url="temporal.html" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);">
+                <div class="slide-content">
+                  <div class="slide-icon">🏬</div>
+                  <h3>Promociones</h3>
+                  <p>Ofertas exclusivas</p>
+                  <div class="slide-stats">🎁 45% descuento</div>
+                  <div class="slide-glow"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <button class="carousel-nav-btn next-btn">›</button>
+        </div>
+
+        <!-- Indicadores -->
+        <div class="carousel-indicators">
+          <span class="indicator-dot active" data-index="0"></span>
+          <span class="indicator-dot" data-index="1"></span>
+          <span class="indicator-dot" data-index="2"></span>
+          <span class="indicator-dot" data-index="3"></span>
+          <span class="indicator-dot" data-index="4"></span>
+          <span class="indicator-dot" data-index="5"></span>
+        </div>
+      </div>
+
+      <!-- Botón Cerrar sesión -->
+      <div class="logout-wrapper">
+        <button id="logoutBtn" class="btn-logout">
+          <i class="fas fa-sign-out-alt"></i> Cerrar sesión
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="editProfileModal" class="modal">
+    <div class="modal-content">
+      <h3><i class="fas fa-user-edit"></i> Editar perfil</h3>
+
+      <div class="profile-pic-edit">
+        <img id="modalProfileImage" src="" alt="Foto" />
+        <div class="camera-icon" id="uploadPhotoIcon">
+          <i class="fas fa-camera"></i>
+        </div>
+      </div>
+      <input type="file" id="uploadPhoto" accept="image/*" style="display: none;" />
+
+      <div class="input-group">
+        <label style="color:white;">Nombre completo:</label>
+        <input type="text" id="editNameInput" placeholder="Tu nombre" />
+      </div>
+
+      <label style="color:white;">O elige una foto predeterminada:</label>
+      <div class="avatar-grid" id="avatarGrid"></div>
+
+      <button id="saveProfileBtn" class="btn btn-primary">Guardar cambios</button>
+      <button id="closeModalBtn" class="btn btn-outline">Cancelar</button>
+    </div>
+  </div>
+
+  <div class="whatsapp-container">
+    <a href="#" class="whatsapp-float" id="whatsappBtn">
+      <i class="fab fa-whatsapp"></i>
+    </a>
+  </div>
+
+  <div id="toast" class="toast-message" style="display: none;"></div>
+
+  <!-- Firebase Import Map -->
+  <script type="importmap">
+    {
+      "imports": {
+        "firebase/app": "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js",
+        "firebase/auth": "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js",
+        "firebase/firestore": "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"
+      }
+    }
+  </script>
+
+  <script type="module" src="prueba.js"></script>
+
+  <!-- Statcounter -->
+  <script type="text/javascript">
+    var sc_project = 13287173;
+    var sc_invisible = 1;
+    var sc_security = "b52e73f2";
+  </script>
+  <script type="text/javascript" src="https://www.statcounter.com/counter/counter.js" async></script>
+  <noscript>
+    <div class="statcounter">
+      <a title="Web Analytics" href="https://statcounter.com/" target="_blank">
+        <img class="statcounter" src="https://c.statcounter.com/13287173/0/b52e73f2/1/" alt="Web Analytics" referrerpolicy="no-referrer-when-downgrade">
+      </a>
+    </div>
+  </noscript>
+</body>
+</html>
