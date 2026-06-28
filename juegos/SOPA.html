@@ -6,7 +6,6 @@
   <title>Sopa de Letras - Nicaragua</title>
 
   <style>
-    /* ===== RESET Y BASE ===== */
     * {
       margin: 0;
       padding: 0;
@@ -38,7 +37,6 @@
       align-self: flex-start;
     }
 
-    /* ===== TÍTULO ===== */
     h1 {
       font-size: clamp(1.8rem, 6vw, 3rem);
       font-weight: 800;
@@ -67,7 +65,6 @@
       backdrop-filter: blur(4px);
     }
 
-    /* ===== BARRA DE NAVEGACIÓN ===== */
     .navbar {
       display: flex;
       align-items: center;
@@ -81,7 +78,8 @@
       gap: 6px;
     }
 
-    .navbar-left, .navbar-right {
+    .navbar-left,
+    .navbar-right {
       display: flex;
       gap: 4px;
       align-items: center;
@@ -132,7 +130,6 @@
       text-align: center;
     }
 
-    /* ===== CONTENEDOR DE JUEGOS ===== */
     .game-area {
       background: rgba(0, 0, 0, 0.06);
       border-radius: 24px;
@@ -152,8 +149,14 @@
     }
 
     @keyframes fadeIn {
-      0% { opacity: 0; transform: translateY(10px); }
-      100% { opacity: 1; transform: translateY(0); }
+      0% {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .panel-title {
@@ -175,7 +178,7 @@
     /* ===== SOPA DE LETRAS ===== */
     .sopa-wrapper {
       width: 100%;
-      max-width: 500px;
+      max-width: 550px;
       margin: 0 auto;
       aspect-ratio: 1 / 1;
       display: flex;
@@ -185,7 +188,7 @@
 
     #sopaBoard {
       display: grid;
-      grid-template-columns: repeat(10, 1fr);
+      grid-template-columns: repeat(12, 1fr);
       gap: 3px;
       width: 100%;
       height: 100%;
@@ -200,7 +203,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: clamp(0.7rem, 3.5vw, 1.4rem);
+      font-size: clamp(0.6rem, 3vw, 1.2rem);
       font-weight: 700;
       background: rgba(255, 255, 255, 0.06);
       border-radius: 4px;
@@ -262,7 +265,7 @@
       opacity: 0.6;
     }
 
-    /* ===== BOTONES DE CONTROL ===== */
+    /* ===== BOTONES ===== */
     .controls {
       display: flex;
       flex-wrap: wrap;
@@ -367,11 +370,15 @@
     }
 
     @keyframes pulse {
-      0% { text-shadow: 0 0 10px rgba(255, 215, 0, 0.2); }
-      100% { text-shadow: 0 0 30px rgba(255, 215, 0, 0.6); }
+      0% {
+        text-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+      }
+      100% {
+        text-shadow: 0 0 30px rgba(255, 215, 0, 0.6);
+      }
     }
 
-    /* ===== BOTÓN VOLVER ===== */
+    /* ===== VOLVER ===== */
     .back-btn {
       display: inline-flex;
       align-items: center;
@@ -558,6 +565,11 @@
       border-color: #ffd54f;
     }
 
+    .secreta-area .letter-btn.used {
+      opacity: 0.3;
+      pointer-events: none;
+    }
+
     .secreta-area .word-display {
       font-size: 2rem;
       letter-spacing: 12px;
@@ -577,44 +589,36 @@
         padding: 16px;
         border-radius: 24px;
       }
-
       .navbar {
         padding: 6px 10px;
         border-radius: 40px;
       }
-
       .nav-btn {
         width: 32px;
         height: 32px;
         font-size: 0.9rem;
       }
-
       .page-number {
         font-size: 0.85rem;
         padding: 2px 12px;
       }
-
       .game-area {
         padding: 12px;
         border-radius: 18px;
       }
-
       #sopaBoard {
         gap: 2px;
         padding: 4px;
       }
-
       .secreta-area .letter-btn {
         width: 36px;
         height: 36px;
         font-size: 1rem;
       }
-
       .secreta-area .word-display {
         font-size: 1.5rem;
         letter-spacing: 8px;
       }
-
       .puzzle-board {
         max-width: 400px;
         padding: 6px;
@@ -626,146 +630,92 @@
       body {
         padding: 10px;
       }
-
       .container {
         padding: 12px;
         border-radius: 18px;
       }
-
       .navbar {
         padding: 4px 8px;
         border-radius: 30px;
       }
-
       .nav-btn {
         width: 28px;
         height: 28px;
         font-size: 0.75rem;
       }
-
       .page-number {
         font-size: 0.7rem;
         padding: 2px 8px;
         min-width: 24px;
       }
-
       .game-area {
         padding: 8px;
         border-radius: 14px;
         min-height: 300px;
       }
-
       #sopaBoard {
         gap: 2px;
         padding: 3px;
         border-radius: 8px;
       }
-
       .cell {
         font-size: clamp(0.5rem, 3vw, 0.8rem);
         border-radius: 3px;
         border-width: 0.5px;
       }
-
       .btn {
         padding: 8px 12px;
         font-size: 0.65rem;
         min-width: 45px;
       }
-
       .secreta-area .letter-btn {
         width: 30px;
         height: 30px;
         font-size: 0.85rem;
       }
-
       .secreta-area .word-display {
         font-size: 1.2rem;
         letter-spacing: 6px;
         padding: 8px;
       }
-
       .secreta-area .hint {
         font-size: 0.9rem;
         padding: 8px 16px;
       }
-
       .back-btn {
         padding: 8px 16px;
         font-size: 0.7rem;
         margin-top: 14px;
       }
-
       .status {
         font-size: 0.7rem;
         padding: 6px 10px;
         gap: 6px;
       }
-
       .word-item {
         font-size: 0.5rem;
         padding: 2px 8px;
       }
-
       .puzzle-board {
         max-width: 320px;
         padding: 4px;
         gap: 2px;
         border-radius: 12px;
       }
-
       .puzzle-piece {
         border-radius: 4px;
         border-width: 1.5px;
         min-height: 35px;
       }
-
       .puzzle-status {
         font-size: 0.8rem;
         padding: 6px 12px;
       }
-
       .puzzle-piece .piece-number {
         font-size: 0.4rem;
         bottom: 2px;
         right: 3px;
         padding: 1px 4px;
-      }
-    }
-
-    @media (max-width: 380px) {
-      .cell {
-        font-size: 0.45rem;
-        border-radius: 2px;
-      }
-
-      .secreta-area .letter-btn {
-        width: 26px;
-        height: 26px;
-        font-size: 0.7rem;
-      }
-
-      .secreta-area .word-display {
-        font-size: 1rem;
-        letter-spacing: 4px;
-      }
-
-      .btn {
-        font-size: 0.55rem;
-        padding: 6px 8px;
-        min-width: 35px;
-      }
-
-      .puzzle-board {
-        max-width: 260px;
-        gap: 2px;
-        padding: 3px;
-      }
-
-      .puzzle-piece {
-        min-height: 28px;
-        border-radius: 3px;
-        border-width: 1px;
       }
     }
   </style>
@@ -778,7 +728,6 @@
       <span class="subtitle">Encuentra las ciudades y lugares turísticos de Nicaragua 🌋🌊</span>
     </div>
 
-    <!-- ===== BARRA DE NAVEGACIÓN ===== -->
     <div class="navbar">
       <div class="navbar-left">
         <button class="nav-btn" id="btnFull">&#9713;</button>
@@ -793,46 +742,38 @@
       </div>
     </div>
 
-    <!-- ===== ÁREA DE JUEGOS ===== -->
     <div class="game-area">
 
-      <!-- ===== PANEL 1: SOPA DE LETRAS ===== -->
+      <!-- PANEL 1: SOPA DE LETRAS -->
       <div class="panel active" id="panel1">
         <div class="panel-title">📝 CIUDADES</div>
         <div class="panel-desc">Selecciona letras en orden para formar las palabras</div>
-
         <div class="sopa-wrapper">
           <div id="sopaBoard"></div>
         </div>
-
         <div class="word-list" id="wordList"></div>
-
         <div class="controls">
           <button class="btn btn-verificar" id="btnVerificar">✅ Verificar</button>
           <button class="btn btn-pista" id="btnPista">💡 Pista</button>
           <button class="btn btn-siguiente" id="btnSiguienteJuego">➡ Siguiente</button>
           <button class="btn btn-reiniciar" id="btnReiniciar">🔄 Reiniciar</button>
         </div>
-
         <div class="status" id="status">
           <span>📌 Encuentra todas las palabras</span>
           <span class="counter">🏷️ <span id="foundCount">0</span> / <span id="totalCount">5</span></span>
         </div>
       </div>
 
-      <!-- ===== PANEL 2: PUZZLE ===== -->
+      <!-- PANEL 2: PUZZLE -->
       <div class="panel" id="panel2">
         <div class="panel-title">🧩 PUZZLE DE NICARAGUA</div>
         <div class="panel-desc">Haz clic en una pieza adyacente al espacio vacío para moverla</div>
-
         <div class="puzzle-container">
           <div class="puzzle-board" id="puzzleBoard"></div>
-
           <div class="puzzle-controls">
             <button class="btn btn-reiniciar" id="puzzleReiniciar">🔄 Reiniciar</button>
             <button class="btn btn-verificar" id="puzzleVerificar">✅ Verificar</button>
           </div>
-
           <div class="puzzle-status" id="puzzleStatus">
             🧩 Mueve las piezas para completar el mapa
             <span class="movements">Movimientos: <span id="puzzleMovements">0</span></span>
@@ -840,11 +781,10 @@
         </div>
       </div>
 
-      <!-- ===== PANEL 3: PALABRA SECRETA ===== -->
+      <!-- PANEL 3: PALABRA SECRETA -->
       <div class="panel" id="panel3">
         <div class="panel-title">🔤 PALABRA SECRETA</div>
-        <div class="panel-desc">Adivina la palabra con las letras disponibles</div>
-
+        <div class="panel-desc">Selecciona las letras en el orden correcto</div>
         <div class="secreta-area">
           <div class="hint" id="secretaHint">💡 Lugar famoso por su volcán activo y artesanías</div>
           <div class="word-display" id="secretaDisplay">_ _ _ _ _ _</div>
@@ -858,7 +798,6 @@
       </div>
     </div>
 
-    <!-- ===== BOTÓN VOLVER ===== -->
     <div class="text-center">
       <a href="../juegos/juegos.html" class="back-btn">⬅ Volver a Juegos</a>
     </div>
@@ -866,7 +805,7 @@
 
   <script>
     // ============================================================
-    // 1. DATOS DE LA SOPA DE LETRAS
+    // 1. SOPA DE LETRAS (12x12 para que quepan todas las palabras)
     // ============================================================
     const palabrasData = [
       { palabra: "MANAGUA", descripcion: "Capital de Nicaragua" },
@@ -876,10 +815,7 @@
       { palabra: "LEON", descripcion: "Cultura y volcanes" }
     ];
 
-    // ============================================================
-    // 2. SOPA DE LETRAS (10x10)
-    // ============================================================
-    const SIZE = 10;
+    const SIZE = 12;
     let board = [];
     let selection = [];
     let foundWords = new Set();
@@ -899,7 +835,10 @@
       wordPositions = [];
 
       const directions = [
-        [0, 1], [1, 0], [1, 1], [-1, 1]
+        [0, 1],
+        [1, 0],
+        [1, 1],
+        [-1, 1]
       ];
 
       palabrasData.forEach((item) => {
@@ -907,7 +846,7 @@
         let placed = false;
         let attempts = 0;
 
-        while (!placed && attempts < 200) {
+        while (!placed && attempts < 300) {
           attempts++;
           const row = Math.floor(Math.random() * SIZE);
           const col = Math.floor(Math.random() * SIZE);
@@ -942,8 +881,8 @@
         }
 
         if (!placed) {
-          let row = Math.floor(Math.random() * SIZE);
-          let col = Math.floor(Math.random() * (SIZE - word.length + 1));
+          let row = Math.floor(Math.random() * (SIZE - 2));
+          let col = Math.floor(Math.random() * (SIZE - word.length));
           const positions = [];
           for (let i = 0; i < word.length; i++) {
             board[row][col + i] = word[i];
@@ -964,6 +903,7 @@
 
     function renderBoard() {
       boardEl.innerHTML = '';
+      boardEl.style.gridTemplateColumns = `repeat(${SIZE}, 1fr)`;
       for (let r = 0; r < SIZE; r++) {
         for (let c = 0; c < SIZE; c++) {
           const cell = document.createElement('div');
@@ -1192,15 +1132,13 @@
     }
 
     // ============================================================
-    // 3. PUZZLE
+    // 2. PUZZLE
     // ============================================================
     const PUZZLE_SIZE = 3;
     let puzzlePieces = [];
     let puzzleEmptyIndex = 8;
     let puzzleSolved = false;
     let puzzleMovements = 0;
-
-    // IMAGEN REAL - Cambia esta ruta según donde tengas tu imagen
     const IMAGE_URL = "file.png";
 
     function initPuzzle() {
@@ -1212,15 +1150,14 @@
       puzzleSolved = false;
       puzzleMovements = 0;
       document.getElementById('puzzleMovements').textContent = '0';
-
       shufflePuzzle();
       renderPuzzle();
-
       const status = document.getElementById('puzzleStatus');
-      status.innerHTML = `
+      status.innerHTML =
+        `
         🧩 Mueve las piezas para completar el mapa
         <span class="movements">Movimientos: <span id="puzzleMovements">0</span></span>
-      `;
+        `;
       status.style.color = '';
     }
 
@@ -1264,7 +1201,6 @@
       board.style.gridTemplateColumns = `repeat(${PUZZLE_SIZE}, 1fr)`;
       board.innerHTML = '';
 
-      // Verificar si la imagen existe
       const img = new Image();
       img.onload = function() {
         renderPieces(true);
@@ -1364,7 +1300,7 @@
     }
 
     // ============================================================
-    // 4. PALABRA SECRETA - CORREGIDA (NO descarta letras)
+    // 3. PALABRA SECRETA - CORREGIDA
     // ============================================================
     const secretaPalabra = "MASAYA";
     const secretaLetras = ["A", "S", "D", "F", "G", "M", "N", "B", "V", "C", "E", "R", "T", "Y", "U"];
@@ -1378,33 +1314,42 @@
         btn.className = 'letter-btn';
         btn.textContent = letra;
         btn.dataset.index = index;
+
+        // Contar cuántas veces se ha seleccionado esta letra
+        const countSelected = secretaSeleccionadas.filter(i => i === index).length;
+
+        // Si ya se seleccionó el máximo de veces (1 por ahora), deshabilitar
+        // Pero para MASAYA necesitamos poder seleccionar A dos veces
+        // Así que permitimos seleccionar la misma letra hasta que se complete la palabra
+
+        btn.addEventListener('click', () => {
+          // Si ya está seleccionada, no hacer nada (no borrar)
+          if (secretaSeleccionadas.includes(index)) {
+            // No hacemos nada, la letra ya está seleccionada
+            return;
+          }
+
+          // Si no está seleccionada y hay espacio, la añadimos
+          if (secretaSeleccionadas.length < secretaPalabra.length) {
+            secretaSeleccionadas.push(index);
+            actualizarSecretaDisplay();
+            renderSecreta();
+          } else {
+            alert('Ya has seleccionado todas las letras necesarias.');
+          }
+        });
+
         // Marcar si ya fue seleccionada
         if (secretaSeleccionadas.includes(index)) {
           btn.classList.add('selected');
         }
-        btn.addEventListener('click', () => {
-          // Si ya está seleccionada, la deseleccionamos
-          if (secretaSeleccionadas.includes(index)) {
-            secretaSeleccionadas = secretaSeleccionadas.filter(i => i !== index);
-          } else {
-            // Si no está seleccionada y hay espacio, la añadimos
-            if (secretaSeleccionadas.length < secretaPalabra.length) {
-              secretaSeleccionadas.push(index);
-            } else {
-              alert('Ya has seleccionado todas las letras necesarias.');
-              return;
-            }
-          }
-          actualizarSecretaDisplay();
-          renderSecreta();
-        });
+
         container.appendChild(btn);
       });
     }
 
     function actualizarSecretaDisplay() {
       const display = document.getElementById('secretaDisplay');
-      // Mostrar las letras seleccionadas en orden
       let texto = '';
       for (let i = 0; i < secretaPalabra.length; i++) {
         if (i < secretaSeleccionadas.length) {
@@ -1441,7 +1386,7 @@
     }
 
     // ============================================================
-    // 5. NAVEGACIÓN ENTRE PANELES
+    // 4. NAVEGACIÓN
     // ============================================================
     let currentPanel = 1;
     const totalPanels = 3;
@@ -1466,7 +1411,7 @@
     }
 
     // ============================================================
-    // 6. EVENTOS
+    // 5. EVENTOS
     // ============================================================
     document.getElementById('btnVerificar').addEventListener('click', tryValidateWord);
     document.getElementById('btnPista').addEventListener('click', mostrarPistaSopa);
@@ -1479,14 +1424,13 @@
     document.getElementById('puzzleReiniciar').addEventListener('click', initPuzzle);
     document.getElementById('puzzleVerificar').addEventListener('click', verificarPuzzle);
 
-    // Botones de la barra
     document.getElementById('btnFull').addEventListener('click', () => alert('Pantalla completa'));
     document.getElementById('btnInfo').addEventListener('click', () => alert('Información del juego'));
     document.getElementById('btnMenu').addEventListener('click', () => alert('Menú de opciones'));
     document.getElementById('btnHelp').addEventListener('click', () => alert('Ayuda: Selecciona letras en orden para formar palabras'));
 
     // ============================================================
-    // 7. INICIALIZACIÓN
+    // 6. INICIALIZACIÓN
     // ============================================================
     generateBoard();
     renderBoard();
