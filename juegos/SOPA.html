@@ -232,7 +232,6 @@
       cursor: default;
     }
 
-    /* ===== LISTA DE PALABRAS ===== */
     .word-list {
       display: flex;
       flex-wrap: wrap;
@@ -265,7 +264,6 @@
       opacity: 0.6;
     }
 
-    /* ===== BOTONES ===== */
     .controls {
       display: flex;
       flex-wrap: wrap;
@@ -332,7 +330,6 @@
       background: #ffa726;
     }
 
-    /* ===== ESTADO ===== */
     .status {
       margin-top: 12px;
       text-align: center;
@@ -378,7 +375,6 @@
       }
     }
 
-    /* ===== VOLVER ===== */
     .back-btn {
       display: inline-flex;
       align-items: center;
@@ -565,11 +561,6 @@
       border-color: #ffd54f;
     }
 
-    .secreta-area .letter-btn.used {
-      opacity: 0.3;
-      pointer-events: none;
-    }
-
     .secreta-area .word-display {
       font-size: 2rem;
       letter-spacing: 12px;
@@ -583,7 +574,6 @@
       border: 1px solid rgba(255, 255, 255, 0.04);
     }
 
-    /* ===== RESPONSIVE ===== */
     @media (max-width: 768px) {
       .container {
         padding: 16px;
@@ -784,7 +774,7 @@
       <!-- PANEL 3: PALABRA SECRETA -->
       <div class="panel" id="panel3">
         <div class="panel-title">🔤 PALABRA SECRETA</div>
-        <div class="panel-desc">Selecciona las letras en el orden correcto</div>
+        <div class="panel-desc">Toca una letra para seleccionarla, toca de nuevo para deseleccionarla</div>
         <div class="secreta-area">
           <div class="hint" id="secretaHint">💡 Lugar famoso por su volcán activo y artesanías</div>
           <div class="word-display" id="secretaDisplay">_ _ _ _ _ _</div>
@@ -805,7 +795,7 @@
 
   <script>
     // ============================================================
-    // 1. SOPA DE LETRAS (12x12 para que quepan todas las palabras)
+    // 1. SOPA DE LETRAS (12x12)
     // ============================================================
     const palabrasData = [
       { palabra: "MANAGUA", descripcion: "Capital de Nicaragua" },
@@ -1315,34 +1305,27 @@
         btn.textContent = letra;
         btn.dataset.index = index;
 
-        // Contar cuántas veces se ha seleccionado esta letra
-        const countSelected = secretaSeleccionadas.filter(i => i === index).length;
-
-        // Si ya se seleccionó el máximo de veces (1 por ahora), deshabilitar
-        // Pero para MASAYA necesitamos poder seleccionar A dos veces
-        // Así que permitimos seleccionar la misma letra hasta que se complete la palabra
-
-        btn.addEventListener('click', () => {
-          // Si ya está seleccionada, no hacer nada (no borrar)
-          if (secretaSeleccionadas.includes(index)) {
-            // No hacemos nada, la letra ya está seleccionada
-            return;
-          }
-
-          // Si no está seleccionada y hay espacio, la añadimos
-          if (secretaSeleccionadas.length < secretaPalabra.length) {
-            secretaSeleccionadas.push(index);
-            actualizarSecretaDisplay();
-            renderSecreta();
-          } else {
-            alert('Ya has seleccionado todas las letras necesarias.');
-          }
-        });
-
-        // Marcar si ya fue seleccionada
+        // Si la letra está seleccionada, mostrarla con estilo
         if (secretaSeleccionadas.includes(index)) {
           btn.classList.add('selected');
         }
+
+        btn.addEventListener('click', () => {
+          // Si la letra ya está seleccionada, la deseleccionamos
+          if (secretaSeleccionadas.includes(index)) {
+            secretaSeleccionadas = secretaSeleccionadas.filter(i => i !== index);
+          } else {
+            // Si no está seleccionada, la añadimos (si hay espacio)
+            if (secretaSeleccionadas.length < secretaPalabra.length) {
+              secretaSeleccionadas.push(index);
+            } else {
+              alert('Ya has seleccionado todas las letras necesarias.');
+              return;
+            }
+          }
+          actualizarSecretaDisplay();
+          renderSecreta();
+        });
 
         container.appendChild(btn);
       });
