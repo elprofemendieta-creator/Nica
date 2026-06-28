@@ -1,107 +1,122 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
   <title>Comunidad - Guía Pinolero</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
   <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
-  <link rel="stylesheet" href="/css/comunidad.css">
+  <link rel="stylesheet" href="/css/comunidad.css" />
 </head>
 <body>
 
-<div class="container">
-  <!-- Dashboard en rejilla -->
-  <div class="comunidad-dashboard">
+<div class="comunidad-mobile-wrapper">
 
-    <!-- COLUMNA IZQUIERDA: Perfil, Buscar, Compartir -->
-    <aside class="sidebar-left">
-      <!-- Tarjeta de Perfil -->
-      <div class="card card-perfil">
-        <div class="profile-header">
-          <div class="avatar">
-            <img id="userPhoto" src="" alt="Foto perfil" style="display:none;">
-            <i id="defaultAvatar" class="fas fa-user"></i>
-          </div>
-          <div class="stats">
-            <h3 id="userDisplayName">Cargando...</h3>
-            <p><i class="fas fa-star" style="color:#F9A826;"></i> Puntos: <span id="userPoints">0</span></p>
-            <p id="globalPosition" class="position-badge">
-              <i class="fas fa-chart-line"></i> 
-              <span id="positionText">Calculando posición...</span>
-            </p>
-          </div>
-        </div>
+  <!-- ===== PESTAÑA 1: PERFIL ===== -->
+  <section id="tab-perfil" class="tab-content active">
+    <!-- Tarjeta de Perfil -->
+    <div class="mobile-card profile-hero">
+      <div class="avatar">
+        <img id="userPhoto" src="" alt="Foto perfil" style="display:none;" />
+        <i id="defaultAvatar" class="fas fa-user"></i>
       </div>
-
-      <!-- Tarjeta de Buscar -->
-      <div class="card card-buscar">
-        <h2><i class="fas fa-user-plus"></i> Buscar usuarios</h2>
-        <div class="search-box">
-          <input type="text" id="searchUserInput" placeholder="Buscar por nombre...">
-          <button class="btn" id="searchUserBtn">Buscar</button>
-        </div>
-        <div id="searchResults"></div>
+      <h3 id="userDisplayName">Cargando...</h3>
+      <div class="stats">
+        <p><i class="fas fa-star" style="color:#F9A826;"></i> Puntos: <span id="userPoints">0</span></p>
+        <p id="globalPosition" class="position-badge">
+          <i class="fas fa-chart-line"></i> 
+          <span id="positionText">Calculando posición...</span>
+        </p>
       </div>
+    </div>
 
-      <!-- Tarjeta de Compartir -->
-      <div class="card card-compartir">
-        <h2><i class="fas fa-qrcode"></i> Compartir perfil</h2>
-        <div class="qr-container">
-          <div id="qrCode"></div>
-          <button id="shareWhatsAppBtn" class="btn"><i class="fab fa-whatsapp"></i> Compartir</button>
-          <button id="copyLinkBtn" class="btn btn-outline">Copiar enlace</button>
-        </div>
+    <!-- Tarjeta de Búsqueda -->
+    <div class="mobile-card">
+      <h2><i class="fas fa-user-plus"></i> Buscar usuarios</h2>
+      <div class="search-box">
+        <input type="text" id="searchUserInput" placeholder="Buscar por nombre..." />
+        <button class="btn" id="searchUserBtn">Buscar</button>
       </div>
-    </aside>
+      <div id="searchResults"></div>
+    </div>
 
-    <!-- COLUMNA CENTRAL: Muro de Consejos -->
-    <main class="main-muro">
-      <div class="card card-muro">
-        <h2><i class="fas fa-comments"></i> Muro de Consejos</h2>
-        <div class="search-box" style="margin-bottom:20px;">
-          <input type="text" id="mensajeForo" placeholder="Pregunta sobre buses, seguridad o consejos...">
-          <button class="btn" id="publicarForoBtn">Publicar</button>
-        </div>
-        <div id="foroMensajes"></div>
+    <!-- Tarjeta de Compartir -->
+    <div class="mobile-card">
+      <h2><i class="fas fa-qrcode"></i> Compartir perfil</h2>
+      <div class="qr-container">
+        <div id="qrCode"></div>
+        <button id="shareWhatsAppBtn" class="btn"><i class="fab fa-whatsapp"></i> Compartir</button>
+        <button id="copyLinkBtn" class="btn btn-outline">Copiar enlace</button>
       </div>
-    </main>
+    </div>
 
-    <!-- COLUMNA DERECHA: Ranking y Amigos -->
-    <aside class="sidebar-right">
-      <!-- Tarjeta de Ranking -->
-      <div class="card card-ranking">
+    <!-- Enlace para volver al inicio -->
+    <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Volver al inicio</a>
+  </section>
+
+  <!-- ===== PESTAÑA 2: MURO ===== -->
+  <section id="tab-muro" class="tab-content">
+    <div class="mobile-card">
+      <h2><i class="fas fa-comments"></i> Muro de Consejos</h2>
+      <div class="search-box" style="margin-bottom:16px;">
+        <input type="text" id="mensajeForo" placeholder="Pregunta sobre buses, seguridad o consejos..." />
+        <button class="btn" id="publicarForoBtn">Publicar</button>
+      </div>
+      <div id="foroMensajes"></div>
+    </div>
+  </section>
+
+  <!-- ===== PESTAÑA 3: RANKING Y AMIGOS ===== -->
+  <section id="tab-ranking" class="tab-content">
+    <!-- Sub‑navegación con chips -->
+    <div class="sub-nav-chips">
+      <button class="chip active" data-subtab="ranking">🏆 Top Usuarios</button>
+      <button class="chip" data-subtab="amigos">👥 Mis Amigos</button>
+    </div>
+
+    <!-- Sub‑pestaña: Ranking -->
+    <div id="subtab-ranking" class="subtab-content active">
+      <div class="mobile-card">
         <h2><i class="fas fa-chart-line"></i> Ranking Global</h2>
         <table class="ranking-table">
           <thead>
-            <tr>
-              <th>#</th>
-              <th>Usuario</th>
-              <th>Puntos</th>
-            </tr>
+            <tr><th>#</th><th>Usuario</th><th>Puntos</th></tr>
           </thead>
           <tbody id="rankingBody"></tbody>
         </table>
       </div>
+    </div>
 
-      <!-- Tarjeta de Amigos -->
-      <div class="card card-amigos">
+    <!-- Sub‑pestaña: Amigos -->
+    <div id="subtab-amigos" class="subtab-content" style="display:none;">
+      <div class="mobile-card">
         <h2><i class="fas fa-users"></i> Mis Amigos</h2>
         <div id="solicitudesPendientes"></div>
         <div id="amigosList"></div>
       </div>
-    </aside>
+    </div>
+  </section>
 
-  </div> <!-- fin comunidad-dashboard -->
-</div> <!-- fin container -->
+  <!-- ===== BARRA DE NAVEGACIÓN INFERIOR FIJA ===== -->
+  <nav class="bottom-nav">
+    <button class="nav-item active" data-tab="tab-perfil">
+      <i class="fas fa-user-circle"></i>
+      <span>Perfil</span>
+    </button>
+    <button class="nav-item" data-tab="tab-muro">
+      <i class="fas fa-comments"></i>
+      <span>Muro</span>
+    </button>
+    <button class="nav-item" data-tab="tab-ranking">
+      <i class="fas fa-trophy"></i>
+      <span>Ranking</span>
+    </button>
+  </nav>
 
-<!-- Botón Volver (fuera del grid) -->
-<a href="index.html" class="back-btn">
-  <i class="fas fa-arrow-left"></i> Volver
-</a>
+</div>
 
-<!-- Firebase Import Map -->
+<!-- ===== FIREBASE IMPORTS ===== -->
 <script type="importmap">
 {
   "imports": {
@@ -112,19 +127,19 @@
 }
 </script>
 
-<!-- ====== EL MISMO CÓDIGO JS DE ANTES (sin cambios) ====== -->
+<!-- ===== JAVASCRIPT (sin cambios funcionales) ===== -->
 <script type="module">
 import { initializeApp } from "firebase/app";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getFirestore, collection, query, orderBy, limit, getDocs, where, addDoc, deleteDoc, doc, onSnapshot, updateDoc, arrayUnion, arrayRemove, getDoc, setDoc } from "firebase/firestore";
 
 const firebaseConfig = {
-apiKey: "AIzaSyA6jVICuE17KJcO34gE1brMxqWEfNd3Fy0",
-authDomain: "mapa-41b00.firebaseapp.com",
-projectId: "mapa-41b00",
-storageBucket: "mapa-41b00.firebasestorage.app",
-messagingSenderId: "535032835400",
-appId: "1:535032835400:web:68c079cbc3f419eafd177d"
+  apiKey: "AIzaSyA6jVICuE17KJcO34gE1brMxqWEfNd3Fy0",
+  authDomain: "mapa-41b00.firebaseapp.com",
+  projectId: "mapa-41b00",
+  storageBucket: "mapa-41b00.firebasestorage.app",
+  messagingSenderId: "535032835400",
+  appId: "1:535032835400:web:68c079cbc3f419eafd177d"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -133,496 +148,559 @@ const db = getFirestore(app);
 let currentUser = null;
 let usuariosCache = new Map();
 
-function toast(msg, isError = false){
-const div = document.createElement("div");
-div.innerText = msg;
-div.style.position = "fixed";
-div.style.bottom = "90px";
-div.style.left = "50%";
-div.style.transform = "translateX(-50%)";
-div.style.background = isError ? "#c62828" : "#2E7D32";
-div.style.padding = "12px 20px";
-div.style.borderRadius = "40px";
-div.style.zIndex = "9999";
-div.style.color = "white";
-document.body.appendChild(div);
-setTimeout(()=> div.remove(), 3000);
+// ===== TOAST =====
+function toast(msg, isError = false) {
+  const div = document.createElement("div");
+  div.innerText = msg;
+  div.style.position = "fixed";
+  div.style.bottom = "90px";
+  div.style.left = "50%";
+  div.style.transform = "translateX(-50%)";
+  div.style.background = isError ? "#c62828" : "#2E7D32";
+  div.style.padding = "12px 20px";
+  div.style.borderRadius = "40px";
+  div.style.zIndex = "9999";
+  div.style.color = "white";
+  div.style.fontWeight = "600";
+  div.style.boxShadow = "0 4px 16px rgba(0,0,0,0.15)";
+  document.body.appendChild(div);
+  setTimeout(() => div.remove(), 3000);
 }
 
-async function getUserData(uid){
-if(usuariosCache.has(uid)) return usuariosCache.get(uid);
-const userDoc = await getDoc(doc(db, "usuarios", uid));
-if(userDoc.exists()){
-const data = userDoc.data();
-usuariosCache.set(uid, data);
-return data;
-}
-return null;
+// ===== UTILIDADES =====
+async function getUserData(uid) {
+  if (usuariosCache.has(uid)) return usuariosCache.get(uid);
+  const userDoc = await getDoc(doc(db, "usuarios", uid));
+  if (userDoc.exists()) {
+    const data = userDoc.data();
+    usuariosCache.set(uid, data);
+    return data;
+  }
+  return null;
 }
 
 function getFotoURL(userData) {
-if (userData && userData.fotoURL && userData.fotoURL !== "" && userData.fotoURL !== "null") {
-return userData.fotoURL;
-}
-return "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
-}
-
-async function asegurarPerfilUsuario(user){
-try{
-const userRef = doc(db, "usuarios", user.uid);
-const userDoc = await getDoc(userRef);
-if(!userDoc.exists()){
-await setDoc(userRef, {
-uid: user.uid,
-nombre: user.displayName || user.email.split('@')[0],
-email: user.email,
-puntos: 0,
-amigos: [],
-solicitudesEnviadas: [],
-solicitudesRecibidas: [],
-fotoURL: user.photoURL || null,
-fechaRegistro: Date.now()
-});
-toast("¡Bienvenido a Guía Pinolero!");
-} else {
-const userData = userDoc.data();
-if(userData.puntos === undefined) await updateDoc(userRef, { puntos: 0 });
-if(!userData.amigos) await updateDoc(userRef, { amigos: [] });
-if(!userData.solicitudesEnviadas) await updateDoc(userRef, { solicitudesEnviadas: [] });
-if(!userData.solicitudesRecibidas) await updateDoc(userRef, { solicitudesRecibidas: [] });
-}
-return true;
-} catch(error){
-console.error("Error asegurando perfil:", error);
-return false;
-}
+  if (userData && userData.fotoURL && userData.fotoURL !== "" && userData.fotoURL !== "null") {
+    return userData.fotoURL;
+  }
+  return "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
 }
 
-async function cargarPerfil(user){
-const nombreMostrar = user.displayName || user.email.split('@')[0];
-document.getElementById("userDisplayName").innerText = nombreMostrar;
-try {
-const userRef = doc(db, "usuarios", user.uid);
-const userDoc = await getDoc(userRef);
-const photo = document.getElementById("userPhoto");
-const defaultAvatar = document.getElementById("defaultAvatar");
-if(userDoc.exists()){
-const data = userDoc.data();
-document.getElementById("userPoints").innerText = data.puntos || 0;
-const fotoURL = getFotoURL(data);
-photo.src = fotoURL;
-photo.style.display = "block";
-defaultAvatar.style.display = "none";
-photo.onerror = () => {
-photo.style.display = "none";
-defaultAvatar.style.display = "flex";
-};
-} else {
-document.getElementById("userPoints").innerText = "0";
-photo.style.display = "none";
-defaultAvatar.style.display = "flex";
-}
-} catch(error){
-console.error("Error cargando perfil:", error);
-}
-}
-
-async function cargarRankingGlobal(){
-try{
-const q = query(collection(db,"usuarios"), orderBy("puntos","desc"), limit(50));
-const snap = await getDocs(q);
-const body = document.getElementById("rankingBody");
-body.innerHTML = "";
-let pos = 1;
-for(const docSnap of snap.docs){
-const data = docSnap.data();
-const isCurrentUser = (docSnap.id === currentUser.uid);
-const rowClass = isCurrentUser ? 'highlight-row' : '';
-const puntosMostrar = data.puntos || 0;
-const fotoURL = getFotoURL(data);
-const nombre = data.nombre || "Usuario";
-let medalIcon = '';
-if(pos === 1) medalIcon = '🥇 ';
-else if(pos === 2) medalIcon = '🥈 ';
-else if(pos === 3) medalIcon = '🥉 ';
-body.innerHTML += `
-<tr class="${rowClass}">
-<td><strong>${medalIcon}${pos}</strong></td>
-<td>
-<div class="user-cell">
-<img src="${fotoURL}" class="ranking-avatar" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
-<span>${nombre} ${isCurrentUser ? '<i class="fas fa-user-check" style="color:#F57C00; margin-left:5px;"></i>' : ''}</span>
-</div>
-</td>
-<td><i class="fas fa-star" style="color:#F9A826;"></i> ${puntosMostrar}</td>
-</tr>
-`;
-pos++;
-}
-if(pos === 1){
-body.innerHTML = '<tr><td colspan="3" style="text-align:center;">No hay usuarios registrados aún</td></tr>';
-}
-await calcularPosicionGlobal(currentUser.uid);
-} catch(error){
-console.error("Error cargando ranking:", error);
-}
+async function asegurarPerfilUsuario(user) {
+  try {
+    const userRef = doc(db, "usuarios", user.uid);
+    const userDoc = await getDoc(userRef);
+    if (!userDoc.exists()) {
+      await setDoc(userRef, {
+        uid: user.uid,
+        nombre: user.displayName || user.email.split('@')[0],
+        email: user.email,
+        puntos: 0,
+        amigos: [],
+        solicitudesEnviadas: [],
+        solicitudesRecibidas: [],
+        fotoURL: user.photoURL || null,
+        fechaRegistro: Date.now()
+      });
+      toast("¡Bienvenido a Guía Pinolero!");
+    } else {
+      const data = userDoc.data();
+      if (data.puntos === undefined) await updateDoc(userRef, { puntos: 0 });
+      if (!data.amigos) await updateDoc(userRef, { amigos: [] });
+      if (!data.solicitudesEnviadas) await updateDoc(userRef, { solicitudesEnviadas: [] });
+      if (!data.solicitudesRecibidas) await updateDoc(userRef, { solicitudesRecibidas: [] });
+    }
+    return true;
+  } catch (error) {
+    console.error("Error asegurando perfil:", error);
+    return false;
+  }
 }
 
-async function calcularPosicionGlobal(uid){
-try{
-const userDoc = await getDoc(doc(db, "usuarios", uid));
-if(!userDoc.exists()){
-document.getElementById("positionText").innerHTML = '📝 Completa tu perfil';
-return null;
-}
-const userData = userDoc.data();
-const puntosUsuario = userData.puntos || 0;
-const q = query(collection(db,"usuarios"), orderBy("puntos","desc"));
-const snap = await getDocs(q);
-let posicion = 0;
-let totalUsuarios = 0;
-let usuariosArray = [];
-snap.forEach((docSnap) => {
-totalUsuarios++;
-const data = docSnap.data();
-usuariosArray.push({
-uid: docSnap.id,
-puntos: data.puntos || 0,
-nombre: data.nombre || "Usuario"
-});
-});
-for(let i = 0; i < usuariosArray.length; i++){
-if(usuariosArray[i].uid === uid){
-posicion = i + 1;
-break;
-}
-}
-const positionText = document.getElementById("positionText");
-if(posicion > 0){
-let medalIcon = '';
-if(posicion === 1) medalIcon = '<i class="fas fa-crown" style="color:#FFD700;"></i> ';
-else if(posicion === 2) medalIcon = '<i class="fas fa-medal" style="color:#C0C0C0;"></i> ';
-else if(posicion === 3) medalIcon = '<i class="fas fa-medal" style="color:#CD7F32;"></i> ';
-positionText.innerHTML = `${medalIcon}Posición #${posicion} de ${totalUsuarios}`;
-} else {
-if(puntosUsuario === 0){
-positionText.innerHTML = '🌟 0 puntos - ¡Empieza a explorar Nicaragua!';
-} else {
-positionText.innerHTML = `📈 ${puntosUsuario} puntos - Subiendo en el ranking...`;
-}
-}
-return {posicion, puntosUsuario, totalUsuarios};
-} catch(error){
-console.error("Error calculando posición:", error);
-document.getElementById("positionText").innerHTML = '🔄 Actualizando ranking...';
-return null;
-}
+// ===== CARGAR PERFIL =====
+async function cargarPerfil(user) {
+  const nombreMostrar = user.displayName || user.email.split('@')[0];
+  document.getElementById("userDisplayName").innerText = nombreMostrar;
+  try {
+    const userRef = doc(db, "usuarios", user.uid);
+    const userDoc = await getDoc(userRef);
+    const photo = document.getElementById("userPhoto");
+    const defaultAvatar = document.getElementById("defaultAvatar");
+    if (userDoc.exists()) {
+      const data = userDoc.data();
+      document.getElementById("userPoints").innerText = data.puntos || 0;
+      const fotoURL = getFotoURL(data);
+      photo.src = fotoURL;
+      photo.style.display = "block";
+      defaultAvatar.style.display = "none";
+      photo.onerror = () => {
+        photo.style.display = "none";
+        defaultAvatar.style.display = "flex";
+      };
+    } else {
+      document.getElementById("userPoints").innerText = "0";
+      photo.style.display = "none";
+      defaultAvatar.style.display = "flex";
+    }
+  } catch (error) {
+    console.error("Error cargando perfil:", error);
+  }
 }
 
-function generarQR(){
-const qrDiv = document.getElementById("qrCode");
-qrDiv.innerHTML = "";
-const url = `${window.location.origin}${window.location.pathname}?user=${currentUser.uid}`;
-new QRCode(qrDiv,{ text:url, width:180, height:180 });
-document.getElementById("copyLinkBtn").onclick = ()=>{
-navigator.clipboard.writeText(url);
-toast("Enlace copiado");
-};
-document.getElementById("shareWhatsAppBtn").onclick = ()=>{
-window.open(`https://wa.me/?text=${encodeURIComponent(url)}`, "_blank");
-};
+// ===== RANKING =====
+async function cargarRankingGlobal() {
+  try {
+    const q = query(collection(db, "usuarios"), orderBy("puntos", "desc"), limit(50));
+    const snap = await getDocs(q);
+    const body = document.getElementById("rankingBody");
+    body.innerHTML = "";
+    let pos = 1;
+    for (const docSnap of snap.docs) {
+      const data = docSnap.data();
+      const isCurrentUser = (docSnap.id === currentUser.uid);
+      const rowClass = isCurrentUser ? 'highlight-row' : '';
+      const puntosMostrar = data.puntos || 0;
+      const fotoURL = getFotoURL(data);
+      const nombre = data.nombre || "Usuario";
+      let medalIcon = '';
+      if (pos === 1) medalIcon = '🥇 ';
+      else if (pos === 2) medalIcon = '🥈 ';
+      else if (pos === 3) medalIcon = '🥉 ';
+      body.innerHTML += `
+        <tr class="${rowClass}">
+          <td><strong>${medalIcon}${pos}</strong></td>
+          <td>
+            <div class="user-cell">
+              <img src="${fotoURL}" class="ranking-avatar" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'" />
+              <span>${nombre} ${isCurrentUser ? '<i class="fas fa-user-check" style="color:#F57C00; margin-left:5px;"></i>' : ''}</span>
+            </div>
+          </td>
+          <td><i class="fas fa-star" style="color:#F9A826;"></i> ${puntosMostrar}</td>
+        </tr>
+      `;
+      pos++;
+    }
+    if (pos === 1) {
+      body.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:20px;">No hay usuarios registrados aún</td></tr>';
+    }
+    await calcularPosicionGlobal(currentUser.uid);
+  } catch (error) {
+    console.error("Error cargando ranking:", error);
+  }
 }
 
-async function enviarSolicitud(amigoUid, amigoNombre){
-if(amigoUid === currentUser.uid){
-toast("No puedes enviarte solicitud a ti mismo");
-return;
-}
-try{
-const currentUserRef = doc(db, "usuarios", currentUser.uid);
-const currentUserDoc = await getDoc(currentUserRef);
-const currentUserData = currentUserDoc.data();
-const solicitudesEnviadas = currentUserData.solicitudesEnviadas || [];
-if(solicitudesEnviadas.includes(amigoUid)){
-toast("Ya enviaste solicitud a este usuario");
-return;
-}
-const amigoRef = doc(db, "usuarios", amigoUid);
-const amigosActuales = currentUserData.amigos || [];
-if(amigosActuales.includes(amigoUid)){
-toast("Ya son amigos");
-return;
-}
-await updateDoc(currentUserRef, { solicitudesEnviadas: arrayUnion(amigoUid) });
-await updateDoc(amigoRef, { solicitudesRecibidas: arrayUnion({ uid: currentUser.uid, nombre: currentUser.displayName || currentUser.email.split('@')[0] }) });
-toast(`Solicitud enviada a ${amigoNombre}`);
-cargarAmigos();
-}catch(error){
-console.error(error);
-toast("Error al enviar solicitud", true);
-}
-}
-
-async function aceptarSolicitud(amigoUid, amigoNombre){
-try{
-const currentUserRef = doc(db, "usuarios", currentUser.uid);
-const currentUserDoc = await getDoc(currentUserRef);
-const currentUserData = currentUserDoc.data();
-const solicitudesRecibidas = currentUserData.solicitudesRecibidas || [];
-const solicitud = solicitudesRecibidas.find(s => s.uid === amigoUid);
-if(!solicitud){
-toast("Solicitud no encontrada");
-return;
-}
-await updateDoc(currentUserRef, { solicitudesRecibidas: arrayRemove(solicitud), amigos: arrayUnion(amigoUid) });
-const amigoRef = doc(db, "usuarios", amigoUid);
-await updateDoc(amigoRef, { solicitudesEnviadas: arrayRemove(currentUser.uid), amigos: arrayUnion(currentUser.uid) });
-toast(`Ahora son amigos con ${amigoNombre}`);
-cargarAmigos();
-}catch(error){
-console.error(error);
-toast("Error al aceptar solicitud", true);
-}
-}
-
-async function rechazarSolicitud(amigoUid, amigoNombre){
-try{
-const currentUserRef = doc(db, "usuarios", currentUser.uid);
-const currentUserDoc = await getDoc(currentUserRef);
-const currentUserData = currentUserDoc.data();
-const solicitudesRecibidas = currentUserData.solicitudesRecibidas || [];
-const solicitud = solicitudesRecibidas.find(s => s.uid === amigoUid);
-if(solicitud){
-await updateDoc(currentUserRef, { solicitudesRecibidas: arrayRemove(solicitud) });
-}
-const amigoRef = doc(db, "usuarios", amigoUid);
-await updateDoc(amigoRef, { solicitudesEnviadas: arrayRemove(currentUser.uid) });
-toast(`Solicitud rechazada`);
-cargarAmigos();
-}catch(error){
-console.error(error);
-toast("Error al rechazar solicitud", true);
-}
+async function calcularPosicionGlobal(uid) {
+  try {
+    const userDoc = await getDoc(doc(db, "usuarios", uid));
+    if (!userDoc.exists()) {
+      document.getElementById("positionText").innerHTML = '📝 Completa tu perfil';
+      return null;
+    }
+    const userData = userDoc.data();
+    const puntosUsuario = userData.puntos || 0;
+    const q = query(collection(db, "usuarios"), orderBy("puntos", "desc"));
+    const snap = await getDocs(q);
+    let posicion = 0;
+    let totalUsuarios = 0;
+    let usuariosArray = [];
+    snap.forEach((docSnap) => {
+      totalUsuarios++;
+      const data = docSnap.data();
+      usuariosArray.push({
+        uid: docSnap.id,
+        puntos: data.puntos || 0,
+        nombre: data.nombre || "Usuario"
+      });
+    });
+    for (let i = 0; i < usuariosArray.length; i++) {
+      if (usuariosArray[i].uid === uid) {
+        posicion = i + 1;
+        break;
+      }
+    }
+    const positionText = document.getElementById("positionText");
+    if (posicion > 0) {
+      let medalIcon = '';
+      if (posicion === 1) medalIcon = '<i class="fas fa-crown" style="color:#FFD700;"></i> ';
+      else if (posicion === 2) medalIcon = '<i class="fas fa-medal" style="color:#C0C0C0;"></i> ';
+      else if (posicion === 3) medalIcon = '<i class="fas fa-medal" style="color:#CD7F32;"></i> ';
+      positionText.innerHTML = `${medalIcon}Posición #${posicion} de ${totalUsuarios}`;
+    } else {
+      if (puntosUsuario === 0) {
+        positionText.innerHTML = '🌟 0 puntos - ¡Empieza a explorar Nicaragua!';
+      } else {
+        positionText.innerHTML = `📈 ${puntosUsuario} puntos - Subiendo en el ranking...`;
+      }
+    }
+    return { posicion, puntosUsuario, totalUsuarios };
+  } catch (error) {
+    console.error("Error calculando posición:", error);
+    document.getElementById("positionText").innerHTML = '🔄 Actualizando ranking...';
+    return null;
+  }
 }
 
-async function eliminarAmigo(amigoUid, amigoNombre){
-if(!confirm(`¿Eliminar a ${amigoNombre} de tus amigos?`)) return;
-try{
-const currentUserRef = doc(db, "usuarios", currentUser.uid);
-const amigoRef = doc(db, "usuarios", amigoUid);
-await updateDoc(currentUserRef, { amigos: arrayRemove(amigoUid) });
-await updateDoc(amigoRef, { amigos: arrayRemove(currentUser.uid) });
-toast(`${amigoNombre} eliminado de tus amigos`);
-cargarAmigos();
-}catch(error){
-console.error(error);
-toast("Error al eliminar amigo", true);
-}
-}
-
-async function cargarAmigos(){
-const userDoc = await getDoc(doc(db, "usuarios", currentUser.uid));
-if(!userDoc.exists()) return;
-const userData = userDoc.data();
-const amigosUids = userData.amigos || [];
-const solicitudesRecibidas = userData.solicitudesRecibidas || [];
-const solicitudesDiv = document.getElementById("solicitudesPendientes");
-if(solicitudesRecibidas.length > 0){
-solicitudesDiv.innerHTML = `<h3 style="font-size:1.2rem; margin:15px 0 10px 0;"><i class="fas fa-user-plus"></i> Solicitudes Pendientes <span class="badge">${solicitudesRecibidas.length}</span></h3>`;
-for(const solicitud of solicitudesRecibidas){
-const amigoData = await getUserData(solicitud.uid);
-const nombre = amigoData?.nombre || solicitud.nombre || "Usuario";
-const fotoURL = getFotoURL(amigoData);
-solicitudesDiv.innerHTML += `
-<div class="friend-item request-item">
-<div class="friend-info">
-<img src="${fotoURL}" class="friend-avatar" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
-<div class="friend-details">
-<strong>${nombre}</strong>
-</div>
-</div>
-<div class="friend-actions">
-<button class="btn btn-success" onclick="window.aceptarSolicitudModule('${solicitud.uid}', '${nombre.replace(/'/g, "\\'")}')">
-<i class="fas fa-check"></i> Aceptar
-</button>
-<button class="btn btn-danger" onclick="window.rechazarSolicitudModule('${solicitud.uid}', '${nombre.replace(/'/g, "\\'")}')">
-<i class="fas fa-times"></i> Rechazar
-</button>
-</div>
-</div>`;
-}
-} else {
-solicitudesDiv.innerHTML = "";
-}
-const amigosDiv = document.getElementById("amigosList");
-if(amigosUids.length > 0){
-amigosDiv.innerHTML = `<h3 style="font-size:1.2rem; margin:15px 0 10px 0;"><i class="fas fa-users"></i> Mis Amigos (${amigosUids.length})</h3>`;
-for(const amigoUid of amigosUids){
-const amigoData = await getUserData(amigoUid);
-const nombre = amigoData?.nombre || "Usuario";
-const puntos = amigoData?.puntos || 0;
-const fotoURL = getFotoURL(amigoData);
-amigosDiv.innerHTML += `
-<div class="friend-item">
-<div class="friend-info">
-<img src="${fotoURL}" class="friend-avatar" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
-<div class="friend-details">
-<strong>${nombre}</strong>
-<small class="friend-points"><i class="fas fa-star"></i> ${puntos} puntos</small>
-</div>
-</div>
-<div class="friend-actions">
-<button class="btn btn-danger" onclick="window.eliminarAmigoModule('${amigoUid}', '${nombre.replace(/'/g, "\\'")}')">
-<i class="fas fa-user-minus"></i> Eliminar
-</button>
-</div>
-</div>`;
-}
-} else {
-amigosDiv.innerHTML = '<div class="empty-state"><i class="fas fa-user-friends" style="font-size:3rem; opacity:0.5;"></i><p style="margin-top:10px;">No tienes amigos agregados</p><small>Busca usuarios para enviar solicitudes</small></div>';
-}
+// ===== QR =====
+function generarQR() {
+  const qrDiv = document.getElementById("qrCode");
+  qrDiv.innerHTML = "";
+  const url = `${window.location.origin}${window.location.pathname}?user=${currentUser.uid}`;
+  new QRCode(qrDiv, { text: url, width: 180, height: 180 });
+  document.getElementById("copyLinkBtn").onclick = () => {
+    navigator.clipboard.writeText(url);
+    toast("Enlace copiado");
+  };
+  document.getElementById("shareWhatsAppBtn").onclick = () => {
+    window.open(`https://wa.me/?text=${encodeURIComponent(url)}`, "_blank");
+  };
 }
 
+// ===== AMIGOS =====
+async function enviarSolicitud(amigoUid, amigoNombre) {
+  if (amigoUid === currentUser.uid) {
+    toast("No puedes enviarte solicitud a ti mismo");
+    return;
+  }
+  try {
+    const currentUserRef = doc(db, "usuarios", currentUser.uid);
+    const currentUserDoc = await getDoc(currentUserRef);
+    const currentUserData = currentUserDoc.data();
+    const solicitudesEnviadas = currentUserData.solicitudesEnviadas || [];
+    if (solicitudesEnviadas.includes(amigoUid)) {
+      toast("Ya enviaste solicitud a este usuario");
+      return;
+    }
+    const amigoRef = doc(db, "usuarios", amigoUid);
+    const amigosActuales = currentUserData.amigos || [];
+    if (amigosActuales.includes(amigoUid)) {
+      toast("Ya son amigos");
+      return;
+    }
+    await updateDoc(currentUserRef, { solicitudesEnviadas: arrayUnion(amigoUid) });
+    await updateDoc(amigoRef, {
+      solicitudesRecibidas: arrayUnion({
+        uid: currentUser.uid,
+        nombre: currentUser.displayName || currentUser.email.split('@')[0]
+      })
+    });
+    toast(`Solicitud enviada a ${amigoNombre}`);
+    cargarAmigos();
+  } catch (error) {
+    console.error(error);
+    toast("Error al enviar solicitud", true);
+  }
+}
+
+async function aceptarSolicitud(amigoUid, amigoNombre) {
+  try {
+    const currentUserRef = doc(db, "usuarios", currentUser.uid);
+    const currentUserDoc = await getDoc(currentUserRef);
+    const currentUserData = currentUserDoc.data();
+    const solicitudesRecibidas = currentUserData.solicitudesRecibidas || [];
+    const solicitud = solicitudesRecibidas.find(s => s.uid === amigoUid);
+    if (!solicitud) {
+      toast("Solicitud no encontrada");
+      return;
+    }
+    await updateDoc(currentUserRef, {
+      solicitudesRecibidas: arrayRemove(solicitud),
+      amigos: arrayUnion(amigoUid)
+    });
+    const amigoRef = doc(db, "usuarios", amigoUid);
+    await updateDoc(amigoRef, {
+      solicitudesEnviadas: arrayRemove(currentUser.uid),
+      amigos: arrayUnion(currentUser.uid)
+    });
+    toast(`Ahora son amigos con ${amigoNombre}`);
+    cargarAmigos();
+  } catch (error) {
+    console.error(error);
+    toast("Error al aceptar solicitud", true);
+  }
+}
+
+async function rechazarSolicitud(amigoUid, amigoNombre) {
+  try {
+    const currentUserRef = doc(db, "usuarios", currentUser.uid);
+    const currentUserDoc = await getDoc(currentUserRef);
+    const currentUserData = currentUserDoc.data();
+    const solicitudesRecibidas = currentUserData.solicitudesRecibidas || [];
+    const solicitud = solicitudesRecibidas.find(s => s.uid === amigoUid);
+    if (solicitud) {
+      await updateDoc(currentUserRef, { solicitudesRecibidas: arrayRemove(solicitud) });
+    }
+    const amigoRef = doc(db, "usuarios", amigoUid);
+    await updateDoc(amigoRef, { solicitudesEnviadas: arrayRemove(currentUser.uid) });
+    toast(`Solicitud rechazada`);
+    cargarAmigos();
+  } catch (error) {
+    console.error(error);
+    toast("Error al rechazar solicitud", true);
+  }
+}
+
+async function eliminarAmigo(amigoUid, amigoNombre) {
+  if (!confirm(`¿Eliminar a ${amigoNombre} de tus amigos?`)) return;
+  try {
+    const currentUserRef = doc(db, "usuarios", currentUser.uid);
+    const amigoRef = doc(db, "usuarios", amigoUid);
+    await updateDoc(currentUserRef, { amigos: arrayRemove(amigoUid) });
+    await updateDoc(amigoRef, { amigos: arrayRemove(currentUser.uid) });
+    toast(`${amigoNombre} eliminado de tus amigos`);
+    cargarAmigos();
+  } catch (error) {
+    console.error(error);
+    toast("Error al eliminar amigo", true);
+  }
+}
+
+async function cargarAmigos() {
+  const userDoc = await getDoc(doc(db, "usuarios", currentUser.uid));
+  if (!userDoc.exists()) return;
+  const userData = userDoc.data();
+  const amigosUids = userData.amigos || [];
+  const solicitudesRecibidas = userData.solicitudesRecibidas || [];
+  const solicitudesDiv = document.getElementById("solicitudesPendientes");
+  if (solicitudesRecibidas.length > 0) {
+    solicitudesDiv.innerHTML = `<h3 style="font-size:1.2rem; margin:15px 0 10px 0;"><i class="fas fa-user-plus"></i> Solicitudes Pendientes <span class="badge">${solicitudesRecibidas.length}</span></h3>`;
+    for (const solicitud of solicitudesRecibidas) {
+      const amigoData = await getUserData(solicitud.uid);
+      const nombre = amigoData?.nombre || solicitud.nombre || "Usuario";
+      const fotoURL = getFotoURL(amigoData);
+      solicitudesDiv.innerHTML += `
+        <div class="friend-item request-item">
+          <div class="friend-info">
+            <img src="${fotoURL}" class="friend-avatar" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'" />
+            <div class="friend-details"><strong>${nombre}</strong></div>
+          </div>
+          <div class="friend-actions">
+            <button class="btn btn-success" onclick="window.aceptarSolicitudModule('${solicitud.uid}', '${nombre.replace(/'/g, "\\'")}')">
+              <i class="fas fa-check"></i> Aceptar
+            </button>
+            <button class="btn btn-danger" onclick="window.rechazarSolicitudModule('${solicitud.uid}', '${nombre.replace(/'/g, "\\'")}')">
+              <i class="fas fa-times"></i> Rechazar
+            </button>
+          </div>
+        </div>
+      `;
+    }
+  } else {
+    solicitudesDiv.innerHTML = "";
+  }
+  const amigosDiv = document.getElementById("amigosList");
+  if (amigosUids.length > 0) {
+    amigosDiv.innerHTML = `<h3 style="font-size:1.2rem; margin:15px 0 10px 0;"><i class="fas fa-users"></i> Mis Amigos (${amigosUids.length})</h3>`;
+    for (const amigoUid of amigosUids) {
+      const amigoData = await getUserData(amigoUid);
+      const nombre = amigoData?.nombre || "Usuario";
+      const puntos = amigoData?.puntos || 0;
+      const fotoURL = getFotoURL(amigoData);
+      amigosDiv.innerHTML += `
+        <div class="friend-item">
+          <div class="friend-info">
+            <img src="${fotoURL}" class="friend-avatar" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'" />
+            <div class="friend-details">
+              <strong>${nombre}</strong>
+              <small class="friend-points"><i class="fas fa-star"></i> ${puntos} puntos</small>
+            </div>
+          </div>
+          <div class="friend-actions">
+            <button class="btn btn-danger" onclick="window.eliminarAmigoModule('${amigoUid}', '${nombre.replace(/'/g, "\\'")}')">
+              <i class="fas fa-user-minus"></i> Eliminar
+            </button>
+          </div>
+        </div>
+      `;
+    }
+  } else {
+    amigosDiv.innerHTML = `<div class="empty-state"><i class="fas fa-user-friends"></i><p>No tienes amigos agregados</p><small>Busca usuarios para enviar solicitudes</small></div>`;
+  }
+}
+
+// ===== BUSCADOR =====
 const searchBtn = document.getElementById("searchUserBtn");
 const searchInput = document.getElementById("searchUserInput");
 const searchResults = document.getElementById("searchResults");
 
-searchBtn.addEventListener("click", async ()=>{
-const texto = searchInput.value.trim().toLowerCase();
-if(!texto){
-toast("Escribe un nombre para buscar");
-return;
-}
-searchResults.innerHTML = '<p><i class="fas fa-spinner fa-spin"></i> Buscando...</p>';
-try{
-const snap = await getDocs(collection(db,"usuarios"));
-searchResults.innerHTML = "";
-let encontrados = 0;
-const currentUserData = await getDoc(doc(db, "usuarios", currentUser.uid));
-const currentAmigos = currentUserData.data()?.amigos || [];
-const currentSolicitudesEnviadas = currentUserData.data()?.solicitudesEnviadas || [];
-for(const docSnap of snap.docs){
-const data = docSnap.data();
-if(data.uid === currentUser.uid) continue;
-const nombre = (data.nombre || "").toLowerCase();
-if(nombre.includes(texto)){
-encontrados++;
-const esAmigo = currentAmigos.includes(data.uid);
-const solicitudEnviada = currentSolicitudesEnviadas.includes(data.uid);
-const fotoURL = getFotoURL(data);
-let boton = '';
-if(esAmigo){
-boton = '<button class="btn btn-danger" disabled style="opacity:0.5;"><i class="fas fa-check"></i> Amigos</button>';
-} else if(solicitudEnviada){
-boton = '<button class="btn btn-outline" disabled style="opacity:0.5;"><i class="fas fa-clock"></i> Solicitud enviada</button>';
-} else {
-boton = `<button class="btn" onclick="window.enviarSolicitudModule('${data.uid}', '${(data.nombre || "Usuario").replace(/'/g, "\\'")}')"><i class="fas fa-user-plus"></i> Enviar solicitud</button>`;
-}
-searchResults.innerHTML += `
-<div class="friend-item">
-<div class="friend-info">
-<img src="${fotoURL}" class="friend-avatar" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
-<div class="friend-details">
-<strong>${data.nombre || "Usuario"}</strong>
-<small class="friend-points"><i class="fas fa-star"></i> ${data.puntos || 0} puntos</small>
-</div>
-</div>
-<div class="friend-actions">
-${boton}
-</div>
-</div>`;
-}
-}
-if(encontrados === 0){
-searchResults.innerHTML = '<div class="empty-state"><i class="fas fa-search"></i><p>No se encontraron usuarios</p></div>';
-}
-}catch(error){
-console.error(error);
-toast("Error al buscar usuarios", true);
-}
+searchBtn.addEventListener("click", async () => {
+  const texto = searchInput.value.trim().toLowerCase();
+  if (!texto) {
+    toast("Escribe un nombre para buscar");
+    return;
+  }
+  searchResults.innerHTML = '<p><i class="fas fa-spinner fa-spin"></i> Buscando...</p>';
+  try {
+    const snap = await getDocs(collection(db, "usuarios"));
+    searchResults.innerHTML = "";
+    let encontrados = 0;
+    const currentUserData = await getDoc(doc(db, "usuarios", currentUser.uid));
+    const currentAmigos = currentUserData.data()?.amigos || [];
+    const currentSolicitudesEnviadas = currentUserData.data()?.solicitudesEnviadas || [];
+    for (const docSnap of snap.docs) {
+      const data = docSnap.data();
+      if (data.uid === currentUser.uid) continue;
+      const nombre = (data.nombre || "").toLowerCase();
+      if (nombre.includes(texto)) {
+        encontrados++;
+        const esAmigo = currentAmigos.includes(data.uid);
+        const solicitudEnviada = currentSolicitudesEnviadas.includes(data.uid);
+        const fotoURL = getFotoURL(data);
+        let boton = '';
+        if (esAmigo) {
+          boton = '<button class="btn btn-danger" disabled style="opacity:0.5;"><i class="fas fa-check"></i> Amigos</button>';
+        } else if (solicitudEnviada) {
+          boton = '<button class="btn btn-outline" disabled style="opacity:0.5;"><i class="fas fa-clock"></i> Solicitud enviada</button>';
+        } else {
+          boton = `<button class="btn" onclick="window.enviarSolicitudModule('${data.uid}', '${(data.nombre || "Usuario").replace(/'/g, "\\'")}')"><i class="fas fa-user-plus"></i> Enviar solicitud</button>`;
+        }
+        searchResults.innerHTML += `
+          <div class="friend-item">
+            <div class="friend-info">
+              <img src="${fotoURL}" class="friend-avatar" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'" />
+              <div class="friend-details">
+                <strong>${data.nombre || "Usuario"}</strong>
+                <small class="friend-points"><i class="fas fa-star"></i> ${data.puntos || 0} puntos</small>
+              </div>
+            </div>
+            <div class="friend-actions">${boton}</div>
+          </div>
+        `;
+      }
+    }
+    if (encontrados === 0) {
+      searchResults.innerHTML = '<div class="empty-state"><i class="fas fa-search"></i><p>No se encontraron usuarios</p></div>';
+    }
+  } catch (error) {
+    console.error(error);
+    toast("Error al buscar usuarios", true);
+  }
 });
 
+// ===== FORO =====
 const foroMensajes = document.getElementById("foroMensajes");
 const publicarForoBtn = document.getElementById("publicarForoBtn");
-publicarForoBtn.addEventListener("click", async ()=>{
-const input = document.getElementById("mensajeForo");
-const mensaje = input.value.trim();
-if(!mensaje){
-toast("Escribe un mensaje");
-return;
-}
-try{
-await addDoc(collection(db,"foro"),{
-uid: currentUser.uid,
-nombre: currentUser.displayName || currentUser.email.split('@')[0],
-mensaje: mensaje,
-fecha: Date.now()
-});
-input.value = "";
-toast("Mensaje publicado");
-}catch(error){
-console.error(error);
-toast("Error al publicar", true);
-}
-});
-const qForo = query(collection(db,"foro"), orderBy("fecha","desc"));
-onSnapshot(qForo,(snapshot)=>{
-foroMensajes.innerHTML = "";
-snapshot.forEach((docSnap)=>{
-const data = docSnap.data();
-const post = document.createElement("div");
-post.className = "foro-post";
-const fecha = new Date(data.fecha).toLocaleString();
-post.innerHTML = `<strong>${data.nombre}</strong><p>${data.mensaje}</p><small>${fecha}</small>`;
-if(data.uid === currentUser.uid){
-const btn = document.createElement("button");
-btn.className = "btn delete-post-btn";
-btn.innerHTML = '<i class="fas fa-trash"></i> Eliminar';
-btn.onclick = async ()=>{
-if(confirm("¿Eliminar mensaje?")){
-await deleteDoc(doc(db,"foro",docSnap.id));
-toast("Mensaje eliminado");
-}
-};
-post.appendChild(btn);
-}
-foroMensajes.appendChild(post);
-});
+publicarForoBtn.addEventListener("click", async () => {
+  const input = document.getElementById("mensajeForo");
+  const mensaje = input.value.trim();
+  if (!mensaje) {
+    toast("Escribe un mensaje");
+    return;
+  }
+  try {
+    await addDoc(collection(db, "foro"), {
+      uid: currentUser.uid,
+      nombre: currentUser.displayName || currentUser.email.split('@')[0],
+      mensaje: mensaje,
+      fecha: Date.now()
+    });
+    input.value = "";
+    toast("Mensaje publicado");
+  } catch (error) {
+    console.error(error);
+    toast("Error al publicar", true);
+  }
 });
 
-function escucharCambiosPuntos(){
-const userRef = doc(db, "usuarios", currentUser.uid);
-onSnapshot(userRef, async (docSnap) => {
-if(docSnap.exists()){
-const data = docSnap.data();
-document.getElementById("userPoints").innerText = data.puntos || 0;
-await cargarRankingGlobal();
-}
+const qForo = query(collection(db, "foro"), orderBy("fecha", "desc"));
+onSnapshot(qForo, (snapshot) => {
+  foroMensajes.innerHTML = "";
+  snapshot.forEach((docSnap) => {
+    const data = docSnap.data();
+    const post = document.createElement("div");
+    post.className = "foro-post";
+    const fecha = new Date(data.fecha).toLocaleString();
+    post.innerHTML = `<strong>${data.nombre}</strong><p>${data.mensaje}</p><small>${fecha}</small>`;
+    if (data.uid === currentUser.uid) {
+      const btn = document.createElement("button");
+      btn.className = "btn delete-post-btn";
+      btn.innerHTML = '<i class="fas fa-trash"></i> Eliminar';
+      btn.onclick = async () => {
+        if (confirm("¿Eliminar mensaje?")) {
+          await deleteDoc(doc(db, "foro", docSnap.id));
+          toast("Mensaje eliminado");
+        }
+      };
+      post.appendChild(btn);
+    }
+    foroMensajes.appendChild(post);
+  });
 });
+
+// ===== ESCUCHAR PUNTOS =====
+function escucharCambiosPuntos() {
+  const userRef = doc(db, "usuarios", currentUser.uid);
+  onSnapshot(userRef, async (docSnap) => {
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      document.getElementById("userPoints").innerText = data.puntos || 0;
+      await cargarRankingGlobal();
+    }
+  });
 }
 
+// ===== EXPONER FUNCIONES PARA EVENTOS INLINE =====
 window.enviarSolicitudModule = enviarSolicitud;
 window.aceptarSolicitudModule = aceptarSolicitud;
 window.rechazarSolicitudModule = rechazarSolicitud;
 window.eliminarAmigoModule = eliminarAmigo;
 
-onAuthStateChanged(auth, async (user)=>{
-if(!user){
-window.location.href = "index.html";
-return;
+// ===== NAVEGACIÓN POR PESTAÑAS (Mobile) =====
+function switchTab(tabId, element) {
+  document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+  document.getElementById(tabId).classList.add('active');
+  element.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
-currentUser = user;
-await asegurarPerfilUsuario(user);
-await cargarPerfil(user);
-generarQR();
-await cargarRankingGlobal();
-cargarAmigos();
-escucharCambiosPuntos();
-onSnapshot(doc(db, "usuarios", user.uid), () => {
-cargarAmigos();
+
+function switchSubTab(subTabType) {
+  const rankingBox = document.getElementById('subtab-ranking');
+  const amigosBox = document.getElementById('subtab-amigos');
+  const chips = document.querySelectorAll('.chip');
+  if (subTabType === 'ranking') {
+    rankingBox.style.display = 'block';
+    amigosBox.style.display = 'none';
+    chips[0].classList.add('active');
+    chips[1].classList.remove('active');
+  } else {
+    rankingBox.style.display = 'none';
+    amigosBox.style.display = 'block';
+    chips[0].classList.remove('active');
+    chips[1].classList.add('active');
+  }
+}
+
+// Asignar eventos a los botones de la barra inferior
+document.querySelectorAll('.nav-item').forEach(btn => {
+  btn.addEventListener('click', function() {
+    switchTab(this.dataset.tab, this);
+  });
 });
+
+// Asignar eventos a los chips de sub‑navegación
+document.querySelectorAll('.chip').forEach(chip => {
+  chip.addEventListener('click', function() {
+    switchSubTab(this.dataset.subtab);
+  });
+});
+
+// ===== AUTENTICACIÓN =====
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    window.location.href = "index.html";
+    return;
+  }
+  currentUser = user;
+  await asegurarPerfilUsuario(user);
+  await cargarPerfil(user);
+  generarQR();
+  await cargarRankingGlobal();
+  cargarAmigos();
+  escucharCambiosPuntos();
+  onSnapshot(doc(db, "usuarios", user.uid), () => {
+    cargarAmigos();
+  });
 });
 </script>
-
 </body>
 </html>
