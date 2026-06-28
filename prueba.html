@@ -130,11 +130,10 @@
             font-size: 1.2rem;
         }
 
-        /* ===== ESPACIO DEL DINERO (COLOR COMBINABLE) ===== */
+        /* ===== ESPACIO DEL DINERO (TRANSPARENTE) ===== */
         .prize-display {
-            background: rgba(30, 20, 10, 0.75);
-            /* Marrón oscuro combinable */
-            backdrop-filter: blur(8px);
+            background: transparent;
+            /* COMPLETAMENTE TRANSPARENTE */
             border-radius: 15px;
             padding: 18px 15px 14px;
             text-align: center;
@@ -146,8 +145,6 @@
             justify-content: center;
             align-items: center;
             position: relative;
-            border: 1px solid #ffd70033;
-            box-shadow: inset 0 0 40px rgba(255, 215, 0, 0.05);
         }
 
         .prize-display .label {
@@ -156,14 +153,14 @@
             text-transform: uppercase;
             letter-spacing: 4px;
             margin-bottom: 2px;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+            text-shadow: 0 2px 12px rgba(0, 0, 0, 0.9);
         }
 
         .prize-display .amount {
             color: #ffd700;
             font-size: 3.8rem;
             font-weight: 900;
-            text-shadow: 0 0 60px #ffd70044, 0 0 120px #ffd70022, 0 4px 20px rgba(0, 0, 0, 0.5);
+            text-shadow: 0 0 60px #ffd70044, 0 0 120px #ffd70022, 0 4px 20px rgba(0, 0, 0, 0.9);
             font-family: 'Courier New', monospace;
             letter-spacing: 3px;
             transition: all 0.3s ease;
@@ -194,7 +191,7 @@
             font-size: 0.6rem;
             letter-spacing: 2px;
             margin-top: 4px;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+            text-shadow: 0 2px 12px rgba(0, 0, 0, 0.9);
         }
 
         .prize-display .sub-info span {
@@ -384,6 +381,15 @@
         .btn-50 {
             background: rgba(58, 58, 26, 0.85);
             border-color: #9a9a4a;
+        }
+
+        .btn-50 .cost {
+            font-size: 0.6rem;
+            color: #ffd700aa;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1px 8px;
+            border-radius: 10px;
+            margin-left: 2px;
         }
 
         /* ===== PISTA ===== */
@@ -651,7 +657,7 @@
                 GANADORES: <span id="winnerCount">125</span>
             </div>
 
-            <!-- ===== ESPACIO DEL DINERO (COLOR COMBINABLE) ===== -->
+            <!-- ===== ESPACIO DEL DINERO (TRANSPARENTE) ===== -->
             <div class="prize-display" id="prizeDisplay">
                 <div class="label">💰 DINERO ACUMULADO</div>
                 <div class="amount" id="currentPrizeDisplay">C$ 0</div>
@@ -679,7 +685,7 @@
                 </div>
 
                 <div class="actions">
-                    <button class="btn-50" id="fiftyBtn">🎲 50/50</button>
+                    <button class="btn-50" id="fiftyBtn">🎲 50/50 <span class="cost">C$1,500</span></button>
                     <button class="btn-hint" id="hintBtn">💡 Pista</button>
                     <button class="btn-next" id="nextBtn" disabled>➡️ Siguiente</button>
                     <button class="btn-reset" id="resetBtn">🔄 Reiniciar</button>
@@ -806,6 +812,9 @@
         // ===== PREMIOS (15 preguntas) =====
         const PRIZES = [1000, 2000, 3000, 5000, 7000, 10000, 15000, 20000, 30000, 40000, 50000, 65000, 80000, 90000, 100000];
 
+        // ===== COSTO DEL 50/50 =====
+        const FIFTY_COST = 1500;
+
         // ===== ESTADO DEL JUEGO =====
         const state = {
             currentIndex: 0,
@@ -815,7 +824,7 @@
             gameOver: false,
             answered: false,
             currentQuestion: null,
-            shuffledQuestions: [], // Preguntas en orden aleatorio
+            shuffledQuestions: [],
         };
 
         // ===== DOM =====
@@ -843,7 +852,7 @@
         const modalDetails = document.getElementById('modalDetails');
         const playAgainBtn = document.getElementById('playAgainBtn');
 
-        // ===== FUNCIÓN PARA MEZCLAR ARRAY (FISHER-YATES) =====
+        // ===== FUNCIÓN PARA MEZCLAR ARRAY =====
         function shuffleArray(array) {
             const arr = [...array];
             for (let i = arr.length - 1; i > 0; i--) {
@@ -894,6 +903,8 @@
             optionEls.forEach(el => el.classList.remove('disabled'));
             state.fiftyUsed = false;
             fiftyBtn.disabled = false;
+            // Actualizar texto del botón 50/50
+            fiftyBtn.innerHTML = '🎲 50/50 <span class="cost">C$1,500</span>';
 
             clearTimeout(window.hintTimeout);
             hintText.textContent = 'Selecciona una opción. ¡Suerte!';
@@ -963,8 +974,23 @@
             state.gameOver = true;
         }
 
+        // ===== 50/50 CON COSTO =====
         function useFifty() {
-            if (state.fiftyUsed || state.answered || state.gameOver) return;
+            if (state.fiftyUsed || state.answered || state.gameOver) {
+                showHint('⚠️ El 50/50 solo se puede usar una vez por pregunta.');
+                return;
+            }
+
+            // Verificar si tiene suficiente dinero
+            if (state.prize < FIFTY_COST) {
+                showHint(`❌ No tienes suficiente dinero. Necesitas ${formatCurrency(FIFTY_COST)} para usar el 50/50.`);
+                return;
+            }
+
+            // Cobrar el costo
+            state.prize -= FIFTY_COST;
+            updatePrizeDisplay(true);
+
             const q = state.currentQuestion;
             const wrongIndices = [];
             for (let i = 0; i < q.options.length; i++) {
@@ -977,7 +1003,7 @@
             });
             state.fiftyUsed = true;
             fiftyBtn.disabled = true;
-            showHint('🎲 50/50 aplicado. Dos opciones eliminadas.');
+            showHint(`🎲 50/50 aplicado. Te costó ${formatCurrency(FIFTY_COST)}. Dos opciones eliminadas.`);
         }
 
         function useHint() {
@@ -1001,7 +1027,6 @@
         }
 
         function resetGame() {
-            // MEZCLAR LAS PREGUNTAS ALEATORIAMENTE
             state.shuffledQuestions = shuffleArray(QUESTION_BANK);
 
             state.currentIndex = 0;
@@ -1022,6 +1047,7 @@
             });
 
             fiftyBtn.disabled = false;
+            fiftyBtn.innerHTML = '🎲 50/50 <span class="cost">C$1,500</span>';
             nextBtn.disabled = true;
             loadQuestion(0);
             showHint('🔄 Juego reiniciado. ¡Buena suerte! Las preguntas están en orden aleatorio.');
@@ -1044,7 +1070,7 @@
 
         console.log('🏆 Pinolero Millonario - Versión mejorada');
         console.log(`📚 Banco de ${QUESTION_BANK.length} preguntas`);
-        console.log(`🎲 Se seleccionarán ${PRIZES.length} preguntas al azar`);
+        console.log(`🎲 50/50 cuesta ${formatCurrency(FIFTY_COST)}`);
     </script>
 </body>
 </html>
