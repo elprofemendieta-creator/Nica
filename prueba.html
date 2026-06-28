@@ -22,115 +22,148 @@
             padding: 20px;
         }
 
+        /* ===== CONTENEDOR PRINCIPAL CON IMAGEN DE FONDO ===== */
         .game-container {
             max-width: 750px;
             width: 100%;
-            background: #0a0a0a;
             border-radius: 30px;
-            padding: 30px;
+            overflow: hidden;
+            position: relative;
             border: 3px solid #ffd700;
-            box-shadow: 0 0 60px #ffd70033, inset 0 0 60px #ffd70011;
+            box-shadow: 0 0 60px #ffd70033;
+        }
+
+        /* ===== IMAGEN DE FONDO ===== */
+        .game-bg {
+            position: relative;
+            width: 100%;
+            background-image: url('1782677408840.png');
+            background-size: 100% 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+            aspect-ratio: 600 / 800;
+            display: flex;
+            flex-direction: column;
+            padding: 20px 25px 25px;
+        }
+
+        /* ===== OVERLAY PARA DAR CONTRASTE ===== */
+        .game-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .game-bg>* {
+            position: relative;
+            z-index: 1;
         }
 
         /* ===== ENCABEZADO ===== */
         .header {
             text-align: center;
-            padding-bottom: 20px;
-            border-bottom: 2px solid #ffd70044;
-            margin-bottom: 20px;
+            padding-bottom: 8px;
+            margin-bottom: 6px;
         }
 
         .header .title {
-            font-size: 2.8rem;
+            font-size: 2.2rem;
             font-weight: 900;
             color: #ffd700;
-            text-shadow: 0 0 30px #ffd70044, 0 4px 8px rgba(0, 0, 0, 0.8);
+            text-shadow: 0 0 30px #ffd70044, 0 4px 8px rgba(0, 0, 0, 0.9);
             letter-spacing: 4px;
             font-family: 'Arial Black', sans-serif;
         }
 
         .header .subtitle {
             color: #ffd700aa;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             letter-spacing: 6px;
             text-transform: uppercase;
-            margin-top: 2px;
+            margin-top: -4px;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
         }
 
         /* ===== PREMIO MAYOR ===== */
         .prize-mayor {
-            background: #1a1a1a;
-            border: 2px solid #ffd70055;
-            border-radius: 15px;
-            padding: 10px 20px;
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 4px;
         }
 
         .prize-mayor .label {
-            color: #aaa;
-            font-size: 0.8rem;
+            color: #ccc;
+            font-size: 0.65rem;
             letter-spacing: 3px;
             text-transform: uppercase;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
         }
 
         .prize-mayor .amount {
             color: #ffd700;
-            font-size: 2.2rem;
+            font-size: 1.8rem;
             font-weight: 900;
-            text-shadow: 0 0 40px #ffd70044;
+            text-shadow: 0 0 40px #ffd70044, 0 4px 12px rgba(0, 0, 0, 0.9);
             font-family: 'Courier New', monospace;
             letter-spacing: 2px;
+            line-height: 1.1;
         }
 
         /* ===== GANADORES ===== */
         .ganadores {
             text-align: center;
-            color: #aaa;
-            font-size: 0.9rem;
+            color: #bbb;
+            font-size: 0.8rem;
             letter-spacing: 2px;
-            margin-bottom: 25px;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
         }
 
         .ganadores span {
             color: #ffd700;
             font-weight: 900;
-            font-size: 1.4rem;
+            font-size: 1.2rem;
         }
 
-        /* ===== ESPACIO NEGRO PRINCIPAL (DINERO) ===== */
+        /* ===== ESPACIO NEGRO DE LA IMAGEN (DONDE VA EL DINERO) ===== */
         .prize-display {
-            background: #000000;
-            border-radius: 20px;
-            padding: 40px 20px;
+            background: transparent;
+            border-radius: 15px;
+            padding: 18px 15px 14px;
             text-align: center;
-            border: 3px solid #ffd700;
-            box-shadow: inset 0 0 80px rgba(0, 0, 0, 0.9), 0 0 50px #ffd70022;
-            margin-bottom: 25px;
-            position: relative;
-            min-height: 180px;
+            margin: 0 auto 12px;
+            width: 92%;
+            min-height: 110px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            position: relative;
         }
 
         .prize-display .label {
-            color: #666;
-            font-size: 0.7rem;
+            color: #888;
+            font-size: 0.6rem;
             text-transform: uppercase;
-            letter-spacing: 5px;
-            margin-bottom: 5px;
+            letter-spacing: 4px;
+            margin-bottom: 2px;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
         }
 
         .prize-display .amount {
             color: #ffd700;
-            font-size: 4.5rem;
+            font-size: 3.8rem;
             font-weight: 900;
-            text-shadow: 0 0 60px #ffd70044, 0 0 120px #ffd70022;
+            text-shadow: 0 0 60px #ffd70044, 0 0 120px #ffd70022, 0 4px 20px rgba(0, 0, 0, 0.9);
             font-family: 'Courier New', monospace;
             letter-spacing: 3px;
             transition: all 0.3s ease;
+            line-height: 1.1;
         }
 
         .prize-display .amount.pulse {
@@ -153,54 +186,26 @@
         }
 
         .prize-display .sub-info {
-            color: #555;
-            font-size: 0.7rem;
+            color: #777;
+            font-size: 0.6rem;
             letter-spacing: 2px;
-            margin-top: 8px;
+            margin-top: 4px;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
         }
 
         .prize-display .sub-info span {
-            color: #ffd70088;
-        }
-
-        /* ===== EFECTO DE BRILLO ===== */
-        .prize-display::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle at center, #ffd70008 0%, transparent 70%);
-            animation: glowMove 4s ease-in-out infinite;
-            pointer-events: none;
-        }
-
-        @keyframes glowMove {
-            0%,
-            100% {
-                transform: translate(0, 0) scale(1);
-                opacity: 0.3;
-            }
-            50% {
-                transform: translate(10%, 10%) scale(1.2);
-                opacity: 0.8;
-            }
-        }
-
-        .prize-display * {
-            position: relative;
-            z-index: 1;
+            color: #ffd700aa;
         }
 
         /* ===== PROGRESO ===== */
         .progress-bar {
-            width: 100%;
+            width: 92%;
             height: 4px;
-            background: #2a2a2a;
+            background: rgba(42, 42, 42, 0.7);
             border-radius: 10px;
-            margin-bottom: 20px;
+            margin: 0 auto 12px;
             overflow: hidden;
+            backdrop-filter: blur(4px);
         }
 
         .progress-bar .fill {
@@ -214,53 +219,57 @@
 
         /* ===== PREGUNTA ===== */
         .question-area {
-            background: #1a1a1a;
-            border-radius: 20px;
-            padding: 25px;
-            border: 2px solid #ffd70033;
-            min-height: 250px;
+            background: rgba(10, 10, 10, 0.75);
+            backdrop-filter: blur(12px);
+            border-radius: 18px;
+            padding: 18px 20px 16px;
+            border: 1px solid #ffd70033;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
         }
 
         .question-number {
-            color: #888;
-            font-size: 0.8rem;
+            color: #999;
+            font-size: 0.7rem;
             letter-spacing: 2px;
-            margin-bottom: 4px;
+            margin-bottom: 2px;
         }
 
         .question-text {
             color: #f0e8d0;
-            font-size: 1.4rem;
+            font-size: 1.2rem;
             font-weight: 700;
-            margin-bottom: 20px;
+            margin-bottom: 14px;
             line-height: 1.4;
-            min-height: 60px;
+            min-height: 50px;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
         }
 
         .options {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 10px;
+            gap: 8px;
         }
 
         .option {
-            background: #2a2a2a;
+            background: rgba(42, 42, 42, 0.8);
+            backdrop-filter: blur(4px);
             border: 2px solid #444;
-            border-radius: 14px;
-            padding: 12px 16px;
-            font-size: 1rem;
+            border-radius: 12px;
+            padding: 10px 14px;
+            font-size: 0.9rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
             color: #f0e8d0;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
         }
 
         .option:hover {
             border-color: #ffd70088;
-            background: #333;
+            background: rgba(51, 51, 51, 0.9);
             transform: translateY(-2px);
             box-shadow: 0 4px 20px rgba(255, 215, 0, 0.1);
         }
@@ -270,38 +279,38 @@
         }
 
         .option .letter {
-            background: #444;
+            background: rgba(68, 68, 68, 0.8);
             color: #ffd700;
             border-radius: 50%;
-            width: 28px;
-            height: 28px;
+            width: 26px;
+            height: 26px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 800;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             flex-shrink: 0;
         }
 
         .option.correct {
-            background: #1a5a3a;
+            background: rgba(26, 90, 58, 0.9);
             border-color: #4aaa6a;
             color: #fff;
         }
 
         .option.correct .letter {
-            background: #0a3a2a;
+            background: rgba(10, 58, 42, 0.9);
             color: #7aff7a;
         }
 
         .option.wrong {
-            background: #5a1a1a;
+            background: rgba(90, 26, 26, 0.9);
             border-color: #aa4a4a;
             color: #fff;
         }
 
         .option.wrong .letter {
-            background: #3a0a0a;
+            background: rgba(58, 10, 10, 0.9);
             color: #ff7a7a;
         }
 
@@ -314,14 +323,14 @@
         .actions {
             display: flex;
             justify-content: center;
-            gap: 10px;
-            margin-top: 18px;
+            gap: 8px;
+            margin-top: 14px;
             flex-wrap: wrap;
         }
 
         .actions button {
-            padding: 10px 22px;
-            font-size: 0.9rem;
+            padding: 8px 16px;
+            font-size: 0.8rem;
             font-weight: 800;
             border: 2px solid #ffd70055;
             border-radius: 50px;
@@ -329,15 +338,16 @@
             transition: all 0.2s;
             display: flex;
             align-items: center;
-            gap: 8px;
-            background: #1a1a1a;
+            gap: 6px;
+            background: rgba(26, 26, 26, 0.85);
+            backdrop-filter: blur(4px);
             color: #f0e8d0;
             letter-spacing: 0.5px;
         }
 
         .actions button:hover {
             border-color: #ffd700;
-            background: #2a2a2a;
+            background: rgba(42, 42, 42, 0.9);
             transform: translateY(-2px);
             box-shadow: 0 4px 20px rgba(255, 215, 0, 0.1);
         }
@@ -353,54 +363,43 @@
         }
 
         .btn-next {
-            background: #1a5a3a;
+            background: rgba(26, 90, 58, 0.85);
             border-color: #4aaa6a;
-        }
-        .btn-next:hover {
-            background: #2a7a4a;
         }
 
         .btn-reset {
-            background: #5a1a1a;
+            background: rgba(90, 26, 26, 0.85);
             border-color: #aa4a4a;
-        }
-        .btn-reset:hover {
-            background: #7a2a2a;
         }
 
         .btn-hint {
-            background: #1a3a5a;
+            background: rgba(26, 58, 90, 0.85);
             border-color: #4a7a9a;
-        }
-        .btn-hint:hover {
-            background: #2a4a7a;
         }
 
         .btn-50 {
-            background: #3a3a1a;
+            background: rgba(58, 58, 26, 0.85);
             border-color: #9a9a4a;
-        }
-        .btn-50:hover {
-            background: #5a5a2a;
         }
 
         /* ===== PISTA ===== */
         .hint-box {
-            background: #1a1a1a;
+            background: rgba(26, 26, 26, 0.8);
+            backdrop-filter: blur(4px);
             border-left: 4px solid #ffd700;
-            padding: 10px 16px;
-            margin-top: 14px;
+            padding: 8px 14px;
+            margin-top: 12px;
             border-radius: 10px;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: #aaa;
-            min-height: 44px;
+            min-height: 38px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
         .hint-box .hint-icon {
-            font-size: 1.2rem;
+            font-size: 1rem;
         }
         .hint-box .hint-text {
             font-style: italic;
@@ -440,8 +439,8 @@
         .modal-content {
             background: #1a1a1a;
             border-radius: 40px;
-            padding: 40px 45px;
-            max-width: 480px;
+            padding: 35px 40px;
+            max-width: 460px;
             width: 90%;
             text-align: center;
             border: 3px solid #ffd700;
@@ -461,35 +460,35 @@
         }
 
         .modal-content .icon {
-            font-size: 4rem;
-            margin-bottom: 6px;
-        }
-
-        .modal-content h2 {
-            font-size: 2rem;
-            color: #ffd700;
+            font-size: 3.5rem;
             margin-bottom: 4px;
         }
 
+        .modal-content h2 {
+            font-size: 1.8rem;
+            color: #ffd700;
+            margin-bottom: 2px;
+        }
+
         .modal-content .subtitle {
-            font-size: 1.1rem;
+            font-size: 1rem;
             color: #aaa;
             margin-bottom: 4px;
         }
 
         .modal-content .prize-amount {
-            font-size: 2.8rem;
+            font-size: 2.5rem;
             font-weight: 900;
             color: #ffd700;
             text-shadow: 0 0 40px #ffd70044;
-            margin: 8px 0;
+            margin: 6px 0;
             font-family: 'Courier New', monospace;
         }
 
         .modal-content .details {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: #888;
-            margin-bottom: 18px;
+            margin-bottom: 16px;
             line-height: 1.6;
         }
 
@@ -497,8 +496,8 @@
             background: #ffd700;
             color: #0a0a0a;
             border: none;
-            padding: 12px 36px;
-            font-size: 1.1rem;
+            padding: 10px 32px;
+            font-size: 1rem;
             font-weight: 900;
             border-radius: 50px;
             cursor: pointer;
@@ -513,70 +512,114 @@
 
         /* ===== RESPONSIVE ===== */
         @media (max-width: 700px) {
-            .game-container {
-                padding: 16px;
+            .game-bg {
+                padding: 14px 16px 18px;
             }
             .header .title {
-                font-size: 2rem;
-            }
-            .prize-display .amount {
-                font-size: 3rem;
-            }
-            .prize-mayor .amount {
                 font-size: 1.6rem;
             }
+            .prize-display .amount {
+                font-size: 2.8rem;
+            }
+            .prize-mayor .amount {
+                font-size: 1.4rem;
+            }
             .question-text {
-                font-size: 1.1rem;
+                font-size: 1rem;
+                min-height: 40px;
             }
             .options {
                 grid-template-columns: 1fr;
+                gap: 6px;
             }
             .option {
-                padding: 10px 14px;
-                font-size: 0.9rem;
-            }
-            .actions button {
-                padding: 8px 14px;
+                padding: 8px 12px;
                 font-size: 0.8rem;
             }
+            .actions button {
+                padding: 6px 12px;
+                font-size: 0.7rem;
+            }
             .modal-content {
-                padding: 24px 18px;
+                padding: 20px 16px;
             }
             .modal-content .prize-amount {
-                font-size: 2rem;
+                font-size: 1.8rem;
+            }
+            .prize-display {
+                min-height: 80px;
+                padding: 12px 10px;
             }
         }
 
         @media (max-width: 450px) {
+            .game-bg {
+                padding: 10px 10px 12px;
+            }
             .header .title {
-                font-size: 1.5rem;
+                font-size: 1.2rem;
                 letter-spacing: 2px;
             }
+            .header .subtitle {
+                font-size: 0.6rem;
+                letter-spacing: 3px;
+            }
             .prize-display .amount {
-                font-size: 2.2rem;
+                font-size: 2rem;
             }
             .prize-mayor .amount {
-                font-size: 1.2rem;
+                font-size: 1rem;
             }
-            .question-text {
-                font-size: 0.95rem;
-                min-height: 50px;
+            .prize-mayor .label {
+                font-size: 0.5rem;
             }
-            .option {
-                font-size: 0.8rem;
-                padding: 8px 10px;
-            }
-            .option .letter {
-                width: 24px;
-                height: 24px;
-                font-size: 0.7rem;
-            }
-            .prize-display {
-                padding: 25px 15px;
-                min-height: 130px;
+            .ganadores {
+                font-size: 0.6rem;
             }
             .ganadores span {
-                font-size: 1.1rem;
+                font-size: 0.9rem;
+            }
+            .question-text {
+                font-size: 0.85rem;
+                min-height: 35px;
+            }
+            .question-number {
+                font-size: 0.6rem;
+            }
+            .option {
+                font-size: 0.7rem;
+                padding: 6px 8px;
+            }
+            .option .letter {
+                width: 20px;
+                height: 20px;
+                font-size: 0.6rem;
+            }
+            .prize-display {
+                min-height: 60px;
+                padding: 8px 6px;
+            }
+            .prize-display .label {
+                font-size: 0.5rem;
+            }
+            .prize-display .sub-info {
+                font-size: 0.5rem;
+            }
+            .actions button {
+                padding: 4px 8px;
+                font-size: 0.6rem;
+                gap: 4px;
+            }
+            .hint-box {
+                font-size: 0.7rem;
+                padding: 6px 10px;
+                min-height: 32px;
+            }
+            .modal-content h2 {
+                font-size: 1.3rem;
+            }
+            .modal-content .prize-amount {
+                font-size: 1.4rem;
             }
         }
     </style>
@@ -584,60 +627,64 @@
 <body>
 
     <div class="game-container">
-        <!-- ===== ENCABEZADO ===== -->
-        <div class="header">
-            <div class="title">🏆 PINOLERO</div>
-            <div class="subtitle">MILLONARIO</div>
-        </div>
+        <!-- ===== CONTENEDOR CON IMAGEN DE FONDO ===== -->
+        <div class="game-bg" style="background-image: url('1782677408840.png');">
 
-        <!-- ===== PREMIO MAYOR ===== -->
-        <div class="prize-mayor">
-            <div class="label">🎯 PREMIO MAYOR</div>
-            <div class="amount">C$ 1,000,000</div>
-        </div>
-
-        <!-- ===== GANADORES ===== -->
-        <div class="ganadores">
-            GANADORES: <span id="winnerCount">125</span>
-        </div>
-
-        <!-- ===== ESPACIO NEGRO CON DINERO ===== -->
-        <div class="prize-display" id="prizeDisplay">
-            <div class="label">💰 DINERO ACUMULADO</div>
-            <div class="amount" id="currentPrizeDisplay">C$ 0</div>
-            <div class="sub-info">
-                PREGUNTA <span id="currentQuestionDisplay">1</span> DE <span id="totalQuestionsDisplay">10</span>
-                &nbsp;•&nbsp; 💡 <span id="hintCountDisplay">3</span>
-            </div>
-        </div>
-
-        <!-- ===== PROGRESO ===== -->
-        <div class="progress-bar">
-            <div class="fill" id="progressFill"></div>
-        </div>
-
-        <!-- ===== PREGUNTA ===== -->
-        <div class="question-area">
-            <div class="question-number" id="questionNumber">PREGUNTA 1 DE 10</div>
-            <div class="question-text" id="questionText">Cargando pregunta...</div>
-
-            <div class="options" id="optionsContainer">
-                <div class="option" data-index="0"><span class="letter">A</span> <span class="text">Opción A</span></div>
-                <div class="option" data-index="1"><span class="letter">B</span> <span class="text">Opción B</span></div>
-                <div class="option" data-index="2"><span class="letter">C</span> <span class="text">Opción C</span></div>
-                <div class="option" data-index="3"><span class="letter">D</span> <span class="text">Opción D</span></div>
+            <!-- ===== ENCABEZADO ===== -->
+            <div class="header">
+                <div class="title">🏆 PINOLERO</div>
+                <div class="subtitle">MILLONARIO</div>
             </div>
 
-            <div class="actions">
-                <button class="btn-50" id="fiftyBtn">🎲 50/50</button>
-                <button class="btn-hint" id="hintBtn">💡 Pista</button>
-                <button class="btn-next" id="nextBtn" disabled>➡️ Siguiente</button>
-                <button class="btn-reset" id="resetBtn">🔄 Reiniciar</button>
+            <!-- ===== PREMIO MAYOR ===== -->
+            <div class="prize-mayor">
+                <div class="label">🎯 PREMIO MAYOR</div>
+                <div class="amount">C$ 1,000,000</div>
             </div>
 
-            <div class="hint-box" id="hintBox">
-                <span class="hint-icon">💬</span>
-                <span class="hint-text" id="hintText">¡Responde correctamente para acumular dinero!</span>
+            <!-- ===== GANADORES ===== -->
+            <div class="ganadores">
+                GANADORES: <span id="winnerCount">125</span>
+            </div>
+
+            <!-- ===== ESPACIO NEGRO DE LA IMAGEN ===== -->
+            <div class="prize-display" id="prizeDisplay">
+                <div class="label">💰 DINERO ACUMULADO</div>
+                <div class="amount" id="currentPrizeDisplay">C$ 0</div>
+                <div class="sub-info">
+                    PREGUNTA <span id="currentQuestionDisplay">1</span> DE <span id="totalQuestionsDisplay">10</span>
+                    &nbsp;•&nbsp; 💡 <span id="hintCountDisplay">3</span>
+                </div>
+            </div>
+
+            <!-- ===== PROGRESO ===== -->
+            <div class="progress-bar">
+                <div class="fill" id="progressFill"></div>
+            </div>
+
+            <!-- ===== PREGUNTA ===== -->
+            <div class="question-area">
+                <div class="question-number" id="questionNumber">PREGUNTA 1 DE 10</div>
+                <div class="question-text" id="questionText">Cargando pregunta...</div>
+
+                <div class="options" id="optionsContainer">
+                    <div class="option" data-index="0"><span class="letter">A</span> <span class="text">Opción A</span></div>
+                    <div class="option" data-index="1"><span class="letter">B</span> <span class="text">Opción B</span></div>
+                    <div class="option" data-index="2"><span class="letter">C</span> <span class="text">Opción C</span></div>
+                    <div class="option" data-index="3"><span class="letter">D</span> <span class="text">Opción D</span></div>
+                </div>
+
+                <div class="actions">
+                    <button class="btn-50" id="fiftyBtn">🎲 50/50</button>
+                    <button class="btn-hint" id="hintBtn">💡 Pista</button>
+                    <button class="btn-next" id="nextBtn" disabled>➡️ Siguiente</button>
+                    <button class="btn-reset" id="resetBtn">🔄 Reiniciar</button>
+                </div>
+
+                <div class="hint-box" id="hintBox">
+                    <span class="hint-icon">💬</span>
+                    <span class="hint-text" id="hintText">¡Responde correctamente para acumular dinero!</span>
+                </div>
             </div>
         </div>
     </div>
@@ -659,6 +706,7 @@
         //  🏆 PINOLERO MILLONARIO - LÓGICA
         // ================================================================
 
+        // ===== BANCO DE PREGUNTAS =====
         const QUESTIONS = [{
             question: '¿En qué departamento se encuentra la ciudad de Granada?',
             options: ['Managua', 'Granada', 'León', 'Masaya'],
@@ -944,7 +992,9 @@
         winnerCount.textContent = 125;
         resetGame();
 
-        console.log('🏆 Pinolero Millonario - Versión fiel a la imagen');
+        console.log('🏆 Pinolero Millonario - Con imagen como fondo');
+        console.log('📸 La imagen debe llamarse: 1782677408840.png');
+        console.log('📁 Coloca la imagen en la misma carpeta que este archivo');
     </script>
 </body>
 </html>
