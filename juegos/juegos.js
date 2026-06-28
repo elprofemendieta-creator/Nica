@@ -174,6 +174,23 @@ document.addEventListener('DOMContentLoaded', () => {
           </a>
         </div>
       `;
+else if (nombreLower.includes('Pinolero Millonario')) {
+// Juego: Pinolero Millonario
+gameContent.innerHTML = `
+  <div style="padding: 1.5rem;">
+    <div style="font-size: 4rem; margin-bottom: 1rem;">🏆</div>
+    <h3 style="font-family: 'Fredoka', sans-serif; font-size: 1.5rem; color: #028090;">Pinolero Millonario</h3>
+    <p style="color: #64748b; margin: 0.5rem 0 1.5rem;">${descripcion}</p>
+    <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin: 1rem 0;">
+      <span style="background: #fef9e8; padding: 0.5rem 1rem; border-radius: 12px; border: 2px solid #ffd700;">💰</span>
+      <span style="background: #fef9e8; padding: 0.5rem 1rem; border-radius: 12px; border: 2px solid #ffd700;">🎯</span>
+      <span style="background: #fef9e8; padding: 0.5rem 1rem; border-radius: 12px; border: 2px solid #ffd700;">🏅</span>
+    </div>
+    <a href="${url}" class="btn" style="display: inline-block; text-decoration: none; color: white; padding: 0.8rem 2.5rem; border-radius: 50px; background: linear-gradient(135deg, #ffd700, #f0a500); font-weight: 600; transition: all 0.3s; box-shadow: 0 4px 15px rgba(255,215,0,0.4); margin-top: 1rem;">
+      🚀 Jugar Ahora
+    </a>
+  </div>
+`;
     } 
     else if (nombreLower.includes('stopinolero')) {
       // Juego: Stopinolero
