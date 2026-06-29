@@ -19,8 +19,44 @@
       width: 100%;
       overflow: hidden;
     }
+/* boton de check in */
+/* Rediseño del botón Check-In Guía Pinolera */
+.btn-pinolero-checkin {
+  background: linear-gradient(135deg, #2ecc71, #27ae60); /* Verde éxito llamativo */
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 25px; /* Bordes redondeados más amigables */
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 4px 12px rgba(46, 204, 113, 0.4);
+  cursor: pointer;
+  vertical-align: middle;
+}
 
+.btn-pinolero-checkin i {
+  font-size: 1.3rem;
+}
 
+.btn-pinolero-checkin .texto-contenedor {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  line-height: 1.2;
+}
+
+.btn-pinolero-checkin .titulo-accion {
+  font-size: 0.9rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.btn-pinolero-checkin .subtitulo-puntos {
+  font-size: 0.75rem;
+  color: #e8f8f5;
+  font-weight: 500;
+}
     /* Header */
     .app-header {
       background: white;
