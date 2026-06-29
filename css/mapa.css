@@ -35,7 +35,7 @@
 }
 
 .btn-pinolero-checkin i {
-  font-size: 0.48rem; /* Icono más pequeño */
+  font-size: 0.47rem; /* Icono más pequeño */
 }
 
 .btn-pinolero-checkin .texto-contenedor {
@@ -46,7 +46,7 @@
 }
 
 .btn-pinolero-checkin .titulo-accion {
-  font-size: 0.60rem; /* Letra principal compacta */
+  font-size: 0.68rem; /* Letra principal compacta */
   font-weight: bold;
   text-transform: uppercase;
 }
