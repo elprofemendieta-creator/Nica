@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Guía Pinolera | Nicaragua Turismo</title>
 
   <!-- Leaflet CSS/JS -->
@@ -15,8 +15,8 @@
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/prueba.css"> 
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="prueba.css"> 
 </head>
 <body>
 <div class="app-container">
@@ -34,7 +34,7 @@
         <i class="fas fa-satellite-dish"></i>
       </button>
       <button id="cofreBtn" class="icon-btn cofre-btn">
-        <i class="fas fa-toolbox"></i>
+        <i class="fas fa-list-ul"></i>
       </button>
       <button id="userBtn" class="icon-btn">
         <i class="fas fa-user-circle"></i>
@@ -43,10 +43,10 @@
         <i class="fas fa-moon"></i>
       </button>
       <button id="adminLoginBtn" class="admin-login-btn">
-        <i class="fas fa-user-shield"></i> Admin
+        <i class="fas fa-user-shield"></i>
       </button>
       <div id="adminPanelHeader" class="admin-panel-header hidden" style="display:none;">
-        <span><i class="fas fa-crown"></i> Admin</span>
+        <span><i class="fas fa-crown"></i></span>
         <button id="logoutAdminBtn" class="icon-btn">
           <i class="fas fa-sign-out-alt"></i>
         </button>
@@ -54,14 +54,14 @@
     </div>
   </header>
 
-  <!-- MAPA (SIEMPRE VISIBLE) -->
+  <!-- MAPA -->
   <div class="map-container" id="mapContainer">
     <div id="map"></div>
     
     <!-- Controles flotantes -->
     <div id="layerControl" class="layer-control">
       <button class="layer-btn active" data-layer="calles">
-        <i class="fas fa-road"></i> <span>Calles</span>
+        <i class="fas fa-road"></i>
       </button>
       <button id="geolocationBtn" class="layer-btn-mi-ubicacion">
         <i class="fas fa-crosshairs"></i>
@@ -72,42 +72,62 @@
     <button id="checkinFloatBtn" class="checkin-float-btn" style="display:none;">
       <i class="fas fa-camera"></i> <span>¡Llegué!</span>
     </button>
+
+    <!-- CONTADOR DE LUGARES CERCA -->
+    <div id="nearbyCounter" class="nearby-counter" style="display:none;">
+      <i class="fas fa-map-pin"></i> <span id="nearbyCount">0</span> cerca
+    </div>
   </div>
 
-  <!-- PANEL COFRE (INFERIOR DESLIZABLE) -->
-  <div id="cofrePanel" class="cofre-panel">
-    <div class="cofre-handle"></div>
-    <div class="cofre-content">
-      <div class="cofre-tabs">
-        <button class="cofre-tab active" data-tab="libreta">
-          <i class="fas fa-book"></i> Libreta
-        </button>
-        <button class="cofre-tab" data-tab="pasaporte">
-          <i class="fas fa-passport"></i> Pasaporte
-        </button>
-      </div>
-      
-      <!-- Libreta -->
-      <div id="libretaContent" class="cofre-section">
-        <div class="filtros-cofre">
-          <select id="filtroCiudad" class="select-mini">
-            <option value="todas">Todas las ciudades</option>
-          </select>
-          <select id="filtroTipoCamino" class="select-mini">
-            <option value="todos">Todos</option>
-            <option value="Educativo">📚 Educativo</option>
-            <option value="Comercial">🍽️ Comercial</option>
-          </select>
-        </div>
-        <div id="lugaresGrid" class="places-grid-horizontal">
-          <!-- Postales dinámicas -->
-        </div>
-      </div>
+  <!-- PANEL INFERIOR - AHORA OCUPA MÁS ESPACIO -->
+  <div id="bottomPanel" class="bottom-panel">
+    <div class="panel-handle"></div>
+    
+    <div class="panel-tabs">
+      <button class="panel-tab active" data-tab="libreta">
+        <i class="fas fa-book"></i> <span>Libreta</span>
+      </button>
+      <button class="panel-tab" data-tab="pasaporte">
+        <i class="fas fa-passport"></i> <span>Pasaporte</span>
+      </button>
+      <button class="panel-tab" data-tab="mapa">
+        <i class="fas fa-map"></i> <span>Mapa</span>
+      </button>
+    </div>
 
-      <!-- Pasaporte -->
-      <div id="pasaporteContent" class="cofre-section hidden-tab">
-        <div id="pasaporteList" class="pasaporte-list">
-          <!-- Historial -->
+    <!-- CONTENIDO LIBRETA -->
+    <div id="libretaContent" class="panel-content active-content">
+      <div class="filtros-bar">
+        <select id="filtroCiudad" class="select-filtro">
+          <option value="todas">📍 Todas</option>
+        </select>
+        <select id="filtroTipoCamino" class="select-filtro">
+          <option value="todos">🎯 Todos</option>
+          <option value="Educativo">📚 Educativo</option>
+          <option value="Comercial">🍽️ Comercial</option>
+        </select>
+      </div>
+      <div id="lugaresGrid" class="lugares-grid">
+        <!-- Cards en grid 2 columnas en móvil -->
+      </div>
+    </div>
+
+    <!-- CONTENIDO PASAPORTE -->
+    <div id="pasaporteContent" class="panel-content">
+      <div id="pasaporteList" class="pasaporte-list">
+        <!-- Historial -->
+      </div>
+    </div>
+
+    <!-- CONTENIDO MAPA (miniatura) -->
+    <div id="mapaContent" class="panel-content">
+      <div class="mapa-mini-container">
+        <div id="mapaMini" class="mapa-mini"></div>
+        <div class="mapa-mini-info">
+          <p><i class="fas fa-location-dot"></i> Vista general del mapa</p>
+          <button id="expandMapBtn" class="expand-map-btn">
+            <i class="fas fa-expand"></i> Ver mapa completo
+          </button>
         </div>
       </div>
     </div>
@@ -158,7 +178,7 @@
   let currentUser = null, userDocId = null, userPointsTotal = 0;
   let gpsActive = false, watchId = null;
   let ultimaRecompensaPorLugar = {};
-  let cofreAbierto = false;
+  let panelAbierto = false;
 
   // DOM
   const darkModeBtn = document.getElementById('darkModeBtn');
@@ -175,17 +195,20 @@
   const pointsSpan = document.getElementById('pointsValue');
   const userPointsDisplay = document.getElementById('userPointsDisplay');
   const pasaporteList = document.getElementById('pasaporteList');
-  const cofrePanel = document.getElementById('cofrePanel');
-  const cofreHandle = document.querySelector('.cofre-handle');
+  const bottomPanel = document.getElementById('bottomPanel');
+  const panelHandle = document.querySelector('.panel-handle');
   const checkinFloatBtn = document.getElementById('checkinFloatBtn');
   const geolocationBtn = document.getElementById('geolocationBtn');
+  const cofreBtn = document.getElementById('cofreBtn');
+  const nearbyCounter = document.getElementById('nearbyCounter');
+  const nearbyCount = document.getElementById('nearbyCount');
 
-  // Toast
   function mostrarToast(msg, tipo='info') {
     const container = document.getElementById('toastContainer');
     const toast = document.createElement('div');
     toast.className = 'toast';
-    toast.innerHTML = `<i class="fas ${tipo==='error'?'fa-exclamation-circle':'fa-check-circle'}"></i> ${msg}`;
+    const icon = tipo==='error' ? 'fa-exclamation-circle' : tipo==='success' ? 'fa-check-circle' : 'fa-info-circle';
+    toast.innerHTML = `<i class="fas ${icon}"></i> ${msg}`;
     container.appendChild(toast);
     setTimeout(() => toast.remove(), 3000);
   }
@@ -206,7 +229,7 @@
   function actualizarFiltrosCiudad() {
     const ciudades = [...new Set(allPlaces.map(p => p.ciudad).filter(c => c && c.trim() !== ''))];
     const currentVal = filtroCiudad.value;
-    filtroCiudad.innerHTML = '<option value="todas">Todas las ciudades</option>' + ciudades.map(c => `<option value="${c}">${c}</option>`).join('');
+    filtroCiudad.innerHTML = '<option value="todas">📍 Todas</option>' + ciudades.map(c => `<option value="${c}">📍 ${c}</option>`).join('');
     if(currentVal && ciudades.includes(currentVal)) filtroCiudad.value = currentVal;
     else filtroCiudad.value = 'todas';
   }
@@ -225,33 +248,45 @@
     
     const grid = document.getElementById('lugaresGrid');
     if(filtered.length === 0) {
-      grid.innerHTML = '<div style="padding:20px;text-align:center;color:#888;">No hay lugares con esos filtros</div>';
+      grid.innerHTML = `
+        <div class="empty-state">
+          <i class="fas fa-map-pin"></i>
+          <p>No hay lugares con estos filtros</p>
+        </div>
+      `;
       return;
     }
     
     grid.innerHTML = filtered.map(place => `
-      <div class="place-card-horizontal" data-id="${place.id}">
-        <img src="${place.imagen || 'https://via.placeholder.com/300x120?text=Sin+imagen'}" 
-             onerror="this.src='https://via.placeholder.com/300x120?text=No+disponible'">
-        <div class="info">
+      <div class="place-card" data-id="${place.id}">
+        <div class="place-card-img">
+          <img src="${place.imagen || 'https://via.placeholder.com/400x200?text=Sin+imagen'}" 
+               onerror="this.src='https://via.placeholder.com/400x200?text=No+disponible'">
+          <span class="place-card-tipo ${place.tipoCamino === 'Educativo' ? 'tipo-educativo' : 'tipo-comercial'}">
+            ${place.tipoCamino === 'Educativo' ? '📚' : '🍽️'}
+          </span>
+        </div>
+        <div class="place-card-body">
           <h4>${place.nombre}</h4>
-          <div class="badge">${place.ciudad || ''} • ${place.tipoCamino === 'Educativo' ? '📚' : '🍽️'}</div>
-          <button class="explore-btn-mini" data-id="${place.id}">
-            <i class="fas fa-compass"></i> Explorar
-          </button>
-          ${isAdmin ? `<button class="explore-btn-mini" style="background:#666;margin-left:4px;" data-edit="${place.id}">✏️</button>` : ''}
+          <p class="place-card-ciudad"><i class="fas fa-location-dot"></i> ${place.ciudad || 'Sin ciudad'}</p>
+          <div class="place-card-actions">
+            <button class="explore-btn" data-id="${place.id}">
+              <i class="fas fa-compass"></i> Explorar
+            </button>
+            ${isAdmin ? `<button class="edit-btn-mini" data-edit="${place.id}"><i class="fas fa-pen"></i></button>` : ''}
+          </div>
         </div>
       </div>
     `).join('');
 
-    document.querySelectorAll('.place-card-horizontal .explore-btn-mini[data-id]').forEach(btn => {
+    // Eventos
+    document.querySelectorAll('.place-card .explore-btn[data-id]').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
         const id = btn.dataset.id;
         const place = allPlaces.find(p => p.id === id);
         if(place) {
-          cofreAbierto = false;
-          cofrePanel.classList.remove('abierto');
+          cerrarPanel();
           setTimeout(() => {
             if(map) {
               map.setView([place.lat, place.lng], 15);
@@ -261,17 +296,18 @@
                 }
               });
             }
-          }, 300);
+          }, 400);
         }
       });
-      if(isAdmin && btn.dataset.edit) {
-        btn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          const id = btn.dataset.edit;
-          const p = allPlaces.find(p => p.id === id);
-          if(p) editarLugarAdmin(p.id);
-        });
-      }
+    });
+    
+    document.querySelectorAll('.place-card .edit-btn-mini[data-edit]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const id = btn.dataset.edit;
+        const p = allPlaces.find(p => p.id === id);
+        if(p) editarLugarAdmin(p.id);
+      });
     });
   }
 
@@ -279,17 +315,36 @@
   function initMap() {
     const mapDiv = document.getElementById('map');
     if(!mapDiv) return;
-    if(map) map.remove();
-    map = L.map('map').setView([12.8654, -85.2072], 8);
-    currentLayers.calles = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { attribution: '&copy; OpenStreetMap' }).addTo(map);
-    currentLayers.satelite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { attribution: 'Esri' });
-    markerCluster = L.markerClusterGroup();
+    if(map) { map.remove(); }
+    map = L.map('map', {
+      zoomControl: false,
+      attributionControl: false
+    }).setView([12.8654, -85.2072], 8);
+    
+    L.control.zoom({ position: 'bottomright' }).addTo(map);
+    L.control.attribution({ position: 'bottomright' }).addTo(map);
+    
+    currentLayers.calles = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { 
+      attribution: '&copy; OpenStreetMap' 
+    }).addTo(map);
+    
+    currentLayers.satelite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { 
+      attribution: 'Esri' 
+    });
+    
+    markerCluster = L.markerClusterGroup({
+      maxClusterRadius: 40,
+      spiderfyOnMaxZoom: true,
+      showCoverageOnHover: false
+    });
     map.addLayer(markerCluster);
     
     document.querySelectorAll('.layer-btn[data-layer]').forEach(btn => {
       btn.addEventListener('click', () => {
         const layer = btn.dataset.layer;
-        Object.keys(currentLayers).forEach(l => map.removeLayer(currentLayers[l]));
+        Object.keys(currentLayers).forEach(l => {
+          if(map.hasLayer(currentLayers[l])) map.removeLayer(currentLayers[l]);
+        });
         map.addLayer(currentLayers[layer]);
         document.querySelectorAll('.layer-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
@@ -297,77 +352,144 @@
     });
     
     geolocationBtn.onclick = () => {
-      if(navigator.geolocation) navigator.geolocation.getCurrentPosition(pos=>map.setView([pos.coords.latitude,pos.coords.longitude],13), ()=>mostrarToast("Error ubicación","error"));
+      if(navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          pos => map.setView([pos.coords.latitude, pos.coords.longitude], 15),
+          () => mostrarToast("Error ubicación", "error")
+        );
+      }
     };
     
     if(isAdmin) {
       map.on('click', (e) => abrirFormularioNuevo(e.latlng.lat, e.latlng.lng));
     }
+    
     actualizarMarcadoresMapa();
+    
+    // Actualizar tamaño después de cargar
+    setTimeout(() => map.invalidateSize(), 300);
   }
 
   async function actualizarMarcadoresMapa() {
     if(!markerCluster) return;
     markerCluster.clearLayers();
+    
     for(let place of allPlaces) {
       const popupDiv = document.createElement('div');
-      popupDiv.innerHTML = `<b>${place.nombre}</b><br>${place.imagen?`<img src="${place.imagen}" style="width:100%;border-radius:8px;max-width:180px;">` : ''}<br><a href="${place.url||'#'}" target="_blank">🔗 Visitar</a>`;
+      popupDiv.className = 'custom-popup';
+      popupDiv.innerHTML = `
+        <div class="popup-content">
+          <h4>${place.nombre}</h4>
+          ${place.imagen ? `<img src="${place.imagen}" class="popup-img">` : ''}
+          <p><i class="fas fa-location-dot"></i> ${place.ciudad || ''}</p>
+          ${place.url ? `<a href="${place.url}" target="_blank" class="popup-link"><i class="fas fa-external-link-alt"></i> Visitar</a>` : ''}
+        </div>
+      `;
+      
       const checkBtn = document.createElement('button');
-      checkBtn.innerHTML = '<i class="fas fa-map-marker-check"></i> Hacer Check-in aquí';
-      checkBtn.style.display = 'block';
-      checkBtn.style.margin = '5px 0';
-      checkBtn.style.background = '#F57C00';
-      checkBtn.style.color = 'white';
-      checkBtn.style.border = 'none';
-      checkBtn.style.padding = '6px';
-      checkBtn.style.borderRadius = '20px';
-      checkBtn.onclick = () => realizarCheckin(place.id, place.nombre);
+      checkBtn.className = 'popup-btn checkin-popup-btn';
+      checkBtn.innerHTML = '<i class="fas fa-map-marker-check"></i> Check-in';
+      checkBtn.onclick = (e) => {
+        e.stopPropagation();
+        realizarCheckin(place.id, place.nombre);
+      };
       popupDiv.appendChild(checkBtn);
 
       if(currentUser) {
         const yaVisito = await verificarSiYaVisito(currentUser.uid, place.id);
         if(yaVisito) {
           const commentBtn = document.createElement('button');
-          commentBtn.innerHTML = '<i class="fas fa-star"></i> Comentar / Puntuar';
-          commentBtn.style.display = 'block';
-          commentBtn.style.marginTop = '5px';
-          commentBtn.style.background = '#2E7D32';
-          commentBtn.onclick = () => abrirComentario(place.id, place.nombre);
+          commentBtn.className = 'popup-btn comment-popup-btn';
+          commentBtn.innerHTML = '<i class="fas fa-star"></i> Comentar';
+          commentBtn.onclick = (e) => {
+            e.stopPropagation();
+            abrirComentario(place.id, place.nombre);
+          };
           popupDiv.appendChild(commentBtn);
         }
       }
+      
       if(isAdmin) {
-        const editBtn = document.createElement('button'); editBtn.innerText='✏️ Editar'; editBtn.onclick=()=>editarLugarAdmin(place.id);
-        const delBtn = document.createElement('button'); delBtn.innerText='🗑️ Eliminar'; delBtn.onclick=()=>eliminarLugarFirestore(place.id);
-        popupDiv.appendChild(editBtn); popupDiv.appendChild(delBtn);
+        const editBtn = document.createElement('button');
+        editBtn.className = 'popup-btn admin-popup-btn';
+        editBtn.innerHTML = '✏️ Editar';
+        editBtn.onclick = (e) => {
+          e.stopPropagation();
+          editarLugarAdmin(place.id);
+        };
+        popupDiv.appendChild(editBtn);
+        
+        const delBtn = document.createElement('button');
+        delBtn.className = 'popup-btn admin-popup-btn';
+        delBtn.innerHTML = '🗑️';
+        delBtn.onclick = (e) => {
+          e.stopPropagation();
+          eliminarLugarFirestore(place.id);
+        };
+        popupDiv.appendChild(delBtn);
       }
-      const marker = L.marker([place.lat, place.lng]).bindPopup(popupDiv);
+      
+      const marker = L.marker([place.lat, place.lng], {
+        icon: L.divIcon({
+          className: 'custom-marker',
+          html: `<div class="marker-pin ${place.tipoCamino === 'Educativo' ? 'marker-educativo' : 'marker-comercial'}">
+            <i class="fas fa-map-pin"></i>
+          </div>`,
+          iconSize: [30, 30],
+          iconAnchor: [15, 30]
+        })
+      }).bindPopup(popupDiv, { maxWidth: 260, className: 'popup-wrapper' });
+      
       markerCluster.addLayer(marker);
+    }
+    
+    // Actualizar contador de lugares cerca
+    if(currentUser && navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(pos => {
+        let cerca = 0;
+        for(let place of allPlaces) {
+          const dist = calcularDistancia(pos.coords.latitude, pos.coords.longitude, place.lat, place.lng);
+          if(dist < 2000) cerca++;
+        }
+        if(cerca > 0) {
+          nearbyCounter.style.display = 'flex';
+          nearbyCount.textContent = cerca;
+        } else {
+          nearbyCounter.style.display = 'none';
+        }
+      }, () => {});
     }
   }
 
   // ========== CHECK-IN ==========
   async function realizarCheckin(lugarId, lugarNombre) {
-    if(!currentUser) { mostrarToast("Inicia sesión para hacer check-in","error"); return; }
+    if(!currentUser) { mostrarToast("Inicia sesión","error"); return; }
     if(!navigator.geolocation) { mostrarToast("GPS no soportado","error"); return; }
+    
     navigator.geolocation.getCurrentPosition(async (pos) => {
       const place = allPlaces.find(p => p.id === lugarId);
       if(!place) return;
       const dist = calcularDistancia(pos.coords.latitude, pos.coords.longitude, place.lat, place.lng);
-      if(dist > 50) { mostrarToast(`Estás demasiado lejos (${Math.round(dist)}m). Acércate al lugar.`,"error"); return; }
+      if(dist > 50) {
+        mostrarToast(`Estás a ${Math.round(dist)}m. Acércate (máx 50m)`, "error");
+        return;
+      }
       const yaVisito = await verificarSiYaVisito(currentUser.uid, lugarId);
       const puntos = yaVisito ? 2 : 10;
       await registrarVisita(currentUser.uid, lugarId, puntos, 'gps');
-      await sumarPuntos(puntos, `Check-in en ${lugarNombre}`, lugarId);
-      mostrarToast(`✅ Check-in exitoso! +${puntos} puntos`, "success");
+      await sumarPuntos(puntos, `Check-in ${lugarNombre}`, lugarId);
+      mostrarToast(`✅ +${puntos} pts en ${lugarNombre}`, "success");
       actualizarMarcadoresMapa();
-      if(!yaVisito && currentUser) actualizarPasaporte();
-    }, () => mostrarToast("No se pudo obtener tu ubicación","error"));
+      if(!yaVisito) actualizarPasaporte();
+    }, () => mostrarToast("Activa el GPS","error"));
   }
 
   function calcularDistancia(lat1,lon1,lat2,lon2){
-    const R=6371e3; const φ1=lat1*Math.PI/180, φ2=lat2*Math.PI/180; const Δφ=(lat2-lat1)*Math.PI/180, Δλ=(lon2-lon1)*Math.PI/180;
-    const a=Math.sin(Δφ/2)**2+Math.cos(φ1)*Math.cos(φ2)*Math.sin(Δλ/2)**2; return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+    const R=6371e3;
+    const φ1=lat1*Math.PI/180, φ2=lat2*Math.PI/180;
+    const Δφ=(lat2-lat1)*Math.PI/180, Δλ=(lon2-lon1)*Math.PI/180;
+    const a=Math.sin(Δφ/2)**2+Math.cos(φ1)*Math.cos(φ2)*Math.sin(Δλ/2)**2;
+    return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
   }
 
   async function verificarSiYaVisito(uid, lugarId) {
@@ -386,26 +508,58 @@
     await updateDoc(doc(db, 'usuarios', userDocId), { puntos: nuevos });
     userPointsTotal = nuevos;
     pointsSpan.innerText = userPointsTotal;
-    mostrarToast(`+${cantidad} puntos (${motivo})`, "success");
   }
 
   // ========== PASAPORTE ==========
   async function actualizarPasaporte() {
-    if(!currentUser) { pasaporteList.innerHTML = '<div style="padding:20px;text-align:center;">Inicia sesión para ver tu pasaporte</div>'; return; }
+    if(!currentUser) {
+      pasaporteList.innerHTML = `
+        <div class="empty-state">
+          <i class="fas fa-passport"></i>
+          <p>Inicia sesión para ver tu pasaporte</p>
+        </div>
+      `;
+      return;
+    }
+    
     const visitsSnap = await getDocs(query(collection(db, 'visitas'), where('usuarioId', '==', currentUser.uid)));
     const visitasMap = new Map();
     visitsSnap.forEach(doc => {
       const data = doc.data();
       const lugarId = data.lugarId;
-      if(!visitasMap.has(lugarId)) visitasMap.set(lugarId, { count: 0 });
+      if(!visitasMap.has(lugarId)) visitasMap.set(lugarId, { count: 0, lastDate: data.fecha });
       visitasMap.get(lugarId).count++;
     });
+    
     const comentariosSnap = await getDocs(query(collection(db, 'comentarios'), where('usuarioId', '==', currentUser.uid)));
     const comentariosMap = new Map();
-    comentariosSnap.forEach(doc => { const c = doc.data(); comentariosMap.set(c.lugarId, { texto: c.texto, estrellas: c.estrellas }); });
+    comentariosSnap.forEach(doc => {
+      const c = doc.data();
+      comentariosMap.set(c.lugarId, { texto: c.texto, estrellas: c.estrellas });
+    });
 
-    if(visitasMap.size === 0) { pasaporteList.innerHTML = '<div style="padding:20px;text-align:center;">Aún no has visitado ningún lugar. ¡Explora!</div>'; return; }
-    let html = '';
+    if(visitasMap.size === 0) {
+      pasaporteList.innerHTML = `
+        <div class="empty-state">
+          <i class="fas fa-map-pin"></i>
+          <p>Aún no has visitado ningún lugar</p>
+          <span class="empty-sub">¡Explora y haz check-in!</span>
+        </div>
+      `;
+      return;
+    }
+    
+    let html = `<div class="pasaporte-stats">
+      <div class="stat-item">
+        <span class="stat-number">${visitasMap.size}</span>
+        <span class="stat-label">Lugares visitados</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">${userPointsTotal}</span>
+        <span class="stat-label">Puntos totales</span>
+      </div>
+    </div>`;
+    
     for(let [lugarId, data] of visitasMap.entries()) {
       const lugar = allPlaces.find(p => p.id === lugarId);
       if(!lugar) continue;
@@ -415,8 +569,11 @@
           <img class="pasaporte-img" src="${lugar.imagen || 'https://via.placeholder.com/80'}" onerror="this.src='https://via.placeholder.com/80'">
           <div class="pasaporte-info">
             <h4>${lugar.nombre}</h4>
-            <div><span class="visits-count">Visitas: ${data.count}</span>  |  ${lugar.ciudad} • ${lugar.tipoCamino === 'Educativo' ? 'Educativo' : 'Comercial'}</div>
-            ${comentario ? `<div class="user-review"><i class="fas fa-comment"></i> "${comentario.texto}"<br>${'⭐'.repeat(comentario.estrellas)}</div>` : '<div class="user-review"><i class="fas fa-edit"></i> Sin reseña aún</div>'}
+            <div class="pasaporte-meta">
+              <span class="visits-count">${data.count} visita${data.count > 1 ? 's' : ''}</span>
+              <span class="pasaporte-ciudad">${lugar.ciudad || ''}</span>
+            </div>
+            ${comentario ? `<div class="user-review"><i class="fas fa-comment"></i> "${comentario.texto}" ${'⭐'.repeat(comentario.estrellas)}</div>` : ''}
           </div>
         </div>
       `;
@@ -426,191 +583,425 @@
 
   // ========== ADMIN ==========
   const ADMIN_PASSWORD = "Diriamba2026";
-  function entrarModoAdmin() { isAdmin=true; adminLoginBtn.style.display='none'; adminPanelHeader.style.display='flex'; mostrarToast("Admin activado","success"); if(map) map.on('click', onMapClick); actualizarLibreta(); actualizarMarcadoresMapa(); }
-  function salirModoAdmin() { isAdmin=false; adminLoginBtn.style.display='flex'; adminPanelHeader.style.display='none'; if(map) map.off('click'); actualizarLibreta(); actualizarMarcadoresMapa(); }
-  function onMapClick(e) { if(isAdmin) abrirFormularioNuevo(e.latlng.lat, e.latlng.lng); }
-  adminLoginBtn.onclick = () => adminModal.style.display='flex';
-  document.getElementById('adminLoginForm').addEventListener('submit',(e)=>{e.preventDefault(); if(document.getElementById('adminPassword').value===ADMIN_PASSWORD){adminModal.style.display='none';entrarModoAdmin();}else mostrarToast("Contraseña incorrecta","error");});
+  function entrarModoAdmin() {
+    isAdmin = true;
+    adminLoginBtn.style.display = 'none';
+    adminPanelHeader.style.display = 'flex';
+    mostrarToast("Admin activado", "success");
+    if(map) map.on('click', onMapClick);
+    actualizarLibreta();
+    actualizarMarcadoresMapa();
+  }
+  
+  function salirModoAdmin() {
+    isAdmin = false;
+    adminLoginBtn.style.display = 'flex';
+    adminPanelHeader.style.display = 'none';
+    if(map) map.off('click');
+    actualizarLibreta();
+    actualizarMarcadoresMapa();
+  }
+  
+  function onMapClick(e) {
+    if(isAdmin) abrirFormularioNuevo(e.latlng.lat, e.latlng.lng);
+  }
+  
+  adminLoginBtn.onclick = () => adminModal.style.display = 'flex';
+  document.getElementById('adminLoginForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    if(document.getElementById('adminPassword').value === ADMIN_PASSWORD) {
+      adminModal.style.display = 'none';
+      entrarModoAdmin();
+    } else {
+      mostrarToast("Contraseña incorrecta", "error");
+    }
+  });
   logoutAdminBtn.onclick = salirModoAdmin;
-  function abrirFormularioNuevo(lat,lng) { document.getElementById('modalTitle').innerText='Añadir Lugar'; document.getElementById('lugarId').value=''; document.getElementById('lugarNombre').value=''; document.getElementById('lugarLat').value=lat.toFixed(6); document.getElementById('lugarLng').value=lng.toFixed(6); document.getElementById('lugarCiudad').value=''; document.getElementById('lugarTipoCamino').value='Educativo'; document.getElementById('lugarUrl').value=''; document.getElementById('lugarImagen').value=''; document.getElementById('lugarCategoria').value=''; lugarModal.style.display='flex'; }
-  function editarLugarAdmin(id) { const p=allPlaces.find(p=>p.id===id); if(!p) return; document.getElementById('modalTitle').innerText='Editar Lugar'; document.getElementById('lugarId').value=p.id; document.getElementById('lugarNombre').value=p.nombre; document.getElementById('lugarLat').value=p.lat; document.getElementById('lugarLng').value=p.lng; document.getElementById('lugarCiudad').value=p.ciudad||''; document.getElementById('lugarTipoCamino').value=p.tipoCamino||'Educativo'; document.getElementById('lugarUrl').value=p.url||''; document.getElementById('lugarImagen').value=p.imagen||''; document.getElementById('lugarCategoria').value=p.categoria||''; lugarModal.style.display='flex'; }
-  window.eliminarLugarFirestore = async (id) => { if(confirm('¿Eliminar lugar?')) await deleteDoc(doc(db,'lugares',id)); };
+  
+  function abrirFormularioNuevo(lat,lng) {
+    document.getElementById('modalTitle').innerText = 'Añadir Lugar';
+    document.getElementById('lugarId').value = '';
+    document.getElementById('lugarNombre').value = '';
+    document.getElementById('lugarLat').value = lat.toFixed(6);
+    document.getElementById('lugarLng').value = lng.toFixed(6);
+    document.getElementById('lugarCiudad').value = '';
+    document.getElementById('lugarTipoCamino').value = 'Educativo';
+    document.getElementById('lugarUrl').value = '';
+    document.getElementById('lugarImagen').value = '';
+    document.getElementById('lugarCategoria').value = '';
+    lugarModal.style.display = 'flex';
+  }
+  
+  function editarLugarAdmin(id) {
+    const p = allPlaces.find(p => p.id === id);
+    if(!p) return;
+    document.getElementById('modalTitle').innerText = 'Editar Lugar';
+    document.getElementById('lugarId').value = p.id;
+    document.getElementById('lugarNombre').value = p.nombre;
+    document.getElementById('lugarLat').value = p.lat;
+    document.getElementById('lugarLng').value = p.lng;
+    document.getElementById('lugarCiudad').value = p.ciudad || '';
+    document.getElementById('lugarTipoCamino').value = p.tipoCamino || 'Educativo';
+    document.getElementById('lugarUrl').value = p.url || '';
+    document.getElementById('lugarImagen').value = p.imagen || '';
+    document.getElementById('lugarCategoria').value = p.categoria || '';
+    lugarModal.style.display = 'flex';
+  }
+  
+  window.eliminarLugarFirestore = async (id) => {
+    if(confirm('¿Eliminar lugar?')) {
+      await deleteDoc(doc(db, 'lugares', id));
+      mostrarToast("Lugar eliminado", "info");
+    }
+  };
+  
   document.getElementById('lugarForm').addEventListener('submit', async(e) => {
-    e.preventDefault(); const id=document.getElementById('lugarId').value; const nombre=document.getElementById('lugarNombre').value.trim(); const lat=parseFloat(document.getElementById('lugarLat').value); const lng=parseFloat(document.getElementById('lugarLng').value); const ciudad=document.getElementById('lugarCiudad').value.trim(); const tipoCamino=document.getElementById('lugarTipoCamino').value; const url=document.getElementById('lugarUrl').value.trim(); const imagen=document.getElementById('lugarImagen').value.trim(); const categoria=document.getElementById('lugarCategoria').value.trim();
-    if(!nombre || isNaN(lat) || isNaN(lng) || !ciudad) { mostrarToast("Complete nombre, coordenadas y ciudad","error"); return; }
+    e.preventDefault();
+    const id = document.getElementById('lugarId').value;
+    const nombre = document.getElementById('lugarNombre').value.trim();
+    const lat = parseFloat(document.getElementById('lugarLat').value);
+    const lng = parseFloat(document.getElementById('lugarLng').value);
+    const ciudad = document.getElementById('lugarCiudad').value.trim();
+    const tipoCamino = document.getElementById('lugarTipoCamino').value;
+    const url = document.getElementById('lugarUrl').value.trim();
+    const imagen = document.getElementById('lugarImagen').value.trim();
+    const categoria = document.getElementById('lugarCategoria').value.trim();
+    
+    if(!nombre || isNaN(lat) || isNaN(lng) || !ciudad) {
+      mostrarToast("Complete todos los campos", "error");
+      return;
+    }
+    
     const data = { nombre, lat, lng, ciudad, tipoCamino, url, imagen, categoria };
-    if(id) await updateDoc(doc(db,'lugares',id), data);
-    else await addDoc(collection(db,'lugares'), data);
-    lugarModal.style.display='none';
+    if(id) {
+      await updateDoc(doc(db, 'lugares', id), data);
+      mostrarToast("Lugar actualizado", "success");
+    } else {
+      await addDoc(collection(db, 'lugares'), data);
+      mostrarToast("Lugar creado", "success");
+    }
+    lugarModal.style.display = 'none';
   });
 
   // ========== COMENTARIOS ==========
   async function abrirComentario(lugarId, lugarNombre) {
     if(!currentUser) return;
     const yaVisito = await verificarSiYaVisito(currentUser.uid, lugarId);
-    if(!yaVisito) { mostrarToast("Primero haz check-in para comentar","error"); return; }
-    const q = query(collection(db,'comentarios'), where('usuarioId','==',currentUser.uid), where('lugarId','==',lugarId));
+    if(!yaVisito) {
+      mostrarToast("Primero haz check-in", "error");
+      return;
+    }
+    
+    const q = query(collection(db, 'comentarios'), where('usuarioId', '==', currentUser.uid), where('lugarId', '==', lugarId));
     const snap = await getDocs(q);
     let existente = null;
     if(!snap.empty) existente = snap.docs[0];
+    
     const modalBody = document.getElementById('comentarioBody');
-    modalBody.innerHTML = `<div style="padding:15px;"><h4>${lugarNombre}</h4>
-      <div class="form-group"><label>Puntuación (1-5)</label><select id="estrellas">${[1,2,3,4,5].map(s=>`<option value="${s}" ${existente && existente.data().estrellas==s?'selected':''}>${'⭐'.repeat(s)}</option>`).join('')}</select></div>
-      <div class="form-group"><label>Comentario</label><textarea id="comentarioTexto" rows="3">${existente?existente.data().texto:''}</textarea></div>
-      <button id="guardarComentarioBtn" class="submit-btn">Guardar comentario</button>${existente?'<button id="eliminarComentarioBtn" class="submit-btn" style="background:#d32f2f;">Eliminar</button>':''}</div>`;
+    modalBody.innerHTML = `
+      <div style="padding:15px;">
+        <h4>${lugarNombre}</h4>
+        <div class="form-group">
+          <label>Puntuación (1-5)</label>
+          <select id="estrellas">
+            ${[1,2,3,4,5].map(s => `<option value="${s}" ${existente && existente.data().estrellas == s ? 'selected' : ''}>${'⭐'.repeat(s)}</option>`).join('')}
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Comentario</label>
+          <textarea id="comentarioTexto" rows="3">${existente ? existente.data().texto : ''}</textarea>
+        </div>
+        <button id="guardarComentarioBtn" class="submit-btn">Guardar comentario</button>
+        ${existente ? '<button id="eliminarComentarioBtn" class="submit-btn" style="background:#d32f2f;">Eliminar</button>' : ''}
+      </div>
+    `;
+    
     document.getElementById('guardarComentarioBtn').onclick = async () => {
       const estrellas = parseInt(document.getElementById('estrellas').value);
       const texto = document.getElementById('comentarioTexto').value.trim();
-      if(!texto){ mostrarToast("Escribe un comentario","error"); return; }
-      if(existente) await updateDoc(doc(db,'comentarios',existente.id), { texto, estrellas, editado: true });
-      else {
-        await addDoc(collection(db,'comentarios'), { usuarioId: currentUser.uid, lugarId, texto, estrellas, fecha: new Date(), editado: false });
-        await sumarPuntos(5, `Comentario en ${lugarNombre}`, lugarId);
-        await sumarPuntos(2, `Valoración en ${lugarNombre}`, lugarId);
+      if(!texto) {
+        mostrarToast("Escribe un comentario", "error");
+        return;
       }
-      document.getElementById('comentarioModal').style.display='none';
-      if(currentUser) actualizarPasaporte();
+      if(existente) {
+        await updateDoc(doc(db, 'comentarios', existente.id), { texto, estrellas, editado: true });
+        mostrarToast("Comentario actualizado", "success");
+      } else {
+        await addDoc(collection(db, 'comentarios'), { usuarioId: currentUser.uid, lugarId, texto, estrellas, fecha: new Date(), editado: false });
+        await sumarPuntos(7, `Comentario en ${lugarNombre}`, lugarId);
+        mostrarToast("¡Comentario guardado! +7 pts", "success");
+      }
+      document.getElementById('comentarioModal').style.display = 'none';
+      actualizarPasaporte();
     };
-    if(existente) document.getElementById('eliminarComentarioBtn').onclick = async()=>{ await deleteDoc(doc(db,'comentarios',existente.id)); mostrarToast("Comentario eliminado","info"); document.getElementById('comentarioModal').style.display='none'; actualizarPasaporte(); };
-    document.getElementById('comentarioModal').style.display='flex';
+    
+    if(existente) {
+      document.getElementById('eliminarComentarioBtn').onclick = async () => {
+        await deleteDoc(doc(db, 'comentarios', existente.id));
+        mostrarToast("Comentario eliminado", "info");
+        document.getElementById('comentarioModal').style.display = 'none';
+        actualizarPasaporte();
+      };
+    }
+    
+    document.getElementById('comentarioModal').style.display = 'flex';
   }
 
   // ========== USUARIO ==========
   async function cargarPuntosUsuario() {
     if(!currentUser) return;
-    const q = query(collection(db,'usuarios'), where('uid','==',currentUser.uid));
+    const q = query(collection(db, 'usuarios'), where('uid', '==', currentUser.uid));
     const snap = await getDocs(q);
-    if(!snap.empty){ userDocId = snap.docs[0].id; userPointsTotal = snap.docs[0].data().puntos||0; pointsSpan.innerText = userPointsTotal; }
-    else { const ref = await addDoc(collection(db,'usuarios'), { uid:currentUser.uid, email:currentUser.email, nombre:currentUser.displayName||currentUser.email, puntos:0 }); userDocId = ref.id; userPointsTotal=0; pointsSpan.innerText='0'; }
-  }
-  
-  function actualizarUIUsuario(){
-    if(currentUser){ 
-      userPointsDisplay.style.display='flex'; 
-      gpsBtn.style.display='flex'; 
-      checkinFloatBtn.style.display='flex';
-      userBtn.innerHTML='<i class="fas fa-user-check"></i>'; 
-      cargarPuntosUsuario(); 
-      actualizarPasaporte(); 
-    } else { 
-      userPointsDisplay.style.display='none'; 
-      gpsBtn.style.display='none'; 
-      checkinFloatBtn.style.display='none';
-      userBtn.innerHTML='<i class="fas fa-user-circle"></i>'; 
-      if(gpsActive && watchId) navigator.geolocation.clearWatch(watchId); 
-      gpsActive=false; 
-      pasaporteList.innerHTML = '<div style="padding:20px;text-align:center;">Inicia sesión para ver tu pasaporte</div>'; 
+    if(!snap.empty) {
+      userDocId = snap.docs[0].id;
+      userPointsTotal = snap.docs[0].data().puntos || 0;
+      pointsSpan.innerText = userPointsTotal;
+    } else {
+      const ref = await addDoc(collection(db, 'usuarios'), {
+        uid: currentUser.uid,
+        email: currentUser.email,
+        nombre: currentUser.displayName || currentUser.email,
+        puntos: 0
+      });
+      userDocId = ref.id;
+      userPointsTotal = 0;
+      pointsSpan.innerText = '0';
     }
   }
   
-  function mostrarModalUsuario(){
-    if(currentUser){
-      document.getElementById('profileBody').innerHTML = `<div style="text-align:center;padding:15px;"><img src="${currentUser.photoURL||'https://via.placeholder.com/80'}" style="width:80px;border-radius:50%;"><h4>${currentUser.displayName||currentUser.email}</h4><p>Puntos: ${userPointsTotal}</p><button id="cerrarSesionBtn" class="submit-btn" style="background:#d32f2f;">Cerrar sesión</button><button id="eliminarCuentaBtn" class="submit-btn" style="background:#666;">Eliminar cuenta</button></div>`;
-      document.getElementById('cerrarSesionBtn').onclick = async()=>{ await signOut(auth); location.reload(); };
-      document.getElementById('eliminarCuentaBtn').onclick = async () => { if(confirm("¿Eliminar cuenta?")){ await currentUser.delete(); await signOut(auth); location.reload(); } };
-      profileModal.style.display='flex';
+  function actualizarUIUsuario() {
+    if(currentUser) {
+      userPointsDisplay.style.display = 'flex';
+      gpsBtn.style.display = 'flex';
+      checkinFloatBtn.style.display = 'flex';
+      userBtn.innerHTML = '<i class="fas fa-user-check"></i>';
+      cargarPuntosUsuario();
+      actualizarPasaporte();
     } else {
-      document.getElementById('userModalBody').innerHTML = `<div style="padding:20px;"><button id="googleLoginBtn" class="submit-btn" style="background:#4285F4;">Google</button><hr><input type="email" id="loginEmail" placeholder="Email"><input type="password" id="loginPassword" placeholder="Contraseña"><button id="emailLoginBtn" class="submit-btn">Iniciar sesión</button><button id="emailRegistroBtn" class="submit-btn" style="background:#2E7D32;">Registrarse</button></div>`;
-      document.getElementById('googleLoginBtn').onclick = ()=> signInWithPopup(auth,provider).then(()=>location.reload());
-      document.getElementById('emailLoginBtn').onclick = ()=>{ const email=document.getElementById('loginEmail').value, pass=document.getElementById('loginPassword').value; signInWithEmailAndPassword(auth,email,pass).then(()=>location.reload()); };
-      document.getElementById('emailRegistroBtn').onclick = ()=>{ const email=document.getElementById('loginEmail').value, pass=document.getElementById('loginPassword').value; createUserWithEmailAndPassword(auth,email,pass).then(()=>location.reload()); };
-      userModal.style.display='flex';
+      userPointsDisplay.style.display = 'none';
+      gpsBtn.style.display = 'none';
+      checkinFloatBtn.style.display = 'none';
+      userBtn.innerHTML = '<i class="fas fa-user-circle"></i>';
+      if(gpsActive && watchId) navigator.geolocation.clearWatch(watchId);
+      gpsActive = false;
+      pasaporteList.innerHTML = `
+        <div class="empty-state">
+          <i class="fas fa-passport"></i>
+          <p>Inicia sesión para ver tu pasaporte</p>
+        </div>
+      `;
+    }
+  }
+  
+  function mostrarModalUsuario() {
+    if(currentUser) {
+      document.getElementById('profileBody').innerHTML = `
+        <div style="text-align:center;padding:15px;">
+          <img src="${currentUser.photoURL || 'https://via.placeholder.com/80'}" style="width:80px;border-radius:50%;margin-bottom:10px;">
+          <h4>${currentUser.displayName || currentUser.email}</h4>
+          <p style="color:#D84315;font-weight:600;font-size:1.2rem;">${userPointsTotal} pts</p>
+          <button id="cerrarSesionBtn" class="submit-btn" style="background:#d32f2f;">Cerrar sesión</button>
+          <button id="eliminarCuentaBtn" class="submit-btn" style="background:#666;">Eliminar cuenta</button>
+        </div>
+      `;
+      document.getElementById('cerrarSesionBtn').onclick = async () => {
+        await signOut(auth);
+        location.reload();
+      };
+      document.getElementById('eliminarCuentaBtn').onclick = async () => {
+        if(confirm("¿Eliminar cuenta?")) {
+          await currentUser.delete();
+          await signOut(auth);
+          location.reload();
+        }
+      };
+      profileModal.style.display = 'flex';
+    } else {
+      document.getElementById('userModalBody').innerHTML = `
+        <div style="padding:20px;">
+          <button id="googleLoginBtn" class="submit-btn" style="background:#4285F4;">
+            <i class="fab fa-google"></i> Google
+          </button>
+          <hr style="margin:15px 0;border-color:#eee;">
+          <div class="form-group">
+            <input type="email" id="loginEmail" placeholder="Email" style="width:100%;">
+          </div>
+          <div class="form-group">
+            <input type="password" id="loginPassword" placeholder="Contraseña" style="width:100%;">
+          </div>
+          <button id="emailLoginBtn" class="submit-btn" style="margin-top:0;">Iniciar sesión</button>
+          <button id="emailRegistroBtn" class="submit-btn" style="background:#2E7D32;">Registrarse</button>
+        </div>
+      `;
+      
+      document.getElementById('googleLoginBtn').onclick = () => signInWithPopup(auth, provider).then(() => location.reload());
+      document.getElementById('emailLoginBtn').onclick = () => {
+        const email = document.getElementById('loginEmail').value;
+        const pass = document.getElementById('loginPassword').value;
+        signInWithEmailAndPassword(auth, email, pass).then(() => location.reload());
+      };
+      document.getElementById('emailRegistroBtn').onclick = () => {
+        const email = document.getElementById('loginEmail').value;
+        const pass = document.getElementById('loginPassword').value;
+        createUserWithEmailAndPassword(auth, email, pass).then(() => location.reload());
+      };
+      userModal.style.display = 'flex';
     }
   }
 
   // ========== GPS ==========
-  gpsBtn.onclick = () => { 
-    if(!currentUser) { mostrarToast("Inicia sesión","error"); return; } 
-    if(gpsActive){ 
-      if(watchId) navigator.geolocation.clearWatch(watchId); 
-      gpsActive=false; 
-      gpsBtn.classList.remove('active'); 
-      mostrarToast("GPS desactivado","info"); 
-    } else { 
-      navigator.geolocation.getCurrentPosition(()=>{ 
-        gpsActive=true; 
-        gpsBtn.classList.add('active'); 
-        watchId = navigator.geolocation.watchPosition(async (pos)=>{ 
-          for(let place of allPlaces){ 
-            const dist = calcularDistancia(pos.coords.latitude,pos.coords.longitude,place.lat,place.lng); 
-            if(dist<=50 && (!ultimaRecompensaPorLugar[place.id] || Date.now()-ultimaRecompensaPorLugar[place.id]>60000)){ 
-              const ya = await verificarSiYaVisito(currentUser.uid, place.id); 
-              const pts = ya?2:10; 
-              await registrarVisita(currentUser.uid,place.id,pts,'gps'); 
-              await sumarPuntos(pts,`GPS ${place.nombre}`,place.id); 
-              ultimaRecompensaPorLugar[place.id]=Date.now(); 
-              actualizarMarcadoresMapa(); 
-              actualizarPasaporte(); 
-            } 
-          } 
-        }, ()=>mostrarToast("Error GPS","error"), {enableHighAccuracy:true}); 
-      }, ()=>mostrarToast("Permiso denegado","error")); 
-    } 
+  gpsBtn.onclick = () => {
+    if(!currentUser) { mostrarToast("Inicia sesión", "error"); return; }
+    if(gpsActive) {
+      if(watchId) navigator.geolocation.clearWatch(watchId);
+      gpsActive = false;
+      gpsBtn.classList.remove('active');
+      mostrarToast("GPS desactivado", "info");
+    } else {
+      navigator.geolocation.getCurrentPosition(() => {
+        gpsActive = true;
+        gpsBtn.classList.add('active');
+        watchId = navigator.geolocation.watchPosition(async (pos) => {
+          for(let place of allPlaces) {
+            const dist = calcularDistancia(pos.coords.latitude, pos.coords.longitude, place.lat, place.lng);
+            if(dist <= 50 && (!ultimaRecompensaPorLugar[place.id] || Date.now() - ultimaRecompensaPorLugar[place.id] > 60000)) {
+              const ya = await verificarSiYaVisito(currentUser.uid, place.id);
+              const pts = ya ? 2 : 10;
+              await registrarVisita(currentUser.uid, place.id, pts, 'gps');
+              await sumarPuntos(pts, `GPS ${place.nombre}`, place.id);
+              ultimaRecompensaPorLugar[place.id] = Date.now();
+              actualizarMarcadoresMapa();
+              actualizarPasaporte();
+              mostrarToast(`📍 +${pts} pts en ${place.nombre}`, "success");
+            }
+          }
+        }, () => mostrarToast("Error GPS", "error"), { enableHighAccuracy: true });
+        mostrarToast("GPS activado", "success");
+      }, () => mostrarToast("Permiso denegado", "error"));
+    }
   };
 
   // ========== CHECK-IN FLOTANTE ==========
   checkinFloatBtn.addEventListener('click', () => {
-    if (!currentUser) { mostrarToast("Inicia sesión","error"); return; }
-    if (!navigator.geolocation) { mostrarToast("GPS no soportado", "error"); return; }
+    if(!currentUser) { mostrarToast("Inicia sesión", "error"); return; }
+    if(!navigator.geolocation) { mostrarToast("GPS no soportado", "error"); return; }
+    
+    checkinFloatBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Buscando...';
+    checkinFloatBtn.disabled = true;
     
     navigator.geolocation.getCurrentPosition(async (pos) => {
       let lugarCercano = null;
       let distanciaMin = 100;
       
-      for (let place of allPlaces) {
+      for(let place of allPlaces) {
         const dist = calcularDistancia(pos.coords.latitude, pos.coords.longitude, place.lat, place.lng);
-        if (dist < distanciaMin) {
+        if(dist < distanciaMin) {
           distanciaMin = dist;
           lugarCercano = place;
         }
       }
       
-      if (!lugarCercano) {
-        mostrarToast("No hay lugares turísticos cerca (≤100m)", "error");
+      checkinFloatBtn.innerHTML = '<i class="fas fa-camera"></i> <span>¡Llegué!</span>';
+      checkinFloatBtn.disabled = false;
+      
+      if(!lugarCercano) {
+        mostrarToast("No hay lugares cerca (≤100m)", "error");
         return;
       }
       
       const yaVisito = await verificarSiYaVisito(currentUser.uid, lugarCercano.id);
       const puntos = yaVisito ? 2 : 10;
       await registrarVisita(currentUser.uid, lugarCercano.id, puntos, 'gps');
-      await sumarPuntos(puntos, `Check-in en ${lugarCercano.nombre}`, lugarCercano.id);
-      mostrarToast(`✅ ¡Check-in en ${lugarCercano.nombre}! +${puntos} pts`, "success");
+      await sumarPuntos(puntos, `Check-in ${lugarCercano.nombre}`, lugarCercano.id);
+      
+      mostrarToast(`✅ ¡${lugarCercano.nombre}! +${puntos} pts`, "success");
       actualizarMarcadoresMapa();
       actualizarPasaporte();
-    }, () => mostrarToast("Activa el GPS", "error"));
+      
+      // Animación de confirmación
+      checkinFloatBtn.style.background = '#2E7D32';
+      setTimeout(() => {
+        checkinFloatBtn.style.background = '#D84315';
+      }, 1000);
+      
+    }, () => {
+      mostrarToast("Activa el GPS", "error");
+      checkinFloatBtn.innerHTML = '<i class="fas fa-camera"></i> <span>¡Llegué!</span>';
+      checkinFloatBtn.disabled = false;
+    });
   });
 
-  // ========== COFRE ==========
-  cofreHandle.addEventListener('click', () => {
-    cofreAbierto = !cofreAbierto;
-    cofrePanel.classList.toggle('abierto', cofreAbierto);
-  });
-
-  document.getElementById('mapContainer').addEventListener('click', () => {
-    if (cofreAbierto) {
-      cofreAbierto = false;
-      cofrePanel.classList.remove('abierto');
+  // ========== PANEL ==========
+  function abrirPanel() {
+    panelAbierto = true;
+    bottomPanel.classList.add('abierto');
+  }
+  
+  function cerrarPanel() {
+    panelAbierto = false;
+    bottomPanel.classList.remove('abierto');
+  }
+  
+  function togglePanel() {
+    if(panelAbierto) {
+      cerrarPanel();
+    } else {
+      abrirPanel();
+    }
+  }
+  
+  panelHandle.addEventListener('click', togglePanel);
+  cofreBtn.addEventListener('click', togglePanel);
+  
+  // Cerrar panel al hacer clic en el mapa (solo si está abierto)
+  document.getElementById('mapContainer').addEventListener('click', (e) => {
+    if(panelAbierto && !e.target.closest('.bottom-panel') && !e.target.closest('.cofre-btn')) {
+      cerrarPanel();
     }
   });
 
-  document.querySelectorAll('.cofre-tab').forEach(tab => {
+  // Tabs del panel
+  document.querySelectorAll('.panel-tab').forEach(tab => {
     tab.addEventListener('click', () => {
-      document.querySelectorAll('.cofre-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.panel-tab').forEach(t => t.classList.remove('active'));
       tab.classList.add('active');
       const target = tab.dataset.tab;
-      document.getElementById('libretaContent').classList.toggle('hidden-tab', target !== 'libreta');
-      document.getElementById('pasaporteContent').classList.toggle('hidden-tab', target !== 'pasaporte');
-      if (target === 'pasaporte') actualizarPasaporte();
+      document.querySelectorAll('.panel-content').forEach(c => c.classList.remove('active-content'));
+      document.getElementById(`${target}Content`).classList.add('active-content');
+      if(target === 'pasaporte') actualizarPasaporte();
+      if(target === 'mapa') {
+        // Inicializar mini mapa si no existe
+        if(!document.getElementById('mapaMini')._leaflet_id) {
+          const miniMap = L.map('mapaMini', {
+            zoomControl: false,
+            attributionControl: false,
+            dragging: false,
+            touchZoom: false,
+            scrollWheelZoom: false
+          }).setView([12.8654, -85.2072], 7);
+          L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png').addTo(miniMap);
+        }
+        setTimeout(() => {
+          if(document.getElementById('mapaMini')._leaflet_id) {
+            document.getElementById('mapaMini')._leaflet_id.invalidateSize();
+          }
+        }, 300);
+      }
     });
+  });
+
+  // Botón expandir mapa
+  document.getElementById('expandMapBtn').addEventListener('click', () => {
+    cerrarPanel();
   });
 
   // ========== AUTENTICACIÓN ==========
   userBtn.onclick = mostrarModalUsuario;
   
-  onAuthStateChanged(auth, (user) => { 
-    currentUser = user; 
-    actualizarUIUsuario(); 
-    if(map && markerCluster) actualizarMarcadoresMapa(); 
+  onAuthStateChanged(auth, (user) => {
+    currentUser = user;
+    actualizarUIUsuario();
+    if(map && markerCluster) actualizarMarcadoresMapa();
   });
 
   // ========== FILTROS ==========
@@ -618,19 +1009,36 @@
   filtroTipoCamino.addEventListener('change', () => actualizarLibreta());
 
   // ========== DARK MODE ==========
-  darkModeBtn.onclick = () => { 
-    document.body.classList.toggle('dark-mode'); 
-    localStorage.setItem('darkMode', document.body.classList.contains('dark-mode')); 
-    darkModeBtn.innerHTML = document.body.classList.contains('dark-mode') ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>'; 
+  darkModeBtn.onclick = () => {
+    document.body.classList.toggle('dark-mode');
+    localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+    darkModeBtn.innerHTML = document.body.classList.contains('dark-mode') ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
   };
-  if(localStorage.getItem('darkMode') === 'true') document.body.classList.add('dark-mode');
+  if(localStorage.getItem('darkMode') === 'true') {
+    document.body.classList.add('dark-mode');
+    darkModeBtn.innerHTML = '<i class="fas fa-sun"></i>';
+  }
 
   // ========== CERRAR MODALES ==========
-  document.querySelectorAll('.close-modal').forEach(btn => btn.onclick = () => btn.closest('.modal').style.display='none');
+  document.querySelectorAll('.close-modal').forEach(btn => {
+    btn.onclick = () => btn.closest('.modal').style.display = 'none';
+  });
+  
+  // Cerrar modales al hacer clic fuera
+  document.querySelectorAll('.modal').forEach(modal => {
+    modal.addEventListener('click', (e) => {
+      if(e.target === modal) modal.style.display = 'none';
+    });
+  });
 
   // ========== INICIO ==========
   cargarLugaresFirestore();
   initMap();
+  
+  // Abrir panel por defecto en móvil
+  if(window.innerWidth <= 600) {
+    setTimeout(() => abrirPanel(), 500);
+  }
 </script>
 
 <!-- Statcounter -->
@@ -642,11 +1050,10 @@ var sc_security="4f479d09";
 <script type="text/javascript"
 src="https://www.statcounter.com/counter/counter.js"
 async></script>
-<noscript><div class="statcounter"><a title="Web Analytics
-Made Easy - Statcounter" href="https://statcounter.com/"
-target="_blank"><img class="statcounter"
+<noscript><div class="statcounter"><a title="Web Analytics"
+href="https://statcounter.com/" target="_blank"><img class="statcounter"
 src="https://c.statcounter.com/13287225/0/4f479d09/1/"
-alt="Web Analytics Made Easy - Statcounter"
+alt="Web Analytics"
 referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
 </body>
 </html>
