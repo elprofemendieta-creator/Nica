@@ -20,40 +20,39 @@
       overflow: hidden;
     }
 /* boton de check in */
-/* Rediseño del botón Check-In Guía Pinolera */
 .btn-pinolero-checkin {
-  background: linear-gradient(135deg, #2ecc71, #27ae60); /* Verde éxito llamativo */
+  background: linear-gradient(135deg, #2ecc71, #27ae60);
   color: white;
   border: none;
-  padding: 10px 16px;
-  border-radius: 25px; /* Bordes redondeados más amigables */
+  padding: 5px 10px;
+  border-radius: 15px; /* Ajustado al nuevo tamaño más pequeño */
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  box-shadow: 0 4px 12px rgba(46, 204, 113, 0.4);
+  gap: 6px; /* Menos espacio de separación */
+  box-shadow: 0 2px 6px rgba(46, 204, 113, 0.4); /* Sombra más discreta */
   cursor: pointer;
   vertical-align: middle;
 }
 
 .btn-pinolero-checkin i {
-  font-size: 1.3rem;
+  font-size: 0.85rem; /* Icono más pequeño */
 }
 
 .btn-pinolero-checkin .texto-contenedor {
   display: flex;
   flex-direction: column;
   text-align: left;
-  line-height: 1.2;
+  line-height: 1.1;
 }
 
 .btn-pinolero-checkin .titulo-accion {
-  font-size: 0.9rem;
+  font-size: 0.65rem; /* Letra principal compacta */
   font-weight: bold;
   text-transform: uppercase;
 }
 
 .btn-pinolero-checkin .subtitulo-puntos {
-  font-size: 0.75rem;
+  font-size: 0.55rem; /* Letra secundaria bien pequeña */
   color: #e8f8f5;
   font-weight: 500;
 }
