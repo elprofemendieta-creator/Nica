@@ -1,1076 +1,652 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>🏆 Pinolero Millonario</title>
-    <style>
-        /* ===== RESET ===== */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <title>Guía Pinolera | Nicaragua Turismo</title>
 
-        body {
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-            background: #0a0a0a;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        /* ===== CONTENEDOR PRINCIPAL CON IMAGEN DE FONDO ===== */
-        .game-container {
-            max-width: 750px;
-            width: 100%;
-            border-radius: 30px;
-            overflow: hidden;
-            position: relative;
-            border: 3px solid #ffd700;
-            box-shadow: 0 0 60px #ffd70033;
-        }
-
-        /* ===== IMAGEN DE FONDO ===== */
-        .game-bg {
-            position: relative;
-            width: 100%;
-            background-image: url('1782677408840.png');
-            background-size: 100% 100%;
-            background-position: center;
-            background-repeat: no-repeat;
-            aspect-ratio: 600 / 800;
-            display: flex;
-            flex-direction: column;
-            padding: 20px 25px 25px;
-        }
-
-        /* ===== OVERLAY PARA DAR CONTRASTE ===== */
-        .game-bg::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.25);
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .game-bg>* {
-            position: relative;
-            z-index: 1;
-        }
-
-        /* ===== ENCABEZADO ===== */
-        .header {
-            text-align: center;
-            padding-bottom: 8px;
-            margin-bottom: 6px;
-        }
-
-        .header .title {
-            font-size: 2.2rem;
-            font-weight: 900;
-            color: #ffd700;
-            text-shadow: 0 0 30px #ffd70044, 0 4px 8px rgba(0, 0, 0, 0.9);
-            letter-spacing: 4px;
-            font-family: 'Arial Black', sans-serif;
-        }
-
-        .header .subtitle {
-            color: #ffd700aa;
-            font-size: 0.8rem;
-            letter-spacing: 6px;
-            text-transform: uppercase;
-            margin-top: -4px;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
-        }
-
-        /* ===== PREMIO MAYOR ===== */
-        .prize-mayor {
-            text-align: center;
-            margin-bottom: 4px;
-        }
-
-        .prize-mayor .label {
-            color: #ccc;
-            font-size: 0.65rem;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
-        }
-
-        .prize-mayor .amount {
-            color: #ffd700;
-            font-size: 1.8rem;
-            font-weight: 900;
-            text-shadow: 0 0 40px #ffd70044, 0 4px 12px rgba(0, 0, 0, 0.9);
-            font-family: 'Courier New', monospace;
-            letter-spacing: 2px;
-            line-height: 1.1;
-        }
-
-        /* ===== GANADORES ===== */
-        .ganadores {
-            text-align: center;
-            color: #bbb;
-            font-size: 0.8rem;
-            letter-spacing: 2px;
-            margin-bottom: 10px;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
-        }
-
-        .ganadores span {
-            color: #ffd700;
-            font-weight: 900;
-            font-size: 1.2rem;
-        }
-
-        /* ===== ESPACIO DEL DINERO (TRANSPARENTE) ===== */
-        .prize-display {
-            background: transparent;
-            /* COMPLETAMENTE TRANSPARENTE */
-            border-radius: 15px;
-            padding: 18px 15px 14px;
-            text-align: center;
-            margin: 0 auto 12px;
-            width: 92%;
-            min-height: 110px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-        }
-
-        .prize-display .label {
-            color: #ccb088;
-            font-size: 0.6rem;
-            text-transform: uppercase;
-            letter-spacing: 4px;
-            margin-bottom: 2px;
-            text-shadow: 0 2px 12px rgba(0, 0, 0, 0.9);
-        }
-
-        .prize-display .amount {
-            color: #ffd700;
-            font-size: 3.8rem;
-            font-weight: 900;
-            text-shadow: 0 0 60px #ffd70044, 0 0 120px #ffd70022, 0 4px 20px rgba(0, 0, 0, 0.9);
-            font-family: 'Courier New', monospace;
-            letter-spacing: 3px;
-            transition: all 0.3s ease;
-            line-height: 1.1;
-        }
-
-        .prize-display .amount.pulse {
-            animation: pulseGold 0.5s ease;
-        }
-
-        @keyframes pulseGold {
-            0% {
-                transform: scale(1);
-                text-shadow: 0 0 60px #ffd70044;
-            }
-            50% {
-                transform: scale(1.1);
-                text-shadow: 0 0 80px #ffd700aa, 0 0 160px #ffd70044;
-            }
-            100% {
-                transform: scale(1);
-                text-shadow: 0 0 60px #ffd70044;
-            }
-        }
-
-        .prize-display .sub-info {
-            color: #aa9a8a;
-            font-size: 0.6rem;
-            letter-spacing: 2px;
-            margin-top: 4px;
-            text-shadow: 0 2px 12px rgba(0, 0, 0, 0.9);
-        }
-
-        .prize-display .sub-info span {
-            color: #ffd700aa;
-        }
-
-        /* ===== PROGRESO ===== */
-        .progress-bar {
-            width: 92%;
-            height: 4px;
-            background: rgba(42, 32, 22, 0.7);
-            border-radius: 10px;
-            margin: 0 auto 12px;
-            overflow: hidden;
-            backdrop-filter: blur(4px);
-        }
-
-        .progress-bar .fill {
-            height: 100%;
-            background: linear-gradient(90deg, #ffd700, #ffaa00);
-            border-radius: 10px;
-            transition: width 0.6s ease;
-            width: 0%;
-            box-shadow: 0 0 20px #ffd70044;
-        }
-
-        /* ===== PREGUNTA ===== */
-        .question-area {
-            background: rgba(10, 8, 6, 0.8);
-            backdrop-filter: blur(12px);
-            border-radius: 18px;
-            padding: 18px 20px 16px;
-            border: 1px solid #ffd70033;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
-        }
-
-        .question-number {
-            color: #aa9a8a;
-            font-size: 0.7rem;
-            letter-spacing: 2px;
-            margin-bottom: 2px;
-        }
-
-        .question-text {
-            color: #f0e8d0;
-            font-size: 1.2rem;
-            font-weight: 700;
-            margin-bottom: 14px;
-            line-height: 1.4;
-            min-height: 50px;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
-        }
-
-        .options {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-        }
-
-        .option {
-            background: rgba(42, 32, 22, 0.8);
-            backdrop-filter: blur(4px);
-            border: 2px solid #5a4a3a;
-            border-radius: 12px;
-            padding: 10px 14px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            color: #f0e8d0;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-        }
-
-        .option:hover {
-            border-color: #ffd70088;
-            background: rgba(51, 41, 31, 0.9);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 20px rgba(255, 215, 0, 0.1);
-        }
-
-        .option:active {
-            transform: translateY(2px);
-        }
-
-        .option .letter {
-            background: rgba(68, 58, 48, 0.8);
-            color: #ffd700;
-            border-radius: 50%;
-            width: 26px;
-            height: 26px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800;
-            font-size: 0.75rem;
-            flex-shrink: 0;
-        }
-
-        .option.correct {
-            background: rgba(26, 90, 58, 0.9);
-            border-color: #4aaa6a;
-            color: #fff;
-        }
-
-        .option.correct .letter {
-            background: rgba(10, 58, 42, 0.9);
-            color: #7aff7a;
-        }
-
-        .option.wrong {
-            background: rgba(90, 26, 26, 0.9);
-            border-color: #aa4a4a;
-            color: #fff;
-        }
-
-        .option.wrong .letter {
-            background: rgba(58, 10, 10, 0.9);
-            color: #ff7a7a;
-        }
-
-        .option.disabled {
-            pointer-events: none;
-            opacity: 0.4;
-        }
-
-        /* ===== BOTONES ===== */
-        .actions {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            margin-top: 14px;
-            flex-wrap: wrap;
-        }
-
-        .actions button {
-            padding: 8px 16px;
-            font-size: 0.8rem;
-            font-weight: 800;
-            border: 2px solid #ffd70055;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            background: rgba(26, 20, 14, 0.85);
-            backdrop-filter: blur(4px);
-            color: #f0e8d0;
-            letter-spacing: 0.5px;
-        }
-
-        .actions button:hover {
-            border-color: #ffd700;
-            background: rgba(42, 32, 22, 0.9);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 20px rgba(255, 215, 0, 0.1);
-        }
-
-        .actions button:active {
-            transform: translateY(2px);
-        }
-
-        .actions button:disabled {
-            opacity: 0.3;
-            transform: translateY(0);
-            pointer-events: none;
-        }
-
-        .btn-next {
-            background: rgba(26, 90, 58, 0.85);
-            border-color: #4aaa6a;
-        }
-
-        .btn-reset {
-            background: rgba(90, 26, 26, 0.85);
-            border-color: #aa4a4a;
-        }
-
-        .btn-hint {
-            background: rgba(26, 58, 90, 0.85);
-            border-color: #4a7a9a;
-        }
-
-        .btn-50 {
-            background: rgba(58, 58, 26, 0.85);
-            border-color: #9a9a4a;
-        }
-
-        .btn-50 .cost {
-            font-size: 0.6rem;
-            color: #ffd700aa;
-            background: rgba(0, 0, 0, 0.3);
-            padding: 1px 8px;
-            border-radius: 10px;
-            margin-left: 2px;
-        }
-
-        /* ===== PISTA ===== */
-        .hint-box {
-            background: rgba(26, 20, 14, 0.8);
-            backdrop-filter: blur(4px);
-            border-left: 4px solid #ffd700;
-            padding: 8px 14px;
-            margin-top: 12px;
-            border-radius: 10px;
-            font-size: 0.85rem;
-            color: #bbaa9a;
-            min-height: 38px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .hint-box .hint-icon {
-            font-size: 1rem;
-        }
-        .hint-box .hint-text {
-            font-style: italic;
-        }
-
-        /* ===== MODAL ===== */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.92);
-            backdrop-filter: blur(8px);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            animation: fadeIn 0.5s ease;
-        }
-
-        .modal-overlay.show {
-            display: flex;
-        }
-
-        @keyframes fadeIn {
-            0% {
-                opacity: 0;
-                transform: scale(0.9);
-            }
-            100% {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-
-        .modal-content {
-            background: #1a1410;
-            border-radius: 40px;
-            padding: 35px 40px;
-            max-width: 460px;
-            width: 90%;
-            text-align: center;
-            border: 3px solid #ffd700;
-            box-shadow: 0 0 80px #ffd70033;
-            animation: popModal 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        @keyframes popModal {
-            0% {
-                transform: scale(0.5);
-                opacity: 0;
-            }
-            100% {
-                transform: scale(1);
-                opacity: 1;
-            }
-        }
-
-        .modal-content .icon {
-            font-size: 3.5rem;
-            margin-bottom: 4px;
-        }
-
-        .modal-content h2 {
-            font-size: 1.8rem;
-            color: #ffd700;
-            margin-bottom: 2px;
-        }
-
-        .modal-content .subtitle {
-            font-size: 1rem;
-            color: #bbaa9a;
-            margin-bottom: 4px;
-        }
-
-        .modal-content .prize-amount {
-            font-size: 2.5rem;
-            font-weight: 900;
-            color: #ffd700;
-            text-shadow: 0 0 40px #ffd70044;
-            margin: 6px 0;
-            font-family: 'Courier New', monospace;
-        }
-
-        .modal-content .details {
-            font-size: 0.85rem;
-            color: #998878;
-            margin-bottom: 16px;
-            line-height: 1.6;
-        }
-
-        .modal-content .btn-play-again {
-            background: #ffd700;
-            color: #0a0a0a;
-            border: none;
-            padding: 10px 32px;
-            font-size: 1rem;
-            font-weight: 900;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.2s;
-            box-shadow: 0 0 30px #ffd70044;
-        }
-
-        .modal-content .btn-play-again:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 50px #ffd70066;
-        }
-
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 700px) {
-            .game-bg {
-                padding: 14px 16px 18px;
-            }
-            .header .title {
-                font-size: 1.6rem;
-            }
-            .prize-display .amount {
-                font-size: 2.8rem;
-            }
-            .prize-mayor .amount {
-                font-size: 1.4rem;
-            }
-            .question-text {
-                font-size: 1rem;
-                min-height: 40px;
-            }
-            .options {
-                grid-template-columns: 1fr;
-                gap: 6px;
-            }
-            .option {
-                padding: 8px 12px;
-                font-size: 0.8rem;
-            }
-            .actions button {
-                padding: 6px 12px;
-                font-size: 0.7rem;
-            }
-            .modal-content {
-                padding: 20px 16px;
-            }
-            .modal-content .prize-amount {
-                font-size: 1.8rem;
-            }
-            .prize-display {
-                min-height: 80px;
-                padding: 12px 10px;
-            }
-        }
-
-        @media (max-width: 450px) {
-            .game-bg {
-                padding: 10px 10px 12px;
-            }
-            .header .title {
-                font-size: 1.2rem;
-                letter-spacing: 2px;
-            }
-            .header .subtitle {
-                font-size: 0.6rem;
-                letter-spacing: 3px;
-            }
-            .prize-display .amount {
-                font-size: 2rem;
-            }
-            .prize-mayor .amount {
-                font-size: 1rem;
-            }
-            .prize-mayor .label {
-                font-size: 0.5rem;
-            }
-            .ganadores {
-                font-size: 0.6rem;
-            }
-            .ganadores span {
-                font-size: 0.9rem;
-            }
-            .question-text {
-                font-size: 0.85rem;
-                min-height: 35px;
-            }
-            .question-number {
-                font-size: 0.6rem;
-            }
-            .option {
-                font-size: 0.7rem;
-                padding: 6px 8px;
-            }
-            .option .letter {
-                width: 20px;
-                height: 20px;
-                font-size: 0.6rem;
-            }
-            .prize-display {
-                min-height: 60px;
-                padding: 8px 6px;
-            }
-            .prize-display .label {
-                font-size: 0.5rem;
-            }
-            .prize-display .sub-info {
-                font-size: 0.5rem;
-            }
-            .actions button {
-                padding: 4px 8px;
-                font-size: 0.6rem;
-                gap: 4px;
-            }
-            .hint-box {
-                font-size: 0.7rem;
-                padding: 6px 10px;
-                min-height: 32px;
-            }
-            .modal-content h2 {
-                font-size: 1.3rem;
-            }
-            .modal-content .prize-amount {
-                font-size: 1.4rem;
-            }
-        }
-    </style>
+  <!-- Leaflet CSS/JS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <!-- MarkerCluster -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+  <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/prueba.css"> 
 </head>
 <body>
+<div class="app-container">
+  <!-- HEADER -->
+  <header class="app-header">
+    <div class="logo">
+      <i class="fas fa-map-marked-alt"></i>
+      <h2>Guía Pinolera</h2>
+    </div>
+    <div class="header-controls">
+      <div id="userPointsDisplay" class="user-points" style="display:none;">
+        <i class="fas fa-star"></i> <span id="pointsValue">0</span>
+      </div>
+      <button id="gpsBtn" class="icon-btn gps-btn" style="display:none;">
+        <i class="fas fa-satellite-dish"></i>
+      </button>
+      <button id="cofreBtn" class="icon-btn cofre-btn">
+        <i class="fas fa-toolbox"></i>
+      </button>
+      <button id="userBtn" class="icon-btn">
+        <i class="fas fa-user-circle"></i>
+      </button>
+      <button id="darkModeBtn" class="icon-btn">
+        <i class="fas fa-moon"></i>
+      </button>
+      <button id="adminLoginBtn" class="admin-login-btn">
+        <i class="fas fa-user-shield"></i> Admin
+      </button>
+      <div id="adminPanelHeader" class="admin-panel-header hidden" style="display:none;">
+        <span><i class="fas fa-crown"></i> Admin</span>
+        <button id="logoutAdminBtn" class="icon-btn">
+          <i class="fas fa-sign-out-alt"></i>
+        </button>
+      </div>
+    </div>
+  </header>
 
-    <div class="game-container">
-        <!-- ===== CONTENEDOR CON IMAGEN DE FONDO ===== -->
-        <div class="game-bg" style="background-image: url('1782677408840.png');">
-
-            <!-- ===== ENCABEZADO ===== -->
-            <div class="header">
-                <div class="title">🏆 PINOLERO</div>
-                <div class="subtitle">MILLONARIO</div>
-            </div>
-
-            <!-- ===== PREMIO MAYOR ===== -->
-            <div class="prize-mayor">
-                <div class="label">🎯 PREMIO MAYOR</div>
-                <div class="amount">C$ 1,000,000</div>
-            </div>
-
-            <!-- ===== GANADORES ===== -->
-            <div class="ganadores">
-                GANADORES: <span id="winnerCount">125</span>
-            </div>
-
-            <!-- ===== ESPACIO DEL DINERO (TRANSPARENTE) ===== -->
-            <div class="prize-display" id="prizeDisplay">
-                <div class="label">💰 DINERO ACUMULADO</div>
-                <div class="amount" id="currentPrizeDisplay">C$ 0</div>
-                <div class="sub-info">
-                    PREGUNTA <span id="currentQuestionDisplay">1</span> DE <span id="totalQuestionsDisplay">15</span>
-                    &nbsp;•&nbsp; 💡 <span id="hintCountDisplay">3</span>
-                </div>
-            </div>
-
-            <!-- ===== PROGRESO ===== -->
-            <div class="progress-bar">
-                <div class="fill" id="progressFill"></div>
-            </div>
-
-            <!-- ===== PREGUNTA ===== -->
-            <div class="question-area">
-                <div class="question-number" id="questionNumber">PREGUNTA 1 DE 15</div>
-                <div class="question-text" id="questionText">Cargando pregunta...</div>
-
-                <div class="options" id="optionsContainer">
-                    <div class="option" data-index="0"><span class="letter">A</span> <span class="text">Opción A</span></div>
-                    <div class="option" data-index="1"><span class="letter">B</span> <span class="text">Opción B</span></div>
-                    <div class="option" data-index="2"><span class="letter">C</span> <span class="text">Opción C</span></div>
-                    <div class="option" data-index="3"><span class="letter">D</span> <span class="text">Opción D</span></div>
-                </div>
-
-                <div class="actions">
-                    <button class="btn-50" id="fiftyBtn">🎲 50/50 <span class="cost">C$1,500</span></button>
-                    <button class="btn-hint" id="hintBtn">💡 Pista</button>
-                    <button class="btn-next" id="nextBtn" disabled>➡️ Siguiente</button>
-                    <button class="btn-reset" id="resetBtn">🔄 Reiniciar</button>
-                </div>
-
-                <div class="hint-box" id="hintBox">
-                    <span class="hint-icon">💬</span>
-                    <span class="hint-text" id="hintText">¡Responde correctamente para acumular dinero!</span>
-                </div>
-            </div>
-        </div>
+  <!-- MAPA (SIEMPRE VISIBLE) -->
+  <div class="map-container" id="mapContainer">
+    <div id="map"></div>
+    
+    <!-- Controles flotantes -->
+    <div id="layerControl" class="layer-control">
+      <button class="layer-btn active" data-layer="calles">
+        <i class="fas fa-road"></i> <span>Calles</span>
+      </button>
+      <button id="geolocationBtn" class="layer-btn-mi-ubicacion">
+        <i class="fas fa-crosshairs"></i>
+      </button>
     </div>
 
-    <!-- ===== MODAL ===== -->
-    <div class="modal-overlay" id="modalOverlay">
-        <div class="modal-content">
-            <div class="icon" id="modalIcon">🏆</div>
-            <h2 id="modalTitle">¡Felicidades!</h2>
-            <div class="subtitle" id="modalSubtitle">Eres un Pinolero Millonario</div>
-            <div class="prize-amount" id="modalPrize">C$ 0</div>
-            <div class="details" id="modalDetails">Respondiste todas las preguntas correctamente.</div>
-            <button class="btn-play-again" id="playAgainBtn">🔄 Jugar de nuevo</button>
+    <!-- BOTÓN CHECK-IN FLOTANTE -->
+    <button id="checkinFloatBtn" class="checkin-float-btn" style="display:none;">
+      <i class="fas fa-camera"></i> <span>¡Llegué!</span>
+    </button>
+  </div>
+
+  <!-- PANEL COFRE (INFERIOR DESLIZABLE) -->
+  <div id="cofrePanel" class="cofre-panel">
+    <div class="cofre-handle"></div>
+    <div class="cofre-content">
+      <div class="cofre-tabs">
+        <button class="cofre-tab active" data-tab="libreta">
+          <i class="fas fa-book"></i> Libreta
+        </button>
+        <button class="cofre-tab" data-tab="pasaporte">
+          <i class="fas fa-passport"></i> Pasaporte
+        </button>
+      </div>
+      
+      <!-- Libreta -->
+      <div id="libretaContent" class="cofre-section">
+        <div class="filtros-cofre">
+          <select id="filtroCiudad" class="select-mini">
+            <option value="todas">Todas las ciudades</option>
+          </select>
+          <select id="filtroTipoCamino" class="select-mini">
+            <option value="todos">Todos</option>
+            <option value="Educativo">📚 Educativo</option>
+            <option value="Comercial">🍽️ Comercial</option>
+          </select>
         </div>
+        <div id="lugaresGrid" class="places-grid-horizontal">
+          <!-- Postales dinámicas -->
+        </div>
+      </div>
+
+      <!-- Pasaporte -->
+      <div id="pasaporteContent" class="cofre-section hidden-tab">
+        <div id="pasaporteList" class="pasaporte-list">
+          <!-- Historial -->
+        </div>
+      </div>
     </div>
+  </div>
+</div>
 
-    <script>
-        // ================================================================
-        //  🏆 PINOLERO MILLONARIO - LÓGICA
-        // ================================================================
+<!-- MODALES -->
+<div id="adminModal" class="modal"><div class="modal-content"><div class="modal-header"><h3>Acceso Admin</h3><button class="close-modal">&times;</button></div><form id="adminLoginForm"><div class="form-group"><label>Contraseña</label><input type="password" id="adminPassword" required></div><button type="submit" class="submit-btn">Entrar</button></form></div></div>
+<div id="lugarModal" class="modal"><div class="modal-content"><div class="modal-header"><h3 id="modalTitle">Añadir Lugar</h3><button class="close-modal">&times;</button></div><form id="lugarForm"><input type="hidden" id="lugarId"><div class="form-group"><label>Nombre</label><input type="text" id="lugarNombre" required></div><div style="display:flex;gap:10px;padding:0 15px;"><div class="form-group" style="flex:1"><label>Lat</label><input type="number" step="any" id="lugarLat" required></div><div class="form-group" style="flex:1"><label>Lng</label><input type="number" step="any" id="lugarLng" required></div></div><div class="form-group"><label>Ciudad *</label><input type="text" id="lugarCiudad" placeholder="Ej. Diriamba" required></div><div class="form-group"><label>Tipo de Camino *</label><select id="lugarTipoCamino" required><option value="Educativo">Ruta Educativa</option><option value="Comercial">Ruta Comercial</option></select></div><div class="form-group"><label>URL (enlace)</label><input type="text" id="lugarUrl" placeholder="https://..."></div><div class="form-group"><label>Imagen URL</label><input type="text" id="lugarImagen"></div><div class="form-group"><label>Categoría (opcional)</label><input type="text" id="lugarCategoria"></div><button type="submit" class="submit-btn">Guardar</button></form></div></div>
+<div id="userModal" class="modal"><div class="modal-content"><div class="modal-header"><h3>Iniciar Sesión</h3><button class="close-modal">&times;</button></div><div id="userModalBody"></div></div></div>
+<div id="profileModal" class="modal"><div class="modal-content"><div class="modal-header"><h3>Mi Perfil</h3><button class="close-modal">&times;</button></div><div id="profileBody"></div></div></div>
+<div id="comentarioModal" class="modal"><div class="modal-content"><div class="modal-header"><h3>Comentar lugar</h3><button class="close-modal">&times;</button></div><div id="comentarioBody"></div></div></div>
+<div id="toastContainer" class="toast-container"></div>
+<a href="https://wa.me/50588170531?text=Hola%20Guía%20Pinolera" class="whatsapp-float" target="_blank"><i class="fab fa-whatsapp"></i></a>
 
-        // ===== BANCO DE PREGUNTAS (15 preguntas) =====
-        const QUESTION_BANK = [{
-            question: '¿En qué departamento se encuentra la ciudad de Granada?',
-            options: ['Managua', 'Granada', 'León', 'Masaya'],
-            correct: 1,
-            hint: 'Es el mismo nombre del departamento.',
-            funFact: 'Granada fue fundada en 1524 y es una de las ciudades más antiguas de América.'
-        }, {
-            question: '¿Cuál es el ave nacional de Nicaragua?',
-            options: ['Quetzal', 'Guardabarranco', 'Loro', 'Colibrí'],
-            correct: 1,
-            hint: 'Su nombre significa "que barre el barranco".',
-            funFact: 'El guardabarranco es conocido científicamente como Eumomota superciliosa.'
-        }, {
-            question: '¿Qué significa el término "Pinolero"?',
-            options: ['Persona que come pinol', 'Habitante de Nicaragua', 'Un baile tradicional', 'Un instrumento musical'],
-            correct: 1,
-            hint: 'Es un gentilicio muy usado por los nicaragüenses.',
-            funFact: 'El pinol es una bebida hecha de maíz tostado y cacao.'
-        }, {
-            question: '¿Quién escribió el poemario "Azul"?',
-            options: ['Rubén Darío', 'Pablo Antonio Cuadra', 'Ernesto Cardenal', 'Salomón de la Selva'],
-            correct: 0,
-            hint: 'Es el poeta más famoso de Nicaragua.',
-            funFact: 'Rubén Darío es considerado el padre del modernismo en la literatura en español.'
-        }, {
-            question: '¿Qué volcán es conocido como "El Coloso de Nicaragua"?',
-            options: ['Momotombo', 'Concepción', 'San Cristóbal', 'Telica'],
-            correct: 2,
-            hint: 'Es el volcán más alto de Nicaragua.',
-            funFact: 'El San Cristóbal tiene 1,745 metros de altura y está activo.'
-        }, {
-            question: '¿En qué año se firmó el Tratado de Paz y Amistad entre Nicaragua y Honduras?',
-            options: ['1990', '1960', '2000', '1980'],
-            correct: 0,
-            hint: 'Fue en la década de los 90.',
-            funFact: 'El tratado puso fin a la disputa territorial por el Golfo de Fonseca.'
-        }, {
-            question: '¿Cuál es la comida típica que se come en las fiestas patronales de Managua?',
-            options: ['Nacatamal', 'Gallo pinto', 'Vigorón', 'Quesillo'],
-            correct: 2,
-            hint: 'Lleva chicharrón, yuca y ensalada de repollo.',
-            funFact: 'El vigorón es originario de Granada y se come con chicharrón y yuca.'
-        }, {
-            question: '¿Qué departamento es conocido como "La Cuna del Folclore" en Nicaragua?',
-            options: ['León', 'Granada', 'Masaya', 'Rivas'],
-            correct: 2,
-            hint: 'Es famoso por sus artesanías y tradiciones.',
-            funFact: 'Masaya es conocida como la "Ciudad de las Flores".'
-        }, {
-            question: '¿Cuántos volcanes activos hay en Nicaragua?',
-            options: ['19', '12', '25', '7'],
-            correct: 0,
-            hint: 'Es un número mayor a 15.',
-            funFact: 'Nicaragua tiene más de 50 volcanes en total, muchos de ellos submarinos.'
-        }, {
-            question: '¿Quién es conocido como "El Héroe Nacional de Nicaragua"?',
-            options: ['Augusto C. Sandino', 'José Santos Zelaya', 'Emiliano Chamorro', 'Pedro Joaquín Chamorro'],
-            correct: 0,
-            hint: 'Luchó contra la ocupación estadounidense.',
-            funFact: 'Sandino es recordado por su lucha en Las Segovias.'
-        }, {
-            question: '¿Cuál es el lago más grande de Nicaragua?',
-            options: ['Lago de Managua', 'Lago de Nicaragua', 'Laguna de Apoyo', 'Lago de Apanás'],
-            correct: 1,
-            hint: 'También es conocido como Cocibolca.',
-            funFact: 'El Lago de Nicaragua es el único lago de agua dulce que contiene tiburones.'
-        }, {
-            question: '¿En qué ciudad se encuentra la Catedral de León, Patrimonio de la Humanidad?',
-            options: ['León', 'Granada', 'Managua', 'Masaya'],
-            correct: 0,
-            hint: 'Es la ciudad universitaria por excelencia.',
-            funFact: 'La Catedral de León es la más grande de Centroamérica.'
-        }, {
-            question: '¿Qué baile tradicional es Patrimonio Inmaterial de la Humanidad?',
-            options: ['Palo de Mayo', 'El Güegüense', 'La Gigantona', 'El Toro Huaco'],
-            correct: 1,
-            hint: 'Es una obra de teatro danzada de la época colonial.',
-            funFact: 'El Güegüense fue declarado Patrimonio de la Humanidad por la UNESCO en 2005.'
-        }, {
-            question: '¿En qué año se fundó la ciudad de Managua como capital?',
-            options: ['1821', '1846', '1852', '1893'],
-            correct: 2,
-            hint: 'Fue a mediados del siglo XIX.',
-            funFact: 'Managua fue elegida capital por su ubicación estratégica entre León y Granada.'
-        }, {
-            question: '¿Qué plato típico se consume tradicionalmente en Semana Santa?',
-            options: ['Gallo pinto', 'Sopa de pescado', 'Nacatamal', 'Quesillo'],
-            correct: 1,
-            hint: 'Es un plato a base de pescado y verduras.',
-            funFact: 'La sopa de pescado es tradición en la costa caribeña durante Semana Santa.'
-        }];
+<script type="importmap">
+  {
+    "imports": {
+      "firebase/app": "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js",
+      "firebase/auth": "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js",
+      "firebase/firestore": "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"
+    }
+  }
+</script>
 
-        // ===== PREMIOS (15 preguntas) =====
-        const PRIZES = [1000, 2000, 3000, 5000, 7000, 10000, 15000, 20000, 30000, 40000, 50000, 65000, 80000, 90000, 100000];
+<script type="module">
+  import { initializeApp } from "firebase/app";
+  import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
+  import { getFirestore, collection, onSnapshot, addDoc, updateDoc, deleteDoc, doc, getDocs, query, where, getDoc, Timestamp } from "firebase/firestore";
 
-        // ===== COSTO DEL 50/50 =====
-        const FIFTY_COST = 1500;
+  const firebaseConfig = {
+    apiKey: "AIzaSyA6jVICuE17KJcO34gE1brMxqWEfNd3Fy0",
+    authDomain: "mapa-41b00.firebaseapp.com",
+    projectId: "mapa-41b00",
+    storageBucket: "mapa-41b00.firebasestorage.app",
+    messagingSenderId: "535032835400",
+    appId: "1:535032835400:web:68c079cbc3f419eafd177d",
+    measurementId: "G-7R3DSH7PPN"
+  };
 
-        // ===== ESTADO DEL JUEGO =====
-        const state = {
-            currentIndex: 0,
-            prize: 0,
-            hints: 3,
-            fiftyUsed: false,
-            gameOver: false,
-            answered: false,
-            currentQuestion: null,
-            shuffledQuestions: [],
-        };
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+  const provider = new GoogleAuthProvider();
 
-        // ===== DOM =====
-        const questionText = document.getElementById('questionText');
-        const questionNumber = document.getElementById('questionNumber');
-        const optionEls = document.querySelectorAll('.option');
-        const currentPrizeDisplay = document.getElementById('currentPrizeDisplay');
-        const currentQuestionDisplay = document.getElementById('currentQuestionDisplay');
-        const totalQuestionsDisplay = document.getElementById('totalQuestionsDisplay');
-        const hintCountDisplay = document.getElementById('hintCountDisplay');
-        const progressFill = document.getElementById('progressFill');
-        const winnerCount = document.getElementById('winnerCount');
-        const hintText = document.getElementById('hintText');
+  // Variables globales
+  let map, markerCluster, currentLayers = {}, allPlaces = [], isAdmin = false;
+  let currentUser = null, userDocId = null, userPointsTotal = 0;
+  let gpsActive = false, watchId = null;
+  let ultimaRecompensaPorLugar = {};
+  let cofreAbierto = false;
 
-        const nextBtn = document.getElementById('nextBtn');
-        const resetBtn = document.getElementById('resetBtn');
-        const hintBtn = document.getElementById('hintBtn');
-        const fiftyBtn = document.getElementById('fiftyBtn');
+  // DOM
+  const darkModeBtn = document.getElementById('darkModeBtn');
+  const adminLoginBtn = document.getElementById('adminLoginBtn');
+  const adminPanelHeader = document.getElementById('adminPanelHeader');
+  const logoutAdminBtn = document.getElementById('logoutAdminBtn');
+  const adminModal = document.getElementById('adminModal');
+  const lugarModal = document.getElementById('lugarModal');
+  const placesGrid = document.getElementById('lugaresGrid');
+  const filtroCiudad = document.getElementById('filtroCiudad');
+  const filtroTipoCamino = document.getElementById('filtroTipoCamino');
+  const userBtn = document.getElementById('userBtn');
+  const gpsBtn = document.getElementById('gpsBtn');
+  const pointsSpan = document.getElementById('pointsValue');
+  const userPointsDisplay = document.getElementById('userPointsDisplay');
+  const pasaporteList = document.getElementById('pasaporteList');
+  const cofrePanel = document.getElementById('cofrePanel');
+  const cofreHandle = document.querySelector('.cofre-handle');
+  const checkinFloatBtn = document.getElementById('checkinFloatBtn');
+  const geolocationBtn = document.getElementById('geolocationBtn');
 
-        const modalOverlay = document.getElementById('modalOverlay');
-        const modalIcon = document.getElementById('modalIcon');
-        const modalTitle = document.getElementById('modalTitle');
-        const modalSubtitle = document.getElementById('modalSubtitle');
-        const modalPrize = document.getElementById('modalPrize');
-        const modalDetails = document.getElementById('modalDetails');
-        const playAgainBtn = document.getElementById('playAgainBtn');
+  // Toast
+  function mostrarToast(msg, tipo='info') {
+    const container = document.getElementById('toastContainer');
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.innerHTML = `<i class="fas ${tipo==='error'?'fa-exclamation-circle':'fa-check-circle'}"></i> ${msg}`;
+    container.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
+  }
 
-        // ===== FUNCIÓN PARA MEZCLAR ARRAY =====
-        function shuffleArray(array) {
-            const arr = [...array];
-            for (let i = arr.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [arr[i], arr[j]] = [arr[j], arr[i]];
-            }
-            return arr;
-        }
+  // ========== FIRESTORE: LUGARES ==========
+  let unsubscribePlaces = null;
+  function cargarLugaresFirestore() {
+    if(unsubscribePlaces) unsubscribePlaces();
+    const colRef = collection(db, 'lugares');
+    unsubscribePlaces = onSnapshot(colRef, (snapshot) => {
+      allPlaces = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      actualizarFiltrosCiudad();
+      actualizarLibreta();
+      if(map && markerCluster) actualizarMarcadoresMapa();
+    }, error => mostrarToast("Error Firestore: "+error.message, "error"));
+  }
 
-        function formatCurrency(amount) {
-            return 'C$ ' + amount.toLocaleString();
-        }
+  function actualizarFiltrosCiudad() {
+    const ciudades = [...new Set(allPlaces.map(p => p.ciudad).filter(c => c && c.trim() !== ''))];
+    const currentVal = filtroCiudad.value;
+    filtroCiudad.innerHTML = '<option value="todas">Todas las ciudades</option>' + ciudades.map(c => `<option value="${c}">${c}</option>`).join('');
+    if(currentVal && ciudades.includes(currentVal)) filtroCiudad.value = currentVal;
+    else filtroCiudad.value = 'todas';
+  }
 
-        function updatePrizeDisplay(animate = false) {
-            currentPrizeDisplay.textContent = formatCurrency(state.prize);
-            if (animate) {
-                currentPrizeDisplay.classList.remove('pulse');
-                void currentPrizeDisplay.offsetWidth;
-                currentPrizeDisplay.classList.add('pulse');
-            }
-        }
+  function getFiltros() {
+    const ciudad = filtroCiudad.value;
+    const tipo = filtroTipoCamino.value;
+    return { ciudad, tipo };
+  }
 
-        function loadQuestion(index) {
-            const q = state.shuffledQuestions[index];
-            state.currentQuestion = q;
-            state.answered = false;
+  function actualizarLibreta() {
+    const { ciudad, tipo } = getFiltros();
+    let filtered = [...allPlaces];
+    if(ciudad !== 'todas') filtered = filtered.filter(p => p.ciudad === ciudad);
+    if(tipo !== 'todos') filtered = filtered.filter(p => p.tipoCamino === tipo);
+    
+    const grid = document.getElementById('lugaresGrid');
+    if(filtered.length === 0) {
+      grid.innerHTML = '<div style="padding:20px;text-align:center;color:#888;">No hay lugares con esos filtros</div>';
+      return;
+    }
+    
+    grid.innerHTML = filtered.map(place => `
+      <div class="place-card-horizontal" data-id="${place.id}">
+        <img src="${place.imagen || 'https://via.placeholder.com/300x120?text=Sin+imagen'}" 
+             onerror="this.src='https://via.placeholder.com/300x120?text=No+disponible'">
+        <div class="info">
+          <h4>${place.nombre}</h4>
+          <div class="badge">${place.ciudad || ''} • ${place.tipoCamino === 'Educativo' ? '📚' : '🍽️'}</div>
+          <button class="explore-btn-mini" data-id="${place.id}">
+            <i class="fas fa-compass"></i> Explorar
+          </button>
+          ${isAdmin ? `<button class="explore-btn-mini" style="background:#666;margin-left:4px;" data-edit="${place.id}">✏️</button>` : ''}
+        </div>
+      </div>
+    `).join('');
 
-            questionText.textContent = q.question;
-            questionNumber.textContent = `PREGUNTA ${index + 1} DE ${state.shuffledQuestions.length}`;
-
-            const letters = ['A', 'B', 'C', 'D'];
-            optionEls.forEach((el, i) => {
-                el.querySelector('.text').textContent = q.options[i] || '---';
-                el.className = 'option';
-                el.dataset.index = i;
-                el.style.display = '';
-                el.querySelector('.letter').textContent = letters[i];
-            });
-
-            currentQuestionDisplay.textContent = index + 1;
-            totalQuestionsDisplay.textContent = state.shuffledQuestions.length;
-            hintCountDisplay.textContent = state.hints;
-
-            const progress = ((index) / state.shuffledQuestions.length) * 100;
-            progressFill.style.width = `${progress}%`;
-
-            nextBtn.disabled = true;
-            optionEls.forEach(el => el.classList.remove('disabled'));
-            state.fiftyUsed = false;
-            fiftyBtn.disabled = false;
-            // Actualizar texto del botón 50/50
-            fiftyBtn.innerHTML = '🎲 50/50 <span class="cost">C$1,500</span>';
-
-            clearTimeout(window.hintTimeout);
-            hintText.textContent = 'Selecciona una opción. ¡Suerte!';
-        }
-
-        function selectOption(index) {
-            if (state.answered || state.gameOver) return;
-
-            const q = state.currentQuestion;
-            const isCorrect = (index === q.correct);
-
-            optionEls.forEach(el => el.classList.add('disabled'));
-
-            optionEls.forEach((el, i) => {
-                if (i === q.correct) el.classList.add('correct');
-                if (i === index && !isCorrect) el.classList.add('wrong');
-            });
-
-            if (isCorrect) {
-                showHint(`✅ ¡Correcto! ${q.funFact}`);
-                state.prize += PRIZES[state.currentIndex];
-                updatePrizeDisplay(true);
-            } else {
-                showHint(`❌ Incorrecto. Respuesta: ${q.options[q.correct]}`);
-                optionEls.forEach((el, i) => {
-                    if (i === q.correct) el.classList.add('correct');
-                });
-                state.gameOver = true;
-                showFinalModal(false);
-                return;
-            }
-
-            state.answered = true;
-            nextBtn.disabled = false;
-
-            if (state.currentIndex === state.shuffledQuestions.length - 1 && isCorrect) {
-                showFinalModal(true);
-            }
-        }
-
-        function goToNext() {
-            if (state.gameOver) return;
-            if (state.currentIndex < state.shuffledQuestions.length - 1) {
-                state.currentIndex++;
-                loadQuestion(state.currentIndex);
-            } else {
-                nextBtn.disabled = true;
-            }
-        }
-
-        function showFinalModal(won) {
-            modalOverlay.classList.add('show');
-            if (won) {
-                modalIcon.textContent = '🏆';
-                modalTitle.textContent = '¡Felicidades!';
-                modalSubtitle.textContent = 'Eres un Pinolero Millonario';
-                modalPrize.textContent = formatCurrency(state.prize);
-                modalDetails.textContent = `Respondiste todas las ${state.shuffledQuestions.length} preguntas. ¡Únete a los ${parseInt(winnerCount.textContent) + 1} ganadores!`;
-                winnerCount.textContent = parseInt(winnerCount.textContent) + 1;
-            } else {
-                modalIcon.textContent = '😔';
-                modalTitle.textContent = '¡Has perdido!';
-                modalSubtitle.textContent = 'Inténtalo de nuevo';
-                modalPrize.textContent = formatCurrency(state.prize);
-                modalDetails.textContent = `Respondiste ${state.currentIndex} de ${state.shuffledQuestions.length} preguntas. ¡Sigue practicando!`;
-            }
-            state.gameOver = true;
-        }
-
-        // ===== 50/50 CON COSTO =====
-        function useFifty() {
-            if (state.fiftyUsed || state.answered || state.gameOver) {
-                showHint('⚠️ El 50/50 solo se puede usar una vez por pregunta.');
-                return;
-            }
-
-            // Verificar si tiene suficiente dinero
-            if (state.prize < FIFTY_COST) {
-                showHint(`❌ No tienes suficiente dinero. Necesitas ${formatCurrency(FIFTY_COST)} para usar el 50/50.`);
-                return;
-            }
-
-            // Cobrar el costo
-            state.prize -= FIFTY_COST;
-            updatePrizeDisplay(true);
-
-            const q = state.currentQuestion;
-            const wrongIndices = [];
-            for (let i = 0; i < q.options.length; i++) {
-                if (i !== q.correct) wrongIndices.push(i);
-            }
-            const shuffled = wrongIndices.sort(() => Math.random() - 0.5);
-            const toHide = shuffled.slice(0, 2);
-            optionEls.forEach((el, i) => {
-                if (toHide.includes(i)) el.style.display = 'none';
-            });
-            state.fiftyUsed = true;
-            fiftyBtn.disabled = true;
-            showHint(`🎲 50/50 aplicado. Te costó ${formatCurrency(FIFTY_COST)}. Dos opciones eliminadas.`);
-        }
-
-        function useHint() {
-            if (state.hints <= 0 || state.gameOver) {
-                showHint('❌ No te quedan pistas.');
-                return;
-            }
-            state.hints--;
-            hintCountDisplay.textContent = state.hints;
-            showHint(`💡 Pista: ${state.currentQuestion.hint}`);
-        }
-
-        function showHint(msg) {
-            hintText.textContent = msg;
-            clearTimeout(window.hintTimeout);
-            window.hintTimeout = setTimeout(() => {
-                if (!state.gameOver && !state.answered) {
-                    hintText.textContent = 'Selecciona una opción. ¡Suerte!';
+    document.querySelectorAll('.place-card-horizontal .explore-btn-mini[data-id]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const id = btn.dataset.id;
+        const place = allPlaces.find(p => p.id === id);
+        if(place) {
+          cofreAbierto = false;
+          cofrePanel.classList.remove('abierto');
+          setTimeout(() => {
+            if(map) {
+              map.setView([place.lat, place.lng], 15);
+              markerCluster.eachLayer(layer => {
+                if(layer.getLatLng().lat === place.lat && layer.getLatLng().lng === place.lng) {
+                  layer.openPopup();
                 }
-            }, 6000);
+              });
+            }
+          }, 300);
         }
-
-        function resetGame() {
-            state.shuffledQuestions = shuffleArray(QUESTION_BANK);
-
-            state.currentIndex = 0;
-            state.prize = 0;
-            state.hints = 3;
-            state.fiftyUsed = false;
-            state.gameOver = false;
-            state.answered = false;
-
-            hintCountDisplay.textContent = state.hints;
-            totalQuestionsDisplay.textContent = state.shuffledQuestions.length;
-            updatePrizeDisplay(false);
-            modalOverlay.classList.remove('show');
-
-            optionEls.forEach(el => {
-                el.style.display = '';
-                el.className = 'option';
-            });
-
-            fiftyBtn.disabled = false;
-            fiftyBtn.innerHTML = '🎲 50/50 <span class="cost">C$1,500</span>';
-            nextBtn.disabled = true;
-            loadQuestion(0);
-            showHint('🔄 Juego reiniciado. ¡Buena suerte! Las preguntas están en orden aleatorio.');
-        }
-
-        // ===== EVENTOS =====
-        optionEls.forEach((el, index) => {
-            el.addEventListener('click', () => selectOption(index));
+      });
+      if(isAdmin && btn.dataset.edit) {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const id = btn.dataset.edit;
+          const p = allPlaces.find(p => p.id === id);
+          if(p) editarLugarAdmin(p.id);
         });
+      }
+    });
+  }
 
-        nextBtn.addEventListener('click', goToNext);
-        resetBtn.addEventListener('click', resetGame);
-        hintBtn.addEventListener('click', useHint);
-        fiftyBtn.addEventListener('click', useFifty);
-        playAgainBtn.addEventListener('click', resetGame);
+  // ========== MAPA ==========
+  function initMap() {
+    const mapDiv = document.getElementById('map');
+    if(!mapDiv) return;
+    if(map) map.remove();
+    map = L.map('map').setView([12.8654, -85.2072], 8);
+    currentLayers.calles = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { attribution: '&copy; OpenStreetMap' }).addTo(map);
+    currentLayers.satelite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { attribution: 'Esri' });
+    markerCluster = L.markerClusterGroup();
+    map.addLayer(markerCluster);
+    
+    document.querySelectorAll('.layer-btn[data-layer]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const layer = btn.dataset.layer;
+        Object.keys(currentLayers).forEach(l => map.removeLayer(currentLayers[l]));
+        map.addLayer(currentLayers[layer]);
+        document.querySelectorAll('.layer-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+    
+    geolocationBtn.onclick = () => {
+      if(navigator.geolocation) navigator.geolocation.getCurrentPosition(pos=>map.setView([pos.coords.latitude,pos.coords.longitude],13), ()=>mostrarToast("Error ubicación","error"));
+    };
+    
+    if(isAdmin) {
+      map.on('click', (e) => abrirFormularioNuevo(e.latlng.lat, e.latlng.lng));
+    }
+    actualizarMarcadoresMapa();
+  }
 
-        // ===== INICIAR =====
-        winnerCount.textContent = 125;
-        resetGame();
+  async function actualizarMarcadoresMapa() {
+    if(!markerCluster) return;
+    markerCluster.clearLayers();
+    for(let place of allPlaces) {
+      const popupDiv = document.createElement('div');
+      popupDiv.innerHTML = `<b>${place.nombre}</b><br>${place.imagen?`<img src="${place.imagen}" style="width:100%;border-radius:8px;max-width:180px;">` : ''}<br><a href="${place.url||'#'}" target="_blank">🔗 Visitar</a>`;
+      const checkBtn = document.createElement('button');
+      checkBtn.innerHTML = '<i class="fas fa-map-marker-check"></i> Hacer Check-in aquí';
+      checkBtn.style.display = 'block';
+      checkBtn.style.margin = '5px 0';
+      checkBtn.style.background = '#F57C00';
+      checkBtn.style.color = 'white';
+      checkBtn.style.border = 'none';
+      checkBtn.style.padding = '6px';
+      checkBtn.style.borderRadius = '20px';
+      checkBtn.onclick = () => realizarCheckin(place.id, place.nombre);
+      popupDiv.appendChild(checkBtn);
 
-        console.log('🏆 Pinolero Millonario - Versión mejorada');
-        console.log(`📚 Banco de ${QUESTION_BANK.length} preguntas`);
-        console.log(`🎲 50/50 cuesta ${formatCurrency(FIFTY_COST)}`);
-    </script>
+      if(currentUser) {
+        const yaVisito = await verificarSiYaVisito(currentUser.uid, place.id);
+        if(yaVisito) {
+          const commentBtn = document.createElement('button');
+          commentBtn.innerHTML = '<i class="fas fa-star"></i> Comentar / Puntuar';
+          commentBtn.style.display = 'block';
+          commentBtn.style.marginTop = '5px';
+          commentBtn.style.background = '#2E7D32';
+          commentBtn.onclick = () => abrirComentario(place.id, place.nombre);
+          popupDiv.appendChild(commentBtn);
+        }
+      }
+      if(isAdmin) {
+        const editBtn = document.createElement('button'); editBtn.innerText='✏️ Editar'; editBtn.onclick=()=>editarLugarAdmin(place.id);
+        const delBtn = document.createElement('button'); delBtn.innerText='🗑️ Eliminar'; delBtn.onclick=()=>eliminarLugarFirestore(place.id);
+        popupDiv.appendChild(editBtn); popupDiv.appendChild(delBtn);
+      }
+      const marker = L.marker([place.lat, place.lng]).bindPopup(popupDiv);
+      markerCluster.addLayer(marker);
+    }
+  }
+
+  // ========== CHECK-IN ==========
+  async function realizarCheckin(lugarId, lugarNombre) {
+    if(!currentUser) { mostrarToast("Inicia sesión para hacer check-in","error"); return; }
+    if(!navigator.geolocation) { mostrarToast("GPS no soportado","error"); return; }
+    navigator.geolocation.getCurrentPosition(async (pos) => {
+      const place = allPlaces.find(p => p.id === lugarId);
+      if(!place) return;
+      const dist = calcularDistancia(pos.coords.latitude, pos.coords.longitude, place.lat, place.lng);
+      if(dist > 50) { mostrarToast(`Estás demasiado lejos (${Math.round(dist)}m). Acércate al lugar.`,"error"); return; }
+      const yaVisito = await verificarSiYaVisito(currentUser.uid, lugarId);
+      const puntos = yaVisito ? 2 : 10;
+      await registrarVisita(currentUser.uid, lugarId, puntos, 'gps');
+      await sumarPuntos(puntos, `Check-in en ${lugarNombre}`, lugarId);
+      mostrarToast(`✅ Check-in exitoso! +${puntos} puntos`, "success");
+      actualizarMarcadoresMapa();
+      if(!yaVisito && currentUser) actualizarPasaporte();
+    }, () => mostrarToast("No se pudo obtener tu ubicación","error"));
+  }
+
+  function calcularDistancia(lat1,lon1,lat2,lon2){
+    const R=6371e3; const φ1=lat1*Math.PI/180, φ2=lat2*Math.PI/180; const Δφ=(lat2-lat1)*Math.PI/180, Δλ=(lon2-lon1)*Math.PI/180;
+    const a=Math.sin(Δφ/2)**2+Math.cos(φ1)*Math.cos(φ2)*Math.sin(Δλ/2)**2; return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+  }
+
+  async function verificarSiYaVisito(uid, lugarId) {
+    const q = query(collection(db, 'visitas'), where('usuarioId', '==', uid), where('lugarId', '==', lugarId));
+    const snap = await getDocs(q);
+    return !snap.empty;
+  }
+
+  async function registrarVisita(uid, lugarId, puntos, tipo) {
+    await addDoc(collection(db, 'visitas'), { usuarioId: uid, lugarId, fecha: new Date(), puntos, tipo });
+  }
+
+  async function sumarPuntos(cantidad, motivo, lugarId=null) {
+    if(!currentUser) return;
+    const nuevos = userPointsTotal + cantidad;
+    await updateDoc(doc(db, 'usuarios', userDocId), { puntos: nuevos });
+    userPointsTotal = nuevos;
+    pointsSpan.innerText = userPointsTotal;
+    mostrarToast(`+${cantidad} puntos (${motivo})`, "success");
+  }
+
+  // ========== PASAPORTE ==========
+  async function actualizarPasaporte() {
+    if(!currentUser) { pasaporteList.innerHTML = '<div style="padding:20px;text-align:center;">Inicia sesión para ver tu pasaporte</div>'; return; }
+    const visitsSnap = await getDocs(query(collection(db, 'visitas'), where('usuarioId', '==', currentUser.uid)));
+    const visitasMap = new Map();
+    visitsSnap.forEach(doc => {
+      const data = doc.data();
+      const lugarId = data.lugarId;
+      if(!visitasMap.has(lugarId)) visitasMap.set(lugarId, { count: 0 });
+      visitasMap.get(lugarId).count++;
+    });
+    const comentariosSnap = await getDocs(query(collection(db, 'comentarios'), where('usuarioId', '==', currentUser.uid)));
+    const comentariosMap = new Map();
+    comentariosSnap.forEach(doc => { const c = doc.data(); comentariosMap.set(c.lugarId, { texto: c.texto, estrellas: c.estrellas }); });
+
+    if(visitasMap.size === 0) { pasaporteList.innerHTML = '<div style="padding:20px;text-align:center;">Aún no has visitado ningún lugar. ¡Explora!</div>'; return; }
+    let html = '';
+    for(let [lugarId, data] of visitasMap.entries()) {
+      const lugar = allPlaces.find(p => p.id === lugarId);
+      if(!lugar) continue;
+      const comentario = comentariosMap.get(lugarId);
+      html += `
+        <div class="pasaporte-item">
+          <img class="pasaporte-img" src="${lugar.imagen || 'https://via.placeholder.com/80'}" onerror="this.src='https://via.placeholder.com/80'">
+          <div class="pasaporte-info">
+            <h4>${lugar.nombre}</h4>
+            <div><span class="visits-count">Visitas: ${data.count}</span>  |  ${lugar.ciudad} • ${lugar.tipoCamino === 'Educativo' ? 'Educativo' : 'Comercial'}</div>
+            ${comentario ? `<div class="user-review"><i class="fas fa-comment"></i> "${comentario.texto}"<br>${'⭐'.repeat(comentario.estrellas)}</div>` : '<div class="user-review"><i class="fas fa-edit"></i> Sin reseña aún</div>'}
+          </div>
+        </div>
+      `;
+    }
+    pasaporteList.innerHTML = html;
+  }
+
+  // ========== ADMIN ==========
+  const ADMIN_PASSWORD = "Diriamba2026";
+  function entrarModoAdmin() { isAdmin=true; adminLoginBtn.style.display='none'; adminPanelHeader.style.display='flex'; mostrarToast("Admin activado","success"); if(map) map.on('click', onMapClick); actualizarLibreta(); actualizarMarcadoresMapa(); }
+  function salirModoAdmin() { isAdmin=false; adminLoginBtn.style.display='flex'; adminPanelHeader.style.display='none'; if(map) map.off('click'); actualizarLibreta(); actualizarMarcadoresMapa(); }
+  function onMapClick(e) { if(isAdmin) abrirFormularioNuevo(e.latlng.lat, e.latlng.lng); }
+  adminLoginBtn.onclick = () => adminModal.style.display='flex';
+  document.getElementById('adminLoginForm').addEventListener('submit',(e)=>{e.preventDefault(); if(document.getElementById('adminPassword').value===ADMIN_PASSWORD){adminModal.style.display='none';entrarModoAdmin();}else mostrarToast("Contraseña incorrecta","error");});
+  logoutAdminBtn.onclick = salirModoAdmin;
+  function abrirFormularioNuevo(lat,lng) { document.getElementById('modalTitle').innerText='Añadir Lugar'; document.getElementById('lugarId').value=''; document.getElementById('lugarNombre').value=''; document.getElementById('lugarLat').value=lat.toFixed(6); document.getElementById('lugarLng').value=lng.toFixed(6); document.getElementById('lugarCiudad').value=''; document.getElementById('lugarTipoCamino').value='Educativo'; document.getElementById('lugarUrl').value=''; document.getElementById('lugarImagen').value=''; document.getElementById('lugarCategoria').value=''; lugarModal.style.display='flex'; }
+  function editarLugarAdmin(id) { const p=allPlaces.find(p=>p.id===id); if(!p) return; document.getElementById('modalTitle').innerText='Editar Lugar'; document.getElementById('lugarId').value=p.id; document.getElementById('lugarNombre').value=p.nombre; document.getElementById('lugarLat').value=p.lat; document.getElementById('lugarLng').value=p.lng; document.getElementById('lugarCiudad').value=p.ciudad||''; document.getElementById('lugarTipoCamino').value=p.tipoCamino||'Educativo'; document.getElementById('lugarUrl').value=p.url||''; document.getElementById('lugarImagen').value=p.imagen||''; document.getElementById('lugarCategoria').value=p.categoria||''; lugarModal.style.display='flex'; }
+  window.eliminarLugarFirestore = async (id) => { if(confirm('¿Eliminar lugar?')) await deleteDoc(doc(db,'lugares',id)); };
+  document.getElementById('lugarForm').addEventListener('submit', async(e) => {
+    e.preventDefault(); const id=document.getElementById('lugarId').value; const nombre=document.getElementById('lugarNombre').value.trim(); const lat=parseFloat(document.getElementById('lugarLat').value); const lng=parseFloat(document.getElementById('lugarLng').value); const ciudad=document.getElementById('lugarCiudad').value.trim(); const tipoCamino=document.getElementById('lugarTipoCamino').value; const url=document.getElementById('lugarUrl').value.trim(); const imagen=document.getElementById('lugarImagen').value.trim(); const categoria=document.getElementById('lugarCategoria').value.trim();
+    if(!nombre || isNaN(lat) || isNaN(lng) || !ciudad) { mostrarToast("Complete nombre, coordenadas y ciudad","error"); return; }
+    const data = { nombre, lat, lng, ciudad, tipoCamino, url, imagen, categoria };
+    if(id) await updateDoc(doc(db,'lugares',id), data);
+    else await addDoc(collection(db,'lugares'), data);
+    lugarModal.style.display='none';
+  });
+
+  // ========== COMENTARIOS ==========
+  async function abrirComentario(lugarId, lugarNombre) {
+    if(!currentUser) return;
+    const yaVisito = await verificarSiYaVisito(currentUser.uid, lugarId);
+    if(!yaVisito) { mostrarToast("Primero haz check-in para comentar","error"); return; }
+    const q = query(collection(db,'comentarios'), where('usuarioId','==',currentUser.uid), where('lugarId','==',lugarId));
+    const snap = await getDocs(q);
+    let existente = null;
+    if(!snap.empty) existente = snap.docs[0];
+    const modalBody = document.getElementById('comentarioBody');
+    modalBody.innerHTML = `<div style="padding:15px;"><h4>${lugarNombre}</h4>
+      <div class="form-group"><label>Puntuación (1-5)</label><select id="estrellas">${[1,2,3,4,5].map(s=>`<option value="${s}" ${existente && existente.data().estrellas==s?'selected':''}>${'⭐'.repeat(s)}</option>`).join('')}</select></div>
+      <div class="form-group"><label>Comentario</label><textarea id="comentarioTexto" rows="3">${existente?existente.data().texto:''}</textarea></div>
+      <button id="guardarComentarioBtn" class="submit-btn">Guardar comentario</button>${existente?'<button id="eliminarComentarioBtn" class="submit-btn" style="background:#d32f2f;">Eliminar</button>':''}</div>`;
+    document.getElementById('guardarComentarioBtn').onclick = async () => {
+      const estrellas = parseInt(document.getElementById('estrellas').value);
+      const texto = document.getElementById('comentarioTexto').value.trim();
+      if(!texto){ mostrarToast("Escribe un comentario","error"); return; }
+      if(existente) await updateDoc(doc(db,'comentarios',existente.id), { texto, estrellas, editado: true });
+      else {
+        await addDoc(collection(db,'comentarios'), { usuarioId: currentUser.uid, lugarId, texto, estrellas, fecha: new Date(), editado: false });
+        await sumarPuntos(5, `Comentario en ${lugarNombre}`, lugarId);
+        await sumarPuntos(2, `Valoración en ${lugarNombre}`, lugarId);
+      }
+      document.getElementById('comentarioModal').style.display='none';
+      if(currentUser) actualizarPasaporte();
+    };
+    if(existente) document.getElementById('eliminarComentarioBtn').onclick = async()=>{ await deleteDoc(doc(db,'comentarios',existente.id)); mostrarToast("Comentario eliminado","info"); document.getElementById('comentarioModal').style.display='none'; actualizarPasaporte(); };
+    document.getElementById('comentarioModal').style.display='flex';
+  }
+
+  // ========== USUARIO ==========
+  async function cargarPuntosUsuario() {
+    if(!currentUser) return;
+    const q = query(collection(db,'usuarios'), where('uid','==',currentUser.uid));
+    const snap = await getDocs(q);
+    if(!snap.empty){ userDocId = snap.docs[0].id; userPointsTotal = snap.docs[0].data().puntos||0; pointsSpan.innerText = userPointsTotal; }
+    else { const ref = await addDoc(collection(db,'usuarios'), { uid:currentUser.uid, email:currentUser.email, nombre:currentUser.displayName||currentUser.email, puntos:0 }); userDocId = ref.id; userPointsTotal=0; pointsSpan.innerText='0'; }
+  }
+  
+  function actualizarUIUsuario(){
+    if(currentUser){ 
+      userPointsDisplay.style.display='flex'; 
+      gpsBtn.style.display='flex'; 
+      checkinFloatBtn.style.display='flex';
+      userBtn.innerHTML='<i class="fas fa-user-check"></i>'; 
+      cargarPuntosUsuario(); 
+      actualizarPasaporte(); 
+    } else { 
+      userPointsDisplay.style.display='none'; 
+      gpsBtn.style.display='none'; 
+      checkinFloatBtn.style.display='none';
+      userBtn.innerHTML='<i class="fas fa-user-circle"></i>'; 
+      if(gpsActive && watchId) navigator.geolocation.clearWatch(watchId); 
+      gpsActive=false; 
+      pasaporteList.innerHTML = '<div style="padding:20px;text-align:center;">Inicia sesión para ver tu pasaporte</div>'; 
+    }
+  }
+  
+  function mostrarModalUsuario(){
+    if(currentUser){
+      document.getElementById('profileBody').innerHTML = `<div style="text-align:center;padding:15px;"><img src="${currentUser.photoURL||'https://via.placeholder.com/80'}" style="width:80px;border-radius:50%;"><h4>${currentUser.displayName||currentUser.email}</h4><p>Puntos: ${userPointsTotal}</p><button id="cerrarSesionBtn" class="submit-btn" style="background:#d32f2f;">Cerrar sesión</button><button id="eliminarCuentaBtn" class="submit-btn" style="background:#666;">Eliminar cuenta</button></div>`;
+      document.getElementById('cerrarSesionBtn').onclick = async()=>{ await signOut(auth); location.reload(); };
+      document.getElementById('eliminarCuentaBtn').onclick = async () => { if(confirm("¿Eliminar cuenta?")){ await currentUser.delete(); await signOut(auth); location.reload(); } };
+      profileModal.style.display='flex';
+    } else {
+      document.getElementById('userModalBody').innerHTML = `<div style="padding:20px;"><button id="googleLoginBtn" class="submit-btn" style="background:#4285F4;">Google</button><hr><input type="email" id="loginEmail" placeholder="Email"><input type="password" id="loginPassword" placeholder="Contraseña"><button id="emailLoginBtn" class="submit-btn">Iniciar sesión</button><button id="emailRegistroBtn" class="submit-btn" style="background:#2E7D32;">Registrarse</button></div>`;
+      document.getElementById('googleLoginBtn').onclick = ()=> signInWithPopup(auth,provider).then(()=>location.reload());
+      document.getElementById('emailLoginBtn').onclick = ()=>{ const email=document.getElementById('loginEmail').value, pass=document.getElementById('loginPassword').value; signInWithEmailAndPassword(auth,email,pass).then(()=>location.reload()); };
+      document.getElementById('emailRegistroBtn').onclick = ()=>{ const email=document.getElementById('loginEmail').value, pass=document.getElementById('loginPassword').value; createUserWithEmailAndPassword(auth,email,pass).then(()=>location.reload()); };
+      userModal.style.display='flex';
+    }
+  }
+
+  // ========== GPS ==========
+  gpsBtn.onclick = () => { 
+    if(!currentUser) { mostrarToast("Inicia sesión","error"); return; } 
+    if(gpsActive){ 
+      if(watchId) navigator.geolocation.clearWatch(watchId); 
+      gpsActive=false; 
+      gpsBtn.classList.remove('active'); 
+      mostrarToast("GPS desactivado","info"); 
+    } else { 
+      navigator.geolocation.getCurrentPosition(()=>{ 
+        gpsActive=true; 
+        gpsBtn.classList.add('active'); 
+        watchId = navigator.geolocation.watchPosition(async (pos)=>{ 
+          for(let place of allPlaces){ 
+            const dist = calcularDistancia(pos.coords.latitude,pos.coords.longitude,place.lat,place.lng); 
+            if(dist<=50 && (!ultimaRecompensaPorLugar[place.id] || Date.now()-ultimaRecompensaPorLugar[place.id]>60000)){ 
+              const ya = await verificarSiYaVisito(currentUser.uid, place.id); 
+              const pts = ya?2:10; 
+              await registrarVisita(currentUser.uid,place.id,pts,'gps'); 
+              await sumarPuntos(pts,`GPS ${place.nombre}`,place.id); 
+              ultimaRecompensaPorLugar[place.id]=Date.now(); 
+              actualizarMarcadoresMapa(); 
+              actualizarPasaporte(); 
+            } 
+          } 
+        }, ()=>mostrarToast("Error GPS","error"), {enableHighAccuracy:true}); 
+      }, ()=>mostrarToast("Permiso denegado","error")); 
+    } 
+  };
+
+  // ========== CHECK-IN FLOTANTE ==========
+  checkinFloatBtn.addEventListener('click', () => {
+    if (!currentUser) { mostrarToast("Inicia sesión","error"); return; }
+    if (!navigator.geolocation) { mostrarToast("GPS no soportado", "error"); return; }
+    
+    navigator.geolocation.getCurrentPosition(async (pos) => {
+      let lugarCercano = null;
+      let distanciaMin = 100;
+      
+      for (let place of allPlaces) {
+        const dist = calcularDistancia(pos.coords.latitude, pos.coords.longitude, place.lat, place.lng);
+        if (dist < distanciaMin) {
+          distanciaMin = dist;
+          lugarCercano = place;
+        }
+      }
+      
+      if (!lugarCercano) {
+        mostrarToast("No hay lugares turísticos cerca (≤100m)", "error");
+        return;
+      }
+      
+      const yaVisito = await verificarSiYaVisito(currentUser.uid, lugarCercano.id);
+      const puntos = yaVisito ? 2 : 10;
+      await registrarVisita(currentUser.uid, lugarCercano.id, puntos, 'gps');
+      await sumarPuntos(puntos, `Check-in en ${lugarCercano.nombre}`, lugarCercano.id);
+      mostrarToast(`✅ ¡Check-in en ${lugarCercano.nombre}! +${puntos} pts`, "success");
+      actualizarMarcadoresMapa();
+      actualizarPasaporte();
+    }, () => mostrarToast("Activa el GPS", "error"));
+  });
+
+  // ========== COFRE ==========
+  cofreHandle.addEventListener('click', () => {
+    cofreAbierto = !cofreAbierto;
+    cofrePanel.classList.toggle('abierto', cofreAbierto);
+  });
+
+  document.getElementById('mapContainer').addEventListener('click', () => {
+    if (cofreAbierto) {
+      cofreAbierto = false;
+      cofrePanel.classList.remove('abierto');
+    }
+  });
+
+  document.querySelectorAll('.cofre-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.cofre-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      const target = tab.dataset.tab;
+      document.getElementById('libretaContent').classList.toggle('hidden-tab', target !== 'libreta');
+      document.getElementById('pasaporteContent').classList.toggle('hidden-tab', target !== 'pasaporte');
+      if (target === 'pasaporte') actualizarPasaporte();
+    });
+  });
+
+  // ========== AUTENTICACIÓN ==========
+  userBtn.onclick = mostrarModalUsuario;
+  
+  onAuthStateChanged(auth, (user) => { 
+    currentUser = user; 
+    actualizarUIUsuario(); 
+    if(map && markerCluster) actualizarMarcadoresMapa(); 
+  });
+
+  // ========== FILTROS ==========
+  filtroCiudad.addEventListener('change', () => actualizarLibreta());
+  filtroTipoCamino.addEventListener('change', () => actualizarLibreta());
+
+  // ========== DARK MODE ==========
+  darkModeBtn.onclick = () => { 
+    document.body.classList.toggle('dark-mode'); 
+    localStorage.setItem('darkMode', document.body.classList.contains('dark-mode')); 
+    darkModeBtn.innerHTML = document.body.classList.contains('dark-mode') ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>'; 
+  };
+  if(localStorage.getItem('darkMode') === 'true') document.body.classList.add('dark-mode');
+
+  // ========== CERRAR MODALES ==========
+  document.querySelectorAll('.close-modal').forEach(btn => btn.onclick = () => btn.closest('.modal').style.display='none');
+
+  // ========== INICIO ==========
+  cargarLugaresFirestore();
+  initMap();
+</script>
+
+<!-- Statcounter -->
+<script type="text/javascript">
+var sc_project=13287225; 
+var sc_invisible=1; 
+var sc_security="4f479d09"; 
+</script>
+<script type="text/javascript"
+src="https://www.statcounter.com/counter/counter.js"
+async></script>
+<noscript><div class="statcounter"><a title="Web Analytics
+Made Easy - Statcounter" href="https://statcounter.com/"
+target="_blank"><img class="statcounter"
+src="https://c.statcounter.com/13287225/0/4f479d09/1/"
+alt="Web Analytics Made Easy - Statcounter"
+referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
 </body>
 </html>
