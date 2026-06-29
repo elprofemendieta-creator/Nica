@@ -1,287 +1,400 @@
-/* ===== MAPA ===== */
-.map-container {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  min-height: 500px;
-  border-radius: 20px;
-  overflow: hidden;
-  background: #e9ecef;
-}
-
-#map {
-  height: 100%;
-  width: 100%;
-}
-
-/* ===== LEYENDA ===== */
-.map-legend {
-  position: absolute;
-  bottom: 90px;
-  left: 20px;
-  z-index: 1000;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(4px);
-  padding: 12px 16px;
-  border-radius: 16px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-  font-size: 13px;
-  line-height: 1.6;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  transition: all 0.3s ease;
-}
-.map-legend .legend-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin: 4px 0;
-}
-.legend-marker {
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  flex-shrink: 0;
-  border: 2px solid rgba(0,0,0,0.1);
-}
-.legend-marker.educational {
-  background: #1e88e5; /* azul */
-}
-.legend-marker.commercial {
-  background: #43a047; /* verde */
-}
-.legend-marker.star {
-  background: #f9a825; /* amarillo */
-  border-color: #f57f17;
-  box-shadow: 0 0 0 2px rgba(249, 168, 37, 0.3);
-}
-
-/* ===== CONTROLES DEL MAPA (barra lateral) ===== */
-.layer-control {
-  position: absolute;
-  bottom: 20px;
-  right: 20px;
-  z-index: 1000;
-  background: white;
-  border-radius: 60px;
-  padding: 8px 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-  align-items: center;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-.layer-btn {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  font-size: 18px;
-  color: #555;
-  transition: all 0.25s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-}
-.layer-btn:hover {
-  background: rgba(0, 0, 0, 0.05);
-  transform: scale(1.05);
-}
-.layer-btn.active {
-  background: #f57c00;
-  color: white;
-  box-shadow: 0 4px 8px rgba(245, 124, 0, 0.3);
-}
-.layer-btn.active:hover {
-  background: #e65100;
-}
-.layer-label {
-  font-size: 10px;
-  color: #666;
-  text-align: center;
-  letter-spacing: 0.3px;
-  margin-top: 2px;
-  font-weight: 500;
-}
-
-/* ===== POPUPS DE LEAFLET (rediseño) ===== */
-.leaflet-popup-content-wrapper {
-  border-radius: 16px !important;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2) !important;
-  padding: 0 !important;
-  overflow: hidden;
-}
-.leaflet-popup-content {
-  margin: 0 !important;
-  padding: 16px 18px 14px !important;
-  min-width: 220px;
-  font-family: 'Poppins', sans-serif;
-}
-.leaflet-popup-content b {
-  color: #1e3c2c;
-  font-size: 18px;
-}
-.leaflet-popup-content img {
-  border-radius: 12px;
-  margin: 8px 0;
-  max-height: 120px;
-  width: 100%;
-  object-fit: cover;
-}
-.leaflet-popup-content a {
-  color: #f57c00;
-  font-weight: 500;
-  text-decoration: none;
-}
-.leaflet-popup-content a:hover {
-  text-decoration: underline;
-}
-/* Botón check-in dentro del popup */
-.leaflet-popup-content button {
-  border: none;
-  padding: 10px 14px;
-  border-radius: 40px;
-  font-weight: 600;
-  font-size: 15px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 6px;
-  width: 100%;
-  justify-content: center;
-}
-/* Botón check-in gamificado */
+<style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html, body {
+      height: 100%;
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #F5F5F0;
+      transition: background 0.3s;
+    }
+    .app-container {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      width: 100%;
+      overflow: hidden;
+    }
+    /* Header */
+    .app-header {
+      background: white;
+      padding: 8px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      z-index: 100;
+      flex-shrink: 0;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .logo i {
+      font-size: 24px;
+      color: #F57C00;
+    }
+    .logo h2 {
+      font-size: 18px;
+      color: #2E7D32;
+    }
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .user-points {
+      background: #F57C00;
+      color: white;
+      padding: 5px 12px;
+      border-radius: 30px;
+      font-size: 14px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .icon-btn, .admin-login-btn {
+      background: none;
+      border: none;
+      font-size: 18px;
+      cursor: pointer;
+      padding: 6px;
+      border-radius: 50%;
+      transition: 0.3s;
+      color: #666;
+    }
+    .icon-btn:hover, .admin-login-btn:hover {
+      background: #f0f0f0;
+      color: #F57C00;
+    }
+    .admin-login-btn {
+      background: #2E7D32;
+      color: white;
+      border-radius: 30px;
+      padding: 4px 12px;
+      font-size: 12px;
+    }
+    /* Tabs */
+    .tabs {
+      display: flex;
+      background: white;
+      border-bottom: 2px solid #eee;
+      padding: 0 16px;
+      gap: 20px;
+      flex-shrink: 0;
+    }
+    .tab-btn {
+      background: none;
+      border: none;
+      padding: 12px 0;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      color: #777;
+      transition: 0.2s;
+      border-bottom: 3px solid transparent;
+    }
+    .tab-btn.active {
+      color: #F57C00;
+      border-bottom-color: #F57C00;
+    }
+    .tab-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      background: #F5F5F0;
+    }
+    .hidden-tab {
+      display: none;
+    }
+    /* Libreta (filtros y cards) */
+    .filtros-container {
+      background: white;
+      border-radius: 20px;
+      padding: 15px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    .filtro-group {
+      margin-bottom: 15px;
+    }
+    .filtro-group label {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 8px;
+      color: #2E7D32;
+    }
+    .select-custom {
+      width: 100%;
+      padding: 10px;
+      border-radius: 30px;
+      border: 1px solid #ddd;
+      background: #f9f9f9;
+    }
+    .places-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+    }
+    .place-card {
+      background: white;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transition: transform 0.2s;
+      cursor: pointer;
+    }
+    .place-card:hover {
+      transform: translateY(-4px);
+    }
+    .place-card img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+    }
+    .place-info-card {
+      padding: 12px;
+    }
+    .place-info-card h4 {
+      font-size: 18px;
+      margin-bottom: 4px;
+    }
+    .place-badge {
+      display: inline-block;
+      background: #F57C10;
+      color: white;
+      border-radius: 30px;
+      padding: 4px 12px;
+      font-size: 12px;
+      margin: 6px 0;
+    }
+    .explore-btn {
+      background: #2E7D32;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 30px;
+      width: 100%;
+      margin-top: 10px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    /* Mapa */
+    .map-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      min-height: 500px;
+      border-radius: 20px;
+      overflow: hidden;
+    }
+    #map {
+      height: 100%;
+      width: 100%;
+    }
+    .layer-control {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      z-index: 1000;
+      background: white;
+      border-radius: 50px;
+      padding: 5px;
+      display: flex;
+      gap: 5px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+    .layer-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: none;
+      background: white;
+      cursor: pointer;
+    }
+    .layer-btn.active {
+      background: #F57C00;
+      color: white;
+    }
+    /* Pasaporte */
+    .pasaporte-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .pasaporte-item {
+      background: white;
+      border-radius: 20px;
+      padding: 16px;
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .pasaporte-img {
+      width: 80px;
+      height: 80px;
+      border-radius: 16px;
+      object-fit: cover;
+    }
+    .pasaporte-info {
+      flex: 1;
+    }
+    .visits-count {
+      background: #F57C00;
+      color: white;
+      border-radius: 30px;
+      padding: 4px 12px;
+      font-size: 12px;
+      display: inline-block;
+    }
+    .user-review {
+      background: #f0f0f0;
+      padding: 8px;
+      border-radius: 12px;
+      margin-top: 8px;
+    }
+    /* modales */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+    }
+    .modal-content {
+      background: white;
+      border-radius: 20px;
+      width: 90%;
+      max-width: 500px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .modal-header {
+      padding: 15px;
+      background: #2E7D32;
+      color: white;
+      border-radius: 20px 20px 0 0;
+      display: flex;
+      justify-content: space-between;
+    }
+    .form-group {
+      padding: 10px 15px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      margin-bottom: 5px;
+    }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+    .submit-btn {
+      width: calc(100% - 30px);
+      margin: 0 15px 15px;
+      padding: 10px;
+      background: #F57C00;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    .toast-container {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 3000;
+    }
+    .toast {
+      background: white;
+      padding: 8px 16px;
+      border-radius: 10px;
+      margin-top: 5px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      border-left: 4px solid #F57C00;
+    }
+    .whatsapp-float {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      background: #25D366;
+      color: white;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      text-decoration: none;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      z-index: 99;
+    }
+    .dark-mode {
+      background: #1a1a2e;
+    }
+    .dark-mode .app-header, .dark-mode .tabs, .dark-mode .filtros-container, .dark-mode .place-card, .dark-mode .pasaporte-item, .dark-mode .modal-content {
+      background: #2d2d44;
+      color: white;
+    }
+    .dark-mode .tab-btn {
+      color: #ccc;
+    }
+    .dark-mode .tab-btn.active {
+      color: #F57C00;
+    }
+    @media (max-width: 768px) {
+      .map-container {
+        height: 70vh;
+      }
+    }
+/* ===== BOTÓN CHECK-IN MEJORADO ===== */
+/* Selecciona el primer botón dentro del popup (el de check-in) */
 .leaflet-popup-content button:first-of-type {
-  background: linear-gradient(135deg, #f9a825, #ff8f00);
-  color: #1e1e1e;
-  box-shadow: 0 4px 12px rgba(249, 168, 37, 0.4);
+  background: linear-gradient(135deg, #f9a825, #ff8f00) !important;
+  color: #1e1e1e !important;
+  font-weight: 700 !important;
+  font-size: 16px !important;
+  padding: 12px 18px !important;
+  border-radius: 50px !important;
+  box-shadow: 0 4px 15px rgba(249, 168, 37, 0.5) !important;
+  border: none !important;
+  transition: all 0.2s ease !important;
+  letter-spacing: 0.5px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
 }
 .leaflet-popup-content button:first-of-type:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(249, 168, 37, 0.6);
+  transform: scale(1.02);
+  box-shadow: 0 6px 25px rgba(249, 168, 37, 0.7) !important;
 }
 .leaflet-popup-content button:first-of-type i {
-  font-size: 18px;
-}
-/* Botón comentar */
-.leaflet-popup-content button:last-of-type {
-  background: #2e7d32;
-  color: white;
-  margin-top: 4px;
-}
-.leaflet-popup-content button:last-of-type:hover {
-  background: #1b5e20;
-}
-/* Botones admin (editar/eliminar) */
-.leaflet-popup-content button:nth-child(3),
-.leaflet-popup-content button:nth-child(4) {
-  background: #6c757d;
-  color: white;
-  font-size: 13px;
-  padding: 6px 12px;
-  width: auto;
-  margin: 4px 4px 0 0;
-}
-.leaflet-popup-content button:nth-child(4) {
-  background: #d32f2f;
+  font-size: 20px;
 }
 
-/* ===== ESTADO GPS ===== */
-.gps-status {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  z-index: 1000;
-  background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(4px);
-  color: #fff;
-  padding: 6px 14px;
-  border-radius: 40px;
-  font-size: 13px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.2);
-  border: 1px solid rgba(255,255,255,0.15);
+/* Ajuste para modo oscuro (si lo usas) */
+.dark-mode .leaflet-popup-content button:first-of-type {
+  background: linear-gradient(135deg, #f9a825, #e65100) !important;
+  color: #fff !important;
 }
-.gps-status i {
-  color: #4caf50;
-}
-.gps-status.hidden {
-  display: none !important;
-}
-
-/* ===== RESPONSIVE ===== */
-@media (max-width: 768px) {
-  .map-container {
-    min-height: 60vh;
-  }
-  .map-legend {
-    bottom: 100px;
-    left: 12px;
-    padding: 10px 14px;
-    font-size: 12px;
-  }
-  .layer-control {
-    bottom: 16px;
-    right: 12px;
-    padding: 6px;
-    gap: 4px;
-  }
-  .layer-btn {
-    width: 38px;
-    height: 38px;
-    font-size: 16px;
-  }
-  .leaflet-popup-content {
-    min-width: 160px !important;
-    padding: 14px !important;
-  }
-  .leaflet-popup-content button {
-    font-size: 13px;
-    padding: 8px 12px;
-  }
-}
-
-/* ===== MODO OSCURO (ajustes para mapa) ===== */
-.dark-mode .map-legend {
-  background: rgba(30, 30, 46, 0.95);
-  color: #eee;
-  border-color: rgba(255,255,255,0.1);
-}
-.dark-mode .layer-control {
-  background: #2d2d44;
-  border-color: rgba(255,255,255,0.1);
-}
-.dark-mode .layer-btn {
-  color: #ccc;
-}
-.dark-mode .layer-btn.active {
-  background: #f57c00;
-  color: #1a1a2e;
-}
-.dark-mode .layer-label {
-  color: #aaa;
-}
-.dark-mode .leaflet-popup-content-wrapper {
-  background: #2d2d44 !important;
-  color: #eee !important;
-}
-.dark-mode .leaflet-popup-content b {
-  color: #f5a623;
-}
-.dark-mode .leaflet-popup-content a {
-  color: #ffb300;
-}
-.dark-mode .leaflet-popup-tip {
-  background: #2d2d44 !important;
-}
-.dark-mode .gps-status {
-  background: rgba(0,0,0,0.85);
-}
+  </style>
