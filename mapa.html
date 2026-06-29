@@ -62,7 +62,14 @@
       <div id="map"></div>
       <div id="layerControl" class="layer-control">
         <button class="layer-btn active" data-layer="calles"><i class="fas fa-road"></i></button>
-        <button class="layer-btn" data-layer="satelite"><i class="fas fa-satellite"></i></button>
+        
+        <button id="gpsBtn" class="btn-pinolero-checkin" style="display:none;">
+  <i class="fas fa-map-marker-alt"></i> 
+  <span class="texto-contenedor">
+    <strong class="titulo-accion">¡Estoy aquí!</strong>
+    <span class="subtitulo-puntos">Marcar lugar (+50 pts)</span>
+  </span>
+</button>
         <button id="geolocationBtn" class="layer-btn"><i class="fas fa-location-dot"></i></button>
       </div>
     </div>
