@@ -35,7 +35,7 @@
 }
 
 .btn-pinolero-checkin i {
-  font-size: 0.85rem; /* Icono más pequeño */
+  font-size: 0.80rem; /* Icono más pequeño */
 }
 
 .btn-pinolero-checkin .texto-contenedor {
@@ -51,11 +51,6 @@
   text-transform: uppercase;
 }
 
-.btn-pinolero-checkin .subtitulo-puntos {
-  font-size: 0.55rem; /* Letra secundaria bien pequeña */
-  color: #e8f8f5;
-  font-weight: 500;
-}
     /* Header */
     .app-header {
       background: white;
