@@ -24,7 +24,15 @@
     <div class="logo"><i class="fas fa-map-marked-alt"></i><h2>Guía Pinolera</h2></div>
     <div class="header-controls">
       <div id="userPointsDisplay" class="user-points" style="display:none;"><i class="fas fa-star"></i> <span id="pointsValue">0</span></div>
-      <button id="gpsBtn" class="icon-btn gps-btn" style="display:none;"><i class="fas fa-satellite-dish"></i></button>
+      <!-- check In  -->
+     <button id="gpsBtn" class="btn-pinolero-checkin" style="display:none;">
+  <i class="fas fa-map-marker-alt"></i>
+  <span class="texto-contenedor">
+    <strong class="titulo-accion">¡Estoy aquí!</strong>
+    <span class="subtitulo-puntos">Marcar lugar (+50 pts)</span>
+  </span>
+</button>
+      <!-- Finaliza check -->
       <button id="userBtn" class="icon-btn"><i class="fas fa-user-circle"></i></button>
       <button id="darkModeBtn" class="icon-btn"><i class="fas fa-moon"></i></button>
       <button id="adminLoginBtn" class="admin-login-btn"><i class="fas fa-user-shield"></i> Admin</button>
@@ -61,17 +69,10 @@
     <div class="map-container">
       <div id="map"></div>
       <div id="layerControl" class="layer-control">
-        <button class="layer-btn active" data-layer="calles">
-  <i class="fas fa-road"></i> <span>Ver Calles</span>
-</button>
+        <button class="layer-btn active" data-layer="calles"><i class="fas fa-road"></i></button>
+        <button id="gpsBtn" class="icon-btn gps-btn" style="display:none;"><i class="fas fa-satellite-dish"></i></button>
+        <button id="geolocationBtn" class="layer-btn"><i class="fas fa-location-dot"></i></button> 
 
-<button id="gpsBtn" class="btn-pinolero-checkin" style="display:none;">
-  <i class="fas fa-star"></i> <span>¡Llegué, ganar puntos!</span>
-</button>
-
-<button id="geolocationBtn" class="layer-btn-mi-ubicacion">
-  <i class="fas fa-crosshairs"></i> <span>¿Dónde estoy?</span>
-</button>
       </div>
     </div>
   </div>
