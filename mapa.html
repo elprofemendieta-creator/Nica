@@ -61,16 +61,17 @@
     <div class="map-container">
       <div id="map"></div>
       <div id="layerControl" class="layer-control">
-        <button class="layer-btn active" data-layer="calles"><i class="fas fa-road"></i></button>
-        
-        <button id="gpsBtn" class="btn-pinolero-checkin" style="display:none;">
-  <i class="fas fa-map-marker-alt"></i> 
-  <span class="texto-contenedor">
-    <strong class="titulo-accion">¡Estoy aquí!</strong>
-    <span class="subtitulo-puntos">Marcar lugar (+50 pts)</span>
-  </span>
+        <button class="layer-btn active" data-layer="calles">
+  <i class="fas fa-road"></i> <span>Ver Calles</span>
 </button>
-        <button id="geolocationBtn" class="layer-btn"><i class="fas fa-location-dot"></i></button>
+
+<button id="gpsBtn" class="btn-pinolero-checkin" style="display:none;">
+  <i class="fas fa-star"></i> <span>¡Llegué, ganar puntos!</span>
+</button>
+
+<button id="geolocationBtn" class="layer-btn-mi-ubicacion">
+  <i class="fas fa-crosshairs"></i> <span>¿Dónde estoy?</span>
+</button>
       </div>
     </div>
   </div>
