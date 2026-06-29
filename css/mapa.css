@@ -365,36 +365,4 @@
         height: 70vh;
       }
     }
-/* ===== BOTÓN CHECK-IN MEJORADO ===== */
-/* Selecciona el primer botón dentro del popup (el de check-in) */
-.leaflet-popup-content button:first-of-type {
-  background: linear-gradient(135deg, #f9a825, #ff8f00) !important;
-  color: #1e1e1e !important;
-  font-weight: 700 !important;
-  font-size: 16px !important;
-  padding: 12px 18px !important;
-  border-radius: 50px !important;
-  box-shadow: 0 4px 15px rgba(249, 168, 37, 0.5) !important;
-  border: none !important;
-  transition: all 0.2s ease !important;
-  letter-spacing: 0.5px;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-}
-.leaflet-popup-content button:first-of-type:hover {
-  transform: scale(1.02);
-  box-shadow: 0 6px 25px rgba(249, 168, 37, 0.7) !important;
-}
-.leaflet-popup-content button:first-of-type i {
-  font-size: 20px;
-}
-
-/* Ajuste para modo oscuro (si lo usas) */
-.dark-mode .leaflet-popup-content button:first-of-type {
-  background: linear-gradient(135deg, #f9a825, #e65100) !important;
-  color: #fff !important;
-}
   </style>
