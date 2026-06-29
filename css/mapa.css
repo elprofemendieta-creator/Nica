@@ -19,6 +19,56 @@
       width: 100%;
       overflow: hidden;
     }
+
+/* Estilo interactivo y llamativo para el botón de Check-in */
+.btn-pinolero-checkin {
+  background: linear-gradient(135deg, #2ecc71, #27ae60); /* Verde vibrante que denota éxito/premio */
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 30px; /* Bordes completamente redondeados (más amigable) */
+  display: inline-flex;
+  align-items: center;
+  gap: 12px; /* Separación entre el icono y el texto */
+  font-family: 'Poppins', sans-serif; /* O la tipografía de tu web */
+  box-shadow: 0 4px 15px rgba(46, 204, 113, 0.4); /* Sombra suave para darle relieve */
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Efecto al pasar el mouse por encima */
+.btn-pinolero-checkin:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(46, 204, 113, 0.6);
+}
+
+/* Tamaño del icono de ubicación */
+.btn-pinolero-checkin i {
+  font-size: 1.4rem;
+}
+
+/* Contenedor del texto para alinearlo en columna */
+.btn-pinolero-checkin .texto-contenedor {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+/* Texto principal */
+.btn-pinolero-checkin .titulo-accion {
+  font-size: 0.95rem;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  line-height: 1.2;
+}
+
+/* Texto secundario de los puntos */
+.btn-pinolero-checkin .subtitulo-puntos {
+  font-size: 0.75rem;
+  color: #e8f8f5; /* Color claro sutil */
+  opacity: 0.9;
+  font-weight: 500;
+}
     /* Header */
     .app-header {
       background: white;
