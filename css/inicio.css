@@ -15,9 +15,9 @@
   justify-content: center;
   align-items: center;
   z-index: 9999; /* Asegura que esté por encima de todo */
-  /* Animación para que suba y desaparezca a los 2.5 segundos */
+  /* Animación para que suba y desaparezca a los 5 segundos */
   animation: slideUp 0.8s cubic-bezier(0.77, 0, 0.175, 1) forwards;
-  animation-delay: 2.5s; 
+  animation-delay: 5s; 
 }
 
 /* Contenedor del texto */
