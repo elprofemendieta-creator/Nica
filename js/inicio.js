@@ -47,7 +47,7 @@ const FALLBACK = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
 let fotoTemporal = null;
 let isSaving = false;
 
-function showToast(msg, isError = false, duration = 3000) {
+function showToast(msg, isError = false, duration = 5000) {
   toastDiv.textContent = msg;
   toastDiv.style.display = 'block';
   toastDiv.style.background = isError ? 'rgba(220,53,69,0.95)' : 'rgba(0,0,0,0.85)';
