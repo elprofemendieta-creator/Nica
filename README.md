@@ -21,7 +21,7 @@ La estructura general del código está distribuida así:
 
 ---
 
-## 🔌 Dependencias del Sistema
+## Dependencias del Sistema
 
 Para levantar este proyecto de forma óptima, nos apoyamos en herramientas modernas que garantizan rendimiento y estabilidad. Asegúrate de tener instalado **Node.js** en tu equipo antes de iniciar.
 
@@ -32,7 +32,7 @@ Para levantar este proyecto de forma óptima, nos apoyamos en herramientas moder
 
 ---
 
-## 🔑 Variables de Entorno 
+##  Variables de Entorno 
 
 El sistema requiere conectarse de forma segura a los servicios externos. Para evitar exponer credenciales en el repositorio, creamos un archivo local llamado `.env` en la raíz del proyecto con la siguiente estructura:
 
