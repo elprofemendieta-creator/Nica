@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Parque Central de Diriamba</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, minimal-ui" />
+  <style> @-ms-viewport { width: device-width; } </style>
+  <link rel="stylesheet" href="vendor/reset.min.css">
+  <link rel="stylesheet" href="style.css">
+  
+  <!-- Firebase SDKs (módulo) -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { getFirestore, doc, runTransaction } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyA6jVICuE17KJcO34gE1brMxqWEfNd3Fy0",
+      authDomain: "mapa-41b00.firebaseapp.com",
+      projectId: "mapa-41b00",
+      storageBucket: "mapa-41b00.firebasestorage.app",
+      messagingSenderId: "535032835400",
+      appId: "1:535032835400:web:68c079cbc3f419eafd177d"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // Autenticación anónima inmediata
+    signInAnonymously(auth).catch(console.error);
+
+    // Definir la función global apenas tengamos UID
+    window.guardarToken = async function(tokenCampo) {
+      const currentUid = auth.currentUser?.uid;
+      if (!currentUid) {
+        alert("Espera un momento, autenticando...");
+        return;
+      }
+      const lugarRef = doc(db, "users", currentUid, "explorer", "parque_diriamba");
+
+      try {
+        let completado = false;
+        await runTransaction(db, async (transaction) => {
+          const lugarSnap = await transaction.get(lugarRef);
+          let data = { token1: false, token2: false, progress: 0, badge: false };
+          if (lugarSnap.exists()) data = lugarSnap.data();
+
+          if (data[tokenCampo]) return; // ya encontrado
+
+          data[tokenCampo] = true;
+          const tokensEncontrados = [data.token1, data.token2].filter(Boolean).length;
+          data.progress = tokensEncontrados * 50;
+          data.badge = data.progress === 100;
+          if (data.badge) {
+            data.completedAt = new Date().toISOString();
+            completado = true;
+          }
+
+          transaction.set(lugarRef, data, { merge: true });
+        });
+
+        // Mostrar toast
+        const toast = document.createElement('div');
+        toast.textContent = '¡Has descubierto un elemento oculto!';
+        toast.style.cssText = `position:fixed; bottom:30px; left:50%; transform:translateX(-50%);
+          background:#FFB703; color:#023047; padding:12px 24px; border-radius:30px;
+          font-weight:bold; z-index:9999;`;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 2500);
+
+        if (completado) {
+          setTimeout(() => {
+            alert("🎉 ¡Felicidades! Has encontrado todos los tokens y obtenido la insignia del Parque de Diriamba.");
+            window.location.href = "https://guiapinolero.netlify.app/visitas/insignias";
+          }, 500);
+        }
+      } catch (e) {
+        console.error(e);
+        alert("Error al guardar progreso.");
+      }
+    };
+
+    // Por si acaso aún no está auth listo al cargar, aseguramos que exista
+    onAuthStateChanged(auth, (user) => {
+      if (user) console.log("Usuario autenticado:", user.uid);
+    });
+  </script>
+
+  <!-- Estilos extra para tokens -->
+  <style>
+    .token-hotspot .info-hotspot-header {
+      background-color: #FFB703 !important;
+    }
+    .token-hotspot .info-hotspot-icon-wrapper img {
+      /* Opcional: filtro para icono de token */
+    }
+  </style>
+</head>
+<body class="multiple-scenes view-control-buttons">
+
+<div id="pano"></div>
+
+<div id="sceneList">
+  <ul class="scenes">
+      <a href="javascript:void(0)" class="scene" data-id="0-img1">
+        <li class="text">Entrada</li>
+      </a>
+      <a href="javascript:void(0)" class="scene" data-id="1-img2">
+        <li class="text">Interior</li>
+      </a>
+  </ul>
+</div>
+
+<div id="titleBar">
+  <h1 class="sceneName"></h1>
+</div>
+
+<a href="javascript:void(0)" id="autorotateToggle">
+  <img class="icon off" src="img/play.png">
+  <img class="icon on" src="img/pause.png">
+</a>
+
+<a href="javascript:void(0)" id="fullscreenToggle">
+  <img class="icon off" src="img/fullscreen.png">
+  <img class="icon on" src="img/windowed.png">
+</a>
+
+<a href="javascript:void(0)" id="sceneListToggle">
+  <img class="icon off" src="img/expand.png">
+  <img class="icon on" src="img/collapse.png">
+</a>
+
+<a href="javascript:void(0)" id="viewUp" class="viewControlButton viewControlButton-1">
+  <img class="icon" src="img/up.png">
+</a>
+<a href="javascript:void(0)" id="viewDown" class="viewControlButton viewControlButton-2">
+  <img class="icon" src="img/down.png">
+</a>
+<a href="javascript:void(0)" id="viewLeft" class="viewControlButton viewControlButton-3">
+  <img class="icon" src="img/left.png">
+</a>
+<a href="javascript:void(0)" id="viewRight" class="viewControlButton viewControlButton-4">
+  <img class="icon" src="img/right.png">
+</a>
+<a href="javascript:void(0)" id="viewIn" class="viewControlButton viewControlButton-5">
+  <img class="icon" src="img/plus.png">
+</a>
+<a href="javascript:void(0)" id="viewOut" class="viewControlButton viewControlButton-6">
+  <img class="icon" src="img/minus.png">
+</a>
+
+<script src="vendor/screenfull.min.js" ></script>
+<script src="vendor/bowser.min.js" ></script>
+<script src="vendor/marzipano.js" ></script>
+<script src="data.js"></script>
+<script src="index.js"></script>
+
+  <a href="https://guiapinolero.netlify.app/visitas/insignias" 
+   style="
+     position: fixed;
+     top: 15px;
+     left: 15px;
+     z-index: 1000;
+     background: rgba(0,0,0,0.6);
+     color: white;
+     padding: 10px 15px;
+     border-radius: 30px;
+     text-decoration: none;
+     font-weight: bold;
+     font-family: sans-serif;
+     font-size: 16px;
+     backdrop-filter: blur(5px);
+     border: 1px solid rgba(255,255,255,0.3);
+     transition: background 0.3s;
+   "
+   onmouseover="this.style.background='rgba(0,0,0,0.8)'"
+   onmouseout="this.style.background='rgba(0,0,0,0.6)'"
+>← Volver a Insignias</a>
+</body>
+</html>

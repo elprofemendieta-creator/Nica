@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Estadísticas – Visitas Pinolera</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #0b3d91, #1e90ff);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .dashboard {
+      max-width: 800px;
+      width: 100%;
+      background: rgba(255,255,255,0.12);
+      backdrop-filter: blur(30px);
+      border-radius: 36px;
+      padding: 30px;
+      border: 1px solid rgba(255,255,255,0.25);
+      color: white;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+    }
+    h1 {
+      text-align: center;
+      font-size: 2.2rem;
+      margin-bottom: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    .stat-card {
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(15px);
+      border-radius: 24px;
+      padding: 25px 15px;
+      text-align: center;
+      border: 1px solid rgba(255,255,255,0.2);
+      transition: transform 0.3s;
+      animation: popIn 0.6s ease both;
+    }
+    .stat-card:hover { transform: translateY(-5px); }
+    .stat-icon { font-size: 2.8rem; margin-bottom: 10px; }
+    .stat-value { font-size: 2rem; font-weight: 800; }
+    .stat-label { opacity: 0.85; font-size: 0.9rem; }
+    .level-box {
+      background: linear-gradient(135deg, #FFB703, #FF8800);
+      border-radius: 24px;
+      padding: 20px;
+      text-align: center;
+      margin-top: 20px;
+      color: #023047;
+      font-weight: bold;
+    }
+    .level-title { font-size: 1.2rem; opacity: 0.8; }
+    .level-name { font-size: 2rem; }
+    @keyframes popIn {
+      0% { opacity: 0; transform: scale(0.7); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard">
+    <h1>📊 Estadísticas Generales</h1>
+    <div class="grid">
+      <div class="stat-card">
+        <div class="stat-icon">🏆</div>
+        <div class="stat-value" id="badgeCount">0</div>
+        <div class="stat-label">Insignias obtenidas</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">📍</div>
+        <div class="stat-value" id="placesCompleted">0/1</div>
+        <div class="stat-label">Lugares completados</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🔎</div>
+        <div class="stat-value" id="tokensFound">0</div>
+        <div class="stat-label">Tokens encontrados</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">📈</div>
+        <div class="stat-value" id="overallProgress">0%</div>
+        <div class="stat-label">Avance</div>
+      </div>
+    </div>
+    <div class="level-box">
+      <div class="level-title">🎖 Nivel actual</div>
+      <div class="level-name" id="levelName">Explorador Novato</div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyA6jVICuE17KJcO34gE1brMxqWEfNd3Fy0",
+      authDomain: "mapa-41b00.firebaseapp.com",
+      projectId: "mapa-41b00",
+      storageBucket: "mapa-41b00.firebasestorage.app",
+      messagingSenderId: "535032835400",
+      appId: "1:535032835400:web:68c079cbc3f419eafd177d"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    signInAnonymously(auth).catch(console.error);
+
+    function getLevel(badgeCount) {
+      if (badgeCount >= 30) return "Maestro del Patrimonio Nicaragüense";
+      if (badgeCount >= 20) return "Embajador Pinolero";
+      if (badgeCount >= 5) return "Explorador Cultural";
+      return "Explorador Novato";
+    }
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const lugarRef = doc(db, "users", user.uid, "explorer", "parque_diriamba");
+        onSnapshot(lugarRef, (docSnap) => {
+          let data = { token1: false, token2: false, progress: 0, badge: false };
+          if (docSnap.exists()) data = docSnap.data();
+
+          const badgeCount = data.badge ? 1 : 0;
+          const placesCompleted = data.badge ? "1/1" : "0/1";
+          const tokensFound = (data.token1 ? 1 : 0) + (data.token2 ? 1 : 0);
+          const progress = data.progress || 0;
+
+          document.getElementById("badgeCount").textContent = badgeCount;
+          document.getElementById("placesCompleted").textContent = placesCompleted;
+          document.getElementById("tokensFound").textContent = tokensFound;
+          document.getElementById("overallProgress").textContent = `${progress}%`;
+          document.getElementById("levelName").textContent = getLevel(badgeCount);
+        });
+      }
+    });
+  </script>
+</body>
+</html>
