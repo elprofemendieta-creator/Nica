@@ -17,8 +17,6 @@ document.addEventListener('DOMContentLoaded', function() {
   }, 6000);
 });
 
-authCard.classList.add('oculto');
-
 import { initializeApp } from "firebase/app";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, sendPasswordResetEmail, updateProfile } from "firebase/auth";
 import { getFirestore, doc, setDoc, getDoc, updateDoc } from "firebase/firestore";
@@ -171,7 +169,8 @@ async function guardarEnFirestore(user, extra = {}) {
     });
   }
 }
-
+//== 
+authCard.classList.add('oculto');
 // ===== CARGAR PERFIL =====
 async function cargarPerfil(user) {
   if (!user) return;
