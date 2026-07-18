@@ -772,5 +772,3 @@ if ('serviceWorker' in navigator) {
     .then(reg => console.log('Service Worker registrado', reg))
     .catch(err => console.error('Error al registrar SW', err));
 }
-//== 
-authCard.classList.add('oculto');
