@@ -3,6 +3,14 @@
   padding: 0;
   box-sizing: border-box;
 }
+
+#authCard.mostrar {
+  display: flex !important;
+}
+authCard.classList.add('mostrar');
+authCard.classList.remove('mostrar'); // para ocultar
+
+
 /* Pantalla completa negra que cubre el login inicial */
 .intro-screen {
   position: fixed;
