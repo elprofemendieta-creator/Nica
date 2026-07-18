@@ -21,17 +21,17 @@ document.addEventListener('DOMContentLoaded', function() {
   const introScreen = document.querySelector('.intro-screen');
   const introImg = document.getElementById('introImg');
 
-  // Paso 1: después de 2.5s, cambia a logo.png
+  // Paso 1: después de 3.5s, cambia a logo.png
   setTimeout(() => {
     introImg.src = 'logo.png';
-  }, 2500);
+  }, 3500);
 
   // Paso 2: después de 5s (2.5 + 2.5), oculta la intro y muestra el login
   setTimeout(() => {
     introScreen.style.display = 'none';
     // Si tu contenedor de login está oculto por defecto, muéstralo
     document.getElementById('authCard').style.display = 'block'; // o 'flex'
-  }, 5000);
+  }, 6000);
 });
 
 // Elementos DOM
