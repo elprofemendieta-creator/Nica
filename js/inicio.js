@@ -371,7 +371,25 @@ document.getElementById('whatsappBtn').onclick = (e) => {
   if (user?.displayName) msg = `Hola,%20soy%20${encodeURIComponent(user.displayName)}.%20${msg}`;
   window.open(`https://wa.me/50588170531?text=${msg}`, '_blank');
 };
+//=====login ===
+//inicio 
+// Espera a que la página cargue
+document.addEventListener('DOMContentLoaded', function() {
+  const introScreen = document.querySelector('.intro-screen');
+  const introImg = document.getElementById('introImg');
 
+  // Paso 1: después de 3s, cambia a logo.png
+  setTimeout(() => {
+    introImg.src = 'logo.png';
+  }, 3000);
+
+  // Paso 2: después de 6s (3 + 3), oculta la intro y muestra el login
+  setTimeout(() => {
+    introScreen.style.display = 'none';
+    // Si tu contenedor de  está oculto por defecto, muéstralo
+    document.getElementById('authCard').style.display = 'block'; // o 'flex'
+  }, 6000);
+});
 // ============================================
 // ===== ESTADO DE AUTENTICACIÓN (ÚNICO) =====
 // ============================================
