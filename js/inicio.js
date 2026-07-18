@@ -1,6 +1,27 @@
+//inicio 
+// Espera a que la página cargue
+document.addEventListener('DOMContentLoaded', function() {
+  const introScreen = document.querySelector('.intro-screen');
+  const introImg = document.getElementById('introImg');
+
+  // Paso 1: después de 3s, cambia a logo.png
+  setTimeout(() => {
+    introImg.src = 'logo.png';
+  }, 3000);
+
+  // Paso 2: después de 6s (3 + 3), oculta la intro y muestra el login
+  setTimeout(() => {
+    introScreen.style.display = 'none';
+    // Si tu contenedor de login está oculto por defecto, muéstralo
+    document.getElementById('authCard').style.display = 'block'; // o 'flex'
+  }, 6000);
+});
+
+
 import { initializeApp } from "firebase/app";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, sendPasswordResetEmail, updateProfile } from "firebase/auth";
 import { getFirestore, doc, setDoc, getDoc, updateDoc } from "firebase/firestore";
+
 
 const firebaseConfig = {
   apiKey: "AIzaSyA6jVICuE17KJcO34gE1brMxqWEfNd3Fy0",
@@ -14,25 +35,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
-
-//inicio 
-// Espera a que la página cargue
-document.addEventListener('DOMContentLoaded', function() {
-  const introScreen = document.querySelector('.intro-screen');
-  const introImg = document.getElementById('introImg');
-
-  // Paso 1: después de 3.5s, cambia a logo.png
-  setTimeout(() => {
-    introImg.src = 'logo.png';
-  }, 3500);
-
-  // Paso 2: después de 5s (2.5 + 2.5), oculta la intro y muestra el login
-  setTimeout(() => {
-    introScreen.style.display = 'none';
-    // Si tu contenedor de login está oculto por defecto, muéstralo
-    document.getElementById('authCard').style.display = 'block'; // o 'flex'
-  }, 6000);
-});
 
 // Elementos DOM
 const authCard = document.getElementById('authCard');
