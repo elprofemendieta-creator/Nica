@@ -1,9 +1,6 @@
-
-
 import { initializeApp } from "firebase/app";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, sendPasswordResetEmail, updateProfile } from "firebase/auth";
 import { getFirestore, doc, setDoc, getDoc, updateDoc } from "firebase/firestore";
-
 
 const firebaseConfig = {
   apiKey: "AIzaSyA6jVICuE17KJcO34gE1brMxqWEfNd3Fy0",
@@ -375,34 +372,20 @@ document.getElementById('whatsappBtn').onclick = (e) => {
   window.open(`https://wa.me/50588170531?text=${msg}`, '_blank');
 };
 
-// Estado de autenticación
-onAuthStateChanged(auth, (user) => {
-  console.log('onAuthStateChanged - user:', user);
-  if (user) {
-    authCard.style.display = 'none';
-    menuSection.style.display = 'block';
-    cargarPerfil(user);
-  } else {
-    authCard.style.display = 'flex';
-    menuSection.style.display = 'none';
-    loginForm.style.display = 'block';
-    registerForm.style.display = 'none';
-    // Limpiar campos...
-  }
-});
+// ============================================
+// ===== ESTADO DE AUTENTICACIÓN (ÚNICO) =====
+// ============================================
 onAuthStateChanged(auth, (user) => {
   console.log('Auth state changed:', user ? 'logueado' : 'no logueado');
-  const authCard = document.getElementById('authCard');
-  const menuSection = document.getElementById('menuSection');
-  const loginForm = document.getElementById('loginForm');
-  const registerForm = document.getElementById('registerForm');
-
+  
   if (user) {
+    // Usuario logueado → ocultar login, mostrar menú
     authCard.style.display = 'none';
     menuSection.style.display = 'block';
     cargarPerfil(user);
   } else {
-    authCard.style.display = 'flex';   // ← IMPORTANTE: usa flex
+    // Usuario NO logueado → mostrar login, ocultar menú
+    authCard.style.display = 'flex';   // Usamos flex porque es el display por defecto de .glass-card
     menuSection.style.display = 'none';
     loginForm.style.display = 'block';
     registerForm.style.display = 'none';
@@ -414,20 +397,23 @@ onAuthStateChanged(auth, (user) => {
     document.getElementById('regName').value = '';
   }
 });
-// mejora de login 
-authCard.style.display = 'none';
-authCard.style.margin = '0';
-authCard.style.padding = '0';
-authCard.style.height = '0';
-authCard.style.overflow = 'hidden';
-
-
 
 // ============================================
-// ===== CARRUSEL PREMIUM ) =====
+// ===== CARRUSEL PREMIUM =====
 // ============================================
 
 document.addEventListener('DOMContentLoaded', () => {
+  // ===== OCULTAR INTRO DESPUÉS DE LA ANIMACIÓN =====
+  // La intro se oculta automáticamente con CSS (animation-delay: 5s y slideUp),
+  // pero por si acaso la forzamos a desaparecer después de 6s (igual que antes)
+  const introScreen = document.querySelector('.intro-screen');
+  if (introScreen) {
+    setTimeout(() => {
+      introScreen.style.display = 'none';
+    }, 6000);
+  }
+
+  // ===== CARRUSEL =====
   const track = document.querySelector('.carousel-track');
   const slides = Array.from(document.querySelectorAll('.carousel-slide'));
   const prevBtn = document.querySelector('.prev-btn');
@@ -674,10 +660,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   setTimeout(initializeCarousel, 600);
 
-  //==ocultar login == 
-const introScreen = document.querySelector('.intro-screen');
-// Asegura que la intro esté oculta por si el usuario vuelve a login
-introScreen.style.display = 'none';
   // ===== PARTÍCULAS =====
   let particlesCreated = false;
 
@@ -776,7 +758,7 @@ introScreen.style.display = 'none';
   console.log('🎠 Carrusel Premium inicializado correctamente');
 });
 
-
+// ===== SERVICE WORKER =====
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/sw.js')
     .then(reg => console.log('Service Worker registrado', reg))
