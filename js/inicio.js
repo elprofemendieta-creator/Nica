@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // Paso 2: después de 6s (3 + 3), oculta la intro y muestra el login
   setTimeout(() => {
     introScreen.style.display = 'none';
-    // Si tu contenedor de login está oculto por defecto, muéstralo
+    // Si tu contenedor de  está oculto por defecto, muéstralo
     document.getElementById('authCard').style.display = 'block'; // o 'flex'
   }, 6000);
 });
@@ -411,9 +411,15 @@ onAuthStateChanged(auth, (user) => {
     document.getElementById('regName').value = '';
   }
 });
+// mejora de login 
+authCard.style.display = 'none';
+authCard.style.margin = '0';
+authCard.style.padding = '0';
+authCard.style.height = '0';
+authCard.style.overflow = 'hidden';
 
 // ============================================
-// ===== CARRUSEL PREMIUM (VERSIÓN CORREGIDA) =====
+// ===== CARRUSEL PREMIUM ) =====
 // ============================================
 
 document.addEventListener('DOMContentLoaded', () => {
