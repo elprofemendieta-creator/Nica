@@ -390,6 +390,30 @@ onAuthStateChanged(auth, (user) => {
     // Limpiar campos...
   }
 });
+onAuthStateChanged(auth, (user) => {
+  console.log('Auth state changed:', user ? 'logueado' : 'no logueado');
+  const authCard = document.getElementById('authCard');
+  const menuSection = document.getElementById('menuSection');
+  const loginForm = document.getElementById('loginForm');
+  const registerForm = document.getElementById('registerForm');
+
+  if (user) {
+    authCard.style.display = 'none';
+    menuSection.style.display = 'block';
+    cargarPerfil(user);
+  } else {
+    authCard.style.display = 'flex';   // ← IMPORTANTE: usa flex
+    menuSection.style.display = 'none';
+    loginForm.style.display = 'block';
+    registerForm.style.display = 'none';
+    // Limpiar campos
+    document.getElementById('loginEmail').value = '';
+    document.getElementById('loginPassword').value = '';
+    document.getElementById('regEmail').value = '';
+    document.getElementById('regPassword').value = '';
+    document.getElementById('regName').value = '';
+  }
+});
 // mejora de login 
 authCard.style.display = 'none';
 authCard.style.margin = '0';
