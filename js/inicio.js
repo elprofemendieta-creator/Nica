@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }, 6000);
 });
 
+authCard.classList.add('oculto');
 
 import { initializeApp } from "firebase/app";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, sendPasswordResetEmail, updateProfile } from "firebase/auth";
