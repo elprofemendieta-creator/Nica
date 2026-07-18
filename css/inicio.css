@@ -5,6 +5,9 @@
 }
 
 /* Pantalla de introducción */
+#authCard {
+  display: none; /* o visibility: hidden; */
+}
 .intro-screen {
   position: fixed;
   top: 0;
