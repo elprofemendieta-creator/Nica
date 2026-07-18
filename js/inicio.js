@@ -373,6 +373,7 @@ document.getElementById('whatsappBtn').onclick = (e) => {
 };
 //=====login ===
 //inicio 
+authCard.classList.add('oculto');
 // Espera a que la página cargue
 document.addEventListener('DOMContentLoaded', function() {
   const introScreen = document.querySelector('.intro-screen');
