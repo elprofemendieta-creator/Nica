@@ -169,8 +169,7 @@ async function guardarEnFirestore(user, extra = {}) {
     });
   }
 }
-//== 
-authCard.classList.add('oculto');
+
 // ===== CARGAR PERFIL =====
 async function cargarPerfil(user) {
   if (!user) return;
@@ -773,3 +772,5 @@ if ('serviceWorker' in navigator) {
     .then(reg => console.log('Service Worker registrado', reg))
     .catch(err => console.error('Error al registrar SW', err));
 }
+//== 
+authCard.classList.add('oculto');
