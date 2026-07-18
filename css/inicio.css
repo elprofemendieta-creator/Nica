@@ -150,7 +150,7 @@ body::before {
   text-align: center;
   transition: transform 0.3s ease;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
 }
 
 .glass-card:hover {
