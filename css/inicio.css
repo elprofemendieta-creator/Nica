@@ -149,7 +149,7 @@ body::before {
   max-width: 480px;
   text-align: center;
   transition: transform 0.3s ease;
-  display: block; /* Asegura que se comporte como bloque */
+  display: block;
 }
 
 .glass-card:hover {
@@ -188,17 +188,18 @@ h1 {
   font-size: 0.95rem;
 }
 
-/* ===== INPUTS CENTRADOS ===== */
+/* ===== INPUTS CENTRADOS (FORZADO) ===== */
 .input-group {
+  display: flex;
+  justify-content: center;  /* Centra horizontalmente al hijo */
   margin-bottom: 1rem;
-  text-align: center; /* Para centrar el contenido */
 }
 
 .input-group input {
-  width: 90%;          /* Ocupa el 90% del ancho de la tarjeta */
-  max-width: 400px;    /* Límite para pantallas grandes */
-  margin: 0 auto;      /* Centrado horizontal */
-  display: block;      /* Necesario para que margin auto funcione */
+  width: 90% !important;   /* Forzamos ancho */
+  max-width: 400px;
+  display: block !important;
+  margin: 0 auto !important; /* Centrado */
   padding: 14px 18px;
   border-radius: 50px;
   border: none;
@@ -302,7 +303,7 @@ h1 {
 
 /* ===== MENÚ PRINCIPAL ===== */
 #menuSection {
-  display: none; /* Oculto por defecto */
+  display: none;
   width: 100%;
   max-width: 100%;
   animation: fadeInUp 0.6s ease;
