@@ -377,20 +377,17 @@ document.getElementById('whatsappBtn').onclick = (e) => {
 
 // Estado de autenticación
 onAuthStateChanged(auth, (user) => {
+  console.log('onAuthStateChanged - user:', user);
   if (user) {
     authCard.style.display = 'none';
     menuSection.style.display = 'block';
     cargarPerfil(user);
   } else {
-    authCard.style.display = 'block';
+    authCard.style.display = 'flex';
     menuSection.style.display = 'none';
     loginForm.style.display = 'block';
     registerForm.style.display = 'none';
-    document.getElementById('loginEmail').value = '';
-    document.getElementById('loginPassword').value = '';
-    document.getElementById('regEmail').value = '';
-    document.getElementById('regPassword').value = '';
-    document.getElementById('regName').value = '';
+    // Limpiar campos...
   }
 });
 // mejora de login 
@@ -399,6 +396,8 @@ authCard.style.margin = '0';
 authCard.style.padding = '0';
 authCard.style.height = '0';
 authCard.style.overflow = 'hidden';
+
+
 
 // ============================================
 // ===== CARRUSEL PREMIUM ) =====
@@ -651,6 +650,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   setTimeout(initializeCarousel, 600);
 
+  //==ocultar login == 
+const introScreen = document.querySelector('.intro-screen');
+// Asegura que la intro esté oculta por si el usuario vuelve a login
+introScreen.style.display = 'none';
   // ===== PARTÍCULAS =====
   let particlesCreated = false;
 
