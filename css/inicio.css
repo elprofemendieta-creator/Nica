@@ -149,7 +149,8 @@ body::before {
   max-width: 480px;
   text-align: center;
   transition: transform 0.3s ease;
-  display: block;
+  display: flex;
+  flex-direction: row;
 }
 
 .glass-card:hover {
