@@ -92,6 +92,10 @@
     transform: scale(1) translateY(0);
   }
 }
+/* Fuerza a que el login desaparezca completamente */
+#authCard.oculto {
+  display: none !important;
+}
 
 body {
   font-family: 'Inter', sans-serif;
