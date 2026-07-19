@@ -6,9 +6,7 @@
 
 /* Pantalla de introducción */
 /* Fuerza a que el login desaparezca completamente */
-#authCard.oculto {
-  display: none !important;
-}
+
 .intro-screen {
   position: fixed;
   top: 0;
