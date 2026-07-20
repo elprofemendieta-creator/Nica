@@ -6,67 +6,41 @@
   <title>Guía Pinolero - Descubre Nicaragua</title>
   <!-- Manifest para PWA -->
   <link rel="manifest" href="/manifest.json" />
-  <meta name="theme-color" content="#2E7D32" />
+  <meta name="theme-color" content="#232049" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-  <link rel="stylesheet" href="css/inicio.css" />
-  <style>
-    /* Botón de instalación flotante */
-    #installBtn {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: #2E7D32;
-      color: white;
-      border: none;
-      border-radius: 50px;
-      padding: 12px 20px;
-      font-size: 1rem;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-      cursor: pointer;
-      z-index: 9999;
-      display: none;
-      align-items: center;
-      gap: 8px;
-      transition: all 0.3s ease;
-    }
-    #installBtn:hover {
-      transform: scale(1.05);
-      background: #1B5E20;
-    }
-    #installBtn i {
-      font-size: 1.2rem;
-    }
-  </style>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div class="wave-bg">
-    <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
-      <path fill="rgba(255,255,255,0.08)" d="M0,192L48,197.3C96,203,192,213,288,208C384,203,480,181,576,176C672,171,768,181,864,197.3C960,213,1056,235,1152,224C1248,213,1344,171,1392,149.3L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
-    </svg>
-  </div>
-  <!-- Pantalla de introducción animada con  Logo -->
+  <!-- Pantalla de introducción animada -->
   <div class="intro-screen">
     <div class="intro-content">
-      <img id="introImg" src="carga.gif" alt="Guía Pinolera" class="intro-logo-img">
-      <p class="intro-subtitle">Bienvenido PROBANDO VERSION 2 Explorador Pinolero </p>
+      <img id="introImg" src="carga.gif" alt="Guía Pinolera" class="intro-logo-img" />
+      <p class="intro-subtitle">Bienvenido, Explorador Pinolero</p>
       <p class="intro-subtitle">Cargando sistema...</p>
     </div>
   </div>
 
+  <!-- Fondo decorativo -->
+  <div class="wave-bg">
+    <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
+      <path fill="rgba(255,255,255,0.06)" d="M0,192L48,197.3C96,203,192,213,288,208C384,203,480,181,576,176C672,171,768,181,864,197.3C960,213,1056,235,1152,224C1248,213,1344,171,1392,149.3L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+    </svg>
+  </div>
+
   <div class="container">
+    <!-- Tarjeta de Login / Registro -->
     <div id="authCard" class="glass-card">
       <div class="mascota">
         <img src="https://cdn-icons-png.flaticon.com/512/4712/4712109.png" alt="Mascota" />
       </div>
-    
-          <h1>Guía Pinolero</h1>
-            <p class="subtitle">🌋 Explora Nicaragua jugando 🌊</p>
-          <div id="loginForm">
-            <div class="input-group">
-            <input type="email" id="loginEmail" placeholder="📧 Correo electrónico" />
-          </div>
-          <div class="input-group">
+      <h1>Guía Pinolero</h1>
+      <p class="subtitle">🌋 Explora Nicaragua jugando 🌊</p>
+      <div id="loginForm">
+        <div class="input-group">
+          <input type="email" id="loginEmail" placeholder="📧 Correo electrónico" />
+        </div>
+        <div class="input-group">
           <input type="password" id="loginPassword" placeholder="🔒 Contraseña" />
         </div>
         <button id="doLoginBtn" class="btn btn-primary">Iniciar sesión</button>
@@ -76,7 +50,6 @@
         <div class="divider"><span>o</span></div>
         <button id="showRegisterBtn" class="btn btn-outline">✨ Crear cuenta nueva</button>
       </div>
-
       <div id="registerForm" style="display:none;">
         <div class="input-group">
           <input type="text" id="regName" placeholder="👤 Nombre completo" />
@@ -92,39 +65,137 @@
       </div>
     </div>
 
-    <!-- ===== MENÚ CON CARRUSEL ===== -->
-    <div id="menuSection" class="menu-section" style="display:none;">
-      <!-- Header con animación -->
-      <div class="welcome-header">
-        <h2 class="welcome-title">¡Bienvenido, <span id="userName"></span>!</h2>
-        <div class="user-badge">
-          <span class="badge-icon">🏆</span>
-          <span class="badge-text" id="positionBadge">Calculando posición...</span>
+    <!-- ===== MENÚ PRINCIPAL (nuevo diseño) ===== -->
+    <div id="menuSection" style="display:none;">
+      <!-- Encabezado superior -->
+      <header class="app-header">
+        <div class="header-left">
+          <h1>Descubre Nicaragua</h1>
+          <span class="header-subtitle">GUÍA PINOLERO</span>
         </div>
+        <div class="header-right">
+          <!-- Aquí podrías poner un ícono de notificaciones o algo similar -->
+          <button id="logoutBtn" class="btn-logout-small" title="Cerrar sesión">
+            <i class="fas fa-sign-out-alt"></i>
+          </button>
+        </div>
+      </header>
+
+      <!-- Barra de búsqueda -->
+      <div class="search-bar">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Buscar lugares, juegos o departamentos..." id="searchInput" />
       </div>
 
-      <!-- Perfil interactivo -->
-      <div class="profile-header-enhanced">
-        <div class="profile-info-enhanced" id="profileTrigger">
-          <img id="profileAvatar" class="profile-avatar-enhanced" src="" alt="Avatar" />
-          <div class="profile-details">
-            <div class="profile-name-enhanced" id="profileNameDisplay">Usuario</div>
-            <div class="profile-level" id="userPointsDisplay">⭐ 0 puntos</div>
+      <!-- Tarjeta de perfil (mantiene los IDs que usa el JS) -->
+      <div class="profile-card" id="profileTrigger">
+        <img id="profileAvatar" class="profile-avatar" src="" alt="Avatar" />
+        <div class="profile-details">
+          <div class="profile-name" id="profileNameDisplay">Usuario</div>
+          <div class="profile-stats-row">
+            <span class="level-badge">Nivel 7</span>
+            <span class="explorer-badge">Explorador</span>
+            <span class="progress-badge">80%</span>
+          </div>
+          <div class="profile-metrics">
+            <span id="userPointsDisplay">⭐ 0 puntos</span>
+            <span>12 insignias</span>
+            <span>7 racha diaria</span>
           </div>
         </div>
-        <button id="editProfileBtn" class="btn-edit-enhanced">
+        <button id="editProfileBtn" class="edit-btn" title="Editar perfil">
           <i class="fas fa-pen"></i>
         </button>
       </div>
 
-      <!-- CARRUSEL PREMIUM -->
-      <div class="carousel-premium-container">
+      <!-- Posición global (se mantiene el badge) -->
+      <div class="position-badge-wrapper">
+        <span class="badge-icon">🏆</span>
+        <span id="positionBadge">Calculando posición...</span>
+      </div>
+
+      <!-- Sección: Juegos Turísticos -->
+      <section class="games-section">
+        <h2>Juegos Turísticos</h2>
+        <ul class="game-list">
+          <li>
+            <span class="game-icon">🎮</span>
+            <span class="game-name">Gran Mapa Misterioso</span>
+            <a href="../juegos/juegos.html" class="btn-jugar">Jugar</a>
+          </li>
+          <li>
+            <span class="game-icon">💰</span>
+            <span class="game-name">Pinolero Millonario</span>
+            <a href="../juegos/juegos.html" class="btn-jugar">Jugar</a>
+          </li>
+          <li>
+            <span class="game-icon">🛑</span>
+            <span class="game-name">Stop Pinolero</span>
+            <a href="../juegos/juegos.html" class="btn-jugar">Jugar</a>
+          </li>
+          <li>
+            <span class="game-icon">🧠</span>
+            <span class="game-name">Memoria Pinolera</span>
+            <a href="../juegos/juegos.html" class="btn-jugar">Jugar</a>
+          </li>
+          <li>
+            <span class="game-icon">🌀</span>
+            <span class="game-name">Laberinto Turístico</span>
+            <a href="../juegos/juegos.html" class="btn-jugar">Jugar</a>
+          </li>
+        </ul>
+      </section>
+
+      <!-- Sección: Destinos destacados -->
+      <section class="destinations-section">
+        <h2>Destinos destacados</h2>
+        <div class="destinations-grid">
+          <div class="dest-item">
+            <span class="dest-name">Volcán Masaya</span>
+            <span class="dest-stars">★★★★★</span>
+          </div>
+          <div class="dest-item">
+            <span class="dest-name">Laguna de Apoyo</span>
+            <span class="dest-stars">★★★★★</span>
+          </div>
+          <div class="dest-item">
+            <span class="dest-name">Granada</span>
+            <span class="dest-stars">★★★★★</span>
+          </div>
+          <div class="dest-item">
+            <span class="dest-name">Orm</span>
+            <span class="dest-stars">★</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Sección: Mis Insignias -->
+      <section class="badges-section">
+        <h2>Mis Insignias</h2>
+        <ul class="badge-list">
+          <li>Explorador</li>
+          <li>Aventurero</li>
+          <li>Maestro Pinolero</li>
+          <li>Leyenda de Nicaragua</li>
+          <li class="next-badge">Próxima insignia</li>
+        </ul>
+      </section>
+
+      <!-- Menú inferior de navegación -->
+      <nav class="bottom-nav">
+        <a href="#" class="active"><i class="fas fa-home"></i><span>Inicio</span></a>
+        <a href="mapa.html"><i class="fas fa-map"></i><span>Mapa</span></a>
+        <a href="../juegos/juegos.html"><i class="fas fa-gamepad"></i><span>Juegos</span></a>
+        <a href="#"><i class="fas fa-trophy"></i><span>Logros</span></a>
+        <a href="#"><i class="fas fa-user"></i><span>Perfil</span></a>
+      </nav>
+
+      <!-- ===== CARRUSEL OCULTO (para no romper el JS existente) ===== -->
+      <div class="carousel-premium-container" style="display:none;">
         <div class="carousel-premium-wrapper">
           <button class="carousel-nav-btn prev-btn">‹</button>
-          
           <div class="carousel-track-wrapper">
             <div class="carousel-track">
-              <!-- Slide 1: Juegos -->
               <div class="carousel-slide" data-url="../juegos/juegos.html" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
                 <div class="slide-content">
                   <div class="slide-icon">🎮</div>
@@ -134,8 +205,6 @@
                   <div class="slide-glow"></div>
                 </div>
               </div>
-
-              <!-- Slide 2: Mapa -->
               <div class="carousel-slide" data-url="mapa.html" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
                 <div class="slide-content">
                   <div class="slide-icon">🗺️</div>
@@ -145,30 +214,24 @@
                   <div class="slide-glow"></div>
                 </div>
               </div>
-
-              <!-- Slide 3: Comunidad -->
               <div class="carousel-slide" data-url="comunidad.html" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
                 <div class="slide-content">
                   <div class="slide-icon">👥</div>
                   <h3>Comunidad</h3>
                   <p>Conecta con viajeros</p>
-                  <div class="slide-stats">💬 </span> </div>
+                  <div class="slide-stats">💬 </div>
                   <div class="slide-glow"></div>
                 </div>
               </div>
-
-              <!-- Slide 4: Visitas Virtuales -->
               <div class="carousel-slide" data-url="visitas/index.html" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
                 <div class="slide-content">
                   <div class="slide-icon">📌</div>
                   <h3>Visitas Virtuales</h3>
                   <p>Experiencias 360°</p>
-                  <div class="slide-stats">🎥  recorridos</div>
+                  <div class="slide-stats">🎥 recorridos</div>
                   <div class="slide-glow"></div>
                 </div>
               </div>
-
-              <!-- Slide 5: Escanea -->
               <div class="carousel-slide" data-url="https://nicaguia.base44.app" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
                 <div class="slide-content">
                   <div class="slide-icon">🔍</div>
@@ -178,8 +241,6 @@
                   <div class="slide-glow"></div>
                 </div>
               </div>
-
-              <!-- Slide 6: Promociones -->
               <div class="carousel-slide" data-url="temporal.html" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);">
                 <div class="slide-content">
                   <div class="slide-icon">🏬</div>
@@ -191,11 +252,8 @@
               </div>
             </div>
           </div>
-
           <button class="carousel-nav-btn next-btn">›</button>
         </div>
-
-        <!-- Indicadores -->
         <div class="carousel-indicators">
           <span class="indicator-dot active" data-index="0"></span>
           <span class="indicator-dot" data-index="1"></span>
@@ -205,20 +263,14 @@
           <span class="indicator-dot" data-index="5"></span>
         </div>
       </div>
-
-      <!-- Botón Cerrar sesión -->
-      <div class="logout-wrapper">
-        <button id="logoutBtn" class="btn-logout">
-          <i class="fas fa-sign-out-alt"></i> Cerrar sesión
-        </button>
-      </div>
+      <!-- Fin carrusel oculto -->
     </div>
   </div>
 
+  <!-- Modal de edición de perfil (sin cambios) -->
   <div id="editProfileModal" class="modal">
     <div class="modal-content">
       <h3><i class="fas fa-user-edit"></i> Editar perfil</h3>
-
       <div class="profile-pic-edit">
         <img id="modalProfileImage" src="" alt="Foto" />
         <div class="camera-icon" id="uploadPhotoIcon">
@@ -226,20 +278,18 @@
         </div>
       </div>
       <input type="file" id="uploadPhoto" accept="image/*" style="display: none;" />
-
       <div class="input-group">
         <label style="color:white;">Nombre completo:</label>
         <input type="text" id="editNameInput" placeholder="Tu nombre" />
       </div>
-
       <label style="color:white;">O elige una foto predeterminada:</label>
       <div class="avatar-grid" id="avatarGrid"></div>
-
       <button id="saveProfileBtn" class="btn btn-primary">Guardar cambios</button>
       <button id="closeModalBtn" class="btn btn-outline">Cancelar</button>
     </div>
   </div>
 
+  <!-- WhatsApp flotante -->
   <div class="whatsapp-container">
     <a href="#" class="whatsapp-float" id="whatsappBtn">
       <i class="fab fa-whatsapp"></i>
@@ -265,14 +315,12 @@
   <!-- ====== TU SCRIPT DE AUTENTICACIÓN (inicio.js) ====== -->
   <script type="module" src="js/inicio.js"></script>
 
-  <!-- ====== SCRIPT PARA ACTUALIZAR ESTADÍSTICAS Y PERFIL ====== -->
+  <!-- ====== SCRIPT DE ESTADÍSTICAS Y ACTUALIZACIÓN (se mantiene igual) ====== -->
   <script type="module">
-    // Importamos Firebase (usamos la misma app que inicio.js, o inicializamos si no existe)
     import { initializeApp, getApp, getApps } from 'firebase/app';
     import { getFirestore, collection, getDocs, doc, getDoc, onSnapshot, query, orderBy } from 'firebase/firestore';
     import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
-    // 🔥 CONFIGURACIÓN DE FIREBASE 
     const firebaseConfig = {
       apiKey: "AIzaSyA6jVICuE17KJcO34gE1brMxqWEfNd3Fy0",
       authDomain: "mapa-41b00.firebaseapp.com",
@@ -282,11 +330,9 @@
       appId: "1:535032835400:web:68c079cbc3f419eafd177d"
     };
 
-    // Inicializar solo si no hay ninguna app
     let app;
     if (getApps().length === 0) {
       app = initializeApp(firebaseConfig);
-      console.log('Firebase inicializada desde el script de estadísticas.');
     } else {
       app = getApp();
     }
@@ -294,38 +340,26 @@
     const db = getFirestore(app);
     const auth = getAuth(app);
 
-    // Referencias a elementos del DOM
     const userPointsSpan = document.getElementById('userPointsDisplay');
     const positionBadge = document.getElementById('positionBadge');
-    const miembrosCount = document.getElementById('miembrosCount');
-    const jugadoresCount = document.getElementById('jugadoresCount');
-    const ubicacionesCount = document.getElementById('ubicacionesCount');
-    const visitasCount = document.getElementById('visitasCount');
 
-    // Función para obtener los puntos y la posición del usuario actual
     async function updateUserStats(uid) {
       try {
-        // Obtener datos del usuario
         const userRef = doc(db, 'usuarios', uid);
         const userSnap = await getDoc(userRef);
         if (!userSnap.exists()) return;
-
         const userData = userSnap.data();
         const puntos = userData.puntos || 0;
         userPointsSpan.textContent = `⭐ ${puntos} puntos`;
 
-        // Calcular posición global
         const q = query(collection(db, 'usuarios'), orderBy('puntos', 'desc'));
         const querySnap = await getDocs(q);
         let posicion = 0;
         let total = 0;
         querySnap.forEach((doc) => {
           total++;
-          if (doc.id === uid) {
-            posicion = total;
-          }
+          if (doc.id === uid) posicion = total;
         });
-
         if (posicion > 0) {
           let medal = '';
           if (posicion === 1) medal = '👑 ';
@@ -335,75 +369,34 @@
         } else {
           positionBadge.textContent = '📈 Sin posición aún';
         }
-
-        // Actualizar total de miembros (para la tarjeta de Comunidad)
-        // Lo hacemos en otra función para no repetir consultas
       } catch (error) {
         console.error('Error en updateUserStats:', error);
       }
     }
 
-    // Función para actualizar estadísticas globales (total usuarios, lugares, visitas)
-    async function updateGlobalStats() {
-      try {
-        const usuariosSnap = await getDocs(collection(db, 'usuarios'));
-        const lugaresSnap = await getDocs(collection(db, 'lugares'));
-        const visitasSnap = await getDocs(collection(db, 'visitas_virtuales'));
-
-        const totalUsuarios = usuariosSnap.size;
-        const totalLugares = lugaresSnap.size;
-        const totalVisitas = visitasSnap.size;
-
-        const jugadores = Math.floor(totalUsuarios * 0.5);
-
-        miembrosCount.textContent = totalUsuarios;
-        jugadoresCount.textContent = jugadores;
-        ubicacionesCount.textContent = totalLugares;
-        visitasCount.textContent = totalVisitas;
-      } catch (error) {
-        console.error('Error en updateGlobalStats:', error);
-      }
-    }
-
-    // Escuchar cambios en autenticación
     onAuthStateChanged(auth, async (user) => {
       if (user) {
-        // Actualizar datos del usuario (puntos y posición)
         await updateUserStats(user.uid);
-        // Escuchar cambios en tiempo real en los puntos del usuario
         const userRef = doc(db, 'usuarios', user.uid);
         onSnapshot(userRef, (docSnap) => {
           if (docSnap.exists()) {
             const data = docSnap.data();
             const puntos = data.puntos || 0;
             userPointsSpan.textContent = `⭐ ${puntos} puntos`;
-            // Recalcular posición cuando cambian los puntos
             updateUserStats(user.uid);
           }
         });
-
-        // Actualizar estadísticas globales
-        await updateGlobalStats();
-        // También podemos escuchar cambios en la colección de usuarios para actualizar miembros
-        onSnapshot(collection(db, 'usuarios'), () => {
-          updateGlobalStats();
-        });
-      } else {
-        // Usuario no autenticado, resetear valores si se desea
-        // (opcional)
       }
     });
 
     // Instalación PWA
     let deferredPrompt;
     const installBtn = document.getElementById('installBtn');
-
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredPrompt = e;
       installBtn.style.display = 'flex';
     });
-
     installBtn.addEventListener('click', async () => {
       if (deferredPrompt) {
         deferredPrompt.prompt();
@@ -417,17 +410,9 @@
         installBtn.style.display = 'none';
       }
     });
-
     window.addEventListener('appinstalled', () => {
-      console.log('App instalada correctamente');
       installBtn.style.display = 'none';
     });
-
-    // También ejecutar al cargar si ya hay usuario (por si la página se recarga)
-    if (auth.currentUser) {
-      updateUserStats(auth.currentUser.uid);
-      updateGlobalStats();
-    }
   </script>
 
   <!-- Statcounter -->
