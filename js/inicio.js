@@ -371,26 +371,7 @@ document.getElementById('whatsappBtn').onclick = (e) => {
   if (user?.displayName) msg = `Hola,%20soy%20${encodeURIComponent(user.displayName)}.%20${msg}`;
   window.open(`https://wa.me/50588170531?text=${msg}`, '_blank');
 };
-//=====login ===
-//inicio 
-authCard.classList.add('oculto');
-// Espera a que la página cargue
-document.addEventListener('DOMContentLoaded', function() {
-  const introScreen = document.querySelector('.intro-screen');
-  const introImg = document.getElementById('introImg');
 
-  // Paso 1: después de 3s, cambia a logo.png
-  setTimeout(() => {
-    introImg.src = 'logo.png';
-  }, 3000);
-
-  // Paso 2: después de 6s (3 + 3), oculta la intro y muestra el login
-  setTimeout(() => {
-    introScreen.style.display = 'none';
-    // Si tu contenedor de  está oculto por defecto, muéstralo
-    document.getElementById('authCard').style.display = 'block'; // o 'flex'
-  }, 6000);
-});
 // ============================================
 // ===== ESTADO DE AUTENTICACIÓN (ÚNICO) =====
 // ============================================
@@ -398,13 +379,11 @@ onAuthStateChanged(auth, (user) => {
   console.log('Auth state changed:', user ? 'logueado' : 'no logueado');
   
   if (user) {
-    // Usuario logueado → ocultar login, mostrar menú
     authCard.style.display = 'none';
     menuSection.style.display = 'block';
     cargarPerfil(user);
   } else {
-    // Usuario NO logueado → mostrar login, ocultar menú
-    authCard.style.display = 'flex';   // Usamos flex porque es el display por defecto de .glass-card
+    authCard.style.display = 'flex';
     menuSection.style.display = 'none';
     loginForm.style.display = 'block';
     registerForm.style.display = 'none';
@@ -418,13 +397,11 @@ onAuthStateChanged(auth, (user) => {
 });
 
 // ============================================
-// ===== CARRUSEL PREMIUM =====
+// ===== CARRUSEL PREMIUM, INTRO Y PARTÍCULAS =====
 // ============================================
 
 document.addEventListener('DOMContentLoaded', () => {
   // ===== OCULTAR INTRO DESPUÉS DE LA ANIMACIÓN =====
-  // La intro se oculta automáticamente con CSS (animation-delay: 5s y slideUp),
-  // pero por si acaso la forzamos a desaparecer después de 6s (igual que antes)
   const introScreen = document.querySelector('.intro-screen');
   if (introScreen) {
     setTimeout(() => {
@@ -782,4 +759,3 @@ if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/sw.js')
     .then(reg => console.log('Service Worker registrado', reg))
     .catch(err => console.error('Error al registrar SW', err));
-}
