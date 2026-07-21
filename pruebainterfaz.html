@@ -10,18 +10,18 @@
 </head>
 <body>
 
-  <!-- INTRO (Tu lógica intacta) -->
-  <div class="intro-screen">
+  <!-- INTRO (Controlado por JS para evitar atascos) -->
+  <div class="intro-screen" id="introScreen">
     <div class="intro-content">
       <img src="carga.gif" alt="Guía Pinolera" class="intro-logo-img" />
       <p class="intro-subtitle">Bienvenido, Explorador Pinolero</p>
-      <p class="intro-subtitle">Cargando sistema...</p>
+      <p class="intro-subtitle">Conectando sistema...</p>
     </div>
   </div>
 
   <div class="app-container">
     
-    <!-- LOGIN / REGISTRO -->
+    <!-- LOGIN / REGISTRO (Visible por defecto si el JS no carga) -->
     <div id="authCard" class="auth-wrapper">
       <div class="auth-glass">
         <div class="auth-mascot">
@@ -64,10 +64,9 @@
       </div>
     </div>
 
-    <!-- MENÚ PRINCIPAL (APP) -->
-    <div id="menuSection" style="display:none;">
+    <!-- APP (Oculta por defecto, JS la mostrará si está logueado) -->
+    <div id="menuSection" style="display: none;">
       
-      <!-- HEADER -->
       <header class="app-header">
         <div class="header-left">
           <img src="logo.png" alt="Logo" class="header-logo" />
@@ -81,23 +80,20 @@
         </div>
       </header>
 
-      <!-- PERFIL (Limpio, sin sobrecarga) -->
+      <!-- PERFIL -->
       <div class="profile-card glass" id="profileTrigger">
         <div class="profile-info">
           <img id="profileAvatar" class="profile-avatar" src="" alt="Avatar" />
           <div class="profile-details">
             <span class="profile-name" id="profileNameDisplay">Usuario</span>
-            <span class="profile-level"><i class="fas fa-star" style="color: #ffd700;"></i> <span id="userPointsDisplay">0 puntos</span></span>
+            <span class="profile-level"><i class="fas fa-star" style="color: #ffd700;"></i> <span id="userPointsDisplay">0 pts</span></span>
           </div>
         </div>
         <button id="editProfileBtn" class="btn-icon-edit"><i class="fas fa-pen"></i></button>
       </div>
 
-      <!-- POSICIÓN Y ACCIONES -->
       <div class="user-actions-wrapper">
-        <div class="position-badge">
-          <i class="fas fa-trophy" style="color: #ffd700;"></i> <span id="positionBadge">Calculando...</span>
-        </div>
+        <div class="position-badge"><i class="fas fa-trophy" style="color: #ffd700;"></i> <span id="positionBadge">Posición: --</span></div>
         <div class="action-buttons">
           <a href="comunidad.html" class="action-btn purple"><i class="fas fa-users"></i> Comunidad</a>
           <a href="../temporal.html" class="action-btn orange"><i class="fas fa-tags"></i> Promociones</a>
@@ -112,7 +108,6 @@
         <div class="cat-item"><div class="cat-circle orange"><i class="fas fa-hiking"></i></div><span>Aventura</span></div>
       </div>
 
-      <!-- DESTINOS POPULARES -->
       <div class="section-header">
         <h2>Destinos populares</h2>
         <a href="#" class="see-all">Ver todos</a>
@@ -136,7 +131,6 @@
         </div>
       </div>
 
-      <!-- BANNER WAO! -->
       <div class="wao-banner glass">
         <div class="wao-content">
           <span class="wao-title">WAO!</span>
@@ -146,45 +140,29 @@
         </div>
       </div>
 
-      <!-- JUEGOS PINOLEROS (3 tarjetas grandes y limpias) -->
       <div class="section-header">
         <h2>Juegos Pinoleros</h2>
         <a href="#" class="see-all">Ver todos</a>
       </div>
       <div class="games-column" id="gameList">
-        <!-- 1 -->
         <div class="game-card glass" data-game="mapa">
           <div class="game-icon-wrap map-bg"><i class="fas fa-map"></i></div>
-          <div class="game-text">
-            <h4>Gran Mapa Misterioso</h4>
-            <p>Por toda Nicaragua</p>
-          </div>
+          <div class="game-text"><h4>Gran Mapa</h4><p>Misterioso</p></div>
           <a href="../juegos/mapamisterioso.html" class="btn-play">Jugar</a>
         </div>
-        <!-- 2 -->
         <div class="game-card glass" data-game="millonario">
           <div class="game-icon-wrap money-bg"><i class="fas fa-coins"></i></div>
-          <div class="game-text">
-            <h4>Pinolero Millonario</h4>
-            <p>¿Qué tanto sabes?</p>
-          </div>
+          <div class="game-text"><h4>Pinolero</h4><p>Millonario</p></div>
           <a href="../juegos/millonario.html" class="btn-play">Jugar</a>
         </div>
-        <!-- 3 -->
         <div class="game-card glass" data-game="memoria">
           <div class="game-icon-wrap brain-bg"><i class="fas fa-brain"></i></div>
-          <div class="game-text">
-            <h4>Memoria Pinolera</h4>
-            <p>Encuentra las parejas</p>
-          </div>
+          <div class="game-text"><h4>Memoria</h4><p>Pinolera</p></div>
           <a href="../juegos/palabra.html" class="btn-play">Jugar</a>
         </div>
       </div>
 
-      <!-- PASAPORTE -->
-      <div class="section-header">
-        <h2>Pasaporte (Visitados)</h2>
-      </div>
+      <div class="section-header"><h2>Pasaporte</h2></div>
       <ul class="passport-list glass" id="passportList">
         <li class="passport-empty">No has visitado ningún lugar aún.</li>
       </ul>
@@ -200,22 +178,20 @@
     </div>
   </div>
 
-  <!-- MODAL DE PERFIL -->
+  <!-- MODAL -->
   <div id="editProfileModal" class="modal-overlay">
     <div class="modal-box glass">
-      <h3><i class="fas fa-user-edit"></i> Editar perfil</h3>
+      <h3>Editar perfil</h3>
       <div class="modal-pic">
         <img id="modalProfileImage" src="" alt="Foto" />
         <div class="camera-btn" id="uploadPhotoIcon"><i class="fas fa-camera"></i></div>
       </div>
       <input type="file" id="uploadPhoto" accept="image/*" style="display:none;" />
-      
       <div class="input-group modal-input">
         <label>Nombre completo:</label>
         <input type="text" id="editNameInput" placeholder="Tu nombre" />
       </div>
       <div class="avatar-grid" id="avatarGrid"></div>
-      
       <button id="saveProfileBtn" class="btn btn-primary-full">Guardar</button>
       <button id="closeModalBtn" class="btn btn-outline-full mt-2">Cancelar</button>
     </div>
@@ -224,7 +200,7 @@
   <!-- TOAST -->
   <div id="toast" class="toast-message" style="display:none;"></div>
 
-  <!-- Firebase Compat (Lógica intacta) -->
+  <!-- Firebase Compat -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
