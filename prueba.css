@@ -649,3 +649,147 @@ body {
         padding: 20px;
     }
 }
+
+/* ============================================================
+   CATEGORÍAS RÁPIDAS (Reemplazo de la barra de búsqueda)
+   ============================================================ */
+
+.quick-categories {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding: 8px 0 16px 0;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+}
+
+.quick-categories::-webkit-scrollbar {
+    display: none;
+}
+
+.category-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 10px 18px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    min-width: 60px;
+    flex-shrink: 0;
+    user-select: none;
+}
+
+.category-item i {
+    font-size: 1.3rem;
+    color: rgba(255, 255, 255, 0.6);
+    transition: all 0.3s ease;
+}
+
+.category-item span {
+    font-size: 0.65rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.5);
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.category-item:hover {
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateY(-2px);
+    border-color: rgba(106, 186, 66, 0.3);
+}
+
+.category-item:hover i {
+    color: #6aba42;
+    transform: scale(1.1);
+}
+
+.category-item:hover span {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.category-item.active {
+    background: rgba(106, 186, 66, 0.15);
+    border-color: #6aba42;
+    box-shadow: 0 4px 15px rgba(106, 186, 66, 0.2);
+}
+
+.category-item.active i {
+    color: #6aba42;
+}
+
+.category-item.active span {
+    color: #6aba42;
+    font-weight: 600;
+}
+
+.category-item:active {
+    transform: scale(0.95);
+}
+
+/* ============================================================
+   SECCIÓN HEADER CON EMOJIS (Mejora visual)
+   ============================================================ */
+
+.section-header h2 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #fff;
+}
+
+/* ============================================================
+   ANIMACIÓN PARA CATEGORÍAS
+   ============================================================ */
+
+@keyframes categorySlide {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.quick-categories .category-item {
+    animation: categorySlide 0.4s ease forwards;
+    opacity: 0;
+}
+
+.quick-categories .category-item:nth-child(1) { animation-delay: 0.05s; }
+.quick-categories .category-item:nth-child(2) { animation-delay: 0.1s; }
+.quick-categories .category-item:nth-child(3) { animation-delay: 0.15s; }
+.quick-categories .category-item:nth-child(4) { animation-delay: 0.2s; }
+.quick-categories .category-item:nth-child(5) { animation-delay: 0.25s; }
+
+/* ============================================================
+   RESPONSIVE PARA CATEGORÍAS
+   ============================================================ */
+
+@media (max-width: 480px) {
+    .quick-categories {
+        gap: 8px;
+        padding: 4px 0 12px 0;
+    }
+    
+    .category-item {
+        padding: 8px 14px;
+        min-width: 50px;
+    }
+    
+    .category-item i {
+        font-size: 1.1rem;
+    }
+    
+    .category-item span {
+        font-size: 0.55rem;
+    }
+}
