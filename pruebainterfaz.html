@@ -20,7 +20,7 @@
   </div>
 
   <div class="app-container">
-    
+
     <!-- ==================== LOGIN / REGISTRO ==================== -->
     <div id="authCard" class="auth-wrapper">
       <div class="auth-glass">
@@ -68,7 +68,7 @@
 
     <!-- ==================== MENÚ PRINCIPAL (APP) ==================== -->
     <div id="menuSection" style="display:none;">
-      
+
       <!-- HEADER -->
       <header class="app-header">
         <div class="header-left">
@@ -85,10 +85,28 @@
         </div>
       </header>
 
-      <!-- BARRA DE BÚSQUEDA (Estilo captura) -->
-      <div class="search-bar">
-        <i class="fas fa-search"></i>
-        <input type="text" placeholder="¿A dónde quieres ir?" readonly />
+      <!-- ===== NUEVA SECCIÓN: CATEGORÍAS RÁPIDAS (Reemplaza la barra de búsqueda) ===== -->
+      <div class="quick-categories">
+        <div class="category-item active" onclick="filterDestinations('todos')">
+          <i class="fas fa-globe-americas"></i>
+          <span>Todos</span>
+        </div>
+        <div class="category-item" onclick="filterDestinations('playas')">
+          <i class="fas fa-umbrella-beach"></i>
+          <span>Playas</span>
+        </div>
+        <div class="category-item" onclick="filterDestinations('volcanes')">
+          <i class="fas fa-mountain"></i>
+          <span>Volcanes</span>
+        </div>
+        <div class="category-item" onclick="filterDestinations('coloniales')">
+          <i class="fas fa-church"></i>
+          <span>Coloniales</span>
+        </div>
+        <div class="category-item" onclick="filterDestinations('naturaleza')">
+          <i class="fas fa-tree"></i>
+          <span>Naturaleza</span>
+        </div>
       </div>
 
       <!-- PERFIL Y ACCIONES -->
@@ -103,25 +121,24 @@
           </div>
           <button id="editProfileBtn" class="btn-icon-edit"><i class="fas fa-pen"></i></button>
         </div>
-        
+
         <div class="position-badge">
           <i class="fas fa-trophy" style="color: #ffd700;"></i>
           <span id="positionBadge">Calculando...</span>
         </div>
-        
+
         <div class="action-grid">
           <a href="comunidad.html" class="action-btn gradient-purple"><i class="fas fa-users"></i> Comunidad</a>
           <a href="../temporal.html" class="action-btn gradient-orange"><i class="fas fa-tags"></i> Promociones</a>
         </div>
       </div>
 
-      <!-- SECCIÓN DESTINOS POPULARES (Estilo captura) -->
+      <!-- SECCIÓN DESTINOS POPULARES (SIN "Ver todos") -->
       <div class="section-header">
-        <h2>Destinos populares</h2>
-        <a href="#" class="see-all">Ver todos</a>
+        <h2>🌍 Destinos populares</h2>
       </div>
-      <div class="horizontal-scroll">
-        <div class="destination-card">
+      <div class="horizontal-scroll" id="destinationsContainer">
+        <div class="destination-card" data-category="coloniales">
           <img src="https://upload.wikimedia.org/wikipedia/commons/8/8f/Nicaragua_2017-03-15_%2833978834325%29.jpg" alt="Granada" />
           <div class="card-overlay">
             <h3>Granada</h3>
@@ -130,7 +147,8 @@
             <a href="destinos/granada.html" class="btn-visitar">Visitar</a>
           </div>
         </div>
-        <div class="destination-card">
+        
+        <div class="destination-card" data-category="volcanes">
           <img src="https://www.visitcentroamerica.com/wp-content/uploads/2025/04/Ometepe-Island-Concepcion-and-Maderas-Volcanoes-Nicaragua-Centroamerica-02.webp" alt="Ometepe" />
           <div class="card-overlay">
             <h3>Ometepe</h3>
@@ -139,110 +157,122 @@
             <a href="destinos/ometepe.html" class="btn-visitar">Visitar</a>
           </div>
         </div>
-<div class="destination-card">
-          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBKh9SQDQA8WI1MB1e6rMhHchGKT6B2rmQ3wCwyewnMMk5F3y_YOBMDe8&s=10" alt="Ometepe" />
+        
+        <div class="destination-card" data-category="coloniales">
+          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBKh9SQDQA8WI1MB1e6rMhHchGKT6B2rmQ3wCwyewnMMk5F3y_YOBMDe8&s=10" alt="Diriamba" />
           <div class="card-overlay">
             <h3>Diriamba</h3>
             <p><i class="fas fa-map-marker-alt"></i> Ciudad del Güegüense</p>
             <span class="rating"><i class="fas fa-star"></i> 4.9</span>
-            <a href="destinos/ometepe.html" class="btn-visitar">Visitar</a>
+            <a href="destinos/diriamba.html" class="btn-visitar">Visitar</a>
           </div>
         </div>
-<div class="destination-card">
-          <img src="https://images.unsplash.com/photo-1587563826427-2c49c0cf0976?auto=format&fit=crop&w=400&q=80" alt="Ometepe" />
-          <div class="card-overlay">
-            <h3>Ometepe</h3>
-            <p><i class="fas fa-map-marker-alt"></i> Isla volcánica</p>
-            <span class="rating"><i class="fas fa-star"></i> 4.9</span>
-            <a href="destinos/ometepe.html" class="btn-visitar">Visitar</a>
-          </div>
-        </div>
-        <div class="destination-card">
+        
+        <div class="destination-card" data-category="playas">
           <img src="https://images.unsplash.com/photo-1599789915601-18b24e13f7de?auto=format&fit=crop&w=400&q=80" alt="San Juan" />
           <div class="card-overlay">
-            <h3>San Juan</h3>
-            <p><i class="fas fa-map-marker-alt"></i> Río y naturaleza</p>
+            <h3>San Juan del Sur</h3>
+            <p><i class="fas fa-map-marker-alt"></i> Playas del Pacífico</p>
             <span class="rating"><i class="fas fa-star"></i> 4.7</span>
             <a href="destinos/sanjuan.html" class="btn-visitar">Visitar</a>
+          </div>
+        </div>
+
+        <div class="destination-card" data-category="naturaleza">
+          <img src="https://images.unsplash.com/photo-1587563826427-2c49c0cf0976?auto=format&fit=crop&w=400&q=80" alt="Selva" />
+          <div class="card-overlay">
+            <h3>Reserva Indio Maíz</h3>
+            <p><i class="fas fa-map-marker-alt"></i> Selva tropical</p>
+            <span class="rating"><i class="fas fa-star"></i> 4.6</span>
+            <a href="destinos/indiomaiz.html" class="btn-visitar">Visitar</a>
+          </div>
+        </div>
+
+        <div class="destination-card" data-category="volcanes">
+          <img src="https://images.unsplash.com/photo-1599117056967-50f675aab524?auto=format&fit=crop&w=400&q=80" alt="Volcán" />
+          <div class="card-overlay">
+            <h3>Volcán Masaya</h3>
+            <p><i class="fas fa-map-marker-alt"></i> Cráter activo</p>
+            <span class="rating"><i class="fas fa-star"></i> 4.8</span>
+            <a href="destinos/masaya.html" class="btn-visitar">Visitar</a>
           </div>
         </div>
       </div>
 
       <!-- SECCIÓN TIPS PINOLEROS -->
-<div class="tips-section">
-  <div class="tips-header">
-    <div class="tips-header-icon">💡</div>
-    <h3>Tips Pinoleros</h3>
-    <p>Consejos para tu viaje por Nicaragua</p>
-  </div>
-  
-  <div class="tips-grid">
-    <div class="tip-card" onclick="showTipDetail('clima')">
-      <div class="tip-icon">🌤️</div>
-      <div class="tip-content">
-        <h4>Mejor época para viajar</h4>
-        <p>Diciembre - Abril (temporada seca)</p>
-        <span class="tip-tag">Clima</span>
-      </div>
-      <i class="fas fa-chevron-right tip-arrow"></i>
-    </div>
-    
-    <div class="tip-card" onclick="showTipDetail('moneda')">
-      <div class="tip-icon">💰</div>
-      <div class="tip-content">
-        <h4>Moneda local</h4>
-        <p>1 USD ≈ 36 Córdobas (NIO)</p>
-        <span class="tip-tag">Dinero</span>
-      </div>
-      <i class="fas fa-chevron-right tip-arrow"></i>
-    </div>
-    
-    <div class="tip-card" onclick="showTipDetail('transporte')">
-      <div class="tip-icon">🚌</div>
-      <div class="tip-content">
-        <h4>Transporte en Nicaragua</h4>
-        <p>Buses, taxis y shuttles disponibles</p>
-        <span class="tip-tag">Movilidad</span>
-      </div>
-      <i class="fas fa-chevron-right tip-arrow"></i>
-    </div>
-    
-    <div class="tip-card" onclick="showTipDetail('comida')">
-      <div class="tip-icon">🍽️</div>
-      <div class="tip-content">
-        <h4>Gastronomía típica</h4>
-        <p>Gallo pinto, nacatamales, quesillo</p>
-        <span class="tip-tag">Comida</span>
-      </div>
-      <i class="fas fa-chevron-right tip-arrow"></i>
-    </div>
-    
-    <div class="tip-card" onclick="showTipDetail('seguridad')">
-      <div class="tip-icon">🛡️</div>
-      <div class="tip-content">
-        <h4>Seguridad para turistas</h4>
-        <p>Consejos para viajar seguro</p>
-        <span class="tip-tag">Seguridad</span>
-      </div>
-      <i class="fas fa-chevron-right tip-arrow"></i>
-    </div>
-  </div>
-</div>
+      <div class="tips-section">
+        <div class="tips-header">
+          <div class="tips-header-icon">💡</div>
+          <h3>Tips Pinoleros</h3>
+          <p>Consejos para tu viaje por Nicaragua</p>
+        </div>
 
-<!-- MODAL PARA DETALLES DE TIPS -->
-<div id="tipModal" class="tip-modal">
-  <div class="tip-modal-content">
-    <span class="tip-modal-close" onclick="closeTipModal()">&times;</span>
-    <div id="tipModalBody">
-      <!-- Contenido dinámico -->
-    </div>
-  </div>
-</div>
+        <div class="tips-grid">
+          <div class="tip-card" onclick="showTipDetail('clima')">
+            <div class="tip-icon">🌤️</div>
+            <div class="tip-content">
+              <h4>Mejor época para viajar</h4>
+              <p>Diciembre - Abril (temporada seca)</p>
+              <span class="tip-tag">Clima</span>
+            </div>
+            <i class="fas fa-chevron-right tip-arrow"></i>
+          </div>
 
-      <!-- SECCIÓN JUEGOS (Estilo captura "Juegos Pinoleros") -->
+          <div class="tip-card" onclick="showTipDetail('moneda')">
+            <div class="tip-icon">💰</div>
+            <div class="tip-content">
+              <h4>Moneda local</h4>
+              <p>1 USD ≈ 36 Córdobas (NIO)</p>
+              <span class="tip-tag">Dinero</span>
+            </div>
+            <i class="fas fa-chevron-right tip-arrow"></i>
+          </div>
+
+          <div class="tip-card" onclick="showTipDetail('transporte')">
+            <div class="tip-icon">🚌</div>
+            <div class="tip-content">
+              <h4>Transporte en Nicaragua</h4>
+              <p>Buses, taxis y shuttles disponibles</p>
+              <span class="tip-tag">Movilidad</span>
+            </div>
+            <i class="fas fa-chevron-right tip-arrow"></i>
+          </div>
+
+          <div class="tip-card" onclick="showTipDetail('comida')">
+            <div class="tip-icon">🍽️</div>
+            <div class="tip-content">
+              <h4>Gastronomía típica</h4>
+              <p>Gallo pinto, nacatamales, quesillo</p>
+              <span class="tip-tag">Comida</span>
+            </div>
+            <i class="fas fa-chevron-right tip-arrow"></i>
+          </div>
+
+          <div class="tip-card" onclick="showTipDetail('seguridad')">
+            <div class="tip-icon">🛡️</div>
+            <div class="tip-content">
+              <h4>Seguridad para turistas</h4>
+              <p>Consejos para viajar seguro</p>
+              <span class="tip-tag">Seguridad</span>
+            </div>
+            <i class="fas fa-chevron-right tip-arrow"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODAL PARA DETALLES DE TIPS -->
+      <div id="tipModal" class="tip-modal">
+        <div class="tip-modal-content">
+          <span class="tip-modal-close" onclick="closeTipModal()">&times;</span>
+          <div id="tipModalBody">
+            <!-- Contenido dinámico -->
+          </div>
+        </div>
+      </div>
+
+      <!-- SECCIÓN JUEGOS (SIN "Ver todos") -->
       <div class="section-header">
-        <h2>Juegos Pinoleros</h2>
-        <a href="#" class="see-all">Ver todos</a>
+        <h2>🎮 Juegos Pinoleros</h2>
       </div>
       <div class="games-grid" id="gameList">
         <div class="game-card" data-game="mapa">
@@ -289,13 +319,13 @@
 
       <!-- SECCIÓN PASAPORTE -->
       <div class="section-header">
-        <h2>Pasaporte</h2>
+        <h2>📌 Pasaporte</h2>
       </div>
       <ul class="passport-list" id="passportList">
         <li class="passport-empty">No has visitado ningún lugar aún.</li>
       </ul>
 
-      <!-- MENÚ INFERIOR (Estilo captura - 5 elementos con botón verde central) -->
+      <!-- MENÚ INFERIOR -->
       <nav class="bottom-nav">
         <a href="#" class="nav-item active" data-url="#">
           <i class="fas fa-home"></i>
@@ -329,14 +359,14 @@
         <div class="camera-btn" id="uploadPhotoIcon"><i class="fas fa-camera"></i></div>
       </div>
       <input type="file" id="uploadPhoto" accept="image/*" style="display:none;" />
-      
+
       <div class="input-group modal-input">
         <label>Nombre completo:</label>
         <input type="text" id="editNameInput" placeholder="Tu nombre" />
       </div>
 
       <div class="avatar-grid" id="avatarGrid"></div>
-      
+
       <div class="modal-actions">
         <button id="saveProfileBtn" class="btn btn-primary-full">Guardar cambios</button>
         <button id="closeModalBtn" class="btn btn-outline-full mt-2">Cancelar</button>
