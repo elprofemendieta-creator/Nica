@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Guía Pinolera - Descubre Nicaragua</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <link rel="stylesheet" href="prueba.css" />
+</head>
+<body>
+
+  <!-- Intro (Manteniendo tu lógica original) -->
+  <div class="intro-screen">
+    <div class="intro-content">
+      <img src="carga.gif" alt="Guía Pinolera" class="intro-logo-img" />
+      <p class="intro-subtitle">Bienvenido, Explorador Pinolero</p>
+      <p class="intro-subtitle">Cargando sistema...</p>
+    </div>
+  </div>
+
+  <div class="app-container">
+    
+    <!-- ==================== LOGIN / REGISTRO ==================== -->
+    <div id="authCard" class="auth-wrapper">
+      <div class="auth-glass">
+        <div class="auth-mascot">
+          <img src="https://cdn-icons-png.flaticon.com/512/4712/4712109.png" alt="Mascota" />
+        </div>
+        <h1 class="auth-title">Guía Pinolera</h1>
+        <p class="auth-subtitle">🌋 Explora Nicaragua jugando 🌊</p>
+
+        <!-- Formulario Login -->
+        <div id="loginForm">
+          <div class="input-group">
+            <i class="fas fa-envelope input-icon"></i>
+            <input type="email" id="loginEmail" placeholder="Correo electrónico" />
+          </div>
+          <div class="input-group">
+            <i class="fas fa-lock input-icon"></i>
+            <input type="password" id="loginPassword" placeholder="Contraseña" />
+          </div>
+          <button id="doLoginBtn" class="btn btn-primary-full">Iniciar sesión</button>
+          <div class="auth-link"><a href="#" id="forgotPasswordLink">¿Olvidaste tu contraseña?</a></div>
+          <div class="divider"><span>o</span></div>
+          <button id="showRegisterBtn" class="btn btn-outline-full">✨ Crear cuenta nueva</button>
+        </div>
+
+        <!-- Formulario Registro -->
+        <div id="registerForm" style="display:none;">
+          <div class="input-group">
+            <i class="fas fa-user input-icon"></i>
+            <input type="text" id="regName" placeholder="Nombre completo" />
+          </div>
+          <div class="input-group">
+            <i class="fas fa-envelope input-icon"></i>
+            <input type="email" id="regEmail" placeholder="Correo electrónico" />
+          </div>
+          <div class="input-group">
+            <i class="fas fa-lock input-icon"></i>
+            <input type="password" id="regPassword" placeholder="Contraseña (mínimo 6)" />
+          </div>
+          <button id="doRegisterBtn" class="btn btn-primary-full">Registrarse</button>
+          <button id="backToLoginBtn" class="btn btn-outline-full mt-2">← Volver</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== MENÚ PRINCIPAL (APP) ==================== -->
+    <div id="menuSection" style="display:none;">
+      
+      <!-- HEADER -->
+      <header class="app-header">
+        <div class="header-left">
+          <img src="logo.png" alt="Logo" class="header-logo" />
+          <div>
+            <h1>¡Explora Nicaragua!</h1>
+            <span class="header-subtitle">GUÍA PINOLERA</span>
+          </div>
+        </div>
+        <div class="header-right">
+          <button id="logoutBtn" class="btn-icon" title="Cerrar sesión">
+            <i class="fas fa-sign-out-alt"></i>
+          </button>
+        </div>
+      </header>
+
+      <!-- BARRA DE BÚSQUEDA (Estilo captura) -->
+      <div class="search-bar">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="¿A dónde quieres ir?" readonly />
+      </div>
+
+      <!-- PERFIL Y ACCIONES -->
+      <div class="profile-wrapper">
+        <div class="profile-card" id="profileTrigger">
+          <div class="profile-info">
+            <img id="profileAvatar" class="profile-avatar" src="" alt="Avatar" />
+            <div class="profile-details">
+              <div class="profile-name" id="profileNameDisplay">Usuario</div>
+              <div class="profile-level"><i class="fas fa-star" style="color: #ffd700;"></i> <span id="userPointsDisplay">0 puntos</span></div>
+            </div>
+          </div>
+          <button id="editProfileBtn" class="btn-icon-edit"><i class="fas fa-pen"></i></button>
+        </div>
+        
+        <div class="position-badge">
+          <i class="fas fa-trophy" style="color: #ffd700;"></i>
+          <span id="positionBadge">Calculando...</span>
+        </div>
+        
+        <div class="action-grid">
+          <a href="comunidad.html" class="action-btn gradient-purple"><i class="fas fa-users"></i> Comunidad</a>
+          <a href="../temporal.html" class="action-btn gradient-orange"><i class="fas fa-tags"></i> Promociones</a>
+        </div>
+      </div>
+
+      <!-- SECCIÓN DESTINOS POPULARES (Estilo captura) -->
+      <div class="section-header">
+        <h2>Destinos populares</h2>
+        <a href="#" class="see-all">Ver todos</a>
+      </div>
+      <div class="horizontal-scroll">
+        <div class="destination-card">
+          <img src="https://images.unsplash.com/photo-1599117056967-50f675aab524?auto=format&fit=crop&w=400&q=80" alt="Granada" />
+          <div class="card-overlay">
+            <h3>Granada</h3>
+            <p><i class="fas fa-map-marker-alt"></i> Capital Colonial</p>
+            <span class="rating"><i class="fas fa-star"></i> 4.8</span>
+          </div>
+        </div>
+        <div class="destination-card">
+          <img src="https://images.unsplash.com/photo-1587563826427-2c49c0cf0976?auto=format&fit=crop&w=400&q=80" alt="Ometepe" />
+          <div class="card-overlay">
+            <h3>Ometepe</h3>
+            <p><i class="fas fa-map-marker-alt"></i> Isla volcánica</p>
+            <span class="rating"><i class="fas fa-star"></i> 4.9</span>
+          </div>
+        </div>
+        <div class="destination-card">
+          <img src="https://images.unsplash.com/photo-1599789915601-18b24e13f7de?auto=format&fit=crop&w=400&q=80" alt="San Juan" />
+          <div class="card-overlay">
+            <h3>San Juan</h3>
+            <p><i class="fas fa-map-marker-alt"></i> Río y naturaleza</p>
+            <span class="rating"><i class="fas fa-star"></i> 4.7</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- BANNER WAO (Estilo captura) -->
+      <div class="wao-banner">
+        <div class="wao-content">
+          <span class="wao-title">WAO!</span>
+          <h3>Experiencias</h3>
+          <p>Vive lo mejor de Nicaragua</p>
+          <button class="btn btn-primary-small">Explorar</button>
+        </div>
+      </div>
+
+      <!-- SECCIÓN JUEGOS (Estilo captura "Juegos Pinoleros") -->
+      <div class="section-header">
+        <h2>Juegos Pinoleros</h2>
+        <a href="#" class="see-all">Ver todos</a>
+      </div>
+      <div class="games-grid" id="gameList">
+        <div class="game-card" data-game="mapa">
+          <div class="game-icon-wrapper icon-map">🎮</div>
+          <div class="game-info">
+            <h4>Gran Mapa</h4>
+            <p>Misterioso</p>
+          </div>
+          <a href="../juegos/mapamisterioso.html" class="btn-game-play">Jugar</a>
+        </div>
+        <div class="game-card" data-game="millonario">
+          <div class="game-icon-wrapper icon-money">💰</div>
+          <div class="game-info">
+            <h4>Pinolero</h4>
+            <p>Millonario</p>
+          </div>
+          <a href="../juegos/millonario.html" class="btn-game-play">Jugar</a>
+        </div>
+        <div class="game-card" data-game="stop">
+          <div class="game-icon-wrapper icon-stop">🛑</div>
+          <div class="game-info">
+            <h4>Stop</h4>
+            <p>Pinolero</p>
+          </div>
+          <a href="../juegos/stop.html" class="btn-game-play">Jugar</a>
+        </div>
+        <div class="game-card" data-game="memoria">
+          <div class="game-icon-wrapper icon-brain">🧠</div>
+          <div class="game-info">
+            <h4>Memoria</h4>
+            <p>Pinolera</p>
+          </div>
+          <a href="../juegos/palabra.html" class="btn-game-play">Jugar</a>
+        </div>
+        <div class="game-card" data-game="laberinto">
+          <div class="game-icon-wrapper icon-maze">🌀</div>
+          <div class="game-info">
+            <h4>Laberinto</h4>
+            <p>Turístico</p>
+          </div>
+          <a href="../juegos/laberinto.html" class="btn-game-play">Jugar</a>
+        </div>
+      </div>
+
+      <!-- SECCIÓN PASAPORTE -->
+      <div class="section-header">
+        <h2>Pasaporte</h2>
+      </div>
+      <ul class="passport-list" id="passportList">
+        <li class="passport-empty">No has visitado ningún lugar aún.</li>
+      </ul>
+
+      <!-- MENÚ INFERIOR (Estilo captura - 5 elementos con botón verde central) -->
+      <nav class="bottom-nav">
+        <a href="#" class="nav-item active" data-url="#">
+          <i class="fas fa-home"></i>
+          <span>Inicio</span>
+        </a>
+        <a href="#" class="nav-item" data-url="visitas/index.html">
+          <i class="fas fa-vr-cardboard"></i>
+          <span>Visitas</span>
+        </a>
+        <a href="#" class="nav-item nav-map" data-url="mapa.html">
+          <i class="fas fa-map"></i>
+        </a>
+        <a href="#" class="nav-item" data-url="https://nicaguia.base44.app">
+          <i class="fas fa-qrcode"></i>
+          <span>Escanea</span>
+        </a>
+        <a href="#" class="nav-item" data-url="../juegos/juegos.html">
+          <i class="fas fa-gamepad"></i>
+          <span>Juegos</span>
+        </a>
+      </nav>
+    </div>
+  </div>
+
+  <!-- MODAL DE PERFIL -->
+  <div id="editProfileModal" class="modal-overlay">
+    <div class="modal-box">
+      <h3><i class="fas fa-user-edit"></i> Editar perfil</h3>
+      <div class="modal-pic-container">
+        <img id="modalProfileImage" src="" alt="Foto" />
+        <div class="camera-btn" id="uploadPhotoIcon"><i class="fas fa-camera"></i></div>
+      </div>
+      <input type="file" id="uploadPhoto" accept="image/*" style="display:none;" />
+      
+      <div class="input-group modal-input">
+        <label>Nombre completo:</label>
+        <input type="text" id="editNameInput" placeholder="Tu nombre" />
+      </div>
+
+      <div class="avatar-grid" id="avatarGrid"></div>
+      
+      <div class="modal-actions">
+        <button id="saveProfileBtn" class="btn btn-primary-full">Guardar cambios</button>
+        <button id="closeModalBtn" class="btn btn-outline-full mt-2">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div id="toast" class="toast-message" style="display:none;"></div>
+
+  <!-- Firebase Compat -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
+
+  <script src="js/inicio.js"></script>
+</body>
+</html>
