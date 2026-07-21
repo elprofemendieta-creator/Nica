@@ -801,3 +801,116 @@ document.getElementById('whatsappBtn')?.addEventListener('click', (e) => {
 });
 
 console.log('✅ Todos los eventos cargados correctamente');
+
+// ================================================================
+// FUNCIONES PARA TIPS PINOLEROS
+// ================================================================
+
+// Datos de los tips
+const tipsData = {
+    clima: {
+        icon: '🌤️',
+        title: 'Mejor época para viajar',
+        description: 'Nicaragua tiene un clima tropical con dos estaciones bien definidas. La mejor época para visitar es durante la temporada seca.',
+        details: [
+            'Temporada seca: Diciembre - Abril (ideal para playas y tours)',
+            'Temporada lluviosa: Mayo - Noviembre (paisajes verdes)',
+            'Temperatura promedio: 27°C - 32°C',
+            'Lleva ropa ligera y protector solar'
+        ],
+        tag: 'Clima'
+    },
+    moneda: {
+        icon: '💰',
+        title: 'Moneda local',
+        description: 'La moneda oficial de Nicaragua es el Córdoba (NIO). Es recomendable llevar efectivo en córdobas para compras locales.',
+        details: [
+            '1 USD ≈ 36 Córdobas (tasa variable)',
+            'Aceptan dólares en lugares turísticos',
+            'Usa tarjeta en hoteles y restaurantes grandes',
+            'Cambia dinero en bancos o casas de cambio oficiales'
+        ],
+        tag: 'Dinero'
+    },
+    transporte: {
+        icon: '🚌',
+        title: 'Transporte en Nicaragua',
+        description: 'Nicaragua ofrece varias opciones de transporte para moverse entre ciudades y lugares turísticos.',
+        details: [
+            'Buses interurbanos: Económicos y frecuentes',
+            'Taxis: Negocia el precio antes de subir',
+            'Shuttles turísticos: Para tours organizados',
+            'Alquiler de autos: Disponible en aeropuertos'
+        ],
+        tag: 'Movilidad'
+    },
+    comida: {
+        icon: '🍽️',
+        title: 'Gastronomía típica',
+        description: 'La comida nicaragüense es variada y deliciosa, con influencias indígenas y españolas.',
+        details: [
+            'Gallo pinto: Arroz y frijoles (desayuno típico)',
+            'Nacatamales: Masa rellena con carne y verduras',
+            'Quesillo: Tortilla con queso y cebolla',
+            'Indio Viejo: Sopa espesa de maíz y carne',
+            'Bebidas: Chicha, tiste y cacao'
+        ],
+        tag: 'Comida'
+    },
+    seguridad: {
+        icon: '🛡️',
+        title: 'Seguridad para turistas',
+        description: 'Nicaragua es generalmente seguro para turistas, pero es importante tomar precauciones básicas.',
+        details: [
+            'Evita mostrar objetos de valor en público',
+            'Usa taxis oficiales o apps de transporte',
+            'No camines solo por zonas desconocidas de noche',
+            'Guarda copias de tus documentos importantes',
+            'Números de emergencia: 911 (policía)'
+        ],
+        tag: 'Seguridad'
+    }
+};
+
+// Función para mostrar el detalle del tip
+function showTipDetail(tipId) {
+    const tip = tipsData[tipId];
+    if (!tip) return;
+    
+    const modal = document.getElementById('tipModal');
+    const body = document.getElementById('tipModalBody');
+    
+    body.innerHTML = `
+        <span class="modal-tip-icon">${tip.icon}</span>
+        <h2>${tip.title}</h2>
+        <p class="modal-tip-description">${tip.description}</p>
+        <div class="modal-tip-details">
+            ${tip.details.map(detail => `<li>${detail}</li>`).join('')}
+        </div>
+        <span class="modal-tip-tag">#${tip.tag}</span>
+    `;
+    
+    modal.style.display = 'block';
+    document.body.style.overflow = 'hidden';
+}
+
+// Función para cerrar el modal
+function closeTipModal() {
+    document.getElementById('tipModal').style.display = 'none';
+    document.body.style.overflow = 'auto';
+}
+
+// Cerrar modal al hacer clic fuera
+window.addEventListener('click', (e) => {
+    const modal = document.getElementById('tipModal');
+    if (e.target === modal) {
+        closeTipModal();
+    }
+});
+
+// Cerrar modal con tecla ESC
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        closeTipModal();
+    }
+});
