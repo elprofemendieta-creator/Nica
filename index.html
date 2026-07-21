@@ -401,28 +401,60 @@
 
 <!-- ===== BOTÓN FLOTANTE IA (DIFY) ===== -->
 <script>
-  window.difyChatbotConfig = {
-    token: 'gw2xlin115DavvTp9',  // <--- IMPORTANTE: las comillas simples '
-    baseUrl: 'https://udify.app',
-    containerProps: {
-      style: {
-        backgroundColor: '#a4c737',  // <--- Verde Pinolero
-        width: '64px',
-        height: '64px',
-        borderRadius: '32px',
-        boxShadow: '0 8px 32px rgba(164, 199, 55, 0.4)'
-      }
-    },
-    welcomeMessage: '🇳🇮 ¡Bienvenido a Guía Pinolera! ¿Qué destino te gustaría explorar hoy?',
-    suggestedQuestions: [
-      '¿Qué lugares visitar en Granada?',
-      'Tips para viajar a Ometepe',
-      'Platos típicos de Nicaragua',
-      'Mejor época para ir a San Juan del Sur'
-    ]
-  }
+ window.difyChatbotConfig = {
+  token: 'gw2xWn1l5DavvTp9',
+  inputs: {
+    // Puedes definir variables de entrada aquí si quieres
+    // Por ejemplo, si quieres pasar el nombre del usuario:
+    // name: "Usuario"
+  },
+  systemVariables: {
+    // user_id: 'PUEDES DEFINIR UN ID DE USUARIO AQUÍ',
+    // conversation_id: 'PUEDES DEFINIR UN ID DE CONVERSACIÓN AQUÍ',
+  },
+  userVariables: {
+    // avatar_url: 'URL DEL AVATAR DEL USUARIO',
+    // name: 'NOMBRE DEL USUARIO',
+  },
+ }
 </script>
-<script src="https://udify.app/embed.js"></script>
+<script
+ src="https://udify.app/embed.min.js"
+ id="gw2xWn1l5DavvTp9"
+ defer>
+</script>
+<style>
+  /* Personalización del botón de Dify */
+  #dify-chatbot-bubble-button {
+    background-color: #a4c737 !important;  /* Verde Pinolero */
+    box-shadow: 0 8px 32px rgba(164, 199, 55, 0.4) !important;
+    width: 64px !important;
+    height: 64px !important;
+  }
+  
+  #dify-chatbot-bubble-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 12px 40px rgba(164, 199, 55, 0.6) !important;
+  }
+
+  /* Tamaño de la ventana del chat */
+  #dify-chatbot-bubble-window {
+    width: 24rem !important;
+    height: 40rem !important;
+    border-radius: 24px !important;
+    border: 2px solid rgba(164, 199, 55, 0.2) !important;
+  }
+
+  /* Botón de cerrar */
+  #dify-chatbot-bubble-close {
+    background-color: #232049 !important;
+  }
+
+  /* Encabezado del chat */
+  .dify-chatbot-bubble-header {
+    background: linear-gradient(135deg, #232049, #a287be) !important;
+  }
+</style>
 
   <!-- Firebase Compat -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
