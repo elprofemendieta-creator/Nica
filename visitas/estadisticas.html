@@ -3,111 +3,691 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Estadísticas – Visitas Pinolera</title>
+  <title>📊 Estadísticas – Visitas Pinolera</title>
+  
+  <!-- Font Awesome para íconos -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    /* ============================================================
+       ESTADÍSTICAS - Visitas Pinolera
+       Paleta: #232049, #a4c737, #a287be, #fbfbfb
+       Fuentes: Myriad Pro, Cascadia Mono Light
+       ============================================================ */
+
+    /* ===== CARGA DE FUENTES ===== */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+    @font-face {
+      font-family: 'Myriad Pro';
+      src: local('Myriad Pro'), local('MyriadPro-Regular');
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: 'Myriad Pro';
+      src: local('Myriad Pro Bold'), local('MyriadPro-Bold');
+      font-weight: 700;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: 'Cascadia Mono Light';
+      src: local('Cascadia Mono Light'), local('CascadiaMono-Light');
+      font-weight: 300;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    /* ===== VARIABLES ===== */
+    :root {
+      --primary: #a4c737;
+      --primary-dark: #8ab32e;
+      --primary-light: #c0e05a;
+      --secondary: #a287be;
+      --secondary-dark: #8a73a8;
+      --secondary-light: #c4b5d8;
+      --bg-dark: #232049;
+      --bg-light: #fbfbfb;
+      --text-light: #fbfbfb;
+      --text-dark: #232049;
+      --text-muted: rgba(251, 251, 251, 0.7);
+      --text-muted-dark: rgba(35, 32, 73, 0.6);
+      
+      --font-title: 'Myriad Pro', 'Poppins', 'Segoe UI', sans-serif;
+      --font-body: 'Myriad Pro', 'Inter', 'Segoe UI', sans-serif;
+      --font-mono: 'Cascadia Mono Light', 'Cascadia Mono', monospace;
+      
+      --shadow-card: 0 20px 40px rgba(0, 0, 0, 0.5);
+      --shadow-primary: 0 4px 15px rgba(164, 199, 55, 0.4);
+      --shadow-secondary: 0 4px 15px rgba(162, 135, 190, 0.4);
+      
+      --transition-fast: 0.2s ease;
+      --transition-med: 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      --transition-slow: 0.6s ease;
+      
+      --border-radius-lg: 36px;
+      --border-radius-md: 24px;
+      --border-radius-sm: 16px;
+    }
+
+    /* ===== RESET Y BASE ===== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #0b3d91, #1e90ff);
+      font-family: var(--font-body);
+      background: linear-gradient(135deg, var(--bg-dark), #1a1738, var(--bg-dark));
+      background-size: 300% 300%;
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 20px;
+      position: relative;
+      overflow-x: hidden;
+      animation: gradientBG 8s ease-in-out infinite;
     }
-    .dashboard {
-      max-width: 800px;
+
+    @keyframes gradientBG {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    /* Decoración de fondo */
+    body::before {
+      content: "📊";
+      position: fixed;
+      top: -50px;
+      right: -50px;
+      font-size: 250px;
+      opacity: 0.03;
+      pointer-events: none;
+      z-index: 0;
+      transform: rotate(20deg);
+    }
+
+    body::after {
+      content: "📈";
+      position: fixed;
+      bottom: -50px;
+      left: -50px;
+      font-size: 250px;
+      opacity: 0.03;
+      pointer-events: none;
+      z-index: 0;
+      transform: rotate(-15deg);
+    }
+
+    /* Partículas de fondo */
+    .particles {
+      position: fixed;
+      top: 0;
+      left: 0;
       width: 100%;
-      background: rgba(255,255,255,0.12);
-      backdrop-filter: blur(30px);
-      border-radius: 36px;
-      padding: 30px;
-      border: 1px solid rgba(255,255,255,0.25);
-      color: white;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
     }
+
+    .particle {
+      position: absolute;
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      opacity: 0.1;
+      animation: floatParticle 20s infinite linear;
+    }
+
+    @keyframes floatParticle {
+      0% { transform: translateY(100vh) scale(0); opacity: 0; }
+      10% { opacity: 0.1; }
+      90% { opacity: 0.1; }
+      100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+    }
+
+    /* ===== DASHBOARD PRINCIPAL ===== */
+    .dashboard {
+      max-width: 850px;
+      width: 100%;
+      background: rgba(251, 251, 251, 0.08);
+      backdrop-filter: blur(30px);
+      -webkit-backdrop-filter: blur(30px);
+      border-radius: var(--border-radius-lg);
+      padding: 35px 30px 30px;
+      border: 1px solid rgba(164, 199, 55, 0.15);
+      color: var(--text-light);
+      box-shadow: var(--shadow-card);
+      position: relative;
+      z-index: 1;
+      animation: fadeInUp 0.8s ease;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(40px) scale(0.95); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* Borde decorativo superior */
+    .dashboard::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary), var(--primary));
+      background-size: 200% 100%;
+      border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
+      animation: gradientMove 3s ease-in-out infinite;
+    }
+
+    @keyframes gradientMove {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    /* ===== TÍTULO ===== */
     h1 {
+      font-family: var(--font-title);
       text-align: center;
-      font-size: 2.2rem;
+      font-size: 2.4rem;
+      font-weight: 800;
       margin-bottom: 30px;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
+      gap: 12px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary), var(--primary));
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: gradientShift 4s ease-in-out infinite;
+      letter-spacing: 1px;
     }
+
+    @keyframes gradientShift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    h1 i {
+      background: none;
+      -webkit-background-clip: unset;
+      background-clip: unset;
+      color: var(--primary);
+      font-size: 2rem;
+    }
+
+    /* ===== GRID DE ESTADÍSTICAS ===== */
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 18px;
       margin-bottom: 30px;
     }
+
     .stat-card {
-      background: rgba(255,255,255,0.08);
+      background: rgba(255, 255, 255, 0.06);
       backdrop-filter: blur(15px);
-      border-radius: 24px;
-      padding: 25px 15px;
+      -webkit-backdrop-filter: blur(15px);
+      border-radius: var(--border-radius-md);
+      padding: 22px 15px 20px;
       text-align: center;
-      border: 1px solid rgba(255,255,255,0.2);
-      transition: transform 0.3s;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      transition: all var(--transition-med);
       animation: popIn 0.6s ease both;
+      position: relative;
+      overflow: hidden;
     }
-    .stat-card:hover { transform: translateY(-5px); }
-    .stat-icon { font-size: 2.8rem; margin-bottom: 10px; }
-    .stat-value { font-size: 2rem; font-weight: 800; }
-    .stat-label { opacity: 0.85; font-size: 0.9rem; }
-    .level-box {
-      background: linear-gradient(135deg, #FFB703, #FF8800);
-      border-radius: 24px;
-      padding: 20px;
-      text-align: center;
-      margin-top: 20px;
-      color: #023047;
-      font-weight: bold;
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(164, 199, 55, 0.05) 0%, transparent 70%);
+      animation: rotateGlow 20s linear infinite;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity var(--transition-fast);
     }
-    .level-title { font-size: 1.2rem; opacity: 0.8; }
-    .level-name { font-size: 2rem; }
+
+    .stat-card:hover::before {
+      opacity: 1;
+    }
+
+    @keyframes rotateGlow {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .stat-card:nth-child(1) { animation-delay: 0.05s; }
+    .stat-card:nth-child(2) { animation-delay: 0.15s; }
+    .stat-card:nth-child(3) { animation-delay: 0.25s; }
+    .stat-card:nth-child(4) { animation-delay: 0.35s; }
+
+    .stat-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(164, 199, 55, 0.3);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+      background: rgba(255, 255, 255, 0.1);
+    }
+
     @keyframes popIn {
-      0% { opacity: 0; transform: scale(0.7); }
-      100% { opacity: 1; transform: scale(1); }
+      0% { opacity: 0; transform: scale(0.7) translateY(20px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
     }
+
+    .stat-icon {
+      font-size: 2.6rem;
+      margin-bottom: 8px;
+      display: block;
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+      transition: transform var(--transition-fast);
+    }
+
+    .stat-card:hover .stat-icon {
+      transform: scale(1.15) rotate(-5deg);
+    }
+
+    .stat-value {
+      font-family: var(--font-mono);
+      font-size: 2.2rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      line-height: 1.2;
+      transition: all var(--transition-fast);
+    }
+
+    .stat-card:hover .stat-value {
+      transform: scale(1.05);
+    }
+
+    .stat-label {
+      font-family: var(--font-body);
+      opacity: 0.8;
+      font-size: 0.85rem;
+      color: var(--text-light);
+      letter-spacing: 0.3px;
+      margin-top: 2px;
+    }
+
+    /* ===== NIVEL ===== */
+    .level-box {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark), var(--secondary));
+      background-size: 200% 200%;
+      border-radius: var(--border-radius-md);
+      padding: 22px 20px 20px;
+      text-align: center;
+      color: var(--bg-dark);
+      font-weight: bold;
+      position: relative;
+      overflow: hidden;
+      animation: levelGradient 4s ease-in-out infinite;
+      box-shadow: var(--shadow-primary);
+      transition: all var(--transition-med);
+    }
+
+    .level-box:hover {
+      transform: scale(1.02);
+      box-shadow: 0 8px 30px rgba(164, 199, 55, 0.5);
+    }
+
+    @keyframes levelGradient {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    .level-box::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 70%);
+      animation: rotateGlow 15s linear infinite;
+      pointer-events: none;
+    }
+
+    .level-title {
+      font-family: var(--font-body);
+      font-size: 1.1rem;
+      opacity: 0.85;
+      position: relative;
+      z-index: 1;
+      letter-spacing: 1px;
+    }
+
+    .level-name {
+      font-family: var(--font-title);
+      font-size: 2rem;
+      font-weight: 800;
+      position: relative;
+      z-index: 1;
+      margin-top: 4px;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      background: rgba(35, 32, 73, 0.1);
+      padding: 4px 20px;
+      border-radius: 50px;
+      display: inline-block;
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    /* ===== BARRA DE PROGRESO ADICIONAL ===== */
+    .progress-extra {
+      margin-top: 20px;
+      padding: 16px 20px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: var(--border-radius-sm);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .progress-extra .label {
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      opacity: 0.7;
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .progress-extra .bar {
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      height: 10px;
+      overflow: hidden;
+    }
+
+    .progress-extra .fill {
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      height: 100%;
+      border-radius: 20px;
+      width: 0%;
+      transition: width 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      .dashboard {
+        padding: 25px 18px 20px;
+        border-radius: 28px;
+      }
+
+      h1 {
+        font-size: 1.8rem;
+        gap: 8px;
+      }
+
+      h1 i {
+        font-size: 1.6rem;
+      }
+
+      .grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
+
+      .stat-card {
+        padding: 18px 12px 16px;
+        border-radius: 18px;
+      }
+
+      .stat-icon {
+        font-size: 2.2rem;
+      }
+
+      .stat-value {
+        font-size: 1.8rem;
+      }
+
+      .stat-label {
+        font-size: 0.75rem;
+      }
+
+      .level-box {
+        padding: 18px 16px;
+      }
+
+      .level-title {
+        font-size: 0.95rem;
+      }
+
+      .level-name {
+        font-size: 1.6rem;
+        padding: 3px 16px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 12px;
+      }
+
+      .dashboard {
+        padding: 18px 12px 16px;
+        border-radius: 24px;
+      }
+
+      h1 {
+        font-size: 1.4rem;
+        margin-bottom: 20px;
+      }
+
+      h1 i {
+        font-size: 1.3rem;
+      }
+
+      .grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+
+      .stat-card {
+        padding: 14px 10px 12px;
+        border-radius: 14px;
+      }
+
+      .stat-icon {
+        font-size: 1.8rem;
+        margin-bottom: 4px;
+      }
+
+      .stat-value {
+        font-size: 1.5rem;
+      }
+
+      .stat-label {
+        font-size: 0.7rem;
+      }
+
+      .level-box {
+        padding: 14px 12px;
+        border-radius: 16px;
+      }
+
+      .level-title {
+        font-size: 0.85rem;
+      }
+
+      .level-name {
+        font-size: 1.3rem;
+        padding: 2px 12px;
+      }
+
+      .progress-extra {
+        padding: 12px 14px;
+        margin-top: 14px;
+      }
+
+      .progress-extra .label {
+        font-size: 0.75rem;
+      }
+
+      .progress-extra .bar {
+        height: 8px;
+      }
+    }
+
+    /* Orientación horizontal en móvil */
+    @media (max-height: 600px) and (orientation: landscape) {
+      .dashboard {
+        padding: 16px 20px;
+        border-radius: 24px;
+      }
+
+      h1 {
+        font-size: 1.6rem;
+        margin-bottom: 16px;
+      }
+
+      .grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+        margin-bottom: 16px;
+      }
+
+      .stat-card {
+        padding: 12px 8px;
+      }
+
+      .stat-icon {
+        font-size: 1.6rem;
+        margin-bottom: 2px;
+      }
+
+      .stat-value {
+        font-size: 1.4rem;
+      }
+
+      .stat-label {
+        font-size: 0.65rem;
+      }
+
+      .level-box {
+        padding: 12px 16px;
+      }
+
+      .level-title {
+        font-size: 0.8rem;
+      }
+
+      .level-name {
+        font-size: 1.4rem;
+      }
+    }
+
+    /* ===== SCROLLBAR ===== */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--bg-dark);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--primary);
+      border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--secondary);
+    }
+
+    /* ===== SELECTION ===== */
+    ::selection {
+      background: var(--primary);
+      color: var(--bg-dark);
+    }
+
+    /* ===== UTILIDADES ===== */
+    .text-center { text-align: center; }
+    .text-primary { color: var(--primary); }
+    .text-secondary { color: var(--secondary); }
+    .text-muted { color: var(--text-muted); }
+
+    .mt-2 { margin-top: 8px; }
+    .mt-3 { margin-top: 16px; }
+    .mb-2 { margin-bottom: 8px; }
+    .mb-3 { margin-bottom: 16px; }
   </style>
 </head>
 <body>
+
+  <!-- Partículas de fondo -->
+  <div class="particles" id="particles"></div>
+
+  <!-- DASHBOARD PRINCIPAL -->
   <div class="dashboard">
-    <h1>📊 Estadísticas Generales</h1>
+    <h1>
+      <i class="fas fa-chart-pie"></i>
+      Estadísticas Generales
+      <i class="fas fa-chart-line"></i>
+    </h1>
+
     <div class="grid">
       <div class="stat-card">
-        <div class="stat-icon">🏆</div>
+        <span class="stat-icon">🏆</span>
         <div class="stat-value" id="badgeCount">0</div>
         <div class="stat-label">Insignias obtenidas</div>
       </div>
       <div class="stat-card">
-        <div class="stat-icon">📍</div>
+        <span class="stat-icon">📍</span>
         <div class="stat-value" id="placesCompleted">0/1</div>
         <div class="stat-label">Lugares completados</div>
       </div>
       <div class="stat-card">
-        <div class="stat-icon">🔎</div>
+        <span class="stat-icon">🔎</span>
         <div class="stat-value" id="tokensFound">0</div>
         <div class="stat-label">Tokens encontrados</div>
       </div>
       <div class="stat-card">
-        <div class="stat-icon">📈</div>
+        <span class="stat-icon">📈</span>
         <div class="stat-value" id="overallProgress">0%</div>
         <div class="stat-label">Avance</div>
       </div>
     </div>
+
     <div class="level-box">
       <div class="level-title">🎖 Nivel actual</div>
       <div class="level-name" id="levelName">Explorador Novato</div>
     </div>
+
+    <!-- Barra de progreso adicional -->
+    <div class="progress-extra">
+      <div class="label">
+        <span>Progreso total</span>
+        <span id="progressLabel">0%</span>
+      </div>
+      <div class="bar">
+        <div class="fill" id="progressFill" style="width: 0%;"></div>
+      </div>
+    </div>
   </div>
 
+  <!-- ============================================================
+       FIREBASE - CONFIGURACIÓN Y LÓGICA
+       ============================================================ -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
     import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
+    // Configuración de Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyA6jVICuE17KJcO34gE1brMxqWEfNd3Fy0",
       authDomain: "mapa-41b00.firebaseapp.com",
@@ -117,39 +697,101 @@
       appId: "1:535032835400:web:68c079cbc3f419eafd177d"
     };
 
+    // Inicializar Firebase
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
 
+    // Autenticación anónima automática
     signInAnonymously(auth).catch(console.error);
 
+    // Función para obtener nivel según insignias
     function getLevel(badgeCount) {
-      if (badgeCount >= 30) return "Maestro del Patrimonio Nicaragüense";
-      if (badgeCount >= 20) return "Embajador Pinolero";
-      if (badgeCount >= 5) return "Explorador Cultural";
-      return "Explorador Novato";
+      if (badgeCount >= 50) return "🌋 Leyenda Pinolera";
+      if (badgeCount >= 30) return "🏛️ Maestro del Patrimonio";
+      if (badgeCount >= 20) return "🌟 Embajador Pinolero";
+      if (badgeCount >= 10) return "🧭 Explorador Experto";
+      if (badgeCount >= 5) return "🗺️ Explorador Cultural";
+      if (badgeCount >= 1) return "🌱 Explorador Novato";
+      return "🆕 Aprendiz de Viajero";
     }
 
+    // Escuchar cambios de autenticación
     onAuthStateChanged(auth, (user) => {
       if (user) {
+        // Referencia al documento del explorador
         const lugarRef = doc(db, "users", user.uid, "explorer", "parque_diriamba");
+        
+        // Escuchar cambios en tiempo real
         onSnapshot(lugarRef, (docSnap) => {
-          let data = { token1: false, token2: false, progress: 0, badge: false };
-          if (docSnap.exists()) data = docSnap.data();
+          let data = { 
+            token1: false, 
+            token2: false, 
+            progress: 0, 
+            badge: false 
+          };
+          
+          if (docSnap.exists()) {
+            data = docSnap.data();
+          }
 
+          // Calcular estadísticas
           const badgeCount = data.badge ? 1 : 0;
           const placesCompleted = data.badge ? "1/1" : "0/1";
           const tokensFound = (data.token1 ? 1 : 0) + (data.token2 ? 1 : 0);
           const progress = data.progress || 0;
 
+          // Actualizar UI
           document.getElementById("badgeCount").textContent = badgeCount;
           document.getElementById("placesCompleted").textContent = placesCompleted;
           document.getElementById("tokensFound").textContent = tokensFound;
           document.getElementById("overallProgress").textContent = `${progress}%`;
+          
+          // Nivel
           document.getElementById("levelName").textContent = getLevel(badgeCount);
+
+          // Barra de progreso adicional
+          const progressFill = document.getElementById("progressFill");
+          progressFill.style.width = `${progress}%`;
+          document.getElementById("progressLabel").textContent = `${progress}%`;
+
+          // Efecto cuando se completa
+          if (progress === 100) {
+            progressFill.style.background = "linear-gradient(90deg, #FFD700, #FFA500, #FFD700)";
+          } else {
+            progressFill.style.background = "";
+          }
+
+        }, (error) => {
+          console.error("Error al escuchar datos:", error);
         });
       }
     });
+
+    // ===== GENERAR PARTÍCULAS =====
+    function createParticles() {
+      const container = document.getElementById('particles');
+      const count = 25;
+      const colors = ['var(--primary)', 'var(--secondary)', '#fbfbfb'];
+      
+      for (let i = 0; i < count; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = `${Math.random() * 100}%`;
+        particle.style.animationDelay = `${Math.random() * 20}s`;
+        particle.style.animationDuration = `${15 + Math.random() * 25}s`;
+        particle.style.width = `${2 + Math.random() * 4}px`;
+        particle.style.height = particle.style.width;
+        particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+        particle.style.opacity = 0.05 + Math.random() * 0.1;
+        container.appendChild(particle);
+      }
+    }
+
+    // Inicializar partículas
+    createParticles();
+
+    console.log('📊 Estadísticas - Visitas Pinolera cargado correctamente');
   </script>
 </body>
 </html>
