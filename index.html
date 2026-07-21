@@ -379,19 +379,7 @@
     </div>
   </div>
 
-  <!-- ===== BOTÓN FLOTANTE IA ===== -->
-  <button id="boton-ia" class="boton-flotante-ia" aria-label="Asistente de Viaje IA">
-    <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2">
-      <path d="M12 2a10 10 0 0 1 10 10c0 5.5-4.5 10-10 10S2 17.5 2 12 6.5 2 12 2z"/>
-      <path d="M8 14s1.5 2 4 2 4-2 4-2"/>
-      <circle cx="9" cy="10" r="1.5"/>
-      <circle cx="15" cy="10" r="1.5"/>
-      <path d="M9 8c.5-.5 1.5-1 3-1s2.5.5 3 1"/>
-    </svg>
-    <span class="ia-pulse"></span>
-  </button>
-
-  <!-- ===== BOTÓN WHATSAPP FLOTANTE (FUNCIONALIDAD ORIGINAL) ===== -->
+  <!-- ===== BOTÓN WHATSAPP FLOTANTE ===== -->
   <a href="#" id="whatsappBtn" class="whatsapp-float" target="_blank">
     <i class="fab fa-whatsapp"></i>
   </a>
@@ -399,62 +387,57 @@
   <!-- TOAST -->
   <div id="toast" class="toast-message" style="display:none;"></div>
 
-<!-- ===== BOTÓN FLOTANTE IA (DIFY) ===== -->
-<script>
- window.difyChatbotConfig = {
-  token: 'gw2xWn1l5DavvTp9',
-  inputs: {
-    // Puedes definir variables de entrada aquí si quieres
-    // Por ejemplo, si quieres pasar el nombre del usuario:
-    // name: "Usuario"
-  },
-  systemVariables: {
-    // user_id: 'PUEDES DEFINIR UN ID DE USUARIO AQUÍ',
-    // conversation_id: 'PUEDES DEFINIR UN ID DE CONVERSACIÓN AQUÍ',
-  },
-  userVariables: {
-    // avatar_url: 'URL DEL AVATAR DEL USUARIO',
-    // name: 'NOMBRE DEL USUARIO',
-  },
- }
-</script>
-<script
- src="https://udify.app/embed.min.js"
- id="gw2xWn1l5DavvTp9"
- defer>
-</script>
-<style>
-  /* Personalización del botón de Dify */
-  #dify-chatbot-bubble-button {
-    background-color: #a4c737 !important;  /* Verde Pinolero */
-    box-shadow: 0 8px 32px rgba(164, 199, 55, 0.4) !important;
-    width: 64px !important;
-    height: 64px !important;
-  }
-  
-  #dify-chatbot-bubble-button:hover {
-    transform: scale(1.05);
-    box-shadow: 0 12px 40px rgba(164, 199, 55, 0.6) !important;
-  }
+  <!-- ===== BOTÓN FLOTANTE IA (DIFY) - ÚNICO BOTÓN IA ===== -->
+  <script>
+    window.difyChatbotConfig = {
+      token: 'gw2xWn1l5DavvTp9',
+      inputs: {},
+      systemVariables: {},
+      userVariables: {},
+    }
+  </script>
+  <script src="https://udify.app/embed.min.js" id="gw2xWn1l5DavvTp9" defer></script>
 
-  /* Tamaño de la ventana del chat */
-  #dify-chatbot-bubble-window {
-    width: 24rem !important;
-    height: 40rem !important;
-    border-radius: 24px !important;
-    border: 2px solid rgba(164, 199, 55, 0.2) !important;
-  }
+  <style>
+    /* ===== BOTÓN FLOTANTE ===== */
+    #dify-chatbot-bubble-button {
+      background-color: #a4c737 !important;
+      box-shadow: 0 8px 32px rgba(164, 199, 55, 0.4) !important;
+      width: 64px !important;
+      height: 64px !important;
+      position: fixed !important;
+      bottom: 100px !important;
+      right: 20px !important;
+      z-index: 999 !important;
+    }
 
-  /* Botón de cerrar */
-  #dify-chatbot-bubble-close {
-    background-color: #232049 !important;
-  }
+    #dify-chatbot-bubble-button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 12px 40px rgba(164, 199, 55, 0.6) !important;
+    }
 
-  /* Encabezado del chat */
-  .dify-chatbot-bubble-header {
-    background: linear-gradient(135deg, #232049, #a287be) !important;
-  }
-</style>
+    /* ===== VENTANA DEL CHAT ===== */
+    #dify-chatbot-bubble-window {
+      width: 24rem !important;
+      height: 40rem !important;
+      border-radius: 24px !important;
+      border: 2px solid rgba(164, 199, 55, 0.2) !important;
+      position: fixed !important;
+      bottom: 180px !important;
+      right: 20px !important;
+      z-index: 998 !important;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5) !important;
+      max-height: 70vh !important;
+    }
+
+    #dify-chatbot-bubble-close {
+      background-color: #232049 !important;
+    }
+
+    .dify-chatbot-bubble-header {
+      background: linear-gradient(135deg, #232049, #a287be) !important;
+    }
+  </style>
 
   <!-- Firebase Compat -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
