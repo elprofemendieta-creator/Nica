@@ -107,7 +107,7 @@ body {
 /* ===== HEADER APP ===== */
 .app-header { display: flex; justify-content: space-between; margin-bottom: 1.5rem; }
 .header-left { display: flex; align-items: center; gap: 12px; }
-.header-logo { height: 50px; }
+.header-logo { height: 80px; }
 .header-left h1 { font-size: 1.6rem; font-weight: 800; line-height: 1; }
 .header-subtitle { display: block; font-size: 0.65rem; letter-spacing: 2px; color: var(--accent-purple); font-weight: 600; }
 .btn-icon { background: rgba(255,255,255,0.1); border: none; color: #fff; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; }
