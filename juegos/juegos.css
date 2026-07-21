@@ -8,30 +8,22 @@
 }
 
 :root {
-  --primary-color: #a4c737;
-  --secondary-color: #a287be;
-  --accent-color: #a4c737;
-  --bg-dark: #232049;
-  --bg-light: #fbfbfb;
-  --text-light: #fbfbfb;
-  --text-dark: #232049;
-  --font-title: 'Myriad Pro', 'Segoe UI', sans-serif;
-  --font-body: 'Myriad Pro', 'Segoe UI', sans-serif;
-  --font-mono: 'Cascadia Mono Light', 'Cascadia Mono', monospace;
-
-  --color-trivia: #a4c737;
-  --color-ruleta: #a287be;
-  --color-memoria: #a4c737;
-  --color-palabra: #a287be;
-  --color-laberinto: #a4c737;
-  --color-varios: #a287be;
+  --primary-green: #a4c737;
+  --secondary-purple: #232049;
+  --accent-purple: #a287be;
+  --bg-app: #0b0d17;
+  --bg-card: rgba(255, 255, 255, 0.06);
+  --text-main: #fbfbfb;
+  --text-muted: rgba(255, 255, 255, 0.6);
+  --font-main: 'Myriad Pro', 'Poppins', sans-serif;
+  --font-mono: 'Cascadia Mono', 'Cascadia Code', monospace;
 }
 
 body {
-  font-family: var(--font-body);
-  background: radial-gradient(circle at top, #2a2560 0%, #1a1738 100%);
+  font-family: var(--font-main);
+  background: radial-gradient(circle at top, var(--secondary-purple) 0%, var(--bg-app) 100%);
   background-attachment: fixed;
-  color: var(--text-light);
+  color: var(--text-main);
   margin: 0;
   padding: 0;
   display: flex;
@@ -66,28 +58,68 @@ body::after {
 }
 
 /* ==========================================================================
-   2. BARRA SUPERIOR MEJORADA
+   2. PARTÍCULAS DE FONDO
+   ========================================================================== */
+.particles-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.particle {
+  position: absolute;
+  background: var(--primary-green);
+  border-radius: 50%;
+  animation: floatParticle linear infinite;
+  opacity: 0.15;
+}
+
+@keyframes floatParticle {
+  0% {
+    transform: translateY(100vh) scale(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.15;
+  }
+  90% {
+    opacity: 0.15;
+  }
+  100% {
+    transform: translateY(-10vh) scale(1);
+    opacity: 0;
+  }
+}
+
+/* ==========================================================================
+   3. BARRA SUPERIOR MEJORADA
    ========================================================================== */
 .topbar {
   width: 100%;
-  background: rgba(251, 251, 251, 0.95);
+  background: rgba(35, 32, 73, 0.95);
   backdrop-filter: blur(10px);
   padding: 1rem 1.5rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 4px 20px rgba(35, 32, 73, 0.25);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
   position: sticky;
   top: 0;
   z-index: 100;
   flex-wrap: wrap;
   gap: 0.8rem;
+  border-bottom: 1px solid rgba(164, 199, 55, 0.2);
 }
 
 .topbar h1 {
-  font-family: var(--font-title);
+  font-family: var(--font-main);
   font-size: 1.5rem;
-  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  background: linear-gradient(135deg, var(--primary-green), var(--accent-purple));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -104,14 +136,26 @@ body::after {
   background: none;
   -webkit-background-clip: unset;
   background-clip: unset;
-  color: var(--primary-color);
+  color: var(--primary-green);
+}
+
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .volver {
   text-decoration: none;
-  font-family: var(--font-title);
-  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-  color: var(--bg-light);
+  font-family: var(--font-main);
+  background: var(--primary-green);
+  color: var(--secondary-purple);
   font-weight: 600;
   padding: 0.7rem 1.3rem;
   border-radius: 50px;
@@ -121,38 +165,36 @@ body::after {
   gap: 8px;
   font-size: 0.95rem;
   min-height: 48px;
-  box-shadow: 0 4px 10px rgba(164, 199, 55, 0.3);
+  box-shadow: 0 4px 15px rgba(164, 199, 55, 0.3);
 }
 
 .volver:hover {
-  transform: translateX(-3px);
-  box-shadow: 0 6px 15px rgba(164, 199, 55, 0.4);
+  transform: translateX(-3px) scale(1.02);
+  box-shadow: 0 6px 25px rgba(164, 199, 55, 0.4);
 }
 
-.btn {
-  text-decoration: none;
-  font-family: var(--font-title);
-  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-  color: var(--bg-light);
-  font-weight: 600;
-  padding: 0.7rem 1.3rem;
-  border-radius: 50px;
-  transition: all 0.3s ease;
-  display: inline-flex;
+.btn-admin {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-main);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 0.95rem;
-  min-height: 48px;
-  box-shadow: 0 4px 10px rgba(164, 199, 55, 0.3);
+  justify-content: center;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.btn:hover {
-  transform: translateX(-3px);
-  box-shadow: 0 6px 15px rgba(164, 199, 55, 0.4);
+.btn-admin:hover {
+  background: rgba(164, 199, 55, 0.2);
+  border-color: var(--primary-green);
+  transform: scale(1.05);
 }
 
 /* ==========================================================================
-   3. CARRUSEL PREMIUM
+   4. CARRUSEL PREMIUM
    ========================================================================== */
 .games-container {
   width: 90%;
@@ -247,7 +289,7 @@ body::after {
   position: relative;
   z-index: 2;
   text-align: center;
-  color: var(--text-light);
+  color: var(--text-main);
   text-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
   transform: scale(1);
   transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
@@ -256,7 +298,7 @@ body::after {
   padding: 0 1rem;
   box-sizing: border-box;
   pointer-events: none;
-  font-family: var(--font-body);
+  font-family: var(--font-main);
 }
 
 .slide-content * {
@@ -293,8 +335,8 @@ body::after {
   font-weight: 800;
   margin: 0.3rem 0;
   letter-spacing: 1px;
-  color: var(--primary-color);
-  font-family: var(--font-title);
+  color: var(--primary-green);
+  font-family: var(--font-main);
 }
 
 .slide-content p {
@@ -302,7 +344,14 @@ body::after {
   opacity: 0.9;
   margin-bottom: 0.8rem;
   font-weight: 400;
-  font-family: var(--font-body);
+  font-family: var(--font-main);
+}
+
+.slide-content .slide-sub {
+  font-size: 0.85rem;
+  opacity: 0.7;
+  max-width: 80%;
+  margin: 0 auto 0.8rem;
 }
 
 .slide-stats {
@@ -315,7 +364,7 @@ body::after {
   font-weight: 600;
   border: 1px solid rgba(162, 135, 190, 0.3);
   animation: pulseStat 2s ease-in-out infinite;
-  color: var(--text-light);
+  color: var(--text-main);
   font-family: var(--font-mono);
 }
 
@@ -353,7 +402,7 @@ body::after {
   border: none;
   background: rgba(162, 135, 190, 0.2);
   backdrop-filter: blur(10px);
-  color: var(--text-light);
+  color: var(--text-main);
   font-size: 1.8rem;
   cursor: pointer;
   transition: all 0.3s;
@@ -400,7 +449,7 @@ body::after {
 }
 
 .indicator-dot.active {
-  background: var(--primary-color);
+  background: var(--primary-green);
   transform: scale(1.4);
   box-shadow: 0 0 25px rgba(164, 199, 55, 0.5);
   border-color: rgba(164, 199, 55, 0.3);
@@ -408,20 +457,21 @@ body::after {
 
 .indicator-dot:hover {
   transform: scale(1.2);
-  background: var(--secondary-color);
+  background: var(--accent-purple);
 }
 
 /* ==========================================================================
-   4. ÁREA DE JUEGO MEJORADA
+   5. ÁREA DE JUEGO MEJORADA
    ========================================================================== */
 .play-area {
   width: 90%;
   max-width: 1100px;
-  background: var(--bg-light);
+  background: var(--bg-card);
+  backdrop-filter: blur(10px);
   margin: 1rem auto 2rem auto;
   padding: 2rem;
   border-radius: 32px;
-  border: 2px solid rgba(164, 199, 55, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.06);
   text-align: center;
   min-height: 250px;
   display: flex;
@@ -430,15 +480,14 @@ body::after {
   align-items: center;
   position: relative;
   z-index: 1;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-  background: linear-gradient(145deg, var(--bg-light), #f3f3fa);
-  color: var(--text-dark);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  color: var(--text-main);
 }
 
 #gameTitle {
-  font-family: var(--font-title);
+  font-family: var(--font-main);
   font-size: 1.8rem;
-  background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+  background: linear-gradient(135deg, var(--accent-purple), var(--primary-green));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -447,14 +496,10 @@ body::after {
 
 #gameContent {
   font-size: 1rem;
-  color: #2d2a4a;
+  color: var(--text-main);
   width: 100%;
   line-height: 1.6;
-  font-family: var(--font-body);
-}
-
-#gameContent p {
-  font-size: 1rem;
+  font-family: var(--font-main);
 }
 
 /* Placeholder del área de juego */
@@ -468,14 +513,14 @@ body::after {
 .play-placeholder i {
   font-size: 4rem;
   opacity: 0.3;
-  color: var(--primary-color);
+  color: var(--primary-green);
 }
 
 .play-placeholder p {
   font-size: 1.2rem;
   opacity: 0.6;
-  color: var(--text-dark);
-  font-family: var(--font-body);
+  color: var(--text-main);
+  font-family: var(--font-main);
 }
 
 .play-hint {
@@ -484,12 +529,12 @@ body::after {
   background: rgba(164, 199, 55, 0.08);
   padding: 0.3rem 1.2rem;
   border-radius: 50px;
-  color: var(--secondary-color);
+  color: var(--primary-green);
   font-family: var(--font-mono);
 }
 
 /* ==========================================================================
-   5. WHATSAPP FLOTANTE
+   6. WHATSAPP FLOTANTE
    ========================================================================== */
 .whatsapp-container {
   position: fixed;
@@ -526,7 +571,7 @@ body::after {
 }
 
 /* ==========================================================================
-   6. MEDIA QUERIES
+   7. MEDIA QUERIES
    ========================================================================== */
 
 /* Tablets y móviles grandes */
@@ -667,7 +712,7 @@ body::after {
 }
 
 /* ==========================================================================
-   7. UTILIDADES Y ANIMACIONES
+   8. UTILIDADES Y ANIMACIONES
    ========================================================================== */
 
 /* Ajustes táctiles globales */
@@ -682,7 +727,7 @@ button,
 }
 
 input, textarea, select {
-  font-size: 16px; /* Previene zoom en iOS */
+  font-size: 16px;
 }
 
 img, canvas, iframe {
@@ -713,14 +758,14 @@ img, canvas, iframe {
 }
 
 ::-webkit-scrollbar-track {
-  background: #2a2560;
+  background: var(--secondary-purple);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--primary-color);
+  background: var(--primary-green);
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--secondary-color);
+  background: var(--accent-purple);
 }
