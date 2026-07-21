@@ -144,6 +144,17 @@
         </div>
       </div>
 
+      <!-- WAO BANNER -->
+      <div class="wao-banner">
+        <div class="wao-content">
+          <span class="wao-title">WAO</span>
+          <h3>Nicaragua te espera</h3>
+          <p>Descubre los destinos más increíbles</p>
+          <button class="btn-primary-small" onclick="window.location.href='destinos.html'">Explorar →</button>
+        </div>
+        <div style="width:30%; text-align:center; font-size:3rem;">🇳🇮</div>
+      </div>
+
       <!-- DESTINOS POPULARES -->
       <div class="section-header">
         <h2>🌍 Destinos populares</h2>
@@ -386,8 +397,8 @@
       <i class="fab fa-whatsapp"></i>
     </a>
 
-    <!-- Botón IA (Dify) - Este botón lo genera Dify, pero lo posicionamos con CSS -->
-    <!-- El script de Dify crea su propio botón, lo estilizamos para que se vea igual -->
+    <!-- Botón IA (Dify) - Se inserta aquí automáticamente -->
+    <div id="dify-button-placeholder"></div>
 
   </div>
 
@@ -404,175 +415,6 @@
     }
   </script>
   <script src="https://udify.app/embed.min.js" id="gw2xWn1l5DavvTp9" defer></script>
-
-  <style>
-    /* ============================================================
-       BOTONES FLOTANTES ORDENADOS - MISMO TAMAÑO Y LUGAR
-       ============================================================ */
-
-    /* Contenedor de ambos botones */
-    .floating-buttons-container {
-      position: fixed;
-      bottom: 100px;
-      right: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      z-index: 999;
-      align-items: center;
-    }
-
-    /* Botón WhatsApp - Mismo tamaño que el de IA */
-    .floating-btn {
-      width: 60px !important;
-      height: 60px !important;
-      border-radius: 50% !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-      font-size: 28px !important;
-      color: white !important;
-      text-decoration: none !important;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-      border: none !important;
-      cursor: pointer !important;
-      position: relative !important;
-    }
-
-    .floating-btn:hover {
-      transform: scale(1.1) translateY(-4px) !important;
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4) !important;
-    }
-
-    .floating-btn:active {
-      transform: scale(0.95) !important;
-    }
-
-    /* WhatsApp - Verde */
-    .whatsapp-btn {
-      background: linear-gradient(135deg, #25D366, #128C7E) !important;
-      box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4) !important;
-    }
-
-    .whatsapp-btn:hover {
-      box-shadow: 0 8px 30px rgba(37, 211, 102, 0.6) !important;
-    }
-
-    /* ============================================================
-       ESTILOS PARA EL BOTÓN DE DIFY - MISMO TAMAÑO Y POSICIÓN
-       ============================================================ */
-
-    /* Ocultar el botón original de Dify y crear uno nuevo */
-    #dify-chatbot-bubble-button {
-      background: linear-gradient(135deg, #a4c737, #8fb32e) !important;
-      box-shadow: 0 4px 20px rgba(164, 199, 55, 0.4) !important;
-      width: 60px !important;
-      height: 60px !important;
-      border-radius: 50% !important;
-      position: relative !important;
-      bottom: auto !important;
-      right: auto !important;
-      z-index: auto !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-      border: none !important;
-      cursor: pointer !important;
-    }
-
-    #dify-chatbot-bubble-button:hover {
-      transform: scale(1.1) translateY(-4px) !important;
-      box-shadow: 0 8px 30px rgba(164, 199, 55, 0.6) !important;
-    }
-
-    #dify-chatbot-bubble-button:active {
-      transform: scale(0.95) !important;
-    }
-
-    /* SVG dentro del botón de Dify - centrado */
-    #dify-chatbot-bubble-button svg {
-      width: 28px !important;
-      height: 28px !important;
-      stroke: white !important;
-      fill: none !important;
-    }
-
-    /* El contenedor del botón de Dify - lo posicionamos en la columna */
-    #dify-chatbot-bubble-button-container {
-      position: static !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-      width: auto !important;
-      height: auto !important;
-    }
-
-    /* Mover el botón de Dify al contenedor */
-    #dify-chatbot-bubble-button {
-      order: 2 !important;
-    }
-
-    /* Ventana del chat - aparece encima del botón */
-    #dify-chatbot-bubble-window {
-      width: 24rem !important;
-      height: 40rem !important;
-      max-height: 70vh !important;
-      border-radius: 24px !important;
-      border: 2px solid rgba(164, 199, 55, 0.2) !important;
-      position: fixed !important;
-      bottom: 180px !important;
-      right: 20px !important;
-      z-index: 998 !important;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5) !important;
-      background: #0b0d17 !important;
-    }
-
-    /* Botón de cerrar */
-    #dify-chatbot-bubble-close {
-      background-color: #232049 !important;
-    }
-
-    /* Encabezado del chat */
-    .dify-chatbot-bubble-header {
-      background: linear-gradient(135deg, #232049, #a287be) !important;
-    }
-
-    /* ============================================================
-       RESPONSIVE
-       ============================================================ */
-    @media (max-width: 480px) {
-      .floating-buttons-container {
-        bottom: 90px;
-        right: 16px;
-        gap: 10px;
-      }
-
-      .floating-btn {
-        width: 52px !important;
-        height: 52px !important;
-        font-size: 24px !important;
-      }
-
-      #dify-chatbot-bubble-button {
-        width: 52px !important;
-        height: 52px !important;
-      }
-
-      #dify-chatbot-bubble-button svg {
-        width: 24px !important;
-        height: 24px !important;
-      }
-
-      #dify-chatbot-bubble-window {
-        width: 20rem !important;
-        height: 32rem !important;
-        bottom: 160px !important;
-        right: 16px !important;
-      }
-    }
-  </style>
 
   <!-- Firebase Compat -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
