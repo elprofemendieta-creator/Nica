@@ -3,23 +3,33 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Guía Pinolero</title>
+  <title>Guía Pinolero - Descubre Nicaragua</title>
+  <!-- Tipografías -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet" />
+  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-  <link rel="stylesheet" href="css/inicio.css" />
+  <!-- Estilos principales -->
+  <link rel="stylesheet" href="inicio.css" />
 </head>
 <body>
   <!-- Pantalla de introducción -->
   <div class="intro-screen">
     <div class="intro-content">
       <img src="carga.gif" alt="Guía Pinolera" class="intro-logo-img" />
-      <p class="intro-subtitle">Bienvenido, PROBANDO Explorador Pinolero</p>
+      <p class="intro-subtitle">Bienvenido, Explorador Pinolero</p>
       <p class="intro-subtitle">Cargando sistema...</p>
     </div>
   </div>
 
+  <!-- Fondo decorativo de ondas -->
+  <div class="wave-bg">
+    <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
+      <path fill="rgba(255,255,255,0.06)" d="M0,192L48,197.3C96,203,192,213,288,208C384,203,480,181,576,176C672,171,768,181,864,197.3C960,213,1056,235,1152,224C1248,213,1344,171,1392,149.3L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+    </svg>
+  </div>
+
   <div class="container">
-    <!-- Tarjeta de Login -->
+    <!-- Tarjeta de Login/Registro -->
     <div id="authCard" class="glass-card">
       <div class="mascota">
         <img src="https://cdn-icons-png.flaticon.com/512/4712/4712109.png" alt="Mascota" />
@@ -57,334 +67,171 @@
       </div>
     </div>
 
-    <!-- Menú principal (nuevo diseño) -->
+    <!-- MENÚ PRINCIPAL (nuevo diseño) -->
     <div id="menuSection" style="display:none;">
-      <!-- ... (copia todo el menú que te di) ... -->
+      <!-- Encabezado -->
+      <header class="app-header">
+        <div class="header-left">
+          <h1>Descubre Nicaragua</h1>
+          <span class="header-subtitle">GUÍA PINOLERO</span>
+        </div>
+        <div class="header-right">
+          <button id="logoutBtn" class="btn-logout-small" title="Cerrar sesión">
+            <i class="fas fa-sign-out-alt"></i>
+          </button>
+        </div>
+      </header>
+
+      <!-- Barra de búsqueda -->
+      <div class="search-bar">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Buscar lugares, juegos o departamentos..." id="searchInput" />
+      </div>
+
+      <!-- Tarjeta de perfil -->
+      <div class="profile-card" id="profileTrigger">
+        <img id="profileAvatar" class="profile-avatar" src="" alt="Avatar" />
+        <div class="profile-details">
+          <div class="profile-name" id="profileNameDisplay">Usuario</div>
+          <div class="profile-stats-row">
+            <span class="level-badge">Nivel 7</span>
+            <span class="explorer-badge">Explorador</span>
+            <span class="progress-badge">80%</span>
+          </div>
+          <div class="profile-metrics">
+            <span id="userPointsDisplay">⭐ 0 puntos</span>
+            <span>12 insignias</span>
+            <span>7 racha diaria</span>
+          </div>
+        </div>
+        <button id="editProfileBtn" class="edit-btn" title="Editar perfil">
+          <i class="fas fa-pen"></i>
+        </button>
+      </div>
+
+      <!-- Posición global -->
+      <div class="position-badge-wrapper">
+        <span class="badge-icon">🏆</span>
+        <span id="positionBadge">Calculando posición...</span>
+      </div>
+
+      <!-- Juegos Turísticos -->
+      <section class="games-section">
+        <h2>Juegos Turísticos</h2>
+        <ul class="game-list">
+          <li>
+            <span class="game-icon">🎮</span>
+            <span class="game-name">Gran Mapa Misterioso</span>
+            <a href="#" class="btn-jugar" data-game="mapa">Jugar</a>
+          </li>
+          <li>
+            <span class="game-icon">💰</span>
+            <span class="game-name">Pinolero Millonario</span>
+            <a href="#" class="btn-jugar" data-game="millonario">Jugar</a>
+          </li>
+          <li>
+            <span class="game-icon">🛑</span>
+            <span class="game-name">Stop Pinolero</span>
+            <a href="#" class="btn-jugar" data-game="stop">Jugar</a>
+          </li>
+          <li>
+            <span class="game-icon">🧠</span>
+            <span class="game-name">Memoria Pinolera</span>
+            <a href="#" class="btn-jugar" data-game="memoria">Jugar</a>
+          </li>
+          <li>
+            <span class="game-icon">🌀</span>
+            <span class="game-name">Laberinto Turístico</span>
+            <a href="#" class="btn-jugar" data-game="laberinto">Jugar</a>
+          </li>
+        </ul>
+      </section>
+
+      <!-- Destinos destacados -->
+      <section class="destinations-section">
+        <h2>Destinos destacados</h2>
+        <div class="destinations-grid">
+          <div class="dest-item">
+            <span class="dest-name">Volcán Masaya</span>
+            <span class="dest-stars">★★★★★</span>
+          </div>
+          <div class="dest-item">
+            <span class="dest-name">Laguna de Apoyo</span>
+            <span class="dest-stars">★★★★★</span>
+          </div>
+          <div class="dest-item">
+            <span class="dest-name">Granada</span>
+            <span class="dest-stars">★★★★★</span>
+          </div>
+          <div class="dest-item">
+            <span class="dest-name">Orm</span>
+            <span class="dest-stars">★</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Mis Insignias -->
+      <section class="badges-section">
+        <h2>Mis Insignias</h2>
+        <ul class="badge-list">
+          <li>Explorador</li>
+          <li>Aventurero</li>
+          <li>Maestro Pinolero</li>
+          <li>Leyenda de Nicaragua</li>
+          <li class="next-badge">Próxima insignia</li>
+        </ul>
+      </section>
+
+      <!-- Menú inferior -->
+      <nav class="bottom-nav">
+        <a href="#" class="active"><i class="fas fa-home"></i><span>Inicio</span></a>
+        <a href="mapa.html"><i class="fas fa-map"></i><span>Mapa</span></a>
+        <a href="#"><i class="fas fa-gamepad"></i><span>Juegos</span></a>
+        <a href="#"><i class="fas fa-trophy"></i><span>Logros</span></a>
+        <a href="#"><i class="fas fa-user"></i><span>Perfil</span></a>
+      </nav>
     </div>
   </div>
 
-  <!-- Modal de edición -->
-  <div id="editProfileModal" class="modal">...</div>
+  <!-- Modal de edición de perfil -->
+  <div id="editProfileModal" class="modal">
+    <div class="modal-content">
+      <h3><i class="fas fa-user-edit"></i> Editar perfil</h3>
+      <div class="profile-pic-edit">
+        <img id="modalProfileImage" src="" alt="Foto" />
+        <div class="camera-icon" id="uploadPhotoIcon">
+          <i class="fas fa-camera"></i>
+        </div>
+      </div>
+      <input type="file" id="uploadPhoto" accept="image/*" style="display:none;" />
+      <div class="input-group">
+        <label style="color:white;">Nombre completo:</label>
+        <input type="text" id="editNameInput" placeholder="Tu nombre" />
+      </div>
+      <label style="color:white;">O elige una foto predeterminada:</label>
+      <div class="avatar-grid" id="avatarGrid"></div>
+      <button id="saveProfileBtn" class="btn btn-primary">Guardar cambios</button>
+      <button id="closeModalBtn" class="btn btn-outline">Cancelar</button>
+    </div>
+  </div>
+
+  <!-- WhatsApp flotante -->
+  <div class="whatsapp-container">
+    <a href="#" class="whatsapp-float" id="whatsappBtn">
+      <i class="fab fa-whatsapp"></i>
+    </a>
+  </div>
 
   <!-- Toast -->
   <div id="toast" class="toast-message" style="display:none;"></div>
 
-  <!-- ===== FIREBASE CDN (no módulos) ===== -->
+  <!-- ===== FIREBASE COMPAT CDN ===== -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
 
-  <!-- ===== CÓDIGO JS (inline, para asegurar que se ejecute) ===== -->
-  <script>
-    // Configuración de Firebase
-    const firebaseConfig = {
-      apiKey: "AIzaSyA6jVICuE17KJcO34gE1brMxqWEfNd3Fy0",
-      authDomain: "mapa-41b00.firebaseapp.com",
-      projectId: "mapa-41b00",
-      storageBucket: "mapa-41b00.firebasestorage.app",
-      messagingSenderId: "535032835400",
-      appId: "1:535032835400:web:68c079cbc3f419eafd177d"
-    };
-
-    // Inicializar Firebase
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.firestore();
-    const storage = firebase.storage();
-
-    console.log('Firebase inicializado correctamente');
-
-    // ===== REFERENCIAS DOM =====
-    const authCard = document.getElementById('authCard');
-    const menuSection = document.getElementById('menuSection');
-    const loginForm = document.getElementById('loginForm');
-    const registerForm = document.getElementById('registerForm');
-    const loginEmail = document.getElementById('loginEmail');
-    const loginPassword = document.getElementById('loginPassword');
-    const doLoginBtn = document.getElementById('doLoginBtn');
-    const showRegisterBtn = document.getElementById('showRegisterBtn');
-    const backToLoginBtn = document.getElementById('backToLoginBtn');
-    const regName = document.getElementById('regName');
-    const regEmail = document.getElementById('regEmail');
-    const regPassword = document.getElementById('regPassword');
-    const doRegisterBtn = document.getElementById('doRegisterBtn');
-    const forgotPasswordLink = document.getElementById('forgotPasswordLink');
-    const logoutBtn = document.getElementById('logoutBtn');
-    const profileTrigger = document.getElementById('profileTrigger');
-    const editProfileBtn = document.getElementById('editProfileBtn');
-    const profileAvatar = document.getElementById('profileAvatar');
-    const profileNameDisplay = document.getElementById('profileNameDisplay');
-    const userPointsDisplay = document.getElementById('userPointsDisplay');
-    const positionBadge = document.getElementById('positionBadge');
-    const editProfileModal = document.getElementById('editProfileModal');
-    const modalProfileImage = document.getElementById('modalProfileImage');
-    const uploadPhotoIcon = document.getElementById('uploadPhotoIcon');
-    const uploadPhotoInput = document.getElementById('uploadPhoto');
-    const editNameInput = document.getElementById('editNameInput');
-    const saveProfileBtn = document.getElementById('saveProfileBtn');
-    const closeModalBtn = document.getElementById('closeModalBtn');
-    const avatarGrid = document.getElementById('avatarGrid');
-    const toast = document.getElementById('toast');
-    const whatsappBtn = document.getElementById('whatsappBtn');
-
-    // ===== FUNCIÓN TOAST =====
-    function showToast(msg, duration = 3000) {
-      toast.textContent = msg;
-      toast.style.display = 'block';
-      setTimeout(() => { toast.style.display = 'none'; }, duration);
-    }
-
-    // ===== EVENTOS DE LOGIN =====
-    doLoginBtn.addEventListener('click', function() {
-      const email = loginEmail.value.trim();
-      const pass = loginPassword.value.trim();
-      if (!email || !pass) {
-        showToast('Completa todos los campos.');
-        return;
-      }
-      auth.signInWithEmailAndPassword(email, pass)
-        .then(() => showToast('¡Bienvenido de vuelta!'))
-        .catch(error => showToast('Error: ' + error.message));
-    });
-
-    showRegisterBtn.addEventListener('click', function() {
-      loginForm.style.display = 'none';
-      registerForm.style.display = 'block';
-    });
-
-    backToLoginBtn.addEventListener('click', function() {
-      registerForm.style.display = 'none';
-      loginForm.style.display = 'block';
-    });
-
-    doRegisterBtn.addEventListener('click', function() {
-      const name = regName.value.trim();
-      const email = regEmail.value.trim();
-      const pass = regPassword.value.trim();
-      if (!name || !email || !pass) {
-        showToast('Completa todos los campos.');
-        return;
-      }
-      if (pass.length < 6) {
-        showToast('La contraseña debe tener al menos 6 caracteres.');
-        return;
-      }
-      auth.createUserWithEmailAndPassword(email, pass)
-        .then((cred) => {
-          return cred.user.updateProfile({ displayName: name })
-            .then(() => {
-              return db.collection('usuarios').doc(cred.user.uid).set({
-                nombre: name,
-                email: email,
-                puntos: 0,
-                avatar: '',
-                createdAt: new Date().toISOString()
-              });
-            });
-        })
-        .then(() => showToast('¡Cuenta creada exitosamente!'))
-        .catch(error => showToast('Error: ' + error.message));
-    });
-
-    forgotPasswordLink.addEventListener('click', function(e) {
-      e.preventDefault();
-      const email = loginEmail.value.trim();
-      if (!email) {
-        showToast('Ingresa tu correo para restablecer.');
-        return;
-      }
-      auth.sendPasswordResetEmail(email)
-        .then(() => showToast('Revisa tu correo para restablecer la contraseña.'))
-        .catch(error => showToast('Error: ' + error.message));
-    });
-
-    // ===== ESTADO DE AUTENTICACIÓN =====
-    auth.onAuthStateChanged(function(user) {
-      console.log('onAuthStateChanged:', user);
-      if (user) {
-        authCard.style.display = 'none';
-        menuSection.style.display = 'block';
-
-        // Cargar datos del usuario
-        db.collection('usuarios').doc(user.uid).get()
-          .then((docSnap) => {
-            if (docSnap.exists) {
-              const data = docSnap.data();
-              const nombre = data.nombre || user.displayName || 'Usuario';
-              profileNameDisplay.textContent = nombre;
-              if (data.avatar) {
-                profileAvatar.src = data.avatar;
-                modalProfileImage.src = data.avatar;
-              } else {
-                const avatarUrl = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(nombre) + '&background=a4c737&color=fff&size=128';
-                profileAvatar.src = avatarUrl;
-                modalProfileImage.src = avatarUrl;
-              }
-              // Actualizar puntos y posición
-              updateUserStats(user.uid);
-            } else {
-              // Crear documento si no existe
-              db.collection('usuarios').doc(user.uid).set({
-                nombre: user.displayName || 'Usuario',
-                email: user.email,
-                puntos: 0,
-                avatar: '',
-                createdAt: new Date().toISOString()
-              });
-              profileNameDisplay.textContent = user.displayName || 'Usuario';
-            }
-          })
-          .catch(err => console.error('Error al cargar usuario:', err));
-      } else {
-        authCard.style.display = 'block';
-        menuSection.style.display = 'none';
-        loginForm.style.display = 'block';
-        registerForm.style.display = 'none';
-      }
-    });
-
-    // ===== ACTUALIZAR PUNTOS Y POSICIÓN =====
-    function updateUserStats(uid) {
-      db.collection('usuarios').doc(uid).get()
-        .then((docSnap) => {
-          if (!docSnap.exists) return;
-          const data = docSnap.data();
-          const puntos = data.puntos || 0;
-          userPointsDisplay.textContent = '⭐ ' + puntos + ' puntos';
-
-          // Calcular posición global
-          return db.collection('usuarios').orderBy('puntos', 'desc').get()
-            .then((querySnap) => {
-              let posicion = 0;
-              let total = 0;
-              querySnap.forEach((doc) => {
-                total++;
-                if (doc.id === uid) posicion = total;
-              });
-              if (posicion > 0) {
-                let medal = '';
-                if (posicion === 1) medal = '👑 ';
-                else if (posicion === 2) medal = '🥈 ';
-                else if (posicion === 3) medal = '🥉 ';
-                positionBadge.textContent = medal + 'Posición #' + posicion + ' de ' + total;
-              } else {
-                positionBadge.textContent = '📈 Sin posición aún';
-              }
-            });
-        })
-        .catch(err => console.error('Error en updateUserStats:', err));
-    }
-
-    // ===== CERRAR SESIÓN =====
-    if (logoutBtn) {
-      logoutBtn.addEventListener('click', function() {
-        auth.signOut().then(() => showToast('Sesión cerrada'));
-      });
-    }
-
-    // ===== MODAL PERFIL =====
-    function openEditModal() {
-      editProfileModal.style.display = 'flex';
-      editNameInput.value = profileNameDisplay.textContent;
-      modalProfileImage.src = profileAvatar.src;
-      loadAvatarGrid();
-    }
-    function closeEditModal() {
-      editProfileModal.style.display = 'none';
-    }
-
-    if (profileTrigger) profileTrigger.addEventListener('click', openEditModal);
-    if (editProfileBtn) editProfileBtn.addEventListener('click', function(e) { e.stopPropagation(); openEditModal(); });
-    if (closeModalBtn) closeModalBtn.addEventListener('click', closeEditModal);
-    window.addEventListener('click', function(e) { if (e.target === editProfileModal) closeEditModal(); });
-
-    // Subir foto
-    if (uploadPhotoIcon) {
-      uploadPhotoIcon.addEventListener('click', function() {
-        uploadPhotoInput.click();
-      });
-    }
-    if (uploadPhotoInput) {
-      uploadPhotoInput.addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = function(ev) {
-          const dataUrl = ev.target.result;
-          modalProfileImage.src = dataUrl;
-          const storageRef = storage.ref('avatars/' + auth.currentUser.uid);
-          storageRef.putString(dataUrl, 'data_url')
-            .then(() => storageRef.getDownloadURL())
-            .then((url) => {
-              return db.collection('usuarios').doc(auth.currentUser.uid).update({ avatar: url });
-            })
-            .then(() => {
-              profileAvatar.src = modalProfileImage.src;
-              showToast('Foto actualizada');
-            })
-            .catch(err => showToast('Error: ' + err.message));
-        };
-        reader.readAsDataURL(file);
-      });
-    }
-
-    // Guardar nombre
-    if (saveProfileBtn) {
-      saveProfileBtn.addEventListener('click', function() {
-        const newName = editNameInput.value.trim();
-        if (!newName) { showToast('El nombre no puede estar vacío.'); return; }
-        const user = auth.currentUser;
-        user.updateProfile({ displayName: newName })
-          .then(() => db.collection('usuarios').doc(user.uid).update({ nombre: newName }))
-          .then(() => {
-            profileNameDisplay.textContent = newName;
-            showToast('Perfil actualizado');
-            closeEditModal();
-          })
-          .catch(err => showToast('Error: ' + err.message));
-      });
-    }
-
-    // Cargar avatares predeterminados
-    function loadAvatarGrid() {
-      const avatars = [
-        'https://ui-avatars.com/api/?name=A&background=a4c737&color=fff&size=128',
-        'https://ui-avatars.com/api/?name=B&background=a287be&color=fff&size=128',
-        'https://ui-avatars.com/api/?name=C&background=f5b342&color=fff&size=128',
-        'https://ui-avatars.com/api/?name=D&background=4facfe&color=fff&size=128',
-        'https://ui-avatars.com/api/?name=E&background=f5576c&color=fff&size=128'
-      ];
-      avatarGrid.innerHTML = '';
-      avatars.forEach((url) => {
-        const img = document.createElement('img');
-        img.src = url;
-        img.className = 'avatar-pred';
-        if (profileAvatar.src === url) img.classList.add('selected');
-        img.addEventListener('click', function() {
-          db.collection('usuarios').doc(auth.currentUser.uid).update({ avatar: url })
-            .then(() => {
-              profileAvatar.src = url;
-              modalProfileImage.src = url;
-              document.querySelectorAll('.avatar-pred').forEach(el => el.classList.remove('selected'));
-              img.classList.add('selected');
-              showToast('Avatar cambiado');
-            })
-            .catch(err => showToast('Error: ' + err.message));
-        });
-        avatarGrid.appendChild(img);
-      });
-    }
-
-    // ===== WHATSAPP =====
-    if (whatsappBtn) {
-      whatsappBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        window.open('https://wa.me/505XXXXXXXX?text=Hola%20Guía%20Pinolero', '_blank');
-      });
-    }
-
-    console.log('Todos los eventos cargados correctamente');
-  </script>
+  <!-- Nuestro script principal -->
+  <script src="inicio.js"></script>
 </body>
 </html>
