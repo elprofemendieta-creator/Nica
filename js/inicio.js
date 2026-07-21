@@ -578,10 +578,10 @@ function loadAvatarGrid() {
 // ===== BOTONES "JUGAR" =====
 document.querySelectorAll('.btn-jugar').forEach(btn => {
   btn.addEventListener('click', function(e) {
-    e.preventDefault();
     const game = this.dataset.game || 'default';
+    // Opcional: mostrar un toast antes de navegar
     showToast('Abriendo juego: ' + game);
-    // Aquí redirigir si es necesario
+    // El enlace navegará normalmente porque no usamos preventDefault
   });
 });
 
