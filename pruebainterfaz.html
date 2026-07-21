@@ -168,15 +168,76 @@
         </div>
       </div>
 
-      <!-- BANNER WAO (Estilo captura) -->
-      <div class="wao-banner">
-        <div class="wao-content">
-          <span class="wao-title">WAO!</span>
-          <h3>Experiencias</h3>
-          <p>Vive lo mejor de Nicaragua</p>
-          <button class="btn btn-primary-small">Explorar</button>
-        </div>
+      <!-- SECCIÓN TIPS PINOLEROS -->
+<div class="tips-section">
+  <div class="tips-header">
+    <div class="tips-header-icon">💡</div>
+    <h3>Tips Pinoleros</h3>
+    <p>Consejos para tu viaje por Nicaragua</p>
+  </div>
+  
+  <div class="tips-grid">
+    <div class="tip-card" onclick="showTipDetail('clima')">
+      <div class="tip-icon">🌤️</div>
+      <div class="tip-content">
+        <h4>Mejor época para viajar</h4>
+        <p>Diciembre - Abril (temporada seca)</p>
+        <span class="tip-tag">Clima</span>
       </div>
+      <i class="fas fa-chevron-right tip-arrow"></i>
+    </div>
+    
+    <div class="tip-card" onclick="showTipDetail('moneda')">
+      <div class="tip-icon">💰</div>
+      <div class="tip-content">
+        <h4>Moneda local</h4>
+        <p>1 USD ≈ 36 Córdobas (NIO)</p>
+        <span class="tip-tag">Dinero</span>
+      </div>
+      <i class="fas fa-chevron-right tip-arrow"></i>
+    </div>
+    
+    <div class="tip-card" onclick="showTipDetail('transporte')">
+      <div class="tip-icon">🚌</div>
+      <div class="tip-content">
+        <h4>Transporte en Nicaragua</h4>
+        <p>Buses, taxis y shuttles disponibles</p>
+        <span class="tip-tag">Movilidad</span>
+      </div>
+      <i class="fas fa-chevron-right tip-arrow"></i>
+    </div>
+    
+    <div class="tip-card" onclick="showTipDetail('comida')">
+      <div class="tip-icon">🍽️</div>
+      <div class="tip-content">
+        <h4>Gastronomía típica</h4>
+        <p>Gallo pinto, nacatamales, quesillo</p>
+        <span class="tip-tag">Comida</span>
+      </div>
+      <i class="fas fa-chevron-right tip-arrow"></i>
+    </div>
+    
+    <div class="tip-card" onclick="showTipDetail('seguridad')">
+      <div class="tip-icon">🛡️</div>
+      <div class="tip-content">
+        <h4>Seguridad para turistas</h4>
+        <p>Consejos para viajar seguro</p>
+        <span class="tip-tag">Seguridad</span>
+      </div>
+      <i class="fas fa-chevron-right tip-arrow"></i>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL PARA DETALLES DE TIPS -->
+<div id="tipModal" class="tip-modal">
+  <div class="tip-modal-content">
+    <span class="tip-modal-close" onclick="closeTipModal()">&times;</span>
+    <div id="tipModalBody">
+      <!-- Contenido dinámico -->
+    </div>
+  </div>
+</div>
 
       <!-- SECCIÓN JUEGOS (Estilo captura "Juegos Pinoleros") -->
       <div class="section-header">
