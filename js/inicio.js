@@ -1,5 +1,5 @@
 // ================================================================
-// Configuración Firebase (Compat)
+// CONFIGURACIÓN FIREBASE (COMPAT)
 // ================================================================
 const firebaseConfig = {
   apiKey: "AIzaSyA6jVICuE17KJcO34gE1brMxqWEfNd3Fy0",
@@ -13,11 +13,30 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
-const storage = firebase.storage();
 
-console.log('Firebase inicializado (Compat)');
+console.log('🔥 Firebase inicializado (Compat)');
 
-// ===== REFERENCIAS DOM =====
+// ================================================================
+// CONSTANTES Y VARIABLES GLOBALES
+// ================================================================
+const DEFAULT_AVATARS = [
+  "https://imgur.com/CFcEYQZ.jpg",
+  "https://imgur.com/rf8HVpD.jpg",
+  "https://imgur.com/LmBBFaT.jpg",
+  "https://us.123rf.com/450wm/yupiramos/yupiramos2009/yupiramos200902259/154588033-avatar-de-un-dise%C3%B1o-de-mujer-de-moda-ni%C3%B1a-persona-humana-humana-y-tema-de-belleza-ilustraci%C3%B3n.jpg?ver=6",
+  "https://randomuser.me/api/portraits/lego/1.jpg",
+  "https://randomuser.me/api/portraits/lego/2.jpg",
+  "https://cdni.iconscout.com/illustration/free/thumb/free-chica-negro-illustration-svg-download-png-1415695.png",
+  "https://img.magnific.com/vector-gratis/ilustracion-empresaria_53876-5857.jpg?semt=ais_hybrid&w=740&q=80"
+];
+const FALLBACK = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
+
+let fotoTemporal = null;
+let isSaving = false;
+
+// ================================================================
+// REFERENCIAS DOM
+// ================================================================
 const authCard = document.getElementById('authCard');
 const menuSection = document.getElementById('menuSection');
 const loginForm = document.getElementById('loginForm');
@@ -42,173 +61,17 @@ const positionBadge = document.getElementById('positionBadge');
 const editProfileModal = document.getElementById('editProfileModal');
 const modalProfileImage = document.getElementById('modalProfileImage');
 const uploadPhotoIcon = document.getElementById('uploadPhotoIcon');
-const uploadPhotoInput = document.getElementById('uploadPhoto');
+const uploadPhoto = document.getElementById('uploadPhoto');
 const editNameInput = document.getElementById('editNameInput');
 const saveProfileBtn = document.getElementById('saveProfileBtn');
 const closeModalBtn = document.getElementById('closeModalBtn');
 const avatarGrid = document.getElementById('avatarGrid');
-const toast = document.getElementById('toast');
+const toastDiv = document.getElementById('toast');
 const passportList = document.getElementById('passportList');
 
-// ===== TOAST =====
-function showToast(msg, duration = 3000) {
-  toast.textContent = msg;
-  toast.style.display = 'block';
-  setTimeout(() => { toast.style.display = 'none'; }, duration);
-}
-
-// ===== LOGIN / REGISTRO =====
-doLoginBtn.addEventListener('click', function() {
-  const email = loginEmail.value.trim();
-  const pass = loginPassword.value.trim();
-  if (!email || !pass) {
-    showToast('Completa todos los campos.');
-    return;
-  }
-  auth.signInWithEmailAndPassword(email, pass)
-    .then(() => showToast('¡Bienvenido de vuelta!'))
-    .catch(error => showToast('Error: ' + error.message));
-});
-
-showRegisterBtn.addEventListener('click', function() {
-  loginForm.style.display = 'none';
-  registerForm.style.display = 'block';
-});
-
-backToLoginBtn.addEventListener('click', function() {
-  registerForm.style.display = 'none';
-  loginForm.style.display = 'block';
-});
-
-doRegisterBtn.addEventListener('click', function() {
-  const name = regName.value.trim();
-  const email = regEmail.value.trim();
-  const pass = regPassword.value.trim();
-  if (!name || !email || !pass) {
-    showToast('Completa todos los campos.');
-    return;
-  }
-  if (pass.length < 6) {
-    showToast('La contraseña debe tener al menos 6 caracteres.');
-    return;
-  }
-  auth.createUserWithEmailAndPassword(email, pass)
-    .then((cred) => {
-      return cred.user.updateProfile({ displayName: name })
-        .then(() => {
-          return db.collection('usuarios').doc(cred.user.uid).set({
-            nombre: name,
-            email: email,
-            puntos: 0,
-            avatar: '',
-            lugares_visitados: [],  // Array vacío para el pasaporte
-            createdAt: new Date().toISOString()
-          });
-        });
-    })
-    .then(() => showToast('¡Cuenta creada exitosamente!'))
-    .catch(error => showToast('Error: ' + error.message));
-});
-
-forgotPasswordLink.addEventListener('click', function(e) {
-  e.preventDefault();
-  const email = loginEmail.value.trim();
-  if (!email) {
-    showToast('Ingresa tu correo para restablecer.');
-    return;
-  }
-  auth.sendPasswordResetEmail(email)
-    .then(() => showToast('Revisa tu correo para restablecer la contraseña.'))
-    .catch(error => showToast('Error: ' + error.message));
-});
-
-// ===== ESTADO DE AUTENTICACIÓN =====
-let currentUserUid = null;
-
-auth.onAuthStateChanged(function(user) {
-  console.log('onAuthStateChanged:', user ? user.uid : 'null');
-  if (user) {
-    currentUserUid = user.uid;
-    authCard.style.display = 'none';
-    menuSection.style.display = 'block';
-
-    const userRef = db.collection('usuarios').doc(user.uid);
-    userRef.get()
-      .then((docSnap) => {
-        if (docSnap.exists) {
-          const data = docSnap.data();
-          actualizarPerfil(data, user);
-          // Cargar pasaporte
-          actualizarPasaporte(data.lugares_visitados || []);
-        } else {
-          userRef.set({
-            nombre: user.displayName || 'Usuario',
-            email: user.email,
-            puntos: 0,
-            avatar: '',
-            lugares_visitados: [],
-            createdAt: new Date().toISOString()
-          }).then(() => {
-            userRef.get().then((newSnap) => {
-              if (newSnap.exists) {
-                const data = newSnap.data();
-                actualizarPerfil(data, user);
-                actualizarPasaporte(data.lugares_visitados || []);
-              }
-            });
-          });
-        }
-      })
-      .catch(err => console.error('Error al cargar usuario:', err));
-
-    // Escuchar cambios en tiempo real en el documento del usuario
-    userRef.onSnapshot((docSnap) => {
-      if (docSnap.exists) {
-        const data = docSnap.data();
-        actualizarPerfil(data, user);
-        updateUserStats(user.uid);
-        actualizarPasaporte(data.lugares_visitados || []);
-      }
-    });
-
-  } else {
-    currentUserUid = null;
-    authCard.style.display = 'block';
-    menuSection.style.display = 'none';
-    loginForm.style.display = 'block';
-    registerForm.style.display = 'none';
-  }
-});
-
-function actualizarPerfil(data, user) {
-  const nombre = data.nombre || user.displayName || 'Usuario';
-  profileNameDisplay.textContent = nombre;
-  if (data.avatar) {
-    profileAvatar.src = data.avatar;
-    modalProfileImage.src = data.avatar;
-  } else {
-    const avatarUrl = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(nombre) + '&background=a4c737&color=fff&size=128';
-    profileAvatar.src = avatarUrl;
-    modalProfileImage.src = avatarUrl;
-  }
-}
-//== target de perfil modificada=== 
-// Imágenes predeterminadas
-const DEFAULT_AVATARS = [
-  "https://imgur.com/CFcEYQZ.jpg",
-  "https://imgur.com/rf8HVpD.jpg",
-  "https://imgur.com/LmBBFaT.jpg",
-  "https://us.123rf.com/450wm/yupiramos/yupiramos2009/yupiramos200902259/154588033-avatar-de-un-dise%C3%B1o-de-mujer-de-moda-ni%C3%B1a-persona-humana-humana-y-tema-de-belleza-ilustraci%C3%B3n.jpg?ver=6",
-  "https://randomuser.me/api/portraits/lego/1.jpg",
-  "https://randomuser.me/api/portraits/lego/2.jpg",
-  "https://cdni.iconscout.com/illustration/free/thumb/free-chica-negro-illustration-svg-download-png-1415695.png",
-  "https://img.magnific.com/vector-gratis/ilustracion-empresaria_53876-5857.jpg?semt=ais_hybrid&w=740&q=80"
-];
-const FALLBACK = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
-
-let fotoTemporal = null;
-let isSaving = false;
-
+// ================================================================
+// FUNCIONES AUXILIARES (TOAST, COMPRESIÓN, SUBIDA)
+// ================================================================
 function showToast(msg, isError = false, duration = 5000) {
   toastDiv.textContent = msg;
   toastDiv.style.display = 'block';
@@ -217,7 +80,6 @@ function showToast(msg, isError = false, duration = 5000) {
   toastDiv._timeout = setTimeout(() => toastDiv.style.display = 'none', duration);
 }
 
-// ===== COMPRESIÓN DE IMAGEN =====
 function compressImage(file) {
   return new Promise((resolve, reject) => {
     try {
@@ -268,7 +130,6 @@ function compressImage(file) {
   });
 }
 
-// ===== SUBIR A IMGBB =====
 async function uploadToImgBB(file) {
   const reader = new FileReader();
   const dataUrl = await new Promise((resolve, reject) => {
@@ -296,29 +157,31 @@ async function uploadToImgBB(file) {
   return json.data.url;
 }
 
-// ===== GUARDAR EN FIRESTORE =====
+// ================================================================
+// FUNCIONES DE PERFIL
+// ================================================================
 async function guardarEnFirestore(user, extra = {}) {
-  const ref = doc(db, 'usuarios', user.uid);
-  const snap = await getDoc(ref);
-  if (!snap.exists()) {
-    await setDoc(ref, {
+  const ref = db.collection('usuarios').doc(user.uid);
+  const snap = await ref.get();
+  if (!snap.exists) {
+    await ref.set({
       uid: user.uid,
       email: user.email,
       nombre: extra.nombre || user.displayName || user.email.split('@')[0],
       fotoURL: extra.fotoURL || user.photoURL || DEFAULT_AVATARS[0],
       puntos: 0,
+      lugares_visitados: [],
       fechaRegistro: new Date()
     });
   }
 }
 
-// ===== CARGAR PERFIL =====
 async function cargarPerfil(user) {
   if (!user) return;
-  const ref = doc(db, 'usuarios', user.uid);
-  const snap = await getDoc(ref);
+  const ref = db.collection('usuarios').doc(user.uid);
+  const snap = await ref.get();
   let nombre, fotoURL;
-  if (snap.exists()) {
+  if (snap.exists) {
     const data = snap.data();
     nombre = data.nombre || user.displayName || user.email.split('@')[0];
     fotoURL = data.fotoURL || user.photoURL || FALLBACK;
@@ -327,13 +190,14 @@ async function cargarPerfil(user) {
     fotoURL = user.photoURL || FALLBACK;
     await guardarEnFirestore(user, { nombre, fotoURL });
   }
-  userNameSpan.textContent = nombre;
+  // Actualizar UI
   profileNameDisplay.textContent = nombre;
   profileAvatar.src = fotoURL;
   profileAvatar.onerror = () => profileAvatar.src = FALLBACK;
+  // También actualizar puntos y posición
+  await updateUserStats(user.uid);
 }
 
-// ===== RENDER AVATARES PREDETERMINADOS =====
 function renderAvatars(selected) {
   avatarGrid.innerHTML = '';
   DEFAULT_AVATARS.forEach(url => {
@@ -352,7 +216,6 @@ function renderAvatars(selected) {
   });
 }
 
-// ===== GUARDAR PERFIL =====
 async function guardarPerfil(nuevoNombre, nuevaFoto) {
   const user = auth.currentUser;
   if (!user) {
@@ -374,22 +237,22 @@ async function guardarPerfil(nuevoNombre, nuevaFoto) {
     } else if (typeof nuevaFoto === 'string' && nuevaFoto.startsWith('http')) {
       fotoURL = nuevaFoto;
     } else {
-      const ref = doc(db, 'usuarios', user.uid);
-      const snap = await getDoc(ref);
-      fotoURL = snap.exists() ? snap.data().fotoURL : null;
+      const ref = db.collection('usuarios').doc(user.uid);
+      const snap = await ref.get();
+      fotoURL = snap.exists ? snap.data().fotoURL : null;
     }
 
     if (nuevoNombre && nuevoNombre !== user.displayName) {
-      await updateProfile(user, { displayName: nuevoNombre });
+      await user.updateProfile({ displayName: nuevoNombre });
     }
 
-    const ref = doc(db, 'usuarios', user.uid);
+    const ref = db.collection('usuarios').doc(user.uid);
     const updates = {};
     if (nuevoNombre) updates.nombre = nuevoNombre;
     if (fotoURL) updates.fotoURL = fotoURL;
-    await updateDoc(ref, updates);
+    await ref.update(updates);
 
-    userNameSpan.textContent = nuevoNombre || user.displayName;
+    // Actualizar UI
     profileNameDisplay.textContent = nuevoNombre || user.displayName;
     if (fotoURL) {
       profileAvatar.src = fotoURL;
@@ -397,7 +260,7 @@ async function guardarPerfil(nuevoNombre, nuevaFoto) {
     }
 
     showToast('✅ Perfil actualizado correctamente');
-    editModal.style.display = 'none';
+    editProfileModal.style.display = 'none';
   } catch (error) {
     console.error('Error al guardar perfil:', error);
     showToast('❌ ' + (error.message || 'Error al guardar'), true, 5000);
@@ -408,8 +271,40 @@ async function guardarPerfil(nuevoNombre, nuevaFoto) {
   }
 }
 
-//== usuario end==
-// ===== PASAPORTE DINÁMICO =====
+// ================================================================
+// ACTUALIZAR PUNTOS Y POSICIÓN
+// ================================================================
+async function updateUserStats(uid) {
+  try {
+    const docSnap = await db.collection('usuarios').doc(uid).get();
+    if (!docSnap.exists) return;
+    const data = docSnap.data();
+    const puntos = data.puntos || 0;
+    userPointsDisplay.textContent = '⭐ ' + puntos + ' puntos';
+
+    const querySnap = await db.collection('usuarios').orderBy('puntos', 'desc').get();
+    let posicion = 0, total = 0;
+    querySnap.forEach(doc => {
+      total++;
+      if (doc.id === uid) posicion = total;
+    });
+    if (posicion > 0) {
+      let medal = '';
+      if (posicion === 1) medal = '👑 ';
+      else if (posicion === 2) medal = '🥈 ';
+      else if (posicion === 3) medal = '🥉 ';
+      positionBadge.textContent = medal + 'Posición #' + posicion + ' de ' + total;
+    } else {
+      positionBadge.textContent = '📈 Sin posición aún';
+    }
+  } catch (error) {
+    console.error('Error en updateUserStats:', error);
+  }
+}
+
+// ================================================================
+// PASAPORTE (LUGARES VISITADOS) - DINÁMICO
+// ================================================================
 function actualizarPasaporte(lugares) {
   passportList.innerHTML = '';
   if (!lugares || lugares.length === 0) {
@@ -424,168 +319,219 @@ function actualizarPasaporte(lugares) {
     const icon = document.createElement('i');
     icon.className = 'fas fa-check-circle';
     icon.style.color = '#a4c737';
-    const text = document.createTextNode(' ' + lugar);
     li.appendChild(icon);
-    li.appendChild(text);
+    li.appendChild(document.createTextNode(' ' + lugar));
     passportList.appendChild(li);
   });
 }
 
-// ===== ACTUALIZAR PUNTOS Y POSICIÓN =====
-function updateUserStats(uid) {
-  db.collection('usuarios').doc(uid).get()
-    .then((docSnap) => {
-      if (!docSnap.exists) return;
-      const data = docSnap.data();
-      const puntos = data.puntos || 0;
-      userPointsDisplay.textContent = '⭐ ' + puntos + ' puntos';
+// ================================================================
+// EVENTOS DE LOGIN / REGISTRO / RECUPERACIÓN
+// ================================================================
+doLoginBtn.addEventListener('click', () => {
+  const email = loginEmail.value.trim();
+  const pass = loginPassword.value.trim();
+  if (!email || !pass) {
+    showToast('Completa todos los campos.', true);
+    return;
+  }
+  auth.signInWithEmailAndPassword(email, pass)
+    .then(() => showToast('¡Bienvenido de vuelta!'))
+    .catch(error => showToast('Error: ' + error.message, true));
+});
 
-      return db.collection('usuarios').orderBy('puntos', 'desc').get()
-        .then((querySnap) => {
-          let posicion = 0;
-          let total = 0;
-          querySnap.forEach((doc) => {
-            total++;
-            if (doc.id === uid) posicion = total;
+showRegisterBtn.addEventListener('click', () => {
+  loginForm.style.display = 'none';
+  registerForm.style.display = 'block';
+});
+
+backToLoginBtn.addEventListener('click', () => {
+  registerForm.style.display = 'none';
+  loginForm.style.display = 'block';
+});
+
+doRegisterBtn.addEventListener('click', () => {
+  const name = regName.value.trim();
+  const email = regEmail.value.trim();
+  const pass = regPassword.value.trim();
+  if (!name || !email || !pass) {
+    showToast('Completa todos los campos.', true);
+    return;
+  }
+  if (pass.length < 6) {
+    showToast('La contraseña debe tener al menos 6 caracteres.', true);
+    return;
+  }
+  auth.createUserWithEmailAndPassword(email, pass)
+    .then(cred => {
+      return cred.user.updateProfile({ displayName: name })
+        .then(() => {
+          return db.collection('usuarios').doc(cred.user.uid).set({
+            uid: cred.user.uid,
+            email: email,
+            nombre: name,
+            fotoURL: DEFAULT_AVATARS[0],
+            puntos: 0,
+            lugares_visitados: [],
+            fechaRegistro: new Date()
           });
-          if (posicion > 0) {
-            let medal = '';
-            if (posicion === 1) medal = '👑 ';
-            else if (posicion === 2) medal = '🥈 ';
-            else if (posicion === 3) medal = '🥉 ';
-            positionBadge.textContent = medal + 'Posición #' + posicion + ' de ' + total;
-          } else {
-            positionBadge.textContent = '📈 Sin posición aún';
-          }
         });
     })
-    .catch(err => console.error('Error en updateUserStats:', err));
-}
+    .then(() => showToast('¡Cuenta creada exitosamente!'))
+    .catch(error => showToast('Error: ' + error.message, true));
+});
 
-// ===== CERRAR SESIÓN =====
-if (logoutBtn) {
-  logoutBtn.addEventListener('click', function() {
-    auth.signOut().then(() => showToast('Sesión cerrada'));
-  });
-}
+forgotPasswordLink.addEventListener('click', (e) => {
+  e.preventDefault();
+  const email = loginEmail.value.trim();
+  if (!email) {
+    showToast('Ingresa tu correo para restablecer.', true);
+    return;
+  }
+  auth.sendPasswordResetEmail(email)
+    .then(() => showToast('Revisa tu correo para restablecer la contraseña.'))
+    .catch(error => showToast('Error: ' + error.message, true));
+});
 
-// ===== REDIRECCIÓN DEL PERFIL A COMUNIDAD =====
-if (profileTrigger) {
-  profileTrigger.addEventListener('click', function(e) {
-    // Si el clic fue en el botón de editar, no redirigir
-    if (e.target.closest('.edit-btn')) return;
-    window.location.href = 'comunidad.html';
-  });
-}
+// ================================================================
+// ESTADO DE AUTENTICACIÓN
+// ================================================================
+auth.onAuthStateChanged(async (user) => {
+  console.log('onAuthStateChanged:', user ? user.uid : 'null');
+  if (user) {
+    authCard.style.display = 'none';
+    menuSection.style.display = 'block';
 
-// ===== MODAL DE EDICIÓN (solo botón lápiz) =====
+    // Cargar perfil (incluye puntos y posición)
+    await cargarPerfil(user);
+
+    // Escuchar cambios en tiempo real en el documento del usuario
+    const userRef = db.collection('usuarios').doc(user.uid);
+    userRef.onSnapshot((docSnap) => {
+      if (docSnap.exists) {
+        const data = docSnap.data();
+        // Actualizar nombre y foto si cambian
+        const nombre = data.nombre || user.displayName || user.email.split('@')[0];
+        profileNameDisplay.textContent = nombre;
+        if (data.fotoURL) {
+          profileAvatar.src = data.fotoURL;
+          profileAvatar.onerror = () => profileAvatar.src = FALLBACK;
+        }
+        // Actualizar puntos y posición
+        updateUserStats(user.uid);
+        // Actualizar pasaporte
+        actualizarPasaporte(data.lugares_visitados || []);
+      }
+    });
+  } else {
+    authCard.style.display = 'block';
+    menuSection.style.display = 'none';
+    loginForm.style.display = 'block';
+    registerForm.style.display = 'none';
+    // Limpiar campos
+    loginEmail.value = '';
+    loginPassword.value = '';
+    regEmail.value = '';
+    regPassword.value = '';
+    regName.value = '';
+  }
+});
+
+// ================================================================
+// CERRAR SESIÓN
+// ================================================================
+logoutBtn.addEventListener('click', () => {
+  auth.signOut().then(() => showToast('Sesión cerrada'));
+});
+
+// ================================================================
+// REDIRECCIÓN DEL PERFIL A COMUNIDAD
+// ================================================================
+profileTrigger.addEventListener('click', (e) => {
+  if (e.target.closest('.edit-btn')) return;
+  window.location.href = 'comunidad.html';
+});
+
+// ================================================================
+// MODAL DE EDICIÓN DE PERFIL
+// ================================================================
 function openEditModal() {
   editProfileModal.style.display = 'flex';
   editNameInput.value = profileNameDisplay.textContent;
   modalProfileImage.src = profileAvatar.src;
-  loadAvatarGrid();
+  fotoTemporal = null; // Resetear foto temporal
+  // Cargar avatares predeterminados
+  renderAvatars(profileAvatar.src);
 }
 function closeEditModal() {
   editProfileModal.style.display = 'none';
 }
 
-if (editProfileBtn) {
-  editProfileBtn.addEventListener('click', function(e) {
-    e.stopPropagation();
-    openEditModal();
-  });
-}
-if (closeModalBtn) closeModalBtn.addEventListener('click', closeEditModal);
-window.addEventListener('click', function(e) { if (e.target === editProfileModal) closeEditModal(); });
+editProfileBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
+  openEditModal();
+});
 
-// ===== SUBIR FOTO =====
-if (uploadPhotoIcon) {
-  uploadPhotoIcon.addEventListener('click', function() {
-    uploadPhotoInput.click();
-  });
-}
-if (uploadPhotoInput) {
-  uploadPhotoInput.addEventListener('change', function(e) {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = function(ev) {
-      const dataUrl = ev.target.result;
-      modalProfileImage.src = dataUrl;
-      const storageRef = storage.ref('avatars/' + auth.currentUser.uid);
-      storageRef.putString(dataUrl, 'data_url')
-        .then(() => storageRef.getDownloadURL())
-        .then((url) => {
-          return db.collection('usuarios').doc(auth.currentUser.uid).update({ avatar: url });
-        })
-        .then(() => {
-          profileAvatar.src = modalProfileImage.src;
-          showToast('Foto actualizada');
-        })
-        .catch(err => showToast('Error: ' + err.message));
-    };
-    reader.readAsDataURL(file);
-  });
-}
+closeModalBtn.addEventListener('click', closeEditModal);
+window.addEventListener('click', (e) => {
+  if (e.target === editProfileModal) closeEditModal();
+});
 
-// ===== GUARDAR NOMBRE =====
-if (saveProfileBtn) {
-  saveProfileBtn.addEventListener('click', function() {
-    const newName = editNameInput.value.trim();
-    if (!newName) { showToast('El nombre no puede estar vacío.'); return; }
-    const user = auth.currentUser;
-    user.updateProfile({ displayName: newName })
-      .then(() => db.collection('usuarios').doc(user.uid).update({ nombre: newName }))
-      .then(() => {
-        profileNameDisplay.textContent = newName;
-        showToast('Perfil actualizado');
-        closeEditModal();
-      })
-      .catch(err => showToast('Error: ' + err.message));
-  });
-}
+// ===== SUBIR FOTO (desde el modal) =====
+uploadPhotoIcon.addEventListener('click', () => uploadPhoto.click());
 
-// ===== AVATARES PREDETERMINADOS =====
-function loadAvatarGrid() {
-  const avatars = [
-    'https://ui-avatars.com/api/?name=A&background=a4c737&color=fff&size=128',
-    'https://ui-avatars.com/api/?name=B&background=a287be&color=fff&size=128',
-    'https://ui-avatars.com/api/?name=C&background=f5b342&color=fff&size=128',
-    'https://ui-avatars.com/api/?name=D&background=4facfe&color=fff&size=128',
-    'https://ui-avatars.com/api/?name=E&background=f5576c&color=fff&size=128'
-  ];
-  avatarGrid.innerHTML = '';
-  avatars.forEach((url) => {
-    const img = document.createElement('img');
-    img.src = url;
-    img.className = 'avatar-pred';
-    if (profileAvatar.src === url) img.classList.add('selected');
-    img.addEventListener('click', function() {
-      db.collection('usuarios').doc(auth.currentUser.uid).update({ avatar: url })
-        .then(() => {
-          profileAvatar.src = url;
-          modalProfileImage.src = url;
-          document.querySelectorAll('.avatar-pred').forEach(el => el.classList.remove('selected'));
-          img.classList.add('selected');
-          showToast('Avatar cambiado');
-        })
-        .catch(err => showToast('Error: ' + err.message));
-    });
-    avatarGrid.appendChild(img);
-  });
-}
+uploadPhoto.addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const validTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp', 'image/gif'];
+  if (!validTypes.includes(file.type)) {
+    showToast('❌ Formato no soportado. Usa JPG, PNG o WEBP', true);
+    uploadPhoto.value = '';
+    return;
+  }
+  if (file.size > 5 * 1024 * 1024) {
+    showToast('❌ La imagen es muy grande. Máximo 5MB', true);
+    uploadPhoto.value = '';
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    modalProfileImage.src = ev.target.result;
+    document.querySelectorAll('.avatar-pred').forEach(a => a.classList.remove('selected'));
+    fotoTemporal = file;
+    showToast('📷 Foto seleccionada, guarda los cambios');
+  };
+  reader.readAsDataURL(file);
+});
 
-// ===== BOTONES "JUGAR" =====
+// ===== GUARDAR PERFIL (desde modal) =====
+saveProfileBtn.addEventListener('click', async () => {
+  const nuevoNombre = editNameInput.value.trim();
+  if (!nuevoNombre) {
+    showToast('❌ El nombre no puede estar vacío', true);
+    return;
+  }
+  if (!fotoTemporal) {
+    showToast('❌ Selecciona una foto de perfil', true);
+    return;
+  }
+  await guardarPerfil(nuevoNombre, fotoTemporal);
+});
+
+// ================================================================
+// BOTONES "JUGAR" (NAVEGACIÓN REAL)
+// ================================================================
 document.querySelectorAll('.btn-jugar').forEach(btn => {
   btn.addEventListener('click', function(e) {
     const game = this.dataset.game || 'default';
-    // Opcional: mostrar un toast antes de navegar
     showToast('Abriendo juego: ' + game);
-    // El enlace navegará normalmente porque no usamos preventDefault
+    // No usamos preventDefault, el enlace navega normalmente
   });
 });
 
-// ===== MENÚ INFERIOR - NAVEGACIÓN =====
+// ================================================================
+// MENÚ INFERIOR - NAVEGACIÓN
+// ================================================================
 document.querySelectorAll('.nav-item').forEach(item => {
   item.addEventListener('click', function(e) {
     e.preventDefault();
@@ -600,4 +546,15 @@ document.querySelectorAll('.nav-item').forEach(item => {
   });
 });
 
-console.log('Todos los eventos cargados correctamente');
+// ================================================================
+// WHATSAPP (flotante)
+// ================================================================
+document.getElementById('whatsappBtn')?.addEventListener('click', (e) => {
+  e.preventDefault();
+  const user = auth.currentUser;
+  let msg = "¡Hola!%20Estoy%20explorando%20Nicaragua%20con%20Guía%20Pinolero";
+  if (user?.displayName) msg = `Hola,%20soy%20${encodeURIComponent(user.displayName)}.%20${msg}`;
+  window.open(`https://wa.me/50588170531?text=${msg}`, '_blank');
+});
+
+console.log('✅ Todos los eventos cargados correctamente');
