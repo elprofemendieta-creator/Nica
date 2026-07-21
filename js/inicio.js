@@ -48,6 +48,7 @@ const saveProfileBtn = document.getElementById('saveProfileBtn');
 const closeModalBtn = document.getElementById('closeModalBtn');
 const avatarGrid = document.getElementById('avatarGrid');
 const toast = document.getElementById('toast');
+const passportList = document.getElementById('passportList');
 
 // ===== TOAST =====
 function showToast(msg, duration = 3000) {
@@ -100,6 +101,7 @@ doRegisterBtn.addEventListener('click', function() {
             email: email,
             puntos: 0,
             avatar: '',
+            lugares_visitados: [],  // Array vacío para el pasaporte
             createdAt: new Date().toISOString()
           });
         });
@@ -136,28 +138,36 @@ auth.onAuthStateChanged(function(user) {
         if (docSnap.exists) {
           const data = docSnap.data();
           actualizarPerfil(data, user);
+          // Cargar pasaporte
+          actualizarPasaporte(data.lugares_visitados || []);
         } else {
           userRef.set({
             nombre: user.displayName || 'Usuario',
             email: user.email,
             puntos: 0,
             avatar: '',
+            lugares_visitados: [],
             createdAt: new Date().toISOString()
           }).then(() => {
             userRef.get().then((newSnap) => {
-              if (newSnap.exists) actualizarPerfil(newSnap.data(), user);
+              if (newSnap.exists) {
+                const data = newSnap.data();
+                actualizarPerfil(data, user);
+                actualizarPasaporte(data.lugares_visitados || []);
+              }
             });
           });
         }
       })
       .catch(err => console.error('Error al cargar usuario:', err));
 
-    // Escuchar cambios en tiempo real
+    // Escuchar cambios en tiempo real en el documento del usuario
     userRef.onSnapshot((docSnap) => {
       if (docSnap.exists) {
         const data = docSnap.data();
         actualizarPerfil(data, user);
         updateUserStats(user.uid);
+        actualizarPasaporte(data.lugares_visitados || []);
       }
     });
 
@@ -181,6 +191,28 @@ function actualizarPerfil(data, user) {
     profileAvatar.src = avatarUrl;
     modalProfileImage.src = avatarUrl;
   }
+}
+
+// ===== PASAPORTE DINÁMICO =====
+function actualizarPasaporte(lugares) {
+  passportList.innerHTML = '';
+  if (!lugares || lugares.length === 0) {
+    const li = document.createElement('li');
+    li.className = 'passport-empty';
+    li.textContent = 'No has visitado ningún lugar aún.';
+    passportList.appendChild(li);
+    return;
+  }
+  lugares.forEach(lugar => {
+    const li = document.createElement('li');
+    const icon = document.createElement('i');
+    icon.className = 'fas fa-check-circle';
+    icon.style.color = '#a4c737';
+    const text = document.createTextNode(' ' + lugar);
+    li.appendChild(icon);
+    li.appendChild(text);
+    passportList.appendChild(li);
+  });
 }
 
 // ===== ACTUALIZAR PUNTOS Y POSICIÓN =====
@@ -221,11 +253,11 @@ if (logoutBtn) {
   });
 }
 
-// ===== REDIRECCIÓN DEL PERFIL A COMUNIDAD (solo el área, no los botones) =====
+// ===== REDIRECCIÓN DEL PERFIL A COMUNIDAD =====
 if (profileTrigger) {
   profileTrigger.addEventListener('click', function(e) {
-    // Si el clic fue en un botón de acción, no redirigir
-    if (e.target.closest('.profile-btn')) return;
+    // Si el clic fue en el botón de editar, no redirigir
+    if (e.target.closest('.edit-btn')) return;
     window.location.href = 'comunidad.html';
   });
 }
@@ -333,11 +365,11 @@ document.querySelectorAll('.btn-jugar').forEach(btn => {
     e.preventDefault();
     const game = this.dataset.game || 'default';
     showToast('Abriendo juego: ' + game);
-    // Aquí redirigir si es necesario: window.location.href = 'juego-' + game + '.html';
+    // Aquí redirigir si es necesario
   });
 });
 
-// ===== MENÚ INFERIOR - NAVEGACIÓN (solo 5) =====
+// ===== MENÚ INFERIOR - NAVEGACIÓN =====
 document.querySelectorAll('.nav-item').forEach(item => {
   item.addEventListener('click', function(e) {
     e.preventDefault();
@@ -351,8 +383,5 @@ document.querySelectorAll('.nav-item').forEach(item => {
     this.classList.add('active');
   });
 });
-
-// ===== EVENTOS PARA LOS BOTONES DE PERFIL (Comunidad y Promociones) =====
-// Ya tienen enlaces directos en el HTML, no necesitan JS adicional.
 
 console.log('Todos los eventos cargados correctamente');
