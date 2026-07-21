@@ -21,7 +21,8 @@
 
 body {
   font-family: var(--font-body);
-  background: radial-gradient(circle at top, #2a2560 0%, #1a1738 100%);
+ background: radial-gradient(circle at top, #2a2560 0%, #1a1738 100%);
+ border: 2px solid rgba(251, 251, 251, 0.4);
   background-attachment: fixed;
   color: var(--text-light);
   margin: 0;
