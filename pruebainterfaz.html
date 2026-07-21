@@ -3,302 +3,25 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Guía Pinolera · Destinos</title>
-  <!-- Fuentes e iconos -->
+  <title>Guía Pinolera - Descubre Nicaragua</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-  <style>
-    /* ===== RESET & BASE ===== */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    :root {
-      --primary-green: #6aba42;
-      --secondary-purple: #5b4f8a;
-      --bg-app: #0b0d17;
-      --bg-card: rgba(255, 255, 255, 0.06);
-      --text-main: #fbfbfb;
-      --text-muted: rgba(255, 255, 255, 0.6);
-      --font-main: 'Poppins', sans-serif;
-    }
-    body {
-      font-family: var(--font-main);
-      background: var(--bg-app);
-      color: var(--text-main);
-      min-height: 100vh;
-      padding-bottom: 100px;
-      overflow-x: hidden;
-    }
-    .app-container {
-      max-width: 480px;
-      margin: 0 auto;
-      padding: 1.5rem 1.2rem;
-    }
-
-    /* ===== LOGIN/REGISTRO (mini) ===== */
-    .auth-wrapper { display: flex; justify-content: center; align-items: center; min-height: 80vh; }
-    .auth-glass {
-      background: rgba(255, 255, 255, 0.05);
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 2.5rem;
-      padding: 2rem;
-      width: 100%;
-      text-align: center;
-    }
-    .auth-mascot img { width: 100px; margin-bottom: 1rem; }
-    .auth-title {
-      font-size: 2.2rem; font-weight: 800;
-      background: linear-gradient(135deg, #fff, #a287be);
-      -webkit-background-clip: text; background-clip: text; color: transparent;
-    }
-    .auth-subtitle { color: var(--text-muted); margin-bottom: 2rem; }
-    .input-group {
-      display: flex; align-items: center;
-      background: rgba(255, 255, 255, 0.08);
-      border-radius: 60px; padding: 0 1.2rem; margin-bottom: 1rem;
-      border: 1px solid rgba(255, 255, 255, 0.05);
-    }
-    .input-icon { color: var(--text-muted); font-size: 1rem; margin-right: 10px; }
-    .input-group input {
-      width: 100%; padding: 14px 0;
-      background: transparent; border: none; color: #fff; outline: none;
-    }
-    .btn {
-      display: inline-flex; align-items: center; justify-content: center;
-      padding: 16px; border-radius: 60px; width: 100%;
-      font-weight: 600; border: none; cursor: pointer;
-      transition: 0.3s; font-family: var(--font-main);
-    }
-    .btn-primary-full { background: var(--primary-green); color: #fff; font-size: 1rem; }
-    .btn-primary-full:hover { transform: scale(1.02); opacity: 0.9; }
-    .btn-outline-full { background: transparent; border: 1px solid var(--text-muted); color: #fff; }
-    .btn-outline-full:hover { background: rgba(255,255,255,0.1); }
-    .mt-2 { margin-top: 10px; }
-    .auth-link { margin: 10px 0; font-size: 0.85rem; color: var(--text-muted); }
-    .divider { display: flex; align-items: center; margin: 1.5rem 0; color: var(--text-muted); }
-    .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid rgba(255,255,255,0.1); }
-    .divider span { margin: 0 10px; font-size: 0.8rem; }
-
-    /* ===== HEADER ===== */
-    .app-header { display: flex; justify-content: space-between; margin-bottom: 1.5rem; }
-    .header-left { display: flex; align-items: center; gap: 12px; }
-    .header-logo { height: 50px; }
-    .header-left h1 { font-size: 1.6rem; font-weight: 800; line-height: 1; }
-    .header-subtitle { display: block; font-size: 0.65rem; letter-spacing: 2px; color: var(--secondary-purple); font-weight: 600; }
-    .btn-icon { background: rgba(255,255,255,0.1); border: none; color: #fff; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; }
-
-    /* ===== SEARCH BAR ===== */
-    .search-bar {
-      display: flex; align-items: center; gap: 10px;
-      background: rgba(255, 255, 255, 0.06); border-radius: 60px; padding: 10px 20px;
-      margin-bottom: 2rem; border: 1px solid rgba(255, 255, 255, 0.05);
-    }
-    .search-bar i { color: var(--text-muted); }
-    .search-bar input { background: transparent; border: none; width: 100%; color: #fff; outline: none; }
-
-    /* ===== PERFIL ===== */
-    .profile-wrapper { margin-bottom: 2rem; }
-    .profile-card {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 12px 16px; background: var(--bg-card); border-radius: 24px; border: 1px solid rgba(255,255,255,0.05);
-    }
-    .profile-info { display: flex; align-items: center; gap: 14px; cursor: pointer; }
-    .profile-avatar { width: 50px; height: 50px; border-radius: 50%; border: 2px solid var(--primary-green); object-fit: cover; }
-    .profile-name { font-weight: 700; font-size: 1.1rem; }
-    .profile-level { font-size: 0.8rem; color: var(--text-muted); }
-    .btn-icon-edit { background: transparent; border: none; color: var(--text-muted); cursor: pointer; }
-    .position-badge {
-      display: flex; align-items: center; gap: 8px; margin: 12px 0;
-      font-size: 0.8rem; color: var(--text-muted);
-    }
-    .action-grid { display: flex; gap: 12px; }
-    .action-btn {
-      flex: 1; text-align: center; padding: 12px; border-radius: 60px;
-      font-size: 0.9rem; font-weight: 600; color: #fff; text-decoration: none;
-      transition: 0.3s;
-    }
-    .gradient-purple { background: linear-gradient(135deg, #7b62b5, #5b4f8a); }
-    .gradient-orange { background: linear-gradient(135deg, #f9a826, #f57c00); }
-
-    /* ===== DESTINOS POPULARES (con botón "Visitar") ===== */
-    .section-header { display: flex; justify-content: space-between; align-items: center; margin: 1.5rem 0 1rem; }
-    .section-header h2 { font-size: 1.2rem; font-weight: 700; }
-    .see-all { color: var(--primary-green); font-size: 0.85rem; text-decoration: none; font-weight: 600; cursor: pointer; }
-
-    .horizontal-scroll {
-      display: flex; gap: 16px; overflow-x: auto; padding-bottom: 10px;
-      scrollbar-width: none;
-    }
-    .horizontal-scroll::-webkit-scrollbar { display: none; }
-
-    .destination-card {
-      min-width: 180px;
-      height: 220px;
-      border-radius: 24px;
-      overflow: hidden;
-      position: relative;
-      flex-shrink: 0;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-      transition: transform 0.2s;
-      background: #1a1d2b;
-    }
-    .destination-card:hover { transform: scale(1.02); }
-
-    .destination-card img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
-    .card-overlay {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      background: linear-gradient(to top, rgba(0,0,0,0.85), transparent 60%);
-      padding: 16px 14px;
-      color: #fff;
-    }
-    .card-overlay h3 {
-      font-size: 1.1rem;
-      font-weight: 700;
-      margin-bottom: 2px;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-    }
-    .card-overlay p {
-      font-size: 0.7rem;
-      color: rgba(255,255,255,0.8);
-      margin-bottom: 6px;
-    }
-    .card-bottom {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 6px;
-    }
-    .rating {
-      font-size: 0.75rem;
-      color: #ffd700;
-      font-weight: 600;
-    }
-    .btn-visitar {
-      background: var(--primary-green);
-      border: none;
-      color: #fff;
-      font-weight: 600;
-      padding: 4px 14px;
-      border-radius: 40px;
-      font-size: 0.7rem;
-      cursor: pointer;
-      transition: 0.2s;
-      box-shadow: 0 2px 8px rgba(106, 186, 66, 0.3);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-    .btn-visitar:hover {
-      background: #7dce4a;
-      transform: scale(1.05);
-    }
-
-    /* ===== WAO BANNER ===== */
-    .wao-banner {
-      background: linear-gradient(135deg, #1b2a25, #2d3a2d);
-      border-radius: 24px; padding: 20px; margin: 2rem 0; display: flex; align-items: center;
-    }
-    .wao-content { width: 70%; }
-    .wao-title { font-size: 2.5rem; font-weight: 800; color: var(--primary-green); display: block; line-height: 1; }
-    .wao-content h3 { font-size: 1.2rem; }
-    .wao-content p { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 10px; }
-    .btn-primary-small { background: var(--primary-green); border: none; padding: 8px 20px; border-radius: 40px; color: #fff; font-weight: 600; cursor: pointer; }
-
-    /* ===== JUEGOS ===== */
-    .games-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-    .game-card {
-      background: var(--bg-card); border-radius: 20px; padding: 16px;
-      display: flex; flex-direction: column; justify-content: space-between;
-      border: 1px solid rgba(255,255,255,0.05);
-    }
-    .game-icon-wrapper { font-size: 2.5rem; margin-bottom: 10px; }
-    .game-info h4 { font-size: 1rem; font-weight: 700; }
-    .game-info p { font-size: 0.75rem; color: var(--text-muted); }
-    .btn-game-play {
-      align-self: flex-end; background: var(--primary-green); color: #fff;
-      padding: 6px 16px; border-radius: 30px; text-decoration: none;
-      font-size: 0.8rem; font-weight: 600; transition: 0.3s;
-    }
-    .btn-game-play:hover { transform: scale(1.05); }
-
-    /* ===== PASAPORTE ===== */
-    .passport-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
-    .passport-list li {
-      background: var(--bg-card); border-radius: 16px; padding: 12px 16px;
-      display: flex; align-items: center; gap: 10px; font-size: 0.9rem;
-    }
-    .passport-empty { color: var(--text-muted); justify-content: center; }
-
-    /* ===== BOTTOM NAV ===== */
-    .bottom-nav {
-      position: fixed; bottom: 0; left: 0; right: 0;
-      background: #141624; border-top: 1px solid rgba(255,255,255,0.05);
-      display: flex; justify-content: space-around; align-items: center;
-      padding: 10px 0 20px; z-index: 100; max-width: 480px; margin: 0 auto;
-    }
-    .nav-item {
-      display: flex; flex-direction: column; align-items: center; text-decoration: none;
-      color: var(--text-muted); font-size: 0.65rem; gap: 4px; flex: 1; transition: 0.3s;
-    }
-    .nav-item i { font-size: 1.4rem; }
-    .nav-item.active { color: #fff; }
-    .nav-item.active i { color: var(--primary-green); }
-    .nav-map {
-      background: var(--primary-green); width: 55px; height: 55px;
-      border-radius: 50%; display: flex; justify-content: center; align-items: center;
-      margin-top: -25px; box-shadow: 0 4px 20px rgba(106, 186, 66, 0.4);
-    }
-    .nav-map i { color: #fff !important; font-size: 1.6rem; margin: 0; }
-    .nav-map span { display: none; }
-
-    /* ===== TOAST ===== */
-    .toast-message {
-      position: fixed; bottom: 120px; left: 50%; transform: translateX(-50%);
-      background: rgba(0,0,0,0.9); color: #fff; padding: 12px 24px; border-radius: 60px;
-      z-index: 1000; font-size: 0.9rem; border: 1px solid rgba(255,255,255,0.1);
-    }
-
-    /* ===== MODAL (mini) ===== */
-    .modal-overlay {
-      display: none; position: fixed; z-index: 2000; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); align-items: center; justify-content: center;
-    }
-    .modal-box {
-      background: #1e2030; border-radius: 2rem; padding: 2rem; width: 90%; max-width: 400px; color: #fff;
-    }
-    .modal-pic-container { position: relative; display: flex; justify-content: center; margin-bottom: 1.5rem; }
-    .modal-pic-container img { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary-green); }
-    .camera-btn {
-      position: absolute; bottom: 0; right: 30%; background: var(--primary-green);
-      width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer;
-    }
-    .modal-input label { display: block; margin-bottom: 5px; font-size: 0.85rem; }
-    .avatar-grid { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin: 15px 0; }
-    .avatar-pred { width: 50px; height: 50px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; object-fit: cover; }
-    .avatar-pred.selected { border-color: var(--primary-green); transform: scale(1.1); }
-    .modal-actions { margin-top: 1rem; }
-  </style>
+  <link rel="stylesheet" href="prueba.css" />
 </head>
 <body>
 
-  <!-- ===== INTRO ===== -->
-  <div class="intro-screen" id="introScreen">
+  <!-- Intro (Manteniendo tu lógica original) -->
+  <div class="intro-screen">
     <div class="intro-content">
-      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%236aba42'/%3E%3Cpath d='M30 50 L45 65 L70 35' stroke='%23fff' stroke-width='6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E" alt="logo" class="intro-logo-img" style="max-width:120px;" />
+      <img src="carga.gif" alt="Guía Pinolera" class="intro-logo-img" />
       <p class="intro-subtitle">Bienvenido, Explorador Pinolero</p>
       <p class="intro-subtitle">Cargando sistema...</p>
     </div>
   </div>
 
-  <div class="app-container" id="appContainer">
-    <!-- ==================== LOGIN ==================== -->
+  <div class="app-container">
+    
+    <!-- ==================== LOGIN / REGISTRO ==================== -->
     <div id="authCard" class="auth-wrapper">
       <div class="auth-glass">
         <div class="auth-mascot">
@@ -306,259 +29,248 @@
         </div>
         <h1 class="auth-title">Guía Pinolera</h1>
         <p class="auth-subtitle">🌋 Explora Nicaragua jugando 🌊</p>
+
+        <!-- Formulario Login -->
         <div id="loginForm">
-          <div class="input-group"><i class="fas fa-envelope input-icon"></i><input type="email" id="loginEmail" placeholder="Correo electrónico" /></div>
-          <div class="input-group"><i class="fas fa-lock input-icon"></i><input type="password" id="loginPassword" placeholder="Contraseña" /></div>
+          <div class="input-group">
+            <i class="fas fa-envelope input-icon"></i>
+            <input type="email" id="loginEmail" placeholder="Correo electrónico" />
+          </div>
+          <div class="input-group">
+            <i class="fas fa-lock input-icon"></i>
+            <input type="password" id="loginPassword" placeholder="Contraseña" />
+          </div>
           <button id="doLoginBtn" class="btn btn-primary-full">Iniciar sesión</button>
           <div class="auth-link"><a href="#" id="forgotPasswordLink">¿Olvidaste tu contraseña?</a></div>
           <div class="divider"><span>o</span></div>
           <button id="showRegisterBtn" class="btn btn-outline-full">✨ Crear cuenta nueva</button>
         </div>
+
+        <!-- Formulario Registro -->
         <div id="registerForm" style="display:none;">
-          <div class="input-group"><i class="fas fa-user input-icon"></i><input type="text" id="regName" placeholder="Nombre completo" /></div>
-          <div class="input-group"><i class="fas fa-envelope input-icon"></i><input type="email" id="regEmail" placeholder="Correo electrónico" /></div>
-          <div class="input-group"><i class="fas fa-lock input-icon"></i><input type="password" id="regPassword" placeholder="Contraseña (mínimo 6)" /></div>
+          <div class="input-group">
+            <i class="fas fa-user input-icon"></i>
+            <input type="text" id="regName" placeholder="Nombre completo" />
+          </div>
+          <div class="input-group">
+            <i class="fas fa-envelope input-icon"></i>
+            <input type="email" id="regEmail" placeholder="Correo electrónico" />
+          </div>
+          <div class="input-group">
+            <i class="fas fa-lock input-icon"></i>
+            <input type="password" id="regPassword" placeholder="Contraseña (mínimo 6)" />
+          </div>
           <button id="doRegisterBtn" class="btn btn-primary-full">Registrarse</button>
           <button id="backToLoginBtn" class="btn btn-outline-full mt-2">← Volver</button>
         </div>
       </div>
     </div>
 
-    <!-- ==================== MENÚ PRINCIPAL ==================== -->
+    <!-- ==================== MENÚ PRINCIPAL (APP) ==================== -->
     <div id="menuSection" style="display:none;">
-
+      
+      <!-- HEADER -->
       <header class="app-header">
         <div class="header-left">
-          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%236aba42'/%3E%3Cpath d='M30 50 L45 65 L70 35' stroke='%23fff' stroke-width='6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E" alt="Logo" class="header-logo" />
-          <div><h1>¡Explora Nicaragua!</h1><span class="header-subtitle">GUÍA PINOLERA</span></div>
+          <img src="logo.png" alt="Logo" class="header-logo" />
+          <div>
+            <h1>¡Explora Nicaragua!</h1>
+            <span class="header-subtitle">GUÍA PINOLERA</span>
+          </div>
         </div>
-        <div class="header-right"><button id="logoutBtn" class="btn-icon"><i class="fas fa-sign-out-alt"></i></button></div>
+        <div class="header-right">
+          <button id="logoutBtn" class="btn-icon" title="Cerrar sesión">
+            <i class="fas fa-sign-out-alt"></i>
+          </button>
+        </div>
       </header>
 
-      <!-- SEARCH -->
-      <div class="search-bar"><i class="fas fa-search"></i><input type="text" placeholder="¿A dónde quieres ir?" readonly /></div>
+      <!-- BARRA DE BÚSQUEDA (Estilo captura) -->
+      <div class="search-bar">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="¿A dónde quieres ir?" readonly />
+      </div>
 
-      <!-- PERFIL -->
+      <!-- PERFIL Y ACCIONES -->
       <div class="profile-wrapper">
         <div class="profile-card" id="profileTrigger">
           <div class="profile-info">
-            <img id="profileAvatar" class="profile-avatar" src="https://i.pravatar.cc/100?img=1" alt="Avatar" />
+            <img id="profileAvatar" class="profile-avatar" src="" alt="Avatar" />
             <div class="profile-details">
-              <div class="profile-name" id="profileNameDisplay">Pinolero</div>
+              <div class="profile-name" id="profileNameDisplay">Usuario</div>
               <div class="profile-level"><i class="fas fa-star" style="color: #ffd700;"></i> <span id="userPointsDisplay">0 puntos</span></div>
             </div>
           </div>
           <button id="editProfileBtn" class="btn-icon-edit"><i class="fas fa-pen"></i></button>
         </div>
-        <div class="position-badge"><i class="fas fa-trophy" style="color:#ffd700;"></i><span id="positionBadge">#1 Explorador</span></div>
+        
+        <div class="position-badge">
+          <i class="fas fa-trophy" style="color: #ffd700;"></i>
+          <span id="positionBadge">Calculando...</span>
+        </div>
+        
         <div class="action-grid">
-          <a href="#" class="action-btn gradient-purple"><i class="fas fa-users"></i> Comunidad</a>
-          <a href="#" class="action-btn gradient-orange"><i class="fas fa-tags"></i> Promociones</a>
+          <a href="comunidad.html" class="action-btn gradient-purple"><i class="fas fa-users"></i> Comunidad</a>
+          <a href="../temporal.html" class="action-btn gradient-orange"><i class="fas fa-tags"></i> Promociones</a>
         </div>
       </div>
 
-      <!-- ===== DESTINOS POPULARES CON BOTÓN VISITAR Y RANDOM ===== -->
+      <!-- SECCIÓN DESTINOS POPULARES (Estilo captura) -->
       <div class="section-header">
         <h2>Destinos populares</h2>
-        <span class="see-all" id="refreshDestinos"><i class="fas fa-sync-alt"></i> Cambiar</span>
+        <a href="#" class="see-all">Ver todos</a>
       </div>
-      <div class="horizontal-scroll" id="destinosContainer">
-        <!-- Las tarjetas se inyectan con JS -->
+      <div class="horizontal-scroll">
+        <div class="destination-card">
+          <img src="https://images.unsplash.com/photo-1599117056967-50f675aab524?auto=format&fit=crop&w=400&q=80" alt="Granada" />
+          <div class="card-overlay">
+            <h3>Granada</h3>
+            <p><i class="fas fa-map-marker-alt"></i> Capital Colonial</p>
+            <span class="rating"><i class="fas fa-star"></i> 4.8</span>
+          </div>
+        </div>
+        <div class="destination-card">
+          <img src="https://images.unsplash.com/photo-1587563826427-2c49c0cf0976?auto=format&fit=crop&w=400&q=80" alt="Ometepe" />
+          <div class="card-overlay">
+            <h3>Ometepe</h3>
+            <p><i class="fas fa-map-marker-alt"></i> Isla volcánica</p>
+            <span class="rating"><i class="fas fa-star"></i> 4.9</span>
+          </div>
+        </div>
+        <div class="destination-card">
+          <img src="https://images.unsplash.com/photo-1599789915601-18b24e13f7de?auto=format&fit=crop&w=400&q=80" alt="San Juan" />
+          <div class="card-overlay">
+            <h3>San Juan</h3>
+            <p><i class="fas fa-map-marker-alt"></i> Río y naturaleza</p>
+            <span class="rating"><i class="fas fa-star"></i> 4.7</span>
+          </div>
+        </div>
       </div>
 
-      <!-- WAO BANNER -->
+      <!-- BANNER WAO (Estilo captura) -->
       <div class="wao-banner">
         <div class="wao-content">
           <span class="wao-title">WAO!</span>
           <h3>Experiencias</h3>
           <p>Vive lo mejor de Nicaragua</p>
-          <button class="btn-primary-small">Explorar</button>
+          <button class="btn btn-primary-small">Explorar</button>
         </div>
       </div>
 
-      <!-- JUEGOS -->
-      <div class="section-header"><h2>Juegos Pinoleros</h2><a href="#" class="see-all">Ver todos</a></div>
-      <div class="games-grid">
-        <div class="game-card"><div class="game-icon-wrapper icon-map">🎮</div><div class="game-info"><h4>Gran Mapa</h4><p>Misterioso</p></div><a href="#" class="btn-game-play">Jugar</a></div>
-        <div class="game-card"><div class="game-icon-wrapper icon-money">💰</div><div class="game-info"><h4>Pinolero</h4><p>Millonario</p></div><a href="#" class="btn-game-play">Jugar</a></div>
-        <div class="game-card"><div class="game-icon-wrapper icon-stop">🛑</div><div class="game-info"><h4>Stop</h4><p>Pinolero</p></div><a href="#" class="btn-game-play">Jugar</a></div>
-        <div class="game-card"><div class="game-icon-wrapper icon-brain">🧠</div><div class="game-info"><h4>Memoria</h4><p>Pinolera</p></div><a href="#" class="btn-game-play">Jugar</a></div>
+      <!-- SECCIÓN JUEGOS (Estilo captura "Juegos Pinoleros") -->
+      <div class="section-header">
+        <h2>Juegos Pinoleros</h2>
+        <a href="#" class="see-all">Ver todos</a>
+      </div>
+      <div class="games-grid" id="gameList">
+        <div class="game-card" data-game="mapa">
+          <div class="game-icon-wrapper icon-map">🎮</div>
+          <div class="game-info">
+            <h4>Gran Mapa</h4>
+            <p>Misterioso</p>
+          </div>
+          <a href="../juegos/mapamisterioso.html" class="btn-game-play">Jugar</a>
+        </div>
+        <div class="game-card" data-game="millonario">
+          <div class="game-icon-wrapper icon-money">💰</div>
+          <div class="game-info">
+            <h4>Pinolero</h4>
+            <p>Millonario</p>
+          </div>
+          <a href="../juegos/millonario.html" class="btn-game-play">Jugar</a>
+        </div>
+        <div class="game-card" data-game="stop">
+          <div class="game-icon-wrapper icon-stop">🛑</div>
+          <div class="game-info">
+            <h4>Stop</h4>
+            <p>Pinolero</p>
+          </div>
+          <a href="../juegos/stop.html" class="btn-game-play">Jugar</a>
+        </div>
+        <div class="game-card" data-game="memoria">
+          <div class="game-icon-wrapper icon-brain">🧠</div>
+          <div class="game-info">
+            <h4>Memoria</h4>
+            <p>Pinolera</p>
+          </div>
+          <a href="../juegos/palabra.html" class="btn-game-play">Jugar</a>
+        </div>
+        <div class="game-card" data-game="laberinto">
+          <div class="game-icon-wrapper icon-maze">🌀</div>
+          <div class="game-info">
+            <h4>Laberinto</h4>
+            <p>Turístico</p>
+          </div>
+          <a href="../juegos/laberinto.html" class="btn-game-play">Jugar</a>
+        </div>
       </div>
 
-      <!-- PASAPORTE -->
-      <div class="section-header"><h2>Pasaporte</h2></div>
-      <ul class="passport-list" id="passportList"><li class="passport-empty">No has visitado ningún lugar aún.</li></ul>
+      <!-- SECCIÓN PASAPORTE -->
+      <div class="section-header">
+        <h2>Pasaporte</h2>
+      </div>
+      <ul class="passport-list" id="passportList">
+        <li class="passport-empty">No has visitado ningún lugar aún.</li>
+      </ul>
 
-      <!-- BOTTOM NAV -->
+      <!-- MENÚ INFERIOR (Estilo captura - 5 elementos con botón verde central) -->
       <nav class="bottom-nav">
-        <a href="#" class="nav-item active"><i class="fas fa-home"></i><span>Inicio</span></a>
-        <a href="#" class="nav-item"><i class="fas fa-vr-cardboard"></i><span>Visitas</span></a>
-        <a href="#" class="nav-item nav-map"><i class="fas fa-map"></i></a>
-        <a href="#" class="nav-item"><i class="fas fa-qrcode"></i><span>Escanea</span></a>
-        <a href="#" class="nav-item"><i class="fas fa-gamepad"></i><span>Juegos</span></a>
+        <a href="#" class="nav-item active" data-url="#">
+          <i class="fas fa-home"></i>
+          <span>Inicio</span>
+        </a>
+        <a href="#" class="nav-item" data-url="visitas/index.html">
+          <i class="fas fa-vr-cardboard"></i>
+          <span>Visitas</span>
+        </a>
+        <a href="#" class="nav-item nav-map" data-url="mapa.html">
+          <i class="fas fa-map"></i>
+        </a>
+        <a href="#" class="nav-item" data-url="https://nicaguia.base44.app">
+          <i class="fas fa-qrcode"></i>
+          <span>Escanea</span>
+        </a>
+        <a href="#" class="nav-item" data-url="../juegos/juegos.html">
+          <i class="fas fa-gamepad"></i>
+          <span>Juegos</span>
+        </a>
       </nav>
     </div>
   </div>
 
-  <!-- MODAL (placeholder) -->
-  <div id="editProfileModal" class="modal-overlay"><div class="modal-box"><h3>Editar perfil</h3><button id="closeModalBtn" class="btn btn-outline-full mt-2">Cerrar</button></div></div>
+  <!-- MODAL DE PERFIL -->
+  <div id="editProfileModal" class="modal-overlay">
+    <div class="modal-box">
+      <h3><i class="fas fa-user-edit"></i> Editar perfil</h3>
+      <div class="modal-pic-container">
+        <img id="modalProfileImage" src="" alt="Foto" />
+        <div class="camera-btn" id="uploadPhotoIcon"><i class="fas fa-camera"></i></div>
+      </div>
+      <input type="file" id="uploadPhoto" accept="image/*" style="display:none;" />
+      
+      <div class="input-group modal-input">
+        <label>Nombre completo:</label>
+        <input type="text" id="editNameInput" placeholder="Tu nombre" />
+      </div>
+
+      <div class="avatar-grid" id="avatarGrid"></div>
+      
+      <div class="modal-actions">
+        <button id="saveProfileBtn" class="btn btn-primary-full">Guardar cambios</button>
+        <button id="closeModalBtn" class="btn btn-outline-full mt-2">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
   <div id="toast" class="toast-message" style="display:none;"></div>
 
-  <script>
-    (function() {
-      // ----- LISTA DE DESTINOS (con imágenes reales de Unsplash) -----
-      const DESTINOS = [
-        { nombre: 'Granada', desc: 'Capital Colonial', rating: '4.8', img: 'https://images.unsplash.com/photo-1599117056967-50f675aab524?auto=format&fit=crop&w=400&q=80' },
-        { nombre: 'Ometepe', desc: 'Isla volcánica', rating: '4.9', img: 'https://images.unsplash.com/photo-1587563826427-2c49c0cf0976?auto=format&fit=crop&w=400&q=80' },
-        { nombre: 'San Juan', desc: 'Río y naturaleza', rating: '4.7', img: 'https://images.unsplash.com/photo-1599789915601-18b24e13f7de?auto=format&fit=crop&w=400&q=80' },
-        { nombre: 'León', desc: 'Ciudad colonial', rating: '4.6', img: 'https://images.unsplash.com/photo-1597769018863-5f42e5f6e5e5?auto=format&fit=crop&w=400&q=80' },
-        { nombre: 'Masaya', desc: 'Volcán activo', rating: '4.5', img: 'https://images.unsplash.com/photo-1585123334904-845d60e6b0d9?auto=format&fit=crop&w=400&q=80' },
-        { nombre: 'Corn Island', desc: 'Paraíso caribeño', rating: '4.9', img: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=400&q=80' },
-        { nombre: 'Estelí', desc: 'Tierra de cigarros', rating: '4.4', img: 'https://images.unsplash.com/photo-1590583004588-0ccab3db1bbb?auto=format&fit=crop&w=400&q=80' },
-        { nombre: 'Matagalpa', desc: 'Café y montañas', rating: '4.6', img: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=400&q=80' },
-        { nombre: 'Rivas', desc: 'Puerta del sur', rating: '4.3', img: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=400&q=80' },
-        { nombre: 'Jinotega', desc: 'Ciudad de las brumas', rating: '4.5', img: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=400&q=80' }
-      ];
+  <!-- Firebase Compat -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
 
-      // ----- Elementos -----
-      const container = document.getElementById('destinosContainer');
-      const refreshBtn = document.getElementById('refreshDestinos');
-
-      // Función para obtener 3 destinos aleatorios (sin repetir)
-      function getRandomDestinos(cantidad = 3) {
-        const shuffled = [...DESTINOS].sort(() => Math.random() - 0.5);
-        return shuffled.slice(0, cantidad);
-      }
-
-      // Renderiza las tarjetas
-      function renderDestinos(destinos) {
-        if (!container) return;
-        container.innerHTML = '';
-        destinos.forEach(d => {
-          const card = document.createElement('div');
-          card.className = 'destination-card';
-          card.innerHTML = `
-            <img src="${d.img}" alt="${d.nombre}" loading="lazy" />
-            <div class="card-overlay">
-              <h3>${d.nombre}</h3>
-              <p><i class="fas fa-map-marker-alt"></i> ${d.desc}</p>
-              <div class="card-bottom">
-                <span class="rating"><i class="fas fa-star"></i> ${d.rating}</span>
-                <button class="btn-visitar" data-destino="${d.nombre}">Visitar</button>
-              </div>
-            </div>
-          `;
-          container.appendChild(card);
-        });
-
-        // Agregar eventos a los botones "Visitar"
-        document.querySelectorAll('.btn-visitar').forEach(btn => {
-          btn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            const destino = this.getAttribute('data-destino') || 'destino';
-            mostrarToast(`📍 Visitaste ${destino} ¡Bien hecho!`);
-            // Opcional: agregar al pasaporte (simulación)
-            const passportList = document.getElementById('passportList');
-            if (passportList) {
-              const li = document.createElement('li');
-              li.innerHTML = `<i class="fas fa-check-circle" style="color:var(--primary-green);"></i> ${destino}`;
-              // Si existe el mensaje vacío, lo reemplazamos
-              const empty = passportList.querySelector('.passport-empty');
-              if (empty) empty.remove();
-              passportList.prepend(li);
-            }
-          });
-        });
-      }
-
-      // Actualizar con nuevos aleatorios
-      function refreshDestinos() {
-        const seleccionados = getRandomDestinos(3);
-        renderDestinos(seleccionados);
-        // Animación sutil
-        if (container) {
-          container.style.transition = 'opacity 0.2s';
-          container.style.opacity = '0.7';
-          setTimeout(() => { container.style.opacity = '1'; }, 200);
-        }
-      }
-
-      // Toast simple
-      function mostrarToast(mensaje) {
-        const toast = document.getElementById('toast');
-        if (!toast) return;
-        toast.textContent = mensaje;
-        toast.style.display = 'block';
-        clearTimeout(toast._timeout);
-        toast._timeout = setTimeout(() => { toast.style.display = 'none'; }, 2000);
-      }
-
-      // ===== INICIALIZAR =====
-      // Simular login (para ver la app)
-      document.getElementById('doLoginBtn')?.addEventListener('click', function(e) {
-        e.preventDefault();
-        document.getElementById('authCard').style.display = 'none';
-        document.getElementById('menuSection').style.display = 'block';
-        // Renderizar primeros destinos
-        refreshDestinos();
-        // Ocultar intro
-        document.getElementById('introScreen')?.style.setProperty('display', 'none');
-      });
-
-      // Botón "Cambiar" (refrescar aleatorios)
-      refreshBtn?.addEventListener('click', refreshDestinos);
-
-      // También al cargar la página, si ya está logueado (simulación)
-      // Pero como es demo, dejamos que el login lo active.
-
-      // Para que el botón "Visitar" funcione incluso si se renderiza después
-      // Se maneja en renderDestinos con event listener directo.
-
-      // Exponer función para que otros scripts puedan usarla
-      window.refreshDestinos = refreshDestinos;
-      window.mostrarToast = mostrarToast;
-
-      // Si alguien quiere cambiar manualmente, también funciona.
-      console.log('✅ Destinos aleatorios con botón "Visitar" listo.');
-    })();
-  </script>
-
-  <!-- Pequeño fix para el login "rápido" (solo demo) -->
-  <script>
-    // Para que el botón "Crear cuenta" y "Volver" no rompan
-    document.getElementById('showRegisterBtn')?.addEventListener('click', function(e) {
-      e.preventDefault();
-      document.getElementById('loginForm').style.display = 'none';
-      document.getElementById('registerForm').style.display = 'block';
-    });
-    document.getElementById('backToLoginBtn')?.addEventListener('click', function(e) {
-      e.preventDefault();
-      document.getElementById('loginForm').style.display = 'block';
-      document.getElementById('registerForm').style.display = 'none';
-    });
-    // Cerrar modal
-    document.getElementById('closeModalBtn')?.addEventListener('click', function() {
-      document.getElementById('editProfileModal').style.display = 'none';
-    });
-    document.getElementById('editProfileBtn')?.addEventListener('click', function() {
-      document.getElementById('editProfileModal').style.display = 'flex';
-    });
-    document.getElementById('profileTrigger')?.addEventListener('click', function() {
-      document.getElementById('editProfileModal').style.display = 'flex';
-    });
-    // Logout
-    document.getElementById('logoutBtn')?.addEventListener('click', function() {
-      document.getElementById('authCard').style.display = 'flex';
-      document.getElementById('menuSection').style.display = 'none';
-      document.getElementById('loginForm').style.display = 'block';
-      document.getElementById('registerForm').style.display = 'none';
-    });
-    // Cerrar intro automáticamente después de 4s (si no se loguea)
-    setTimeout(() => {
-      const intro = document.getElementById('introScreen');
-      if (intro) intro.style.opacity = '0';
-      setTimeout(() => { if (intro) intro.style.display = 'none'; }, 800);
-    }, 4000);
-  </script>
+  <script src="js/inicio.js"></script>
 </body>
 </html>
