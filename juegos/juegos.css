@@ -1,5 +1,39 @@
 /* ==========================================================================
-   1. RESET Y CONFIGURACIÓN BASE
+   JUEGOS TURÍSTICOS - GUÍA PINOLERO
+   Versión unificada con paleta personalizada y carrusel premium
+   ========================================================================== */
+
+/* ==========================================================================
+   1. CARGA DE FUENTES
+   ========================================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap');
+
+@font-face {
+  font-family: 'Myriad Pro';
+  src: local('Myriad Pro'), local('MyriadPro-Regular');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Myriad Pro';
+  src: local('Myriad Pro Bold'), local('MyriadPro-Bold');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Cascadia Mono Light';
+  src: local('Cascadia Mono Light'), local('CascadiaMono-Light');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ==========================================================================
+   2. RESET Y CONFIGURACIÓN BASE
    ========================================================================== */
 * {
   margin: 0;
@@ -8,23 +42,46 @@
 }
 
 :root {
+  /* Paleta Pinolero */
   --primary-color: #a4c737;
+  --primary-dark: #8ab32e;
+  --primary-light: #c0e05a;
   --secondary-color: #a287be;
-  --accent-color: #a4c737;
+  --secondary-dark: #8a73a8;
   --bg-dark: #232049;
   --bg-light: #fbfbfb;
   --text-light: #fbfbfb;
   --text-dark: #232049;
-  --font-title: 'Myriad Pro', 'Segoe UI', sans-serif;
-  --font-body: 'Myriad Pro', 'Segoe UI', sans-serif;
+  --text-muted: rgba(251, 251, 251, 0.6);
+  
+  /* Fuentes */
+  --font-title: 'Myriad Pro', 'Poppins', 'Segoe UI', sans-serif;
+  --font-body: 'Myriad Pro', 'Inter', 'Segoe UI', sans-serif;
   --font-mono: 'Cascadia Mono Light', 'Cascadia Mono', monospace;
 
+  /* Colores por juego */
   --color-trivia: #a4c737;
   --color-ruleta: #a287be;
   --color-memoria: #a4c737;
   --color-palabra: #a287be;
   --color-laberinto: #a4c737;
   --color-varios: #a287be;
+  
+  /* Medidas */
+  --max-width: 1100px;
+  --border-radius-lg: 32px;
+  --border-radius-md: 24px;
+  --border-radius-sm: 16px;
+  
+  /* Sombras */
+  --shadow-card: 0 20px 60px rgba(0, 0, 0, 0.4);
+  --shadow-primary: 0 4px 10px rgba(164, 199, 55, 0.3);
+  --shadow-secondary: 0 4px 15px rgba(162, 135, 190, 0.3);
+  
+  /* Transiciones */
+  --transition-fast: 0.2s ease;
+  --transition-med: 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --transition-slow: 0.6s ease;
 }
 
 body {
@@ -66,12 +123,13 @@ body::after {
 }
 
 /* ==========================================================================
-   2. BARRA SUPERIOR MEJORADA
+   3. BARRA SUPERIOR MEJORADA
    ========================================================================== */
 .topbar {
   width: 100%;
   background: rgba(251, 251, 251, 0.95);
   backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   padding: 1rem 1.5rem;
   display: flex;
   justify-content: space-between;
@@ -115,49 +173,92 @@ body::after {
   font-weight: 600;
   padding: 0.7rem 1.3rem;
   border-radius: 50px;
-  transition: all 0.3s ease;
+  transition: all var(--transition-fast);
   display: inline-flex;
   align-items: center;
   gap: 8px;
   font-size: 0.95rem;
   min-height: 48px;
-  box-shadow: 0 4px 10px rgba(164, 199, 55, 0.3);
+  box-shadow: var(--shadow-primary);
+  border: none;
+  cursor: pointer;
 }
 
 .volver:hover {
   transform: translateX(-3px);
-  box-shadow: 0 6px 15px rgba(164, 199, 55, 0.4);
+  box-shadow: 0 6px 20px rgba(164, 199, 55, 0.5);
 }
 
-.btn {
-  text-decoration: none;
-  font-family: var(--font-title);
-  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-  color: var(--bg-light);
-  font-weight: 600;
-  padding: 0.7rem 1.3rem;
-  border-radius: 50px;
-  transition: all 0.3s ease;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.95rem;
-  min-height: 48px;
-  box-shadow: 0 4px 10px rgba(164, 199, 55, 0.3);
-}
-
-.btn:hover {
-  transform: translateX(-3px);
-  box-shadow: 0 6px 15px rgba(164, 199, 55, 0.4);
+.volver:active {
+  transform: scale(0.95);
 }
 
 /* ==========================================================================
-   3. CARRUSEL PREMIUM
+   4. TÍTULO JUEGOS TURÍSTICOS
+   ========================================================================== */
+.games-title-section {
+  width: 90%;
+  max-width: var(--max-width);
+  margin: 1.5rem auto 0.5rem auto;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+.games-title-section h2 {
+  font-family: var(--font-title);
+  font-size: 2.8rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color), var(--primary-color));
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: gradientShift 4s ease-in-out infinite;
+  letter-spacing: 2px;
+  text-shadow: 0 0 40px rgba(164, 199, 55, 0.1);
+  position: relative;
+  display: inline-block;
+}
+
+.games-title-section h2::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+  border-radius: 4px;
+  animation: linePulse 2s ease-in-out infinite;
+}
+
+.games-title-section .subtitle {
+  font-family: var(--font-body);
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  margin-top: 0.8rem;
+  letter-spacing: 1px;
+}
+
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes linePulse {
+  0%, 100% { width: 80px; opacity: 1; }
+  50% { width: 120px; opacity: 0.6; }
+}
+
+/* ==========================================================================
+   5. CARRUSEL PREMIUM
    ========================================================================== */
 .games-container {
   width: 90%;
-  max-width: 1100px;
-  padding: 2rem 0;
+  max-width: var(--max-width);
+  padding: 1.5rem 0 2rem 0;
   margin: 0 auto;
   position: relative;
   z-index: 1;
@@ -172,19 +273,20 @@ body::after {
   position: relative;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   width: 100%;
 }
 
 .carousel-track-wrapper {
   flex: 1;
   overflow: hidden;
-  border-radius: 24px;
+  border-radius: var(--border-radius-md);
   box-shadow: 
-    0 20px 60px rgba(0, 0, 0, 0.4),
+    var(--shadow-card),
     inset 0 0 60px rgba(162, 135, 190, 0.05);
   background: rgba(162, 135, 190, 0.08);
   backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border: 1px solid rgba(162, 135, 190, 0.2);
   min-width: 0;
   position: relative;
@@ -209,9 +311,12 @@ body::after {
   position: relative;
   cursor: pointer;
   transition: all 0.4s;
-  border-radius: 24px;
+  border-radius: var(--border-radius-md);
   box-sizing: border-box;
   pointer-events: auto;
+  padding: 2rem;
+  background: linear-gradient(145deg, rgba(35, 32, 73, 0.7), rgba(26, 23, 56, 0.9));
+  overflow: hidden;
 }
 
 .carousel-slide:hover {
@@ -240,6 +345,37 @@ body::after {
 @keyframes rotateGlow {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+/* Colores específicos por juego */
+.carousel-slide[data-game="trivia"] {
+  background: linear-gradient(145deg, rgba(164, 199, 55, 0.15), rgba(35, 32, 73, 0.9));
+  border: 2px solid var(--color-trivia);
+}
+
+.carousel-slide[data-game="ruleta"] {
+  background: linear-gradient(145deg, rgba(162, 135, 190, 0.15), rgba(35, 32, 73, 0.9));
+  border: 2px solid var(--color-ruleta);
+}
+
+.carousel-slide[data-game="memoria"] {
+  background: linear-gradient(145deg, rgba(164, 199, 55, 0.15), rgba(35, 32, 73, 0.9));
+  border: 2px solid var(--color-memoria);
+}
+
+.carousel-slide[data-game="palabra"] {
+  background: linear-gradient(145deg, rgba(162, 135, 190, 0.15), rgba(35, 32, 73, 0.9));
+  border: 2px solid var(--color-palabra);
+}
+
+.carousel-slide[data-game="laberinto"] {
+  background: linear-gradient(145deg, rgba(164, 199, 55, 0.15), rgba(35, 32, 73, 0.9));
+  border: 2px solid var(--color-laberinto);
+}
+
+.carousel-slide[data-game="varios"] {
+  background: linear-gradient(145deg, rgba(162, 135, 190, 0.15), rgba(35, 32, 73, 0.9));
+  border: 2px solid var(--color-varios);
 }
 
 /* Contenido del slide */
@@ -289,12 +425,15 @@ body::after {
 }
 
 .slide-content h3 {
-  font-size: 1.8rem;
+  font-size: 2rem;
   font-weight: 800;
   margin: 0.3rem 0;
   letter-spacing: 1px;
-  color: var(--primary-color);
   font-family: var(--font-title);
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 .slide-content p {
@@ -303,12 +442,14 @@ body::after {
   margin-bottom: 0.8rem;
   font-weight: 400;
   font-family: var(--font-body);
+  color: var(--text-light);
 }
 
 .slide-stats {
   display: inline-block;
-  background: rgba(35, 32, 73, 0.5);
+  background: rgba(35, 32, 73, 0.6);
   backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   padding: 0.4rem 1.2rem;
   border-radius: 50px;
   font-size: 0.85rem;
@@ -332,7 +473,7 @@ body::after {
   transform: translate(-50%, -50%);
   width: 250px;
   height: 250px;
-  background: radial-gradient(circle, rgba(164, 199, 55, 0.2) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(164, 199, 55, 0.15) 0%, transparent 70%);
   border-radius: 50%;
   filter: blur(60px);
   animation: glowPulse 3s ease-in-out infinite;
@@ -353,10 +494,11 @@ body::after {
   border: none;
   background: rgba(162, 135, 190, 0.2);
   backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   color: var(--text-light);
   font-size: 1.8rem;
   cursor: pointer;
-  transition: all 0.3s;
+  transition: all var(--transition-fast);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -412,15 +554,15 @@ body::after {
 }
 
 /* ==========================================================================
-   4. ÁREA DE JUEGO MEJORADA
+   6. ÁREA DE JUEGO MEJORADA
    ========================================================================== */
 .play-area {
   width: 90%;
-  max-width: 1100px;
+  max-width: var(--max-width);
   background: var(--bg-light);
   margin: 1rem auto 2rem auto;
   padding: 2rem;
-  border-radius: 32px;
+  border-radius: var(--border-radius-lg);
   border: 2px solid rgba(164, 199, 55, 0.3);
   text-align: center;
   min-height: 250px;
@@ -433,6 +575,12 @@ body::after {
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
   background: linear-gradient(145deg, var(--bg-light), #f3f3fa);
   color: var(--text-dark);
+  transition: all var(--transition-med);
+}
+
+.play-area:hover {
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+  border-color: var(--secondary-color);
 }
 
 #gameTitle {
@@ -443,6 +591,7 @@ body::after {
   background-clip: text;
   color: transparent;
   margin-bottom: 1rem;
+  font-weight: 700;
 }
 
 #gameContent {
@@ -489,7 +638,7 @@ body::after {
 }
 
 /* ==========================================================================
-   5. WHATSAPP FLOTANTE
+   7. WHATSAPP FLOTANTE
    ========================================================================== */
 .whatsapp-container {
   position: fixed;
@@ -511,7 +660,7 @@ body::after {
   text-decoration: none;
   animation: whatsappPulse 2s infinite;
   box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
-  transition: all 0.3s;
+  transition: all var(--transition-fast);
 }
 
 .whatsapp-float:hover {
@@ -526,7 +675,7 @@ body::after {
 }
 
 /* ==========================================================================
-   6. MEDIA QUERIES
+   8. MEDIA QUERIES
    ========================================================================== */
 
 /* Tablets y móviles grandes */
@@ -545,14 +694,22 @@ body::after {
     font-size: 1.5rem;
   }
 
+  .games-title-section h2 {
+    font-size: 2rem;
+  }
+  
+  .games-title-section .subtitle {
+    font-size: 0.95rem;
+  }
+
   .games-container {
     width: 92%;
-    padding: 1.5rem 0;
+    padding: 1rem 0;
   }
 
   .carousel-slide {
     height: 280px;
-    padding: 2rem 1rem;
+    padding: 1.5rem 1rem;
   }
 
   .slide-icon {
@@ -560,7 +717,7 @@ body::after {
   }
 
   .slide-content h3 {
-    font-size: 1.4rem;
+    font-size: 1.6rem;
   }
 
   .carousel-nav-btn {
@@ -582,9 +739,21 @@ body::after {
 
 /* Móviles pequeños */
 @media (max-width: 480px) {
+  .games-title-section h2 {
+    font-size: 1.6rem;
+  }
+  
+  .games-title-section .subtitle {
+    font-size: 0.85rem;
+  }
+  
+  .games-title-section h2::after {
+    width: 60px;
+  }
+
   .games-container {
     width: 95%;
-    padding: 1rem 0;
+    padding: 0.8rem 0;
   }
 
   .carousel-premium-wrapper {
@@ -594,20 +763,20 @@ body::after {
   .carousel-nav-btn {
     width: 32px;
     height: 32px;
-    font-size: 1.2rem;
+    font-size: 1rem;
   }
 
   .carousel-slide {
     height: 250px;
-    padding: 1.5rem 0.8rem;
+    padding: 1rem 0.8rem;
   }
 
   .slide-icon {
-    font-size: 3rem;
+    font-size: 2.8rem;
   }
 
   .slide-content h3 {
-    font-size: 1.2rem;
+    font-size: 1.3rem;
   }
 
   .slide-content p {
@@ -654,7 +823,7 @@ body::after {
   }
 
   .slide-content h3 {
-    font-size: 1.1rem;
+    font-size: 1.2rem;
   }
 
   .slide-content p {
@@ -664,10 +833,14 @@ body::after {
   .play-area {
     min-height: 150px;
   }
+  
+  .games-title-section h2 {
+    font-size: 1.8rem;
+  }
 }
 
 /* ==========================================================================
-   7. UTILIDADES Y ANIMACIONES
+   9. UTILIDADES Y ANIMACIONES
    ========================================================================== */
 
 /* Ajustes táctiles globales */
@@ -703,8 +876,9 @@ img, canvas, iframe {
 }
 
 .games-container,
-.play-area {
-  animation: fadeIn 0.5s ease-out;
+.play-area,
+.games-title-section {
+  animation: fadeIn 0.6s ease-out;
 }
 
 /* Scrollbar personalizado */
@@ -719,8 +893,60 @@ img, canvas, iframe {
 ::-webkit-scrollbar-thumb {
   background: var(--primary-color);
   border-radius: 10px;
+  transition: background var(--transition-fast);
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--secondary-color);
 }
+
+/* Selection */
+::selection {
+  background: var(--primary-color);
+  color: var(--bg-dark);
+}
+
+/* ==========================================================================
+   10. CLASES UTILITARIAS
+   ========================================================================== */
+.text-center { text-align: center; }
+.text-primary { color: var(--primary-color); }
+.text-secondary { color: var(--secondary-color); }
+.text-light { color: var(--text-light); }
+.text-dark { color: var(--text-dark); }
+
+.bg-primary { background: var(--primary-color); }
+.bg-secondary { background: var(--secondary-color); }
+.bg-dark { background: var(--bg-dark); }
+.bg-light { background: var(--bg-light); }
+
+.d-flex { display: flex; }
+.flex-column { flex-direction: column; }
+.align-center { align-items: center; }
+.justify-center { justify-content: center; }
+.justify-between { justify-content: space-between; }
+.gap-1 { gap: 4px; }
+.gap-2 { gap: 8px; }
+.gap-3 { gap: 16px; }
+.gap-4 { gap: 24px; }
+
+.w-100 { width: 100%; }
+.h-100 { height: 100%; }
+
+.mt-1 { margin-top: 4px; }
+.mt-2 { margin-top: 8px; }
+.mt-3 { margin-top: 16px; }
+.mt-4 { margin-top: 24px; }
+
+.mb-1 { margin-bottom: 4px; }
+.mb-2 { margin-bottom: 8px; }
+.mb-3 { margin-bottom: 16px; }
+.mb-4 { margin-bottom: 24px; }
+
+.rounded { border-radius: var(--border-radius-md); }
+.rounded-lg { border-radius: var(--border-radius-lg); }
+.rounded-full { border-radius: 50px; }
+
+.shadow { box-shadow: var(--shadow-card); }
+.shadow-sm { box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+.shadow-primary { box-shadow: var(--shadow-primary); }
