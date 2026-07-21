@@ -914,3 +914,126 @@ document.addEventListener('keydown', (e) => {
         closeTipModal();
     }
 });
+
+// ================================================================
+// FILTRO DE DESTINOS POR CATEGORÍA
+// ================================================================
+
+function filterDestinations(category) {
+    // Actualizar la clase active en las categorías
+    document.querySelectorAll('.category-item').forEach(item => {
+        item.classList.remove('active');
+    });
+    
+    // Encontrar y activar la categoría seleccionada
+    const categoryItems = document.querySelectorAll('.category-item');
+    const categoryMap = {
+        'todos': 0,
+        'playas': 1,
+        'volcanes': 2,
+        'coloniales': 3,
+        'naturaleza': 4
+    };
+    
+    const index = categoryMap[category];
+    if (index !== undefined && categoryItems[index]) {
+        categoryItems[index].classList.add('active');
+    }
+    
+    // Filtrar los destinos
+    const destinations = document.querySelectorAll('.destination-card');
+    
+    destinations.forEach(dest => {
+        if (category === 'todos') {
+            dest.style.display = 'block';
+            dest.style.animation = 'fadeIn 0.3s ease forwards';
+        } else {
+            const destCategory = dest.dataset.category;
+            if (destCategory === category) {
+                dest.style.display = 'block';
+                dest.style.animation = 'fadeIn 0.3s ease forwards';
+            } else {
+                dest.style.display = 'none';
+            }
+        }
+    });
+    
+    // Mostrar mensaje si no hay resultados
+    const container = document.getElementById('destinationsContainer');
+    const existingMessage = document.querySelector('.no-results-message');
+    
+    if (category !== 'todos') {
+        const visible = document.querySelectorAll('.destination-card[style*="display: block"]');
+        if (visible.length === 0) {
+            if (!existingMessage) {
+                const message = document.createElement('div');
+                message.className = 'no-results-message';
+                message.innerHTML = `
+                    <i class="fas fa-search" style="font-size: 2rem; color: #6aba42;"></i>
+                    <p>No hay destinos en esta categoría</p>
+                    <span style="font-size: 0.8rem; color: rgba(255,255,255,0.5);">Pronto agregaremos más</span>
+                `;
+                container.parentNode.insertBefore(message, container.nextSibling);
+            }
+        } else if (existingMessage) {
+            existingMessage.remove();
+        }
+    } else {
+        if (existingMessage) {
+            existingMessage.remove();
+        }
+    }
+}
+
+// ================================================================
+// ANIMACIÓN DE ENTRADA PARA DESTINOS FILTRADOS
+// ================================================================
+
+// Agregar estilo para la animación fadeIn si no existe
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: scale(0.9);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+    
+    .no-results-message {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 20px;
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 24px;
+        margin: 20px 0;
+        border: 2px dashed rgba(255, 255, 255, 0.05);
+    }
+    
+    .no-results-message p {
+        color: rgba(255, 255, 255, 0.7);
+        margin: 8px 0;
+        font-weight: 500;
+    }
+`;
+document.head.appendChild(style);
+
+// Inicializar con "Todos" activo
+document.addEventListener('DOMContentLoaded', () => {
+    // Activar la primera categoría (Todos)
+    const firstCategory = document.querySelector('.category-item');
+    if (firstCategory) {
+        firstCategory.classList.add('active');
+    }
+});
+
+// ================================================================
+// FUNCIÓN PARA MOSTRAR TIPS (Ya existente, mantener)
+// ================================================================
+
+// ... (mantén todas las funciones de tips que ya tienes)
