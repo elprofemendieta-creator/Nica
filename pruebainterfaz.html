@@ -1,1299 +1,276 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Guía Pinolera</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-
-    <!-- CSS INTEGRADO (Estilo idéntico a la foto) -->
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --green-bright: #70e679;
-            --green-main: #5cb85c;
-            --bg-app: #1a1733;
-            --glass-bg: rgba(255, 255, 255, 0.08);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --text-main: #fcfcfc;
-            --text-muted: rgba(255, 255, 255, 0.6);
-            --font-main: 'Poppins', sans-serif;
-        }
-
-        body {
-            font-family: var(--font-main);
-            background: radial-gradient(circle at top, #2b2658, #0f0d21);
-            color: var(--text-main);
-            min-height: 100vh;
-            padding-bottom: 100px;
-        }
-
-        .app-container {
-            max-width: 430px;
-            margin: 0 auto;
-            padding: 1.5rem 1.2rem;
-        }
-
-        /* INTRO */
-        .intro-screen {
-            position: fixed;
-            inset: 0;
-            background: #0f0d21;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            transition: opacity 0.6s ease, transform 0.6s ease;
-        }
-        .intro-screen.hidden {
-            opacity: 0;
-            transform: scale(0.9) translateY(-30px);
-            pointer-events: none;
-        }
-        .intro-content {
-            text-align: center;
-        }
-        .intro-logo-img {
-            max-width: 200px;
-        }
-        .intro-subtitle {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            margin-top: 10px;
-        }
-
-        /* LOGIN / REGISTRO */
-        .auth-wrapper {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 80vh;
-        }
-        .auth-glass {
-            background: var(--glass-bg);
-            backdrop-filter: blur(16px);
-            border: 1px solid var(--glass-border);
-            border-radius: 2.5rem;
-            padding: 2.5rem 1.5rem;
-            width: 100%;
-            text-align: center;
-        }
-        .auth-mascot img {
-            width: 80px;
-            margin-bottom: 1rem;
-        }
-        .auth-title {
-            font-size: 2.2rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #fff, #a287be);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        .auth-subtitle {
-            color: var(--text-muted);
-            margin-bottom: 2rem;
-        }
-
-        .input-group {
-            display: flex;
-            align-items: center;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 60px;
-            padding: 0 1.2rem;
-            margin-bottom: 1rem;
-            border: 1px solid var(--glass-border);
-        }
-        .input-icon {
-            color: var(--text-muted);
-            margin-right: 12px;
-        }
-        .input-group input {
-            width: 100%;
-            padding: 14px 0;
-            background: transparent;
-            border: none;
-            color: #fff;
-            outline: none;
-        }
-
-        .btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 16px;
-            border-radius: 60px;
-            width: 100%;
-            font-weight: 600;
-            border: none;
-            cursor: pointer;
-            transition: 0.3s;
-            font-family: var(--font-main);
-        }
-        .btn-primary-full {
-            background: linear-gradient(135deg, var(--green-bright), #3f9944);
-            color: #0f0d21;
-        }
-        .btn-primary-full:hover {
-            transform: scale(1.02);
-        }
-        .btn-outline-full {
-            background: transparent;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: #fff;
-        }
-        .btn-outline-full:hover {
-            background: rgba(255, 255, 255, 0.05);
-        }
-        .auth-link {
-            margin: 10px 0;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-        }
-        .auth-link a {
-            color: var(--green-bright);
-            text-decoration: none;
-        }
-        .divider {
-            display: flex;
-            align-items: center;
-            margin: 1.5rem 0;
-            color: var(--text-muted);
-        }
-        .divider::before,
-        .divider::after {
-            content: '';
-            flex: 1;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .divider span {
-            margin: 0 10px;
-        }
-        .mt-2 {
-            margin-top: 10px;
-        }
-
-        /* APP HEADER */
-        .app-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.2rem;
-        }
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .header-logo {
-            height: 45px;
-        }
-        .header-left h1 {
-            font-size: 1.6rem;
-            font-weight: 800;
-            line-height: 1;
-        }
-        .header-subtitle {
-            display: block;
-            font-size: 0.6rem;
-            letter-spacing: 2px;
-            color: #a287be;
-            font-weight: 600;
-        }
-        .btn-icon {
-            background: var(--glass-bg);
-            border: none;
-            color: #fff;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            cursor: pointer;
-        }
-
-        /* PERFIL */
-        .glass {
-            background: var(--glass-bg);
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--glass-border);
-        }
-        .profile-card {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 16px;
-            border-radius: 20px;
-            cursor: pointer;
-        }
-        .profile-info {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-        .profile-avatar {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            border: 2px solid var(--green-bright);
-            object-fit: cover;
-        }
-        .profile-name {
-            font-weight: 700;
-            font-size: 1rem;
-        }
-        .profile-level {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-        }
-        .btn-icon-edit {
-            background: transparent;
-            border: none;
-            color: var(--text-muted);
-            cursor: pointer;
-        }
-
-        /* ACCIONES */
-        .user-actions-wrapper {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-bottom: 1.8rem;
-        }
-        .position-badge {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            padding: 6px 12px;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 30px;
-            width: fit-content;
-        }
-        .action-buttons {
-            display: flex;
-            gap: 12px;
-        }
-        .action-btn {
-            flex: 1;
-            text-align: center;
-            padding: 12px;
-            border-radius: 60px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: #fff;
-            text-decoration: none;
-        }
-        .purple {
-            background: linear-gradient(135deg, #a287be, #5b4f8a);
-        }
-        .orange {
-            background: linear-gradient(135deg, #f5a623, #f57c00);
-        }
-
-        /* CATEGORÍAS */
-        .categories-row {
-            display: flex;
-            justify-content: space-between;
-            gap: 10px;
-            margin-bottom: 1.8rem;
-        }
-        .cat-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px;
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            flex: 1;
-        }
-        .cat-circle {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 1.1rem;
-            color: #fff;
-        }
-        .green {
-            background: #5cb85c;
-        }
-        .blue {
-            background: #3498db;
-        }
-        .purple {
-            background: #a287be;
-        }
-        .orange {
-            background: #f39c12;
-        }
-
-        /* DESTINOS */
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
-        .section-header h2 {
-            font-size: 1.1rem;
-            font-weight: 700;
-        }
-        .see-all {
-            color: var(--green-bright);
-            font-size: 0.8rem;
-            text-decoration: none;
-            font-weight: 600;
-        }
-        .horizontal-scroll {
-            display: flex;
-            gap: 14px;
-            overflow-x: auto;
-            padding-bottom: 10px;
-            scrollbar-width: none;
-        }
-        .horizontal-scroll::-webkit-scrollbar {
-            display: none;
-        }
-        .destiny-card {
-            min-width: 160px;
-            height: 190px;
-            border-radius: 20px;
-            overflow: hidden;
-            position: relative;
-            flex-shrink: 0;
-        }
-        .destiny-card img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .destiny-card .overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, transparent 100%);
-            padding: 14px;
-        }
-        .destiny-card h3 {
-            font-size: 1rem;
-            margin-bottom: 2px;
-        }
-        .destiny-card p {
-            font-size: 0.7rem;
-            color: rgba(255, 255, 255, 0.8);
-        }
-        .stars {
-            position: absolute;
-            bottom: 14px;
-            right: 14px;
-            color: #ffd700;
-            font-size: 0.75rem;
-            font-weight: 700;
-        }
-
-        /* WAO */
-        .wao-banner {
-            border-radius: 20px;
-            padding: 1.2rem;
-            margin: 1.8rem 0;
-            background: linear-gradient(135deg, rgba(92, 184, 92, 0.15), rgba(162, 135, 190, 0.1));
-        }
-        .wao-title {
-            font-size: 3rem;
-            font-weight: 900;
-            color: var(--green-bright);
-            display: block;
-            line-height: 1;
-        }
-        .wao-content h3 {
-            font-size: 1.1rem;
-            margin-bottom: 2px;
-        }
-        .wao-content p {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            margin-bottom: 10px;
-        }
-        .btn-green-small {
-            background: #5cb85c;
-            border: none;
-            padding: 8px 20px;
-            border-radius: 40px;
-            color: #fff;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        /* JUEGOS */
-        .games-column {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-bottom: 1.8rem;
-        }
-        .game-card {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 14px 18px;
-            border-radius: 20px;
-        }
-        .game-icon-wrap {
-            width: 44px;
-            height: 44px;
-            border-radius: 14px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 1.2rem;
-            color: #fff;
-        }
-        .map-bg {
-            background: rgba(46, 204, 113, 0.3);
-        }
-        .money-bg {
-            background: rgba(241, 196, 15, 0.3);
-        }
-        .brain-bg {
-            background: rgba(155, 89, 182, 0.3);
-        }
-        .game-text {
-            flex: 1;
-            margin-left: 14px;
-        }
-        .game-text h4 {
-            font-size: 0.95rem;
-            font-weight: 700;
-        }
-        .game-text p {
-            font-size: 0.7rem;
-            color: var(--text-muted);
-        }
-        .btn-play {
-            background: var(--green-bright);
-            color: #0f0d21;
-            padding: 4px 16px;
-            border-radius: 30px;
-            text-decoration: none;
-            font-size: 0.75rem;
-            font-weight: 700;
-        }
-
-        /* PASAPORTE */
-        .passport-list {
-            list-style: none;
-            border-radius: 20px;
-            padding: 12px 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-        .passport-list li {
-            font-size: 0.85rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .passport-empty {
-            color: var(--text-muted);
-            justify-content: center;
-        }
-
-        /* BOTTOM NAV */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100%;
-            max-width: 430px;
-            background: #141227;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            padding: 12px 0 20px;
-            z-index: 100;
-        }
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-decoration: none;
-            color: var(--text-muted);
-            font-size: 0.6rem;
-            gap: 4px;
-            flex: 1;
-        }
-        .nav-item i {
-            font-size: 1.3rem;
-        }
-        .nav-item.active i {
-            color: var(--green-bright);
-        }
-        .nav-item.active {
-            color: #fff;
-        }
-        .nav-map {
-            background: #5cb85c;
-            width: 58px;
-            height: 58px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-top: -25px;
-            box-shadow: 0 4px 15px rgba(92, 184, 92, 0.3);
-        }
-        .nav-map i {
-            color: #fff !important;
-            font-size: 1.6rem;
-        }
-        .nav-map span {
-            display: none;
-        }
-
-        /* MODAL */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            z-index: 2000;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(8px);
-            align-items: center;
-            justify-content: center;
-        }
-        .modal-box {
-            border-radius: 2rem;
-            padding: 2rem;
-            width: 90%;
-            max-width: 400px;
-            color: #fff;
-        }
-        .modal-pic {
-            position: relative;
-            display: flex;
-            justify-content: center;
-            margin-bottom: 1.5rem;
-        }
-        .modal-pic img {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid var(--green-bright);
-        }
-        .camera-btn {
-            position: absolute;
-            bottom: 0;
-            right: 30%;
-            background: #5cb85c;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            color: #fff;
-        }
-        .modal-input label {
-            display: block;
-            margin-bottom: 5px;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-        }
-        .avatar-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            justify-content: center;
-            margin: 15px 0;
-        }
-        .avatar-pred {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            cursor: pointer;
-            border: 2px solid transparent;
-            object-fit: cover;
-        }
-        .avatar-pred.selected {
-            border-color: var(--green-bright);
-            transform: scale(1.1);
-        }
-
-        /* TOAST */
-        .toast-message {
-            position: fixed;
-            bottom: 130px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(20, 18, 39, 0.95);
-            color: #fff;
-            padding: 12px 24px;
-            border-radius: 60px;
-            z-index: 1000;
-            font-size: 0.85rem;
-            border: 1px solid var(--glass-border);
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Guía Pinolera - Descubre Nicaragua</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <link rel="stylesheet" href="prueba.css" />
 </head>
 <body>
 
-    <!-- INTRO -->
-    <div class="intro-screen" id="introScreen">
-        <div class="intro-content">
-            <img src="carga.gif" alt="Guía Pinolera" class="intro-logo-img" />
-            <p class="intro-subtitle">Bienvenido, Explorador Pinolero</p>
-            <p class="intro-subtitle">Conectando sistema...</p>
+  <!-- Intro (Manteniendo tu lógica original) -->
+  <div class="intro-screen">
+    <div class="intro-content">
+      <img src="carga.gif" alt="Guía Pinolera" class="intro-logo-img" />
+      <p class="intro-subtitle">Bienvenido, Explorador Pinolero</p>
+      <p class="intro-subtitle">Cargando sistema...</p>
+    </div>
+  </div>
+
+  <div class="app-container">
+    
+    <!-- ==================== LOGIN / REGISTRO ==================== -->
+    <div id="authCard" class="auth-wrapper">
+      <div class="auth-glass">
+        <div class="auth-mascot">
+          <img src="https://cdn-icons-png.flaticon.com/512/4712/4712109.png" alt="Mascota" />
         </div>
+        <h1 class="auth-title">Guía Pinolera</h1>
+        <p class="auth-subtitle">🌋 Explora Nicaragua jugando 🌊</p>
+
+        <!-- Formulario Login -->
+        <div id="loginForm">
+          <div class="input-group">
+            <i class="fas fa-envelope input-icon"></i>
+            <input type="email" id="loginEmail" placeholder="Correo electrónico" />
+          </div>
+          <div class="input-group">
+            <i class="fas fa-lock input-icon"></i>
+            <input type="password" id="loginPassword" placeholder="Contraseña" />
+          </div>
+          <button id="doLoginBtn" class="btn btn-primary-full">Iniciar sesión</button>
+          <div class="auth-link"><a href="#" id="forgotPasswordLink">¿Olvidaste tu contraseña?</a></div>
+          <div class="divider"><span>o</span></div>
+          <button id="showRegisterBtn" class="btn btn-outline-full">✨ Crear cuenta nueva</button>
+        </div>
+
+        <!-- Formulario Registro -->
+        <div id="registerForm" style="display:none;">
+          <div class="input-group">
+            <i class="fas fa-user input-icon"></i>
+            <input type="text" id="regName" placeholder="Nombre completo" />
+          </div>
+          <div class="input-group">
+            <i class="fas fa-envelope input-icon"></i>
+            <input type="email" id="regEmail" placeholder="Correo electrónico" />
+          </div>
+          <div class="input-group">
+            <i class="fas fa-lock input-icon"></i>
+            <input type="password" id="regPassword" placeholder="Contraseña (mínimo 6)" />
+          </div>
+          <button id="doRegisterBtn" class="btn btn-primary-full">Registrarse</button>
+          <button id="backToLoginBtn" class="btn btn-outline-full mt-2">← Volver</button>
+        </div>
+      </div>
     </div>
 
-    <div class="app-container">
-
-        <!-- LOGIN / REGISTRO -->
-        <div id="authCard" class="auth-wrapper">
-            <div class="auth-glass">
-                <div class="auth-mascot">
-                    <img src="https://cdn-icons-png.flaticon.com/512/4712/4712109.png" alt="Mascota" />
-                </div>
-                <h1 class="auth-title">Guía Pinolera</h1>
-                <p class="auth-subtitle">🌋 Explora Nicaragua jugando 🌊</p>
-
-                <div id="loginForm">
-                    <div class="input-group">
-                        <i class="fas fa-envelope input-icon"></i>
-                        <input type="email" id="loginEmail" placeholder="Correo electrónico" />
-                    </div>
-                    <div class="input-group">
-                        <i class="fas fa-lock input-icon"></i>
-                        <input type="password" id="loginPassword" placeholder="Contraseña" />
-                    </div>
-                    <button id="doLoginBtn" class="btn btn-primary-full">Iniciar sesión</button>
-                    <div class="auth-link"><a href="#" id="forgotPasswordLink">¿Olvidaste tu contraseña?</a></div>
-                    <div class="divider"><span>o</span></div>
-                    <button id="showRegisterBtn" class="btn btn-outline-full">Crear cuenta</button>
-                </div>
-
-                <div id="registerForm" style="display:none;">
-                    <div class="input-group">
-                        <i class="fas fa-user input-icon"></i>
-                        <input type="text" id="regName" placeholder="Nombre completo" />
-                    </div>
-                    <div class="input-group">
-                        <i class="fas fa-envelope input-icon"></i>
-                        <input type="email" id="regEmail" placeholder="Correo electrónico" />
-                    </div>
-                    <div class="input-group">
-                        <i class="fas fa-lock input-icon"></i>
-                        <input type="password" id="regPassword" placeholder="Contraseña (mínimo 6)" />
-                    </div>
-                    <button id="doRegisterBtn" class="btn btn-primary-full">Registrarse</button>
-                    <button id="backToLoginBtn" class="btn btn-outline-full mt-2">← Volver</button>
-                </div>
-            </div>
+    <!-- ==================== MENÚ PRINCIPAL (APP) ==================== -->
+    <div id="menuSection" style="display:none;">
+      
+      <!-- HEADER -->
+      <header class="app-header">
+        <div class="header-left">
+          <img src="logo.png" alt="Logo" class="header-logo" />
+          <div>
+            <h1>¡Explora Nicaragua!</h1>
+            <span class="header-subtitle">GUÍA PINOLERA</span>
+          </div>
         </div>
-
-        <!-- APP -->
-        <div id="menuSection" style="display: none;">
-
-            <header class="app-header">
-                <div class="header-left">
-                    <img src="logo.png" alt="Logo" class="header-logo" />
-                    <div>
-                        <h1>¡Explora Nicaragua!</h1>
-                        <span class="header-subtitle">GUÍA PINOLERA</span>
-                    </div>
-                </div>
-                <div class="header-right">
-                    <button id="logoutBtn" class="btn-icon"><i class="fas fa-sign-out-alt"></i></button>
-                </div>
-            </header>
-
-            <div class="profile-card glass" id="profileTrigger">
-                <div class="profile-info">
-                    <img id="profileAvatar" class="profile-avatar" src="" alt="Avatar" />
-                    <div class="profile-details">
-                        <span class="profile-name" id="profileNameDisplay">Usuario</span>
-                        <span class="profile-level"><i class="fas fa-star" style="color: #ffd700;"></i> <span id="userPointsDisplay">0 pts</span></span>
-                    </div>
-                </div>
-                <button id="editProfileBtn" class="btn-icon-edit"><i class="fas fa-pen"></i></button>
-            </div>
-
-            <div class="user-actions-wrapper">
-                <div class="position-badge"><i class="fas fa-trophy" style="color: #ffd700;"></i> <span id="positionBadge">Posición: --</span></div>
-                <div class="action-buttons">
-                    <a href="comunidad.html" class="action-btn purple"><i class="fas fa-users"></i> Comunidad</a>
-                    <a href="../temporal.html" class="action-btn orange"><i class="fas fa-tags"></i> Promociones</a>
-                </div>
-            </div>
-
-            <div class="categories-row">
-                <div class="cat-item"><div class="cat-circle green"><i class="fas fa-tree"></i></div><span>Naturaleza</span></div>
-                <div class="cat-item"><div class="cat-circle blue"><i class="fas fa-water"></i></div><span>Playas</span></div>
-                <div class="cat-item"><div class="cat-circle purple"><i class="fas fa-landmark"></i></div><span>Cultura</span></div>
-                <div class="cat-item"><div class="cat-circle orange"><i class="fas fa-hiking"></i></div><span>Aventura</span></div>
-            </div>
-
-            <div class="section-header">
-                <h2>Destinos populares</h2>
-                <a href="#" class="see-all">Ver todos</a>
-            </div>
-            <div class="horizontal-scroll">
-                <div class="destiny-card">
-                    <img src="https://images.unsplash.com/photo-1599117056967-50f675aab524?auto=format&fit=crop&w=400&q=80" alt="Granada" />
-                    <div class="overlay">
-                        <h3>Granada</h3>
-                        <p><i class="fas fa-map-marker-alt"></i> Capital Colonial</p>
-                        <span class="stars"><i class="fas fa-star"></i> 4.8</span>
-                    </div>
-                </div>
-                <div class="destiny-card">
-                    <img src="https://images.unsplash.com/photo-1587563826427-2c49c0cf0976?auto=format&fit=crop&w=400&q=80" alt="Ometepe" />
-                    <div class="overlay">
-                        <h3>Ometepe</h3>
-                        <p><i class="fas fa-map-marker-alt"></i> Isla Volcánica</p>
-                        <span class="stars"><i class="fas fa-star"></i> 4.9</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="wao-banner glass">
-                <div class="wao-content">
-                    <span class="wao-title">WAO!</span>
-                    <h3>Experiencias</h3>
-                    <p>Vive lo mejor de Nicaragua</p>
-                    <button class="btn-green-small">Explorar</button>
-                </div>
-            </div>
-
-            <div class="section-header">
-                <h2>Juegos Pinoleros</h2>
-                <a href="#" class="see-all">Ver todos</a>
-            </div>
-            <div class="games-column" id="gameList">
-                <div class="game-card glass" data-game="mapa">
-                    <div class="game-icon-wrap map-bg"><i class="fas fa-map"></i></div>
-                    <div class="game-text"><h4>Gran Mapa</h4><p>Misterioso</p></div>
-                    <a href="../juegos/mapamisterioso.html" class="btn-play">Jugar</a>
-                </div>
-                <div class="game-card glass" data-game="millonario">
-                    <div class="game-icon-wrap money-bg"><i class="fas fa-coins"></i></div>
-                    <div class="game-text"><h4>Pinolero</h4><p>Millonario</p></div>
-                    <a href="../juegos/millonario.html" class="btn-play">Jugar</a>
-                </div>
-                <div class="game-card glass" data-game="memoria">
-                    <div class="game-icon-wrap brain-bg"><i class="fas fa-brain"></i></div>
-                    <div class="game-text"><h4>Memoria</h4><p>Pinolera</p></div>
-                    <a href="../juegos/palabra.html" class="btn-play">Jugar</a>
-                </div>
-            </div>
-
-            <div class="section-header"><h2>Pasaporte</h2></div>
-            <ul class="passport-list glass" id="passportList">
-                <li class="passport-empty">No has visitado ningún lugar aún.</li>
-            </ul>
-
-            <nav class="bottom-nav">
-                <a href="#" class="nav-item active" data-url="#"><i class="fas fa-home"></i><span>Inicio</span></a>
-                <a href="#" class="nav-item" data-url="visitas/index.html"><i class="fas fa-vr-cardboard"></i><span>Visitas</span></a>
-                <a href="#" class="nav-map" data-url="mapa.html"><i class="fas fa-map"></i></a>
-                <a href="#" class="nav-item" data-url="https://nicaguia.base44.app"><i class="fas fa-qrcode"></i><span>Escanea</span></a>
-                <a href="#" class="nav-item" data-url="../juegos/juegos.html"><i class="fas fa-gamepad"></i><span>Juegos</span></a>
-            </nav>
+        <div class="header-right">
+          <button id="logoutBtn" class="btn-icon" title="Cerrar sesión">
+            <i class="fas fa-sign-out-alt"></i>
+          </button>
         </div>
+      </header>
+
+      <!-- BARRA DE BÚSQUEDA (Estilo captura) -->
+      <div class="search-bar">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="¿A dónde quieres ir?" readonly />
+      </div>
+
+      <!-- PERFIL Y ACCIONES -->
+      <div class="profile-wrapper">
+        <div class="profile-card" id="profileTrigger">
+          <div class="profile-info">
+            <img id="profileAvatar" class="profile-avatar" src="" alt="Avatar" />
+            <div class="profile-details">
+              <div class="profile-name" id="profileNameDisplay">Usuario</div>
+              <div class="profile-level"><i class="fas fa-star" style="color: #ffd700;"></i> <span id="userPointsDisplay">0 puntos</span></div>
+            </div>
+          </div>
+          <button id="editProfileBtn" class="btn-icon-edit"><i class="fas fa-pen"></i></button>
+        </div>
+        
+        <div class="position-badge">
+          <i class="fas fa-trophy" style="color: #ffd700;"></i>
+          <span id="positionBadge">Calculando...</span>
+        </div>
+        
+        <div class="action-grid">
+          <a href="comunidad.html" class="action-btn gradient-purple"><i class="fas fa-users"></i> Comunidad</a>
+          <a href="../temporal.html" class="action-btn gradient-orange"><i class="fas fa-tags"></i> Promociones</a>
+        </div>
+      </div>
+
+      <!-- SECCIÓN DESTINOS POPULARES (Estilo captura) -->
+      <div class="section-header">
+        <h2>Destinos populares</h2>
+        <a href="#" class="see-all">Ver todos</a>
+      </div>
+      <div class="horizontal-scroll">
+        <div class="destination-card">
+          <img src="https://images.unsplash.com/photo-1599117056967-50f675aab524?auto=format&fit=crop&w=400&q=80" alt="Granada" />
+          <div class="card-overlay">
+            <h3>Granada</h3>
+            <p><i class="fas fa-map-marker-alt"></i> Capital Colonial</p>
+            <span class="rating"><i class="fas fa-star"></i> 4.8</span>
+          </div>
+        </div>
+        <div class="destination-card">
+          <img src="https://images.unsplash.com/photo-1587563826427-2c49c0cf0976?auto=format&fit=crop&w=400&q=80" alt="Ometepe" />
+          <div class="card-overlay">
+            <h3>Ometepe</h3>
+            <p><i class="fas fa-map-marker-alt"></i> Isla volcánica</p>
+            <span class="rating"><i class="fas fa-star"></i> 4.9</span>
+          </div>
+        </div>
+        <div class="destination-card">
+          <img src="https://images.unsplash.com/photo-1599789915601-18b24e13f7de?auto=format&fit=crop&w=400&q=80" alt="San Juan" />
+          <div class="card-overlay">
+            <h3>San Juan</h3>
+            <p><i class="fas fa-map-marker-alt"></i> Río y naturaleza</p>
+            <span class="rating"><i class="fas fa-star"></i> 4.7</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- BANNER WAO (Estilo captura) -->
+      <div class="wao-banner">
+        <div class="wao-content">
+          <span class="wao-title">WAO!</span>
+          <h3>Experiencias</h3>
+          <p>Vive lo mejor de Nicaragua</p>
+          <button class="btn btn-primary-small">Explorar</button>
+        </div>
+      </div>
+
+      <!-- SECCIÓN JUEGOS (Estilo captura "Juegos Pinoleros") -->
+      <div class="section-header">
+        <h2>Juegos Pinoleros</h2>
+        <a href="#" class="see-all">Ver todos</a>
+      </div>
+      <div class="games-grid" id="gameList">
+        <div class="game-card" data-game="mapa">
+          <div class="game-icon-wrapper icon-map">🎮</div>
+          <div class="game-info">
+            <h4>Gran Mapa</h4>
+            <p>Misterioso</p>
+          </div>
+          <a href="../juegos/mapamisterioso.html" class="btn-game-play">Jugar</a>
+        </div>
+        <div class="game-card" data-game="millonario">
+          <div class="game-icon-wrapper icon-money">💰</div>
+          <div class="game-info">
+            <h4>Pinolero</h4>
+            <p>Millonario</p>
+          </div>
+          <a href="../juegos/millonario.html" class="btn-game-play">Jugar</a>
+        </div>
+        <div class="game-card" data-game="stop">
+          <div class="game-icon-wrapper icon-stop">🛑</div>
+          <div class="game-info">
+            <h4>Stop</h4>
+            <p>Pinolero</p>
+          </div>
+          <a href="../juegos/stop.html" class="btn-game-play">Jugar</a>
+        </div>
+        <div class="game-card" data-game="memoria">
+          <div class="game-icon-wrapper icon-brain">🧠</div>
+          <div class="game-info">
+            <h4>Memoria</h4>
+            <p>Pinolera</p>
+          </div>
+          <a href="../juegos/palabra.html" class="btn-game-play">Jugar</a>
+        </div>
+        <div class="game-card" data-game="laberinto">
+          <div class="game-icon-wrapper icon-maze">🌀</div>
+          <div class="game-info">
+            <h4>Laberinto</h4>
+            <p>Turístico</p>
+          </div>
+          <a href="../juegos/laberinto.html" class="btn-game-play">Jugar</a>
+        </div>
+      </div>
+
+      <!-- SECCIÓN PASAPORTE -->
+      <div class="section-header">
+        <h2>Pasaporte</h2>
+      </div>
+      <ul class="passport-list" id="passportList">
+        <li class="passport-empty">No has visitado ningún lugar aún.</li>
+      </ul>
+
+      <!-- MENÚ INFERIOR (Estilo captura - 5 elementos con botón verde central) -->
+      <nav class="bottom-nav">
+        <a href="#" class="nav-item active" data-url="#">
+          <i class="fas fa-home"></i>
+          <span>Inicio</span>
+        </a>
+        <a href="#" class="nav-item" data-url="visitas/index.html">
+          <i class="fas fa-vr-cardboard"></i>
+          <span>Visitas</span>
+        </a>
+        <a href="#" class="nav-item nav-map" data-url="mapa.html">
+          <i class="fas fa-map"></i>
+        </a>
+        <a href="#" class="nav-item" data-url="https://nicaguia.base44.app">
+          <i class="fas fa-qrcode"></i>
+          <span>Escanea</span>
+        </a>
+        <a href="#" class="nav-item" data-url="../juegos/juegos.html">
+          <i class="fas fa-gamepad"></i>
+          <span>Juegos</span>
+        </a>
+      </nav>
     </div>
+  </div>
 
-    <!-- MODAL -->
-    <div id="editProfileModal" class="modal-overlay">
-        <div class="modal-box glass">
-            <h3>Editar perfil</h3>
-            <div class="modal-pic">
-                <img id="modalProfileImage" src="" alt="Foto" />
-                <div class="camera-btn" id="uploadPhotoIcon"><i class="fas fa-camera"></i></div>
-            </div>
-            <input type="file" id="uploadPhoto" accept="image/*" style="display:none;" />
-            <div class="input-group modal-input">
-                <label>Nombre completo:</label>
-                <input type="text" id="editNameInput" placeholder="Tu nombre" />
-            </div>
-            <div class="avatar-grid" id="avatarGrid"></div>
-            <button id="saveProfileBtn" class="btn btn-primary-full">Guardar</button>
-            <button id="closeModalBtn" class="btn btn-outline-full mt-2">Cancelar</button>
-        </div>
+  <!-- MODAL DE PERFIL -->
+  <div id="editProfileModal" class="modal-overlay">
+    <div class="modal-box">
+      <h3><i class="fas fa-user-edit"></i> Editar perfil</h3>
+      <div class="modal-pic-container">
+        <img id="modalProfileImage" src="" alt="Foto" />
+        <div class="camera-btn" id="uploadPhotoIcon"><i class="fas fa-camera"></i></div>
+      </div>
+      <input type="file" id="uploadPhoto" accept="image/*" style="display:none;" />
+      
+      <div class="input-group modal-input">
+        <label>Nombre completo:</label>
+        <input type="text" id="editNameInput" placeholder="Tu nombre" />
+      </div>
+
+      <div class="avatar-grid" id="avatarGrid"></div>
+      
+      <div class="modal-actions">
+        <button id="saveProfileBtn" class="btn btn-primary-full">Guardar cambios</button>
+        <button id="closeModalBtn" class="btn btn-outline-full mt-2">Cancelar</button>
+      </div>
     </div>
+  </div>
 
-    <!-- TOAST -->
-    <div id="toast" class="toast-message" style="display:none;"></div>
+  <!-- TOAST -->
+  <div id="toast" class="toast-message" style="display:none;"></div>
 
-    <!-- FIREBASE (Lógica Original intacta) -->
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js">
-    </script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js">
-    </script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js">
-    </script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js">
-    </script>
+  <!-- Firebase Compat -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
 
-    <!-- Aquí debe ir el código de tu inicio.js. (Si tenías el archivo separado, copia y pega su contenido justo aquí debajo) -->
-    <script>
-        // ================================================================
-        // CONFIGURACIÓN FIREBASE (COMPAT)
-        // ================================================================
-        const firebaseConfig = {
-            apiKey: "AIzaSyA6jVICuE17KJcO34gE1brMxqWEfNd3Fy0",
-            authDomain: "mapa-41b00.firebaseapp.com",
-            projectId: "mapa-41b00",
-            storageBucket: "mapa-41b00.firebasestorage.app",
-            messagingSenderId: "535032835400",
-            appId: "1:535032835400:web:68c079cbc3f419eafd177d"
-        };
-
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
-
-        console.log('🔥 Firebase inicializado (Compat)');
-
-        // ================================================================
-        // CONSTANTES
-        // ================================================================
-        const DEFAULT_AVATARS = [
-            "https://imgur.com/CFcEYQZ.jpg",
-            "https://imgur.com/rf8HVpD.jpg",
-            "https://imgur.com/LmBBFaT.jpg",
-            "https://us.123rf.com/450wm/yupiramos/yupiramos2009/yupiramos200902259/154588033-avatar-de-un-dise%C3%B1o-de-mujer-de-moda-ni%C3%B1a-persona-humana-humana-y-tema-de-belleza-ilustraci%C3%B3n.jpg?ver=6",
-            "https://randomuser.me/api/portraits/lego/1.jpg",
-            "https://randomuser.me/api/portraits/lego/2.jpg",
-            "https://cdni.iconscout.com/illustration/free/thumb/free-chica-negro-illustration-svg-download-png-1415695.png",
-            "https://img.magnific.com/vector-gratis/ilustracion-empresaria_53876-5857.jpg?semt=ais_hybrid&w=740&q=80"
-        ];
-        const FALLBACK = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
-
-        let fotoTemporal = null;
-        let isSaving = false;
-
-        // ================================================================
-        // REFERENCIAS DOM
-        // ================================================================
-        const authCard = document.getElementById('authCard');
-        const menuSection = document.getElementById('menuSection');
-        const loginForm = document.getElementById('loginForm');
-        const registerForm = document.getElementById('registerForm');
-        const loginEmail = document.getElementById('loginEmail');
-        const loginPassword = document.getElementById('loginPassword');
-        const doLoginBtn = document.getElementById('doLoginBtn');
-        const showRegisterBtn = document.getElementById('showRegisterBtn');
-        const backToLoginBtn = document.getElementById('backToLoginBtn');
-        const regName = document.getElementById('regName');
-        const regEmail = document.getElementById('regEmail');
-        const regPassword = document.getElementById('regPassword');
-        const doRegisterBtn = document.getElementById('doRegisterBtn');
-        const forgotPasswordLink = document.getElementById('forgotPasswordLink');
-        const logoutBtn = document.getElementById('logoutBtn');
-        const profileTrigger = document.getElementById('profileTrigger');
-        const editProfileBtn = document.getElementById('editProfileBtn');
-        const profileAvatar = document.getElementById('profileAvatar');
-        const profileNameDisplay = document.getElementById('profileNameDisplay');
-        const userPointsDisplay = document.getElementById('userPointsDisplay');
-        const positionBadge = document.getElementById('positionBadge');
-        const editProfileModal = document.getElementById('editProfileModal');
-        const modalProfileImage = document.getElementById('modalProfileImage');
-        const uploadPhotoIcon = document.getElementById('uploadPhotoIcon');
-        const uploadPhoto = document.getElementById('uploadPhoto');
-        const editNameInput = document.getElementById('editNameInput');
-        const saveProfileBtn = document.getElementById('saveProfileBtn');
-        const closeModalBtn = document.getElementById('closeModalBtn');
-        const avatarGrid = document.getElementById('avatarGrid');
-        const toastDiv = document.getElementById('toast');
-        const passportList = document.getElementById('passportList');
-
-        // ================================================================
-        // FUNCIÓN PARA OCULTAR LA INTRO (¡SOLUCIÓN AL "NO CARGA"!)
-        // ================================================================
-        setTimeout(() => {
-            const intro = document.getElementById('introScreen');
-            if (intro) intro.classList.add('hidden');
-        }, 2500);
-
-        // ================================================================
-        // FUNCIONES AUXILIARES (TOAST, COMPRESIÓN, SUBIDA)
-        // ================================================================
-        function showToast(msg, isError = false, duration = 5000) {
-            toastDiv.textContent = msg;
-            toastDiv.style.display = 'block';
-            toastDiv.style.background = isError ? 'rgba(220,53,69,0.95)' : 'rgba(0,0,0,0.85)';
-            clearTimeout(toastDiv._timeout);
-            toastDiv._timeout = setTimeout(() => toastDiv.style.display = 'none', duration);
-        }
-
-        function compressImage(file) {
-            return new Promise((resolve, reject) => {
-                try {
-                    const reader = new FileReader();
-                    reader.readAsDataURL(file);
-                    reader.onload = (e) => {
-                        const img = new Image();
-                        img.src = e.target.result;
-                        img.onload = () => {
-                            const canvas = document.createElement('canvas');
-                            let width = img.width;
-                            let height = img.height;
-                            const MAX_SIZE = 600;
-                            if (width > MAX_SIZE || height > MAX_SIZE) {
-                                if (width > height) {
-                                    height = height * (MAX_SIZE / width);
-                                    width = MAX_SIZE;
-                                } else {
-                                    width = width * (MAX_SIZE / height);
-                                    height = MAX_SIZE;
-                                }
-                            }
-                            canvas.width = Math.round(width);
-                            canvas.height = Math.round(height);
-                            const ctx = canvas.getContext('2d');
-                            ctx.imageSmoothingEnabled = true;
-                            ctx.imageSmoothingQuality = 'high';
-                            ctx.drawImage(img, 0, 0, width, height);
-                            canvas.toBlob((blob) => {
-                                if (blob) {
-                                    const compressedFile = new File(
-                                        [blob],
-                                        file.name.replace(/\.[^.]+$/, '.jpg'), { type: 'image/jpeg',
-                                            lastModified: Date.now() }
-                                    );
-                                    resolve(compressedFile);
-                                } else {
-                                    reject(new Error('Error al comprimir la imagen'));
-                                }
-                            }, 'image/jpeg', 0.8);
-                        };
-                        img.onerror = () => reject(new Error('Error al cargar la imagen'));
-                    };
-                    reader.onerror = () => reject(new Error('Error al leer el archivo'));
-                } catch (error) {
-                    reject(error);
-                }
-            });
-        }
-
-        async function uploadToImgBB(file) {
-            const reader = new FileReader();
-            const dataUrl = await new Promise((resolve, reject) => {
-                reader.onload = () => resolve(reader.result);
-                reader.onerror = reject;
-                reader.readAsDataURL(file);
-            });
-            const base64 = dataUrl.split(',')[1];
-
-            const formData = new FormData();
-            formData.append('key', '241be8181060d6203088a57a14c355fa');
-            formData.append('image', base64);
-
-            const response = await fetch('https://api.imgbb.com/1/upload', {
-                method: 'POST',
-                body: formData,
-            });
-            if (!response.ok) {
-                throw new Error('Error al subir a ImgBB (código ' + response.status + ')');
-            }
-            const json = await response.json();
-            if (!json.success) {
-                throw new Error(json.error?.message || 'Error desconocido en ImgBB');
-            }
-            return json.data.url;
-        }
-
-        // ================================================================
-        // FUNCIONES DE PERFIL
-        // ================================================================
-        async function guardarEnFirestore(user, extra = {}) {
-            const ref = db.collection('usuarios').doc(user.uid);
-            const snap = await ref.get();
-            if (!snap.exists) {
-                await ref.set({
-                    uid: user.uid,
-                    email: user.email,
-                    nombre: extra.nombre || user.displayName || user.email.split('@')[0],
-                    fotoURL: extra.fotoURL || user.photoURL || DEFAULT_AVATARS[0],
-                    puntos: 0,
-                    lugares_visitados: [],
-                    fechaRegistro: new Date()
-                });
-            }
-        }
-
-        async function cargarPerfil(user) {
-            if (!user) return;
-            const ref = db.collection('usuarios').doc(user.uid);
-            const snap = await ref.get();
-            let nombre, fotoURL;
-            if (snap.exists) {
-                const data = snap.data();
-                nombre = data.nombre || user.displayName || user.email.split('@')[0];
-                fotoURL = data.fotoURL || user.photoURL || FALLBACK;
-            } else {
-                nombre = user.displayName || user.email.split('@')[0];
-                fotoURL = user.photoURL || FALLBACK;
-                await guardarEnFirestore(user, { nombre, fotoURL });
-            }
-            profileNameDisplay.textContent = nombre;
-            profileAvatar.src = fotoURL;
-            profileAvatar.onerror = () => profileAvatar.src = FALLBACK;
-            await updateUserStats(user.uid);
-        }
-
-        function renderAvatars(selected) {
-            avatarGrid.innerHTML = '';
-            DEFAULT_AVATARS.forEach(url => {
-                const img = document.createElement('img');
-                img.src = url;
-                img.className = 'avatar-pred';
-                if (selected === url) img.classList.add('selected');
-                img.onclick = () => {
-                    document.querySelectorAll('.avatar-pred').forEach(a => a.classList.remove('selected'));
-                    img.classList.add('selected');
-                    fotoTemporal = url;
-                    modalProfileImage.src = url;
-                    uploadPhoto.value = '';
-                };
-                avatarGrid.appendChild(img);
-            });
-        }
-
-        async function guardarPerfil(nuevoNombre, nuevaFoto) {
-            const user = auth.currentUser;
-            if (!user) { showToast('❌ Usuario no autenticado', true); return; }
-            if (isSaving) return;
-            isSaving = true;
-            saveProfileBtn.disabled = true;
-            saveProfileBtn.innerHTML = 'Guardando...';
-
-            try {
-                let fotoURL = null;
-                if (nuevaFoto instanceof File) {
-                    showToast('📤 Subiendo imagen...', false, 5000);
-                    const compressed = await compressImage(nuevaFoto);
-                    fotoURL = await uploadToImgBB(compressed);
-                } else if (typeof nuevaFoto === 'string' && nuevaFoto.startsWith('http')) {
-                    fotoURL = nuevaFoto;
-                } else {
-                    const ref = db.collection('usuarios').doc(user.uid);
-                    const snap = await ref.get();
-                    fotoURL = snap.exists ? snap.data().fotoURL : null;
-                }
-
-                if (nuevoNombre && nuevoNombre !== user.displayName) {
-                    await user.updateProfile({ displayName: nuevoNombre });
-                }
-
-                const ref = db.collection('usuarios').doc(user.uid);
-                const updates = {};
-                if (nuevoNombre) updates.nombre = nuevoNombre;
-                if (fotoURL) updates.fotoURL = fotoURL;
-                await ref.update(updates);
-
-                profileNameDisplay.textContent = nuevoNombre || user.displayName;
-                if (fotoURL) { profileAvatar.src = fotoURL;
-                    profileAvatar.onerror = () => profileAvatar.src = FALLBACK; }
-
-                showToast('✅ Perfil actualizado');
-                editProfileModal.style.display = 'none';
-            } catch (error) {
-                console.error('Error al guardar perfil:', error);
-                showToast('❌ ' + (error.message || 'Error al guardar'), true, 5000);
-            } finally {
-                isSaving = false;
-                saveProfileBtn.disabled = false;
-                saveProfileBtn.innerHTML = 'Guardar cambios';
-            }
-        }
-
-        // ================================================================
-        // ACTUALIZAR PUNTOS Y POSICIÓN
-        // ================================================================
-        async function updateUserStats(uid) {
-            try {
-                const docSnap = await db.collection('usuarios').doc(uid).get();
-                if (!docSnap.exists) return;
-                const data = docSnap.data();
-                const puntos = data.puntos || 0;
-                userPointsDisplay.textContent = '⭐ ' + puntos + ' pts';
-
-                const querySnap = await db.collection('usuarios').orderBy('puntos', 'desc').get();
-                let posicion = 0,
-                    total = 0;
-                querySnap.forEach(doc => { total++; if (doc.id === uid) posicion = total; });
-                if (posicion > 0) {
-                    let medal = '';
-                    if (posicion === 1) medal = '👑 ';
-                    else if (posicion === 2) medal = '🥈 ';
-                    else if (posicion === 3) medal = '🥉 ';
-                    positionBadge.textContent = medal + 'Posición #' + posicion + ' de ' + total;
-                } else {
-                    positionBadge.textContent = '📈 Sin posición aún';
-                }
-            } catch (error) { console.error('Error en updateUserStats:', error); }
-        }
-
-        function actualizarPasaporte(lugares) {
-            passportList.innerHTML = '';
-            if (!lugares || lugares.length === 0) {
-                const li = document.createElement('li');
-                li.className = 'passport-empty';
-                li.textContent = 'No has visitado ningún lugar aún.';
-                passportList.appendChild(li);
-                return;
-            }
-            lugares.forEach(lugar => {
-                const li = document.createElement('li');
-                const icon = document.createElement('i');
-                icon.className = 'fas fa-check-circle';
-                icon.style.color = '#70e679';
-                li.appendChild(icon);
-                li.appendChild(document.createTextNode(' ' + lugar));
-                passportList.appendChild(li);
-            });
-        }
-
-        // ================================================================
-        // EVENTOS DE LOGIN / REGISTRO / RECUPERACIÓN
-        // ================================================================
-        doLoginBtn.addEventListener('click', () => {
-            const email = loginEmail.value.trim();
-            const pass = loginPassword.value.trim();
-            if (!email || !pass) { showToast('Completa todos los campos.', true); return; }
-            auth.signInWithEmailAndPassword(email, pass).then(() => showToast('¡Bienvenido de vuelta!')).catch(
-            error => showToast('Error: ' + error.message, true));
-        });
-
-        showRegisterBtn.addEventListener('click', () => { loginForm.style.display = 'none';
-            registerForm.style.display = 'block'; });
-        backToLoginBtn.addEventListener('click', () => { registerForm.style.display = 'none';
-            loginForm.style.display = 'block'; });
-
-        doRegisterBtn.addEventListener('click', () => {
-            const name = regName.value.trim();
-            const email = regEmail.value.trim();
-            const pass = regPassword.value.trim();
-            if (!name || !email || !pass) { showToast('Completa todos los campos.', true); return; }
-            if (pass.length < 6) { showToast('La contraseña debe tener al menos 6 caracteres.', true); return; }
-            auth.createUserWithEmailAndPassword(email, pass)
-                .then(cred => { return cred.user.updateProfile({ displayName: name }).then(() => { return db
-                            .collection('usuarios').doc(cred.user.uid).set({ uid: cred.user.uid,
-                            email: email, nombre: name, fotoURL: DEFAULT_AVATARS[0], puntos: 0,
-                            lugares_visitados: [], fechaRegistro: new Date() }); }); })
-                .then(() => showToast('¡Cuenta creada exitosamente!'))
-                .catch(error => showToast('Error: ' + error.message, true));
-        });
-
-        forgotPasswordLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            const email = loginEmail.value.trim();
-            if (!email) { showToast('Ingresa tu correo para restablecer.', true); return; }
-            auth.sendPasswordResetEmail(email).then(() => showToast('Revisa tu correo para restablecer la contraseña.'))
-                .catch(error => showToast('Error: ' + error.message, true));
-        });
-
-        // ================================================================
-        // ESTADO DE AUTENTICACIÓN
-        // ================================================================
-        auth.onAuthStateChanged(async (user) => {
-            if (user) {
-                authCard.style.display = 'none';
-                menuSection.style.display = 'block';
-                await cargarPerfil(user);
-                const userRef = db.collection('usuarios').doc(user.uid);
-                userRef.onSnapshot((docSnap) => {
-                    if (docSnap.exists) {
-                        const data = docSnap.data();
-                        const nombre = data.nombre || user.displayName || user.email.split('@')[0];
-                        profileNameDisplay.textContent = nombre;
-                        if (data.fotoURL) { profileAvatar.src = data.fotoURL;
-                            profileAvatar.onerror = () => profileAvatar.src = FALLBACK; }
-                        updateUserStats(user.uid);
-                        actualizarPasaporte(data.lugares_visitados || []);
-                    }
-                });
-            } else {
-                authCard.style.display = 'block';
-                menuSection.style.display = 'none';
-                loginForm.style.display = 'block';
-                registerForm.style.display = 'none';
-                loginEmail.value = '';
-                loginPassword.value = '';
-                regEmail.value = '';
-                regPassword.value = '';
-                regName.value = '';
-            }
-        });
-
-        logoutBtn.addEventListener('click', () => { auth.signOut().then(() => showToast('Sesión cerrada')); });
-        profileTrigger.addEventListener('click', (e) => { if (e.target.closest('.edit-btn')) return;
-            window.location.href = 'comunidad.html'; });
-
-        // ================================================================
-        // MODAL
-        // ================================================================
-        function openEditModal() { editProfileModal.style.display = 'flex';
-            editNameInput.value = profileNameDisplay.textContent;
-            modalProfileImage.src = profileAvatar.src;
-            fotoTemporal = null;
-            renderAvatars(profileAvatar.src); }
-
-        function closeEditModal() { editProfileModal.style.display = 'none'; }
-
-        editProfileBtn.addEventListener('click', (e) => { e.stopPropagation();
-            openEditModal(); });
-        closeModalBtn.addEventListener('click', closeEditModal);
-        window.addEventListener('click', (e) => { if (e.target === editProfileModal) closeEditModal(); });
-
-        uploadPhotoIcon.addEventListener('click', () => uploadPhoto.click());
-        uploadPhoto.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
-            const validTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp', 'image/gif'];
-            if (!validTypes.includes(file.type)) { showToast('❌ Formato no soportado. Usa JPG, PNG o WEBP', true);
-                uploadPhoto.value = ''; return; }
-            if (file.size > 5 * 1024 * 1024) { showToast('❌ La imagen es muy grande. Máximo 5MB', true);
-                uploadPhoto.value = ''; return; }
-            const reader = new FileReader();
-            reader.onload = (ev) => { modalProfileImage.src = ev.target.result;
-                document.querySelectorAll('.avatar-pred').forEach(a => a.classList.remove('selected'));
-                fotoTemporal = file;
-                showToast('📷 Foto seleccionada'); };
-            reader.readAsDataURL(file);
-        });
-
-        saveProfileBtn.addEventListener('click', async () => {
-            const nuevoNombre = editNameInput.value.trim();
-            if (!nuevoNombre) { showToast('❌ El nombre no puede estar vacío', true); return; }
-            if (!fotoTemporal) { showToast('❌ Selecciona una foto de perfil', true); return; }
-            await guardarPerfil(nuevoNombre, fotoTemporal);
-        });
-
-        document.querySelectorAll('.btn-jugar').forEach(btn => { btn.addEventListener('click', function(e) { showToast(
-                    'Abriendo juego: ' + this.dataset.game); }); });
-        document.querySelectorAll('.nav-item').forEach(item => { item.addEventListener('click', function(e) {
-                e.preventDefault();
-                const url = this.dataset.url;
-                if (url && url !== '#') { window.location.href = url; } else { showToast('Página de inicio'); }
-                document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-                this.classList.add('active');
-            }); });
-    </script>
+  <script src="js/inicio.js"></script>
 </body>
 </html>
