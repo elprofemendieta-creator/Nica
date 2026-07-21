@@ -399,6 +399,31 @@
   <!-- TOAST -->
   <div id="toast" class="toast-message" style="display:none;"></div>
 
+<!-- ===== BOTÓN FLOTANTE IA (DIFY) ===== -->
+<script>
+  window.difyChatbotConfig = {
+    token: 'gw2xlin115DavvTp9',  // <--- IMPORTANTE: las comillas simples '
+    baseUrl: 'https://udify.app',
+    containerProps: {
+      style: {
+        backgroundColor: '#a4c737',  // <--- Verde Pinolero
+        width: '64px',
+        height: '64px',
+        borderRadius: '32px',
+        boxShadow: '0 8px 32px rgba(164, 199, 55, 0.4)'
+      }
+    },
+    welcomeMessage: '🇳🇮 ¡Bienvenido a Guía Pinolera! ¿Qué destino te gustaría explorar hoy?',
+    suggestedQuestions: [
+      '¿Qué lugares visitar en Granada?',
+      'Tips para viajar a Ometepe',
+      'Platos típicos de Nicaragua',
+      'Mejor época para ir a San Juan del Sur'
+    ]
+  }
+</script>
+<script src="https://udify.app/embed.js"></script>
+
   <!-- Firebase Compat -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
