@@ -3,16 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Guía Pinolero - Descubre Nicaragua</title>
-  <!-- Tipografías -->
+  <title>Guía Pinolera - Descubre Nicaragua</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet" />
-  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-  <!-- Estilos principales -->
-  <link rel="stylesheet" href="css/inicio.css" />
+  <link rel="stylesheet" href="inicio.css" />
 </head>
 <body>
-  <!-- Pantalla de introducción -->
+  <!-- Intro -->
   <div class="intro-screen">
     <div class="intro-content">
       <img src="carga.gif" alt="Guía Pinolera" class="intro-logo-img" />
@@ -21,7 +18,6 @@
     </div>
   </div>
 
-  <!-- Fondo decorativo de ondas -->
   <div class="wave-bg">
     <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
       <path fill="rgba(255,255,255,0.06)" d="M0,192L48,197.3C96,203,192,213,288,208C384,203,480,181,576,176C672,171,768,181,864,197.3C960,213,1056,235,1152,224C1248,213,1344,171,1392,149.3L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
@@ -29,12 +25,12 @@
   </div>
 
   <div class="container">
-    <!-- Tarjeta de Login/Registro -->
+    <!-- Login/Registro -->
     <div id="authCard" class="glass-card">
       <div class="mascota">
         <img src="https://cdn-icons-png.flaticon.com/512/4712/4712109.png" alt="Mascota" />
       </div>
-      <h1>Guía Pinolero</h1>
+      <h1>Guía Pinolera</h1>
       <p class="subtitle">🌋 Explora Nicaragua jugando 🌊</p>
 
       <div id="loginForm">
@@ -67,13 +63,16 @@
       </div>
     </div>
 
-    <!-- MENÚ PRINCIPAL (nuevo diseño) -->
+    <!-- MENÚ PRINCIPAL -->
     <div id="menuSection" style="display:none;">
-      <!-- Encabezado -->
+      <!-- Encabezado con logo -->
       <header class="app-header">
         <div class="header-left">
-          <h1>Descubre Nicaragua</h1>
-          <span class="header-subtitle">GUÍA PINOLERO</span>
+          <img src="logo.png" alt="Logo" class="header-logo" />
+          <div>
+            <h1>Descubre Nicaragua</h1>
+            <span class="header-subtitle">GUÍA PINOLERA</span>
+          </div>
         </div>
         <div class="header-right">
           <button id="logoutBtn" class="btn-logout-small" title="Cerrar sesión">
@@ -82,10 +81,11 @@
         </div>
       </header>
 
-      <!-- Barra de búsqueda -->
+      <!-- Barra de búsqueda con resultados -->
       <div class="search-bar">
         <i class="fas fa-search"></i>
         <input type="text" placeholder="Buscar lugares, juegos o departamentos..." id="searchInput" />
+        <div id="searchResults" class="search-results"></div>
       </div>
 
       <!-- Tarjeta de perfil -->
@@ -115,32 +115,31 @@
         <span id="positionBadge">Calculando posición...</span>
       </div>
 
-      <!-- Juegos Turísticos -->
+      <!-- Juegos -->
       <section class="games-section">
         <h2>Juegos Turísticos</h2>
-        <ul class="game-list">
-          <li>
+        <ul class="game-list" id="gameList">
+          <li data-game="mapa">
             <span class="game-icon">🎮</span>
             <span class="game-name">Gran Mapa Misterioso</span>
             <a href="#" class="btn-jugar" data-game="mapa">Jugar</a>
           </li>
-          <li>
+          <li data-game="millonario">
             <span class="game-icon">💰</span>
             <span class="game-name">Pinolero Millonario</span>
             <a href="#" class="btn-jugar" data-game="millonario">Jugar</a>
-             <div class="carousel-slide" data-url="../juegos/juegos.html" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
           </li>
-          <li>
+          <li data-game="stop">
             <span class="game-icon">🛑</span>
             <span class="game-name">Stop Pinolero</span>
             <a href="#" class="btn-jugar" data-game="stop">Jugar</a>
           </li>
-          <li>
+          <li data-game="memoria">
             <span class="game-icon">🧠</span>
             <span class="game-name">Memoria Pinolera</span>
             <a href="#" class="btn-jugar" data-game="memoria">Jugar</a>
           </li>
-          <li>
+          <li data-game="laberinto">
             <span class="game-icon">🌀</span>
             <span class="game-name">Laberinto Turístico</span>
             <a href="#" class="btn-jugar" data-game="laberinto">Jugar</a>
@@ -148,30 +147,30 @@
         </ul>
       </section>
 
-      <!-- Destinos destacados -->
+      <!-- Destinos -->
       <section class="destinations-section">
         <h2>Destinos destacados</h2>
-        <div class="destinations-grid">
-          <div class="dest-item">
+        <div class="destinations-grid" id="destinationsGrid">
+          <div class="dest-item" data-dest="masaya">
             <span class="dest-name">Volcán Masaya</span>
             <span class="dest-stars">★★★★★</span>
           </div>
-          <div class="dest-item">
+          <div class="dest-item" data-dest="apoyo">
             <span class="dest-name">Laguna de Apoyo</span>
             <span class="dest-stars">★★★★★</span>
           </div>
-          <div class="dest-item">
+          <div class="dest-item" data-dest="granada">
             <span class="dest-name">Granada</span>
             <span class="dest-stars">★★★★★</span>
           </div>
-          <div class="dest-item">
+          <div class="dest-item" data-dest="orm">
             <span class="dest-name">Orm</span>
             <span class="dest-stars">★</span>
           </div>
         </div>
       </section>
 
-      <!-- Mis Insignias -->
+      <!-- Insignias -->
       <section class="badges-section">
         <h2>Mis Insignias</h2>
         <ul class="badge-list">
@@ -183,18 +182,41 @@
         </ul>
       </section>
 
-      <!-- Menú inferior -->
+      <!-- Menú inferior renovado -->
       <nav class="bottom-nav">
-        <a href="#" class="active"><i class="fas fa-home"></i><span>Inicio</span></a>
-        <a href="mapa.html"><i class="fas fa-map"></i><span>Mapa</span></a>
-        <a href="#"><i class="fas fa-gamepad"></i><span>Juegos</span></a>
-        <a href="#"><i class="fas fa-trophy"></i><span>Logros</span></a>
-        <a href="#"><i class="fas fa-user"></i><span>Perfil</span></a>
+        <a href="#" class="nav-item active" data-url="#">
+          <i class="fas fa-home"></i>
+          <span>Inicio</span>
+        </a>
+        <a href="#" class="nav-item" data-url="../juegos/juegos.html">
+          <i class="fas fa-gamepad"></i>
+          <span>Juegos</span>
+        </a>
+        <a href="#" class="nav-item" data-url="visitas/index.html">
+          <i class="fas fa-vr-cardboard"></i>
+          <span>Visitas</span>
+        </a>
+        <a href="#" class="nav-item nav-map" data-url="mapa.html">
+          <i class="fas fa-map"></i>
+          <span>Mapa</span>
+        </a>
+        <a href="#" class="nav-item" data-url="https://nicaguia.base44.app">
+          <i class="fas fa-qrcode"></i>
+          <span>Escanea</span>
+        </a>
+        <a href="#" class="nav-item" data-url="promociones.html">
+          <i class="fas fa-tags"></i>
+          <span>Promociones</span>
+        </a>
+        <a href="#" class="nav-item" data-url="comunidad.html">
+          <i class="fas fa-users"></i>
+          <span>Comunidad</span>
+        </a>
       </nav>
     </div>
   </div>
 
-  <!-- Modal de edición de perfil -->
+  <!-- Modal de edición -->
   <div id="editProfileModal" class="modal">
     <div class="modal-content">
       <h3><i class="fas fa-user-edit"></i> Editar perfil</h3>
@@ -223,16 +245,14 @@
     </a>
   </div>
 
-  <!-- Toast -->
   <div id="toast" class="toast-message" style="display:none;"></div>
 
-  <!-- ===== FIREBASE COMPAT CDN ===== -->
+  <!-- Firebase Compat -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
 
-  <!-- Nuestro script principal -->
-  <script src="js/inicio.js"></script>
+  <script src="inicio.js"></script>
 </body>
 </html>
