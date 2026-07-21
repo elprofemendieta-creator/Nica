@@ -760,110 +760,126 @@ body {
 }
 
 /* ============================================================
-   BOTÓN FLOTANTE IA
+   BOTONES FLOTANTES UNIFICADOS (WHATSAPP + IA)
    ============================================================ */
-.boton-flotante-ia {
-    position: fixed;
-    bottom: 100px;
-    right: 20px;
-    background: linear-gradient(135deg, #6C63FF, #4A3FCF);
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 64px;
-    height: 64px;
-    cursor: pointer;
-    z-index: 999;
-    box-shadow: 0 8px 32px rgba(108, 99, 255, 0.4);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+
+/* Contenedor que agrupa y alinea los botones */
+.floating-buttons-container {
+  position: fixed;
+  bottom: 100px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  z-index: 999;
 }
 
-.boton-flotante-ia:hover {
-    transform: scale(1.1) translateY(-4px);
-    box-shadow: 0 12px 40px rgba(108, 99, 255, 0.6);
+/* Estilo base para AMBOS botones (mismo tamaño y forma) */
+.floating-btn {
+  width: 60px !important;
+  height: 60px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 28px !important;
+  color: white !important;
+  text-decoration: none !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  border: none !important;
+  cursor: pointer !important;
 }
 
-.boton-flotante-ia:active {
-    transform: scale(0.95);
+/* Efecto hover para ambos */
+.floating-btn:hover {
+  transform: scale(1.1) translateY(-4px) !important;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4) !important;
 }
 
-.boton-flotante-ia svg {
-    width: 32px;
-    height: 32px;
-    stroke: white;
-    z-index: 1;
+/* Color específico para WhatsApp */
+.whatsapp-btn {
+  background: linear-gradient(135deg, #25D366, #128C7E) !important;
+  box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4) !important;
 }
 
-/* Pulso alrededor del botón */
-.ia-pulse {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    background: rgba(108, 99, 255, 0.3);
-    animation: pulse-ia 2s ease-out infinite;
-    pointer-events: none;
-}
-
-@keyframes pulse-ia {
-    0% {
-        transform: scale(1);
-        opacity: 0.6;
-    }
-    100% {
-        transform: scale(1.6);
-        opacity: 0;
-    }
-}
-
-/* Badge de "IA" */
-.boton-flotante-ia::after {
-    content: 'IA';
-    position: absolute;
-    bottom: -4px;
-    right: -4px;
-    background: var(--primary-green);
-    color: #232049;
-    font-size: 10px;
-    font-weight: 800;
-    padding: 2px 6px;
-    border-radius: 8px;
-    border: 2px solid #0b0d17;
-    z-index: 2;
+.whatsapp-btn:hover {
+  box-shadow: 0 8px 30px rgba(37, 211, 102, 0.6) !important;
 }
 
 /* ============================================================
-   BOTÓN WHATSAPP FLOTANTE
+   ESTILOS PARA EL BOTÓN DE DIFY (heredan los estilos base)
    ============================================================ */
-.whatsapp-float {
-    position: fixed;
-    bottom: 180px;
-    right: 20px;
-    background: #25D366;
-    color: white;
-    border-radius: 50%;
-    width: 60px;
-    height: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2rem;
-    box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
-    z-index: 998;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    text-decoration: none;
+
+/* Posicionamos el botón de Dify dentro de nuestro contenedor */
+#dify-chatbot-bubble-button-container {
+  position: static !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: auto !important;
+  height: auto !important;
 }
 
-.whatsapp-float:hover {
-    transform: scale(1.1) translateY(-4px);
-    box-shadow: 0 8px 30px rgba(37, 211, 102, 0.6);
+/* Aplicamos los mismos estilos de .floating-btn al botón de Dify */
+#dify-chatbot-bubble-button {
+  width: 60px !important;
+  height: 60px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: linear-gradient(135deg, #a4c737, #8fb32e) !important;
+  box-shadow: 0 4px 20px rgba(164, 199, 55, 0.4) !important;
+  border: none !important;
+  cursor: pointer !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  position: relative !important;
+  bottom: auto !important;
+  right: auto !important;
+  z-index: auto !important;
 }
 
-.whatsapp-float:active {
-    transform: scale(0.95);
+/* Hover para el botón de Dify */
+#dify-chatbot-bubble-button:hover {
+  transform: scale(1.1) translateY(-4px) !important;
+  box-shadow: 0 8px 30px rgba(164, 199, 55, 0.6) !important;
+}
+
+/* Tamaño del icono SVG dentro del botón de Dify */
+#dify-chatbot-bubble-button svg {
+  width: 28px !important;
+  height: 28px !important;
+  stroke: white !important;
+  fill: none !important;
+}
+
+/* ============================================================
+   VENTANA DEL CHAT - Aparece encima del botón IA
+   ============================================================ */
+#dify-chatbot-bubble-window {
+  width: 24rem !important;
+  height: 40rem !important;
+  max-height: 70vh !important;
+  border-radius: 24px !important;
+  border: 2px solid rgba(164, 199, 55, 0.2) !important;
+  position: fixed !important;
+  bottom: 180px !important;
+  right: 20px !important;
+  z-index: 998 !important;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5) !important;
+  background: #0b0d17 !important;
+}
+
+/* Botón de cerrar */
+#dify-chatbot-bubble-close {
+  background-color: #232049 !important;
+}
+
+/* Encabezado del chat */
+.dify-chatbot-bubble-header {
+  background: linear-gradient(135deg, #232049, #a287be) !important;
 }
 
 /* ============================================================
@@ -964,23 +980,33 @@ body {
         right: 2px;
     }
 
-    .boton-flotante-ia {
-        width: 56px;
-        height: 56px;
+    /* Ajustes responsive para botones flotantes */
+    .floating-buttons-container {
         bottom: 90px;
         right: 16px;
+        gap: 10px;
     }
 
-    .boton-flotante-ia svg {
-        width: 28px;
-        height: 28px;
+    .floating-btn {
+        width: 52px !important;
+        height: 52px !important;
+        font-size: 24px !important;
     }
 
-    .whatsapp-float {
-        width: 52px;
-        height: 52px;
-        font-size: 1.8rem;
-        bottom: 160px;
-        right: 16px;
+    #dify-chatbot-bubble-button {
+        width: 52px !important;
+        height: 52px !important;
+    }
+
+    #dify-chatbot-bubble-button svg {
+        width: 24px !important;
+        height: 24px !important;
+    }
+
+    #dify-chatbot-bubble-window {
+        width: 20rem !important;
+        height: 32rem !important;
+        bottom: 160px !important;
+        right: 16px !important;
     }
 }
