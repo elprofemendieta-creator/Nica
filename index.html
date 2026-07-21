@@ -18,9 +18,10 @@
     </div>
   </div>
 
+  <!-- Fondo decorativo -->
   <div class="wave-bg">
     <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
-      <path fill="rgba(255,255,255,0.06)" d="M0,192L48,197.3C96,203,192,213,288,208C384,203,480,181,576,176C672,171,768,181,864,197.3C960,213,1056,235,1152,224C1248,213,1344,171,1392,149.3L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+      <path fill="rgba(0,0,0,0.03)" d="M0,192L48,197.3C96,203,192,213,288,208C384,203,480,181,576,176C672,171,768,181,864,197.3C960,213,1056,235,1152,224C1248,213,1344,171,1392,149.3L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
     </svg>
   </div>
 
@@ -81,15 +82,8 @@
         </div>
       </header>
 
-      <!-- Barra de búsqueda con resultados -->
-      <div class="search-bar">
-        <i class="fas fa-search"></i>
-        <input type="text" placeholder="Buscar lugares, juegos o departamentos..." id="searchInput" />
-        <div id="searchResults" class="search-results"></div>
-      </div>
-
-      <!-- Tarjeta de perfil -->
-      <div class="profile-card" id="profileTrigger">
+      <!-- Tarjeta de perfil (con redirección a comunidad al hacer clic en el área) -->
+      <div class="profile-card" id="profileTrigger" style="cursor:pointer;">
         <img id="profileAvatar" class="profile-avatar" src="" alt="Avatar" />
         <div class="profile-details">
           <div class="profile-name" id="profileNameDisplay">Usuario</div>
@@ -102,6 +96,15 @@
             <span id="userPointsDisplay">⭐ 0 puntos</span>
             <span>12 insignias</span>
             <span>7 racha diaria</span>
+          </div>
+          <!-- NUEVOS BOTONES: Comunidad y Promociones -->
+          <div class="profile-actions">
+            <a href="comunidad.html" class="profile-btn profile-btn-comunidad">
+              <i class="fas fa-users"></i> Comunidad
+            </a>
+            <a href="promociones.html" class="profile-btn profile-btn-promociones">
+              <i class="fas fa-tags"></i> Promociones
+            </a>
           </div>
         </div>
         <button id="editProfileBtn" class="edit-btn" title="Editar perfil">
@@ -147,50 +150,24 @@
         </ul>
       </section>
 
-      <!-- Destinos -->
-      <section class="destinations-section">
-        <h2>Destinos destacados</h2>
-        <div class="destinations-grid" id="destinationsGrid">
-          <div class="dest-item" data-dest="masaya">
-            <span class="dest-name">Volcán Masaya</span>
-            <span class="dest-stars">★★★★★</span>
-          </div>
-          <div class="dest-item" data-dest="apoyo">
-            <span class="dest-name">Laguna de Apoyo</span>
-            <span class="dest-stars">★★★★★</span>
-          </div>
-          <div class="dest-item" data-dest="granada">
-            <span class="dest-name">Granada</span>
-            <span class="dest-stars">★★★★★</span>
-          </div>
-          <div class="dest-item" data-dest="orm">
-            <span class="dest-name">Orm</span>
-            <span class="dest-stars">★</span>
-          </div>
-        </div>
-      </section>
-
-      <!-- Insignias -->
-      <section class="badges-section">
-        <h2>Mis Insignias</h2>
-        <ul class="badge-list">
-          <li>Explorador</li>
-          <li>Aventurero</li>
-          <li>Maestro Pinolero</li>
-          <li>Leyenda de Nicaragua</li>
-          <li class="next-badge">Próxima insignia</li>
+      <!-- Pasaporte (lugares visitados) -->
+      <section class="passport-section">
+        <h2>Pasaporte (lugares visitados)</h2>
+        <ul class="passport-list">
+          <li><i class="fas fa-check-circle" style="color:#a4c737;"></i> Volcán Masaya</li>
+          <li><i class="fas fa-check-circle" style="color:#a4c737;"></i> Laguna de Apoyo</li>
+          <li><i class="fas fa-circle" style="color:#ccc;"></i> Granada</li>
+          <li><i class="fas fa-circle" style="color:#ccc;"></i> Orm</li>
+          <li><i class="fas fa-circle" style="color:#ccc;"></i> León</li>
         </ul>
+        <p style="font-size:0.8rem; color:#888; margin-top:0.5rem;">✅ Visitados  •  ⭕ Pendientes</p>
       </section>
 
-      <!-- Menú inferior renovado -->
+      <!-- MENÚ INFERIOR RENOVADO (5 botones: Inicio, Visitas, Mapa, Escanea, Juegos) -->
       <nav class="bottom-nav">
         <a href="#" class="nav-item active" data-url="#">
           <i class="fas fa-home"></i>
           <span>Inicio</span>
-        </a>
-        <a href="#" class="nav-item" data-url="../juegos/juegos.html">
-          <i class="fas fa-gamepad"></i>
-          <span>Juegos</span>
         </a>
         <a href="#" class="nav-item" data-url="visitas/index.html">
           <i class="fas fa-vr-cardboard"></i>
@@ -204,19 +181,15 @@
           <i class="fas fa-qrcode"></i>
           <span>Escanea</span>
         </a>
-        <a href="#" class="nav-item" data-url="promociones.html">
-          <i class="fas fa-tags"></i>
-          <span>Promociones</span>
-        </a>
-        <a href="#" class="nav-item" data-url="comunidad.html">
-          <i class="fas fa-users"></i>
-          <span>Comunidad</span>
+        <a href="#" class="nav-item" data-url="../juegos/juegos.html">
+          <i class="fas fa-gamepad"></i>
+          <span>Juegos</span>
         </a>
       </nav>
     </div>
   </div>
 
-  <!-- Modal de edición -->
+  <!-- Modal de edición de perfil -->
   <div id="editProfileModal" class="modal">
     <div class="modal-content">
       <h3><i class="fas fa-user-edit"></i> Editar perfil</h3>
@@ -228,23 +201,17 @@
       </div>
       <input type="file" id="uploadPhoto" accept="image/*" style="display:none;" />
       <div class="input-group">
-        <label style="color:white;">Nombre completo:</label>
+        <label style="color:var(--text-dark);">Nombre completo:</label>
         <input type="text" id="editNameInput" placeholder="Tu nombre" />
       </div>
-      <label style="color:white;">O elige una foto predeterminada:</label>
+      <label style="color:var(--text-dark);">O elige una foto predeterminada:</label>
       <div class="avatar-grid" id="avatarGrid"></div>
       <button id="saveProfileBtn" class="btn btn-primary">Guardar cambios</button>
       <button id="closeModalBtn" class="btn btn-outline">Cancelar</button>
     </div>
   </div>
 
-  <!-- WhatsApp flotante -->
-  <div class="whatsapp-container">
-    <a href="#" class="whatsapp-float" id="whatsappBtn">
-      <i class="fab fa-whatsapp"></i>
-    </a>
-  </div>
-
+  <!-- Toast -->
   <div id="toast" class="toast-message" style="display:none;"></div>
 
   <!-- Firebase Compat -->
