@@ -17,11 +17,8 @@
 
 body {
   font-family: var(--font-main);
-  /* ===== FONDO CON DEGRADADO Y PATRÓN CORREGIDO ===== */
   background: 
-    /* Patrón de ondas (inspirado en costas y lagos de Nicaragua) */
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cpath d='M10 40 Q30 20 50 40 T90 40' stroke='rgba(255,255,255,0.03)' stroke-width='2' fill='none'/%3E%3Cpath d='M10 70 Q30 50 50 70 T90 70' stroke='rgba(255,255,255,0.02)' stroke-width='2' fill='none'/%3E%3Cpath d='M10 100 Q30 80 50 100 T90 100' stroke='rgba(164,199,55,0.02)' stroke-width='1.5' fill='none'/%3E%3C/svg%3E"),
-    /* Degradado sutil */
     radial-gradient(ellipse at 20% 50%, rgba(35, 32, 73, 0.5) 0%, transparent 70%),
     radial-gradient(ellipse at 80% 20%, rgba(164, 199, 55, 0.08) 0%, transparent 50%),
     radial-gradient(ellipse at 50% 100%, rgba(108, 99, 255, 0.05) 0%, transparent 60%),
@@ -123,7 +120,7 @@ body {
 .btn-icon { background: rgba(255,255,255,0.1); border: none; color: #fff; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; }
 
 /* ============================================================
-   CATEGORÍAS RÁPIDAS CON SCROLL MEJORADO
+   CATEGORÍAS RÁPIDAS
    ============================================================ */
 .quick-categories-wrapper {
     position: relative;
@@ -146,7 +143,6 @@ body {
     display: none;
 }
 
-/* INDICADOR DE DESVANECIMIENTO AL FINAL */
 .quick-categories-wrapper::after {
     content: '';
     position: absolute;
@@ -159,7 +155,6 @@ body {
     border-radius: 0 12px 12px 0;
 }
 
-/* INDICADOR DE "MÁS OPCIONES" CON FLECHA ANIMADA */
 .scroll-indicator {
     position: absolute;
     right: 4px;
@@ -251,7 +246,7 @@ body {
     transform: scale(0.95);
 }
 
-/* ===== PERFIL WRAPPER ===== */
+/* ===== PERFIL ===== */
 .profile-wrapper { margin-bottom: 2rem; }
 .profile-card {
   display: flex; justify-content: space-between; align-items: center;
@@ -304,7 +299,7 @@ body {
   font-family: var(--font-main);
 }
 
-/* ===== DESTINOS POPULARES ===== */
+/* ===== DESTINOS ===== */
 .section-header { display: flex; justify-content: space-between; align-items: center; margin: 1.5rem 0 1rem; }
 .section-header h2 { 
   font-size: 1.2rem; font-weight: 700; 
@@ -334,9 +329,7 @@ body {
   justify-content: flex-end;
   height: 100%;
 }
-.card-overlay * {
-    pointer-events: auto;
-}
+.card-overlay * { pointer-events: auto; }
 .card-overlay h3 {
   font-size: 16px; font-weight: 700; margin-bottom: 2px;
   text-shadow: 0 2px 4px rgba(0,0,0,0.3);
@@ -346,9 +339,7 @@ body {
   text-shadow: 0 1px 3px rgba(0,0,0,0.3);
 }
 
-/* ============================================================
-   BOTÓN VISITAR CON RIPPLE EFFECT
-   ============================================================ */
+/* ===== BOTÓN VISITAR ===== */
 .destination-card .btn-visitar {
     display: inline-flex !important;
     align-items: center !important;
@@ -372,7 +363,6 @@ body {
     overflow: hidden !important;
 }
 
-/* RIPPLE EFFECT */
 .destination-card .btn-visitar::after {
     content: '';
     position: absolute;
@@ -415,7 +405,7 @@ body {
     box-shadow: 0 2px 10px rgba(164, 199, 55, 0.3) !important;
 }
 
-/* ===== TIPS PINOLEROS ===== */
+/* ===== TIPS ===== */
 .tips-section {
     background: rgba(255, 255, 255, 0.03);
     border-radius: 24px;
@@ -575,7 +565,7 @@ body {
     transform: translateX(4px);
 }
 
-/* ===== MODAL PARA DETALLES DE TIPS ===== */
+/* ===== MODAL TIPS ===== */
 .tip-modal {
     display: none;
     position: fixed;
@@ -683,7 +673,7 @@ body {
     margin-top: 8px;
 }
 
-/* ===== JUEGOS GRID ===== */
+/* ===== JUEGOS ===== */
 .games-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
 .game-card {
   background: var(--bg-card); border-radius: 20px; padding: 16px;
@@ -732,7 +722,7 @@ body {
 .nav-map i { color: #232049 !important; font-size: 1.6rem; margin: 0; }
 .nav-map span { display: none; }
 
-/* ===== MODAL ===== */
+/* ===== MODAL PERFIL ===== */
 .modal-overlay {
   display: none; position: fixed; z-index: 2000; top: 0; left: 0; width: 100%; height: 100%;
   background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); align-items: center; justify-content: center;
@@ -760,10 +750,9 @@ body {
 }
 
 /* ============================================================
-   BOTONES FLOTANTES UNIFICADOS (WHATSAPP + IA)
+   BOTONES FLOTANTES UNIFICADOS: WHATSAPP ARRIBA - IA ABAJO
    ============================================================ */
 
-/* Contenedor que agrupa y alinea los botones */
 .floating-buttons-container {
   position: fixed;
   bottom: 100px;
@@ -775,7 +764,6 @@ body {
   z-index: 999;
 }
 
-/* Estilo base para AMBOS botones (mismo tamaño y forma) */
 .floating-btn {
   width: 60px !important;
   height: 60px !important;
@@ -792,13 +780,11 @@ body {
   cursor: pointer !important;
 }
 
-/* Efecto hover para ambos */
 .floating-btn:hover {
   transform: scale(1.1) translateY(-4px) !important;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4) !important;
 }
 
-/* Color específico para WhatsApp */
 .whatsapp-btn {
   background: linear-gradient(135deg, #25D366, #128C7E) !important;
   box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4) !important;
@@ -808,11 +794,7 @@ body {
   box-shadow: 0 8px 30px rgba(37, 211, 102, 0.6) !important;
 }
 
-/* ============================================================
-   ESTILOS PARA EL BOTÓN DE DIFY (heredan los estilos base)
-   ============================================================ */
-
-/* Posicionamos el botón de Dify dentro de nuestro contenedor */
+/* ===== ESTILOS DIFY (hereda de .floating-btn) ===== */
 #dify-chatbot-bubble-button-container {
   position: static !important;
   display: flex !important;
@@ -822,7 +804,6 @@ body {
   height: auto !important;
 }
 
-/* Aplicamos los mismos estilos de .floating-btn al botón de Dify */
 #dify-chatbot-bubble-button {
   width: 60px !important;
   height: 60px !important;
@@ -841,13 +822,11 @@ body {
   z-index: auto !important;
 }
 
-/* Hover para el botón de Dify */
 #dify-chatbot-bubble-button:hover {
   transform: scale(1.1) translateY(-4px) !important;
   box-shadow: 0 8px 30px rgba(164, 199, 55, 0.6) !important;
 }
 
-/* Tamaño del icono SVG dentro del botón de Dify */
 #dify-chatbot-bubble-button svg {
   width: 28px !important;
   height: 28px !important;
@@ -855,9 +834,7 @@ body {
   fill: none !important;
 }
 
-/* ============================================================
-   VENTANA DEL CHAT - Aparece encima del botón IA
-   ============================================================ */
+/* ===== VENTANA DEL CHAT ===== */
 #dify-chatbot-bubble-window {
   width: 24rem !important;
   height: 40rem !important;
@@ -872,141 +849,44 @@ body {
   background: #0b0d17 !important;
 }
 
-/* Botón de cerrar */
 #dify-chatbot-bubble-close {
   background-color: #232049 !important;
 }
 
-/* Encabezado del chat */
 .dify-chatbot-bubble-header {
   background: linear-gradient(135deg, #232049, #a287be) !important;
 }
 
 /* ============================================================
-   ANIMACIONES Y RESPONSIVE
+   RESPONSIVE
    ============================================================ */
-@keyframes categorySlide {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.quick-categories .category-item {
-    animation: categorySlide 0.4s ease forwards;
-    opacity: 0;
-}
-
-.quick-categories .category-item:nth-child(1) { animation-delay: 0.05s; }
-.quick-categories .category-item:nth-child(2) { animation-delay: 0.1s; }
-.quick-categories .category-item:nth-child(3) { animation-delay: 0.15s; }
-.quick-categories .category-item:nth-child(4) { animation-delay: 0.2s; }
-.quick-categories .category-item:nth-child(5) { animation-delay: 0.25s; }
-.quick-categories .category-item:nth-child(6) { animation-delay: 0.3s; }
-.quick-categories .category-item:nth-child(7) { animation-delay: 0.35s; }
-
-.no-results-message {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 40px 20px;
-    background: rgba(255, 255, 255, 0.03);
-    border-radius: 24px;
-    margin: 20px 0;
-    border: 2px dashed rgba(255, 255, 255, 0.05);
-}
-
-.no-results-message p {
-    color: rgba(255, 255, 255, 0.7);
-    margin: 8px 0;
-    font-weight: 500;
-}
-
 @media (max-width: 480px) {
-    .tips-section {
-        padding: 16px;
-    }
+  .floating-buttons-container {
+    bottom: 90px;
+    right: 16px;
+    gap: 10px;
+  }
 
-    .tip-card {
-        padding: 12px 14px;
-    }
+  .floating-btn {
+    width: 52px !important;
+    height: 52px !important;
+    font-size: 24px !important;
+  }
 
-    .tip-icon {
-        width: 40px;
-        height: 40px;
-        font-size: 1.4rem;
-    }
+  #dify-chatbot-bubble-button {
+    width: 52px !important;
+    height: 52px !important;
+  }
 
-    .tip-content h4 {
-        font-size: 0.85rem;
-    }
+  #dify-chatbot-bubble-button svg {
+    width: 24px !important;
+    height: 24px !important;
+  }
 
-    .tip-content p {
-        font-size: 0.7rem;
-    }
-
-    .tip-modal-content {
-        margin: 20% auto;
-        padding: 20px;
-    }
-
-    .quick-categories {
-        gap: 8px;
-        padding: 4px 4px 16px 4px;
-    }
-
-    .category-item {
-        padding: 8px 14px;
-        min-width: 60px;
-    }
-
-    .category-item i {
-        font-size: 1.1rem;
-    }
-
-    .category-item span {
-        font-size: 0.55rem;
-    }
-
-    .scroll-indicator {
-        width: 28px;
-        height: 28px;
-        font-size: 12px;
-        right: 2px;
-    }
-
-    /* Ajustes responsive para botones flotantes */
-    .floating-buttons-container {
-        bottom: 90px;
-        right: 16px;
-        gap: 10px;
-    }
-
-    .floating-btn {
-        width: 52px !important;
-        height: 52px !important;
-        font-size: 24px !important;
-    }
-
-    #dify-chatbot-bubble-button {
-        width: 52px !important;
-        height: 52px !important;
-    }
-
-    #dify-chatbot-bubble-button svg {
-        width: 24px !important;
-        height: 24px !important;
-    }
-
-    #dify-chatbot-bubble-window {
-        width: 20rem !important;
-        height: 32rem !important;
-        bottom: 160px !important;
-        right: 16px !important;
-    }
+  #dify-chatbot-bubble-window {
+    width: 20rem !important;
+    height: 32rem !important;
+    bottom: 160px !important;
+    right: 16px !important;
+  }
 }
