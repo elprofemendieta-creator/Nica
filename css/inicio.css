@@ -214,8 +214,15 @@ body {
   font-size: 0.9rem; font-weight: 600; color: #fff; text-decoration: none;
   transition: 0.3s;
 }
-.gradient-purple { background: linear-gradient(135deg, var(--accent-purple), var(--secondary-purple)); }
-.gradient-orange { background: linear-gradient(135deg, #f9a826, #f57c00); }
+/* AMBOS BOTONES USAN EL MISMO GRADIENTE MORADO */
+.gradient-purple { 
+  background: linear-gradient(135deg, var(--accent-purple), var(--secondary-purple)); 
+}
+.gradient-purple:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(162, 135, 190, 0.4);
+}
+/* ELIMINAMOS gradient-orange ya que no se usa */
 
 /* ===== DESTINOS POPULARES ===== */
 .section-header { display: flex; justify-content: space-between; align-items: center; margin: 1.5rem 0 1rem; }
@@ -258,15 +265,7 @@ body {
   font-size: 11px; opacity: 0.9; margin-bottom: 4px;
   text-shadow: 0 1px 3px rgba(0,0,0,0.3);
 }
-.rating {
-  display: inline-flex; align-items: center; gap: 4px;
-  background: rgba(35, 32, 73, 0.6);
-  backdrop-filter: blur(4px);
-  padding: 2px 12px; border-radius: 20px;
-  font-size: 11px; font-weight: 600; color: #ffd700;
-  width: fit-content;
-  border: 1px solid rgba(255, 215, 0, 0.2);
-}
+/* ELIMINAMOS LA CLASE rating ya que no se usa */
 
 /* ===== BOTÓN VISITAR MEJORADO ===== */
 .destination-card .btn-visitar {
