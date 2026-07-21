@@ -1,3 +1,56 @@
+/* ============================================================
+   PREGUNTAS Y RESPUESTAS - Nicaragua
+   Paleta: #232049, #a4c737, #a287be, #fbfbfb
+   Fuentes: Myriad Pro, Cascadia Mono Light
+   ============================================================ */
+
+/* ===== CARGA DE FUENTES ===== */
+@font-face {
+    font-family: 'Myriad Pro';
+    src: local('Myriad Pro'), local('MyriadPro-Regular');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Myriad Pro';
+    src: local('Myriad Pro Bold'), local('MyriadPro-Bold');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Cascadia Mono Light';
+    src: local('Cascadia Mono Light'), local('CascadiaMono-Light');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* ===== VARIABLES ===== */
+:root {
+    --primary: #a4c737;
+    --primary-dark: #8ab32e;
+    --primary-light: #c0e05a;
+    --secondary: #a287be;
+    --secondary-dark: #8a73a8;
+    --bg-dark: #232049;
+    --bg-light: #fbfbfb;
+    --text-light: #fbfbfb;
+    --text-dark: #232049;
+    --text-muted: rgba(251, 251, 251, 0.7);
+    
+    --font-title: 'Myriad Pro', 'Poppins', 'Segoe UI', sans-serif;
+    --font-body: 'Myriad Pro', 'Inter', 'Segoe UI', sans-serif;
+    --font-mono: 'Cascadia Mono Light', 'Cascadia Mono', monospace;
+    
+    --gold: #ffd700;
+    --gold-dark: #cc9900;
+    --gold-light: #ffed4a;
+}
+
 /* ===== RESET ===== */
 * {
     box-sizing: border-box;
@@ -6,8 +59,8 @@
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, sans-serif;
-    background: #0a0a0a;
+    font-family: var(--font-body);
+    background: var(--bg-dark);
     min-height: 100vh;
     display: flex;
     justify-content: center;
@@ -22,15 +75,14 @@ body {
     border-radius: 30px;
     overflow: hidden;
     position: relative;
-    border: 3px solid #ffd700;
-    box-shadow: 0 0 60px #ffd70033;
+    border: 3px solid var(--primary);
+    box-shadow: 0 0 60px rgba(164, 199, 55, 0.2);
 }
 
 /* ===== IMAGEN DE FONDO ===== */
 .game-bg {
     position: relative;
     width: 100%;
-    /* ✅ RUTA CORREGIDA: sube un nivel con ../ */
     background-image: url('../../1782677408840.png');
     background-size: 100% 100%;
     background-position: center;
@@ -49,7 +101,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.25);
+    background: rgba(35, 32, 73, 0.5);
     pointer-events: none;
     z-index: 0;
 }
@@ -67,21 +119,24 @@ body {
 }
 
 .header .title {
+    font-family: var(--font-title);
     font-size: 2.2rem;
     font-weight: 900;
-    color: #ffd700;
-    text-shadow: 0 0 30px #ffd70044, 0 4px 8px rgba(0, 0, 0, 0.9);
+    background: linear-gradient(135deg, var(--primary), var(--gold));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: none;
     letter-spacing: 4px;
-    font-family: 'Arial Black', sans-serif;
 }
 
 .header .subtitle {
-    color: #ffd700aa;
+    font-family: var(--font-body);
+    color: var(--text-muted);
     font-size: 0.8rem;
     letter-spacing: 6px;
     text-transform: uppercase;
     margin-top: -4px;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
 }
 
 /* ===== PREMIO MAYOR ===== */
@@ -91,19 +146,19 @@ body {
 }
 
 .prize-mayor .label {
-    color: #ccc;
+    font-family: var(--font-body);
+    color: var(--text-muted);
     font-size: 0.65rem;
     letter-spacing: 3px;
     text-transform: uppercase;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
 }
 
 .prize-mayor .amount {
-    color: #ffd700;
+    font-family: var(--font-mono);
+    color: var(--gold);
     font-size: 1.8rem;
     font-weight: 900;
-    text-shadow: 0 0 40px #ffd70044, 0 4px 12px rgba(0, 0, 0, 0.9);
-    font-family: 'Courier New', monospace;
+    text-shadow: 0 0 40px rgba(255, 215, 0, 0.2);
     letter-spacing: 2px;
     line-height: 1.1;
 }
@@ -111,20 +166,21 @@ body {
 /* ===== GANADORES ===== */
 .ganadores {
     text-align: center;
-    color: #bbb;
+    font-family: var(--font-body);
+    color: var(--text-muted);
     font-size: 0.8rem;
     letter-spacing: 2px;
     margin-bottom: 10px;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
 }
 
 .ganadores span {
-    color: #ffd700;
+    font-family: var(--font-mono);
+    color: var(--gold);
     font-weight: 900;
     font-size: 1.2rem;
 }
 
-/* ===== ESPACIO DEL DINERO (TRANSPARENTE) ===== */
+/* ===== ESPACIO DEL DINERO ===== */
 .prize-display {
     background: transparent;
     border-radius: 15px;
@@ -141,20 +197,20 @@ body {
 }
 
 .prize-display .label {
-    color: #ccb088;
+    font-family: var(--font-body);
+    color: var(--text-muted);
     font-size: 0.6rem;
     text-transform: uppercase;
     letter-spacing: 4px;
     margin-bottom: 2px;
-    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.9);
 }
 
 .prize-display .amount {
-    color: #ffd700;
+    font-family: var(--font-mono);
+    color: var(--gold);
     font-size: 3.8rem;
     font-weight: 900;
-    text-shadow: 0 0 60px #ffd70044, 0 0 120px #ffd70022, 0 4px 20px rgba(0, 0, 0, 0.9);
-    font-family: 'Courier New', monospace;
+    text-shadow: 0 0 60px rgba(255, 215, 0, 0.2);
     letter-spacing: 3px;
     transition: all 0.3s ease;
     line-height: 1.1;
@@ -167,75 +223,74 @@ body {
 @keyframes pulseGold {
     0% {
         transform: scale(1);
-        text-shadow: 0 0 60px #ffd70044;
     }
     50% {
         transform: scale(1.1);
-        text-shadow: 0 0 80px #ffd700aa, 0 0 160px #ffd70044;
+        text-shadow: 0 0 80px rgba(255, 215, 0, 0.4);
     }
     100% {
         transform: scale(1);
-        text-shadow: 0 0 60px #ffd70044;
     }
 }
 
 .prize-display .sub-info {
-    color: #aa9a8a;
+    font-family: var(--font-body);
+    color: var(--text-muted);
     font-size: 0.6rem;
     letter-spacing: 2px;
     margin-top: 4px;
-    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.9);
 }
 
 .prize-display .sub-info span {
-    color: #ffd700aa;
+    color: var(--gold);
 }
 
 /* ===== PROGRESO ===== */
 .progress-bar {
     width: 92%;
     height: 4px;
-    background: rgba(42, 32, 22, 0.7);
+    background: rgba(255, 255, 255, 0.1);
     border-radius: 10px;
     margin: 0 auto 12px;
     overflow: hidden;
-    backdrop-filter: blur(4px);
 }
 
 .progress-bar .fill {
     height: 100%;
-    background: linear-gradient(90deg, #ffd700, #ffaa00);
+    background: linear-gradient(90deg, var(--primary), var(--gold));
     border-radius: 10px;
     transition: width 0.6s ease;
     width: 0%;
-    box-shadow: 0 0 20px #ffd70044;
+    box-shadow: 0 0 20px rgba(164, 199, 55, 0.3);
 }
 
 /* ===== PREGUNTA ===== */
 .question-area {
-    background: rgba(10, 8, 6, 0.8);
+    background: rgba(35, 32, 73, 0.85);
     backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border-radius: 18px;
     padding: 18px 20px 16px;
-    border: 1px solid #ffd70033;
+    border: 1px solid rgba(164, 199, 55, 0.2);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
 }
 
 .question-number {
-    color: #aa9a8a;
+    font-family: var(--font-mono);
+    color: var(--text-muted);
     font-size: 0.7rem;
     letter-spacing: 2px;
     margin-bottom: 2px;
 }
 
 .question-text {
-    color: #f0e8d0;
+    font-family: var(--font-title);
+    color: var(--text-light);
     font-size: 1.2rem;
     font-weight: 700;
     margin-bottom: 14px;
     line-height: 1.4;
     min-height: 50px;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
 }
 
 .options {
@@ -245,27 +300,28 @@ body {
 }
 
 .option {
-    background: rgba(42, 32, 22, 0.8);
+    background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(4px);
-    border: 2px solid #5a4a3a;
+    -webkit-backdrop-filter: blur(4px);
+    border: 2px solid rgba(255, 255, 255, 0.08);
     border-radius: 12px;
     padding: 10px 14px;
+    font-family: var(--font-body);
     font-size: 0.9rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s;
-    color: #f0e8d0;
+    transition: all 0.2s ease;
+    color: var(--text-light);
     display: flex;
     align-items: center;
     gap: 8px;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .option:hover {
-    border-color: #ffd70088;
-    background: rgba(51, 41, 31, 0.9);
+    border-color: var(--primary);
+    background: rgba(164, 199, 55, 0.1);
     transform: translateY(-2px);
-    box-shadow: 0 4px 20px rgba(255, 215, 0, 0.1);
+    box-shadow: 0 4px 20px rgba(164, 199, 55, 0.1);
 }
 
 .option:active {
@@ -273,8 +329,9 @@ body {
 }
 
 .option .letter {
-    background: rgba(68, 58, 48, 0.8);
-    color: #ffd700;
+    font-family: var(--font-mono);
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--primary);
     border-radius: 50%;
     width: 26px;
     height: 26px;
@@ -287,25 +344,25 @@ body {
 }
 
 .option.correct {
-    background: rgba(26, 90, 58, 0.9);
-    border-color: #4aaa6a;
-    color: #fff;
+    background: rgba(164, 199, 55, 0.2);
+    border-color: var(--primary);
+    color: var(--text-light);
 }
 
 .option.correct .letter {
-    background: rgba(10, 58, 42, 0.9);
-    color: #7aff7a;
+    background: var(--primary);
+    color: var(--bg-dark);
 }
 
 .option.wrong {
-    background: rgba(90, 26, 26, 0.9);
-    border-color: #aa4a4a;
-    color: #fff;
+    background: rgba(211, 47, 47, 0.2);
+    border-color: #d32f2f;
+    color: var(--text-light);
 }
 
 .option.wrong .letter {
-    background: rgba(58, 10, 10, 0.9);
-    color: #ff7a7a;
+    background: #d32f2f;
+    color: white;
 }
 
 .option.disabled {
@@ -323,27 +380,27 @@ body {
 }
 
 .actions button {
+    font-family: var(--font-body);
     padding: 8px 16px;
     font-size: 0.8rem;
     font-weight: 800;
-    border: 2px solid #ffd70055;
+    border: 2px solid rgba(255, 255, 255, 0.08);
     border-radius: 50px;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.2s ease;
     display: flex;
     align-items: center;
     gap: 6px;
-    background: rgba(26, 20, 14, 0.85);
-    backdrop-filter: blur(4px);
-    color: #f0e8d0;
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text-light);
     letter-spacing: 0.5px;
 }
 
 .actions button:hover {
-    border-color: #ffd700;
-    background: rgba(42, 32, 22, 0.9);
+    border-color: var(--primary);
+    background: rgba(164, 199, 55, 0.1);
     transform: translateY(-2px);
-    box-shadow: 0 4px 20px rgba(255, 215, 0, 0.1);
+    box-shadow: 0 4px 20px rgba(164, 199, 55, 0.1);
 }
 
 .actions button:active {
@@ -357,28 +414,45 @@ body {
 }
 
 .btn-next {
-    background: rgba(26, 90, 58, 0.85);
-    border-color: #4aaa6a;
+    background: rgba(164, 199, 55, 0.15);
+    border-color: var(--primary);
+}
+
+.btn-next:hover {
+    background: rgba(164, 199, 55, 0.25);
 }
 
 .btn-reset {
-    background: rgba(90, 26, 26, 0.85);
-    border-color: #aa4a4a;
+    background: rgba(162, 135, 190, 0.15);
+    border-color: var(--secondary);
+}
+
+.btn-reset:hover {
+    background: rgba(162, 135, 190, 0.25);
 }
 
 .btn-hint {
-    background: rgba(26, 58, 90, 0.85);
-    border-color: #4a7a9a;
+    background: rgba(164, 199, 55, 0.08);
+    border-color: rgba(164, 199, 55, 0.3);
+}
+
+.btn-hint:hover {
+    background: rgba(164, 199, 55, 0.2);
 }
 
 .btn-50 {
-    background: rgba(58, 58, 26, 0.85);
-    border-color: #9a9a4a;
+    background: rgba(162, 135, 190, 0.08);
+    border-color: rgba(162, 135, 190, 0.3);
+}
+
+.btn-50:hover {
+    background: rgba(162, 135, 190, 0.2);
 }
 
 .btn-50 .cost {
+    font-family: var(--font-mono);
     font-size: 0.6rem;
-    color: #ffd700aa;
+    color: var(--gold);
     background: rgba(0, 0, 0, 0.3);
     padding: 1px 8px;
     border-radius: 10px;
@@ -387,14 +461,16 @@ body {
 
 /* ===== PISTA ===== */
 .hint-box {
-    background: rgba(26, 20, 14, 0.8);
+    background: rgba(35, 32, 73, 0.6);
     backdrop-filter: blur(4px);
-    border-left: 4px solid #ffd700;
+    -webkit-backdrop-filter: blur(4px);
+    border-left: 4px solid var(--primary);
     padding: 8px 14px;
     margin-top: 12px;
     border-radius: 10px;
+    font-family: var(--font-body);
     font-size: 0.85rem;
-    color: #bbaa9a;
+    color: var(--text-muted);
     min-height: 38px;
     display: flex;
     align-items: center;
@@ -407,6 +483,7 @@ body {
 
 .hint-box .hint-text {
     font-style: italic;
+    color: var(--text-light);
 }
 
 /* ===== MODAL ===== */
@@ -416,8 +493,9 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.92);
+    background: rgba(35, 32, 73, 0.92);
     backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     display: none;
     justify-content: center;
     align-items: center;
@@ -441,14 +519,14 @@ body {
 }
 
 .modal-content {
-    background: #1a1410;
+    background: var(--bg-dark);
     border-radius: 40px;
     padding: 35px 40px;
     max-width: 460px;
     width: 90%;
     text-align: center;
-    border: 3px solid #ffd700;
-    box-shadow: 0 0 80px #ffd70033;
+    border: 3px solid var(--primary);
+    box-shadow: 0 0 80px rgba(164, 199, 55, 0.15);
     animation: popModal 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
@@ -469,49 +547,56 @@ body {
 }
 
 .modal-content h2 {
+    font-family: var(--font-title);
     font-size: 1.8rem;
-    color: #ffd700;
+    background: linear-gradient(135deg, var(--primary), var(--gold));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
     margin-bottom: 2px;
 }
 
 .modal-content .subtitle {
+    font-family: var(--font-body);
     font-size: 1rem;
-    color: #bbaa9a;
+    color: var(--text-muted);
     margin-bottom: 4px;
 }
 
 .modal-content .prize-amount {
+    font-family: var(--font-mono);
     font-size: 2.5rem;
     font-weight: 900;
-    color: #ffd700;
-    text-shadow: 0 0 40px #ffd70044;
+    color: var(--gold);
+    text-shadow: 0 0 40px rgba(255, 215, 0, 0.2);
     margin: 6px 0;
-    font-family: 'Courier New', monospace;
 }
 
 .modal-content .details {
+    font-family: var(--font-body);
     font-size: 0.85rem;
-    color: #998878;
+    color: var(--text-muted);
     margin-bottom: 16px;
     line-height: 1.6;
 }
 
 .modal-content .btn-play-again {
-    background: #ffd700;
-    color: #0a0a0a;
+    font-family: var(--font-title);
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: var(--bg-dark);
     border: none;
     padding: 10px 32px;
     font-size: 1rem;
     font-weight: 900;
     border-radius: 50px;
     cursor: pointer;
-    transition: all 0.2s;
-    box-shadow: 0 0 30px #ffd70044;
+    transition: all 0.2s ease;
+    box-shadow: 0 0 30px rgba(164, 199, 55, 0.2);
 }
 
 .modal-content .btn-play-again:hover {
     transform: scale(1.05);
-    box-shadow: 0 0 50px #ffd70066;
+    box-shadow: 0 0 50px rgba(164, 199, 55, 0.3);
 }
 
 /* ===== RESPONSIVE ===== */
