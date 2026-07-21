@@ -192,7 +192,223 @@ function actualizarPerfil(data, user) {
     modalProfileImage.src = avatarUrl;
   }
 }
+//== target de perfil modificada=== 
+// Imágenes predeterminadas
+const DEFAULT_AVATARS = [
+  "https://imgur.com/CFcEYQZ.jpg",
+  "https://imgur.com/rf8HVpD.jpg",
+  "https://imgur.com/LmBBFaT.jpg",
+  "https://us.123rf.com/450wm/yupiramos/yupiramos2009/yupiramos200902259/154588033-avatar-de-un-dise%C3%B1o-de-mujer-de-moda-ni%C3%B1a-persona-humana-humana-y-tema-de-belleza-ilustraci%C3%B3n.jpg?ver=6",
+  "https://randomuser.me/api/portraits/lego/1.jpg",
+  "https://randomuser.me/api/portraits/lego/2.jpg",
+  "https://cdni.iconscout.com/illustration/free/thumb/free-chica-negro-illustration-svg-download-png-1415695.png",
+  "https://img.magnific.com/vector-gratis/ilustracion-empresaria_53876-5857.jpg?semt=ais_hybrid&w=740&q=80"
+];
+const FALLBACK = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
 
+let fotoTemporal = null;
+let isSaving = false;
+
+function showToast(msg, isError = false, duration = 5000) {
+  toastDiv.textContent = msg;
+  toastDiv.style.display = 'block';
+  toastDiv.style.background = isError ? 'rgba(220,53,69,0.95)' : 'rgba(0,0,0,0.85)';
+  clearTimeout(toastDiv._timeout);
+  toastDiv._timeout = setTimeout(() => toastDiv.style.display = 'none', duration);
+}
+
+// ===== COMPRESIÓN DE IMAGEN =====
+function compressImage(file) {
+  return new Promise((resolve, reject) => {
+    try {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (e) => {
+        const img = new Image();
+        img.src = e.target.result;
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          let width = img.width;
+          let height = img.height;
+          const MAX_SIZE = 600;
+          if (width > MAX_SIZE || height > MAX_SIZE) {
+            if (width > height) {
+              height = height * (MAX_SIZE / width);
+              width = MAX_SIZE;
+            } else {
+              width = width * (MAX_SIZE / height);
+              height = MAX_SIZE;
+            }
+          }
+          canvas.width = Math.round(width);
+          canvas.height = Math.round(height);
+          const ctx = canvas.getContext('2d');
+          ctx.imageSmoothingEnabled = true;
+          ctx.imageSmoothingQuality = 'high';
+          ctx.drawImage(img, 0, 0, width, height);
+          canvas.toBlob((blob) => {
+            if (blob) {
+              const compressedFile = new File(
+                [blob],
+                file.name.replace(/\.[^.]+$/, '.jpg'),
+                { type: 'image/jpeg', lastModified: Date.now() }
+              );
+              resolve(compressedFile);
+            } else {
+              reject(new Error('Error al comprimir la imagen'));
+            }
+          }, 'image/jpeg', 0.8);
+        };
+        img.onerror = () => reject(new Error('Error al cargar la imagen'));
+      };
+      reader.onerror = () => reject(new Error('Error al leer el archivo'));
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+
+// ===== SUBIR A IMGBB =====
+async function uploadToImgBB(file) {
+  const reader = new FileReader();
+  const dataUrl = await new Promise((resolve, reject) => {
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+  const base64 = dataUrl.split(',')[1];
+
+  const formData = new FormData();
+  formData.append('key', '241be8181060d6203088a57a14c355fa');
+  formData.append('image', base64);
+
+  const response = await fetch('https://api.imgbb.com/1/upload', {
+    method: 'POST',
+    body: formData,
+  });
+  if (!response.ok) {
+    throw new Error('Error al subir a ImgBB (código ' + response.status + ')');
+  }
+  const json = await response.json();
+  if (!json.success) {
+    throw new Error(json.error?.message || 'Error desconocido en ImgBB');
+  }
+  return json.data.url;
+}
+
+// ===== GUARDAR EN FIRESTORE =====
+async function guardarEnFirestore(user, extra = {}) {
+  const ref = doc(db, 'usuarios', user.uid);
+  const snap = await getDoc(ref);
+  if (!snap.exists()) {
+    await setDoc(ref, {
+      uid: user.uid,
+      email: user.email,
+      nombre: extra.nombre || user.displayName || user.email.split('@')[0],
+      fotoURL: extra.fotoURL || user.photoURL || DEFAULT_AVATARS[0],
+      puntos: 0,
+      fechaRegistro: new Date()
+    });
+  }
+}
+
+// ===== CARGAR PERFIL =====
+async function cargarPerfil(user) {
+  if (!user) return;
+  const ref = doc(db, 'usuarios', user.uid);
+  const snap = await getDoc(ref);
+  let nombre, fotoURL;
+  if (snap.exists()) {
+    const data = snap.data();
+    nombre = data.nombre || user.displayName || user.email.split('@')[0];
+    fotoURL = data.fotoURL || user.photoURL || FALLBACK;
+  } else {
+    nombre = user.displayName || user.email.split('@')[0];
+    fotoURL = user.photoURL || FALLBACK;
+    await guardarEnFirestore(user, { nombre, fotoURL });
+  }
+  userNameSpan.textContent = nombre;
+  profileNameDisplay.textContent = nombre;
+  profileAvatar.src = fotoURL;
+  profileAvatar.onerror = () => profileAvatar.src = FALLBACK;
+}
+
+// ===== RENDER AVATARES PREDETERMINADOS =====
+function renderAvatars(selected) {
+  avatarGrid.innerHTML = '';
+  DEFAULT_AVATARS.forEach(url => {
+    const img = document.createElement('img');
+    img.src = url;
+    img.className = 'avatar-pred';
+    if (selected === url) img.classList.add('selected');
+    img.onclick = () => {
+      document.querySelectorAll('.avatar-pred').forEach(a => a.classList.remove('selected'));
+      img.classList.add('selected');
+      fotoTemporal = url;
+      modalProfileImage.src = url;
+      uploadPhoto.value = '';
+    };
+    avatarGrid.appendChild(img);
+  });
+}
+
+// ===== GUARDAR PERFIL =====
+async function guardarPerfil(nuevoNombre, nuevaFoto) {
+  const user = auth.currentUser;
+  if (!user) {
+    showToast('❌ Usuario no autenticado', true);
+    return;
+  }
+  if (isSaving) return;
+  isSaving = true;
+  saveProfileBtn.disabled = true;
+  saveProfileBtn.innerHTML = '<span class="loading-spinner"></span> Guardando...';
+
+  try {
+    let fotoURL = null;
+
+    if (nuevaFoto instanceof File) {
+      showToast('📤 Subiendo imagen a ImgBB...', false, 5000);
+      const compressed = await compressImage(nuevaFoto);
+      fotoURL = await uploadToImgBB(compressed);
+    } else if (typeof nuevaFoto === 'string' && nuevaFoto.startsWith('http')) {
+      fotoURL = nuevaFoto;
+    } else {
+      const ref = doc(db, 'usuarios', user.uid);
+      const snap = await getDoc(ref);
+      fotoURL = snap.exists() ? snap.data().fotoURL : null;
+    }
+
+    if (nuevoNombre && nuevoNombre !== user.displayName) {
+      await updateProfile(user, { displayName: nuevoNombre });
+    }
+
+    const ref = doc(db, 'usuarios', user.uid);
+    const updates = {};
+    if (nuevoNombre) updates.nombre = nuevoNombre;
+    if (fotoURL) updates.fotoURL = fotoURL;
+    await updateDoc(ref, updates);
+
+    userNameSpan.textContent = nuevoNombre || user.displayName;
+    profileNameDisplay.textContent = nuevoNombre || user.displayName;
+    if (fotoURL) {
+      profileAvatar.src = fotoURL;
+      profileAvatar.onerror = () => profileAvatar.src = FALLBACK;
+    }
+
+    showToast('✅ Perfil actualizado correctamente');
+    editModal.style.display = 'none';
+  } catch (error) {
+    console.error('Error al guardar perfil:', error);
+    showToast('❌ ' + (error.message || 'Error al guardar'), true, 5000);
+  } finally {
+    isSaving = false;
+    saveProfileBtn.disabled = false;
+    saveProfileBtn.innerHTML = 'Guardar cambios';
+  }
+}
+
+//== usuario end==
 // ===== PASAPORTE DINÁMICO =====
 function actualizarPasaporte(lugares) {
   passportList.innerHTML = '';
