@@ -1,33 +1,7 @@
 // ================================================================
-// app.js - Lógica de autenticación, perfil y estadísticas
-// (Mantiene todas las funciones originales sin cambios)
+// Configuración e inicialización de Firebase (versión compat)
 // ================================================================
 
-import { initializeApp, getApp, getApps } from 'firebase/app';
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  sendPasswordResetEmail,
-  updateProfile,
-  onAuthStateChanged,
-  signOut
-} from 'firebase/auth';
-import {
-  getFirestore,
-  doc,
-  setDoc,
-  getDoc,
-  updateDoc,
-  collection,
-  getDocs,
-  query,
-  orderBy,
-  onSnapshot
-} from 'firebase/firestore';
-import { getStorage, ref, uploadString, getDownloadURL } from 'firebase/storage';
-
-// ===== CONFIGURACIÓN DE FIREBASE =====
 const firebaseConfig = {
   apiKey: "AIzaSyA6jVICuE17KJcO34gE1brMxqWEfNd3Fy0",
   authDomain: "mapa-41b00.firebaseapp.com",
@@ -37,16 +11,12 @@ const firebaseConfig = {
   appId: "1:535032835400:web:68c079cbc3f419eafd177d"
 };
 
-let app;
-if (getApps().length === 0) {
-  app = initializeApp(firebaseConfig);
-} else {
-  app = getApp();
-}
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+const storage = firebase.storage();
 
-const auth = getAuth(app);
-const db = getFirestore(app);
-const storage = getStorage(app);
+console.log('Firebase inicializado (Compat)');
 
 // ===== REFERENCIAS DOM =====
 const authCard = document.getElementById('authCard');
@@ -68,11 +38,8 @@ const profileTrigger = document.getElementById('profileTrigger');
 const editProfileBtn = document.getElementById('editProfileBtn');
 const profileAvatar = document.getElementById('profileAvatar');
 const profileNameDisplay = document.getElementById('profileNameDisplay');
-const userNameSpan = document.getElementById('userName');
 const userPointsDisplay = document.getElementById('userPointsDisplay');
 const positionBadge = document.getElementById('positionBadge');
-
-// Modal
 const editProfileModal = document.getElementById('editProfileModal');
 const modalProfileImage = document.getElementById('modalProfileImage');
 const uploadPhotoIcon = document.getElementById('uploadPhotoIcon');
@@ -81,37 +48,41 @@ const editNameInput = document.getElementById('editNameInput');
 const saveProfileBtn = document.getElementById('saveProfileBtn');
 const closeModalBtn = document.getElementById('closeModalBtn');
 const avatarGrid = document.getElementById('avatarGrid');
-
-// Toast
 const toast = document.getElementById('toast');
+const whatsappBtn = document.getElementById('whatsappBtn');
+const searchInput = document.getElementById('searchInput');
 
-// ===== FUNCIONES AUXILIARES =====
+// ===== FUNCIÓN TOAST =====
 function showToast(msg, duration = 3000) {
   toast.textContent = msg;
   toast.style.display = 'block';
   setTimeout(() => { toast.style.display = 'none'; }, duration);
 }
 
-// ===== AUTENTICACIÓN =====
-
-// Login
-doLoginBtn.addEventListener('click', async () => {
+// ===== EVENTOS DE LOGIN =====
+doLoginBtn.addEventListener('click', function() {
   const email = loginEmail.value.trim();
   const pass = loginPassword.value.trim();
   if (!email || !pass) {
-    showToast('Por favor, completa todos los campos.');
+    showToast('Completa todos los campos.');
     return;
   }
-  try {
-    await signInWithEmailAndPassword(auth, email, pass);
-    showToast('¡Bienvenido de vuelta!');
-  } catch (error) {
-    showToast('Error: ' + error.message);
-  }
+  auth.signInWithEmailAndPassword(email, pass)
+    .then(() => showToast('¡Bienvenido de vuelta!'))
+    .catch(error => showToast('Error: ' + error.message));
 });
 
-// Registro
-doRegisterBtn.addEventListener('click', async () => {
+showRegisterBtn.addEventListener('click', function() {
+  loginForm.style.display = 'none';
+  registerForm.style.display = 'block';
+});
+
+backToLoginBtn.addEventListener('click', function() {
+  registerForm.style.display = 'none';
+  loginForm.style.display = 'block';
+});
+
+doRegisterBtn.addEventListener('click', function() {
   const name = regName.value.trim();
   const email = regEmail.value.trim();
   const pass = regPassword.value.trim();
@@ -123,232 +94,181 @@ doRegisterBtn.addEventListener('click', async () => {
     showToast('La contraseña debe tener al menos 6 caracteres.');
     return;
   }
-  try {
-    const cred = await createUserWithEmailAndPassword(auth, email, pass);
-    // Actualizar nombre en Firebase Auth
-    await updateProfile(cred.user, { displayName: name });
-    // Guardar en Firestore
-    await setDoc(doc(db, 'usuarios', cred.user.uid), {
-      nombre: name,
-      email: email,
-      puntos: 0,
-      avatar: '',
-      createdAt: new Date().toISOString()
-    });
-    showToast('¡Cuenta creada exitosamente!');
-  } catch (error) {
-    showToast('Error: ' + error.message);
-  }
+  auth.createUserWithEmailAndPassword(email, pass)
+    .then((cred) => {
+      return cred.user.updateProfile({ displayName: name })
+        .then(() => {
+          return db.collection('usuarios').doc(cred.user.uid).set({
+            nombre: name,
+            email: email,
+            puntos: 0,
+            avatar: '',
+            createdAt: new Date().toISOString()
+          });
+        });
+    })
+    .then(() => showToast('¡Cuenta creada exitosamente!'))
+    .catch(error => showToast('Error: ' + error.message));
 });
 
-// Mostrar formulario de registro
-showRegisterBtn.addEventListener('click', () => {
-  loginForm.style.display = 'none';
-  registerForm.style.display = 'block';
-});
-
-backToLoginBtn.addEventListener('click', () => {
-  registerForm.style.display = 'none';
-  loginForm.style.display = 'block';
-});
-
-// Recuperar contraseña
-forgotPasswordLink.addEventListener('click', async (e) => {
+forgotPasswordLink.addEventListener('click', function(e) {
   e.preventDefault();
   const email = loginEmail.value.trim();
   if (!email) {
-    showToast('Ingresa tu correo para restablecer la contraseña.');
+    showToast('Ingresa tu correo para restablecer.');
     return;
   }
-  try {
-    await sendPasswordResetEmail(auth, email);
-    showToast('Correo de restablecimiento enviado. Revisa tu bandeja.');
-  } catch (error) {
-    showToast('Error: ' + error.message);
-  }
+  auth.sendPasswordResetEmail(email)
+    .then(() => showToast('Revisa tu correo para restablecer la contraseña.'))
+    .catch(error => showToast('Error: ' + error.message));
 });
 
 // ===== ESTADO DE AUTENTICACIÓN =====
-onAuthStateChanged(auth, async (user) => {
+auth.onAuthStateChanged(function(user) {
+  console.log('onAuthStateChanged:', user ? user.uid : 'null');
   if (user) {
     authCard.style.display = 'none';
     menuSection.style.display = 'block';
 
     // Cargar datos del usuario
-    const userRef = doc(db, 'usuarios', user.uid);
-    const snap = await getDoc(userRef);
-    if (snap.exists()) {
-      const data = snap.data();
-      const nombre = data.nombre || user.displayName || 'Usuario';
-      profileNameDisplay.textContent = nombre;
-      if (userNameSpan) userNameSpan.textContent = nombre;
-      if (data.avatar) {
-        profileAvatar.src = data.avatar;
-        modalProfileImage.src = data.avatar;
-      } else {
-        profileAvatar.src = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(nombre) + '&background=a4c737&color=fff&size=128';
-        modalProfileImage.src = profileAvatar.src;
-      }
-      // Actualizar puntos y posición
-      await updateUserStats(user.uid);
-      // Escuchar cambios en tiempo real
-      onSnapshot(userRef, (docSnap) => {
-        if (docSnap.exists()) {
-          const newData = docSnap.data();
-          const puntos = newData.puntos || 0;
-          userPointsDisplay.textContent = `⭐ ${puntos} puntos`;
-          // Recalcular posición
+    db.collection('usuarios').doc(user.uid).get()
+      .then((docSnap) => {
+        if (docSnap.exists) {
+          const data = docSnap.data();
+          const nombre = data.nombre || user.displayName || 'Usuario';
+          profileNameDisplay.textContent = nombre;
+          if (data.avatar) {
+            profileAvatar.src = data.avatar;
+            modalProfileImage.src = data.avatar;
+          } else {
+            const avatarUrl = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(nombre) + '&background=a4c737&color=fff&size=128';
+            profileAvatar.src = avatarUrl;
+            modalProfileImage.src = avatarUrl;
+          }
+          // Actualizar puntos y posición
           updateUserStats(user.uid);
+        } else {
+          // Crear documento si no existe
+          db.collection('usuarios').doc(user.uid).set({
+            nombre: user.displayName || 'Usuario',
+            email: user.email,
+            puntos: 0,
+            avatar: '',
+            createdAt: new Date().toISOString()
+          });
+          profileNameDisplay.textContent = user.displayName || 'Usuario';
         }
-      });
-    } else {
-      // Crear documento si no existe
-      await setDoc(userRef, {
-        nombre: user.displayName || 'Usuario',
-        email: user.email,
-        puntos: 0,
-        avatar: '',
-        createdAt: new Date().toISOString()
-      });
-      profileNameDisplay.textContent = user.displayName || 'Usuario';
-      if (userNameSpan) userNameSpan.textContent = user.displayName || 'Usuario';
-    }
-
-    // Cargar insignias (ejemplo)
-    loadBadges(user.uid);
-
-    // Cargar destinos (estáticos)
-    // (opcional)
+      })
+      .catch(err => console.error('Error al cargar usuario:', err));
   } else {
     authCard.style.display = 'block';
     menuSection.style.display = 'none';
-    // Limpiar formularios
     loginForm.style.display = 'block';
     registerForm.style.display = 'none';
   }
 });
 
-// ===== ACTUALIZAR ESTADÍSTICAS (puntos y posición) =====
-async function updateUserStats(uid) {
-  try {
-    const userRef = doc(db, 'usuarios', uid);
-    const userSnap = await getDoc(userRef);
-    if (!userSnap.exists()) return;
-    const userData = userSnap.data();
-    const puntos = userData.puntos || 0;
-    userPointsDisplay.textContent = `⭐ ${puntos} puntos`;
+// ===== ACTUALIZAR PUNTOS Y POSICIÓN =====
+function updateUserStats(uid) {
+  db.collection('usuarios').doc(uid).get()
+    .then((docSnap) => {
+      if (!docSnap.exists) return;
+      const data = docSnap.data();
+      const puntos = data.puntos || 0;
+      userPointsDisplay.textContent = '⭐ ' + puntos + ' puntos';
 
-    const q = query(collection(db, 'usuarios'), orderBy('puntos', 'desc'));
-    const querySnap = await getDocs(q);
-    let posicion = 0;
-    let total = 0;
-    querySnap.forEach((doc) => {
-      total++;
-      if (doc.id === uid) posicion = total;
-    });
-    if (posicion > 0) {
-      let medal = '';
-      if (posicion === 1) medal = '👑 ';
-      else if (posicion === 2) medal = '🥈 ';
-      else if (posicion === 3) medal = '🥉 ';
-      positionBadge.textContent = `${medal}Posición #${posicion} de ${total}`;
-    } else {
-      positionBadge.textContent = '📈 Sin posición aún';
-    }
-  } catch (error) {
-    console.error('Error en updateUserStats:', error);
-  }
+      // Calcular posición global
+      return db.collection('usuarios').orderBy('puntos', 'desc').get()
+        .then((querySnap) => {
+          let posicion = 0;
+          let total = 0;
+          querySnap.forEach((doc) => {
+            total++;
+            if (doc.id === uid) posicion = total;
+          });
+          if (posicion > 0) {
+            let medal = '';
+            if (posicion === 1) medal = '👑 ';
+            else if (posicion === 2) medal = '🥈 ';
+            else if (posicion === 3) medal = '🥉 ';
+            positionBadge.textContent = medal + 'Posición #' + posicion + ' de ' + total;
+          } else {
+            positionBadge.textContent = '📈 Sin posición aún';
+          }
+        });
+    })
+    .catch(err => console.error('Error en updateUserStats:', err));
 }
 
 // ===== CERRAR SESIÓN =====
-logoutBtn.addEventListener('click', async () => {
-  try {
-    await signOut(auth);
-    showToast('Sesión cerrada');
-  } catch (error) {
-    showToast('Error al cerrar sesión: ' + error.message);
-  }
-});
-
-// ===== MODAL DE EDICIÓN DE PERFIL =====
-function openEditModal() {
-  editProfileModal.style.display = 'flex';
-  // Cargar datos actuales
-  const nombre = profileNameDisplay.textContent;
-  editNameInput.value = nombre;
-  const imgSrc = profileAvatar.src;
-  modalProfileImage.src = imgSrc;
-  // Cargar avatares predeterminados
-  loadAvatarGrid();
+if (logoutBtn) {
+  logoutBtn.addEventListener('click', function() {
+    auth.signOut().then(() => showToast('Sesión cerrada'));
+  });
 }
 
+// ===== MODAL PERFIL =====
+function openEditModal() {
+  editProfileModal.style.display = 'flex';
+  editNameInput.value = profileNameDisplay.textContent;
+  modalProfileImage.src = profileAvatar.src;
+  loadAvatarGrid();
+}
 function closeEditModal() {
   editProfileModal.style.display = 'none';
 }
 
-profileTrigger.addEventListener('click', openEditModal);
-editProfileBtn.addEventListener('click', (e) => {
-  e.stopPropagation();
-  openEditModal();
-});
-
-closeModalBtn.addEventListener('click', closeEditModal);
-window.addEventListener('click', (e) => {
-  if (e.target === editProfileModal) closeEditModal();
-});
+if (profileTrigger) profileTrigger.addEventListener('click', openEditModal);
+if (editProfileBtn) editProfileBtn.addEventListener('click', function(e) { e.stopPropagation(); openEditModal(); });
+if (closeModalBtn) closeModalBtn.addEventListener('click', closeEditModal);
+window.addEventListener('click', function(e) { if (e.target === editProfileModal) closeEditModal(); });
 
 // Subir foto
-uploadPhotoIcon.addEventListener('click', () => {
-  uploadPhotoInput.click();
-});
-
-uploadPhotoInput.addEventListener('change', async (e) => {
-  const file = e.target.files[0];
-  if (!file) return;
-  try {
+if (uploadPhotoIcon) {
+  uploadPhotoIcon.addEventListener('click', function() {
+    uploadPhotoInput.click();
+  });
+}
+if (uploadPhotoInput) {
+  uploadPhotoInput.addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
     const reader = new FileReader();
-    reader.onload = async (ev) => {
+    reader.onload = function(ev) {
       const dataUrl = ev.target.result;
       modalProfileImage.src = dataUrl;
-      // Subir a Firebase Storage
-      const storageRef = ref(storage, `avatars/${auth.currentUser.uid}`);
-      await uploadString(storageRef, dataUrl, 'data_url');
-      const url = await getDownloadURL(storageRef);
-      // Actualizar en Firestore
-      await updateDoc(doc(db, 'usuarios', auth.currentUser.uid), { avatar: url });
-      // Actualizar vista
-      profileAvatar.src = url;
-      modalProfileImage.src = url;
-      showToast('Foto actualizada');
+      const storageRef = storage.ref('avatars/' + auth.currentUser.uid);
+      storageRef.putString(dataUrl, 'data_url')
+        .then(() => storageRef.getDownloadURL())
+        .then((url) => {
+          return db.collection('usuarios').doc(auth.currentUser.uid).update({ avatar: url });
+        })
+        .then(() => {
+          profileAvatar.src = modalProfileImage.src;
+          showToast('Foto actualizada');
+        })
+        .catch(err => showToast('Error: ' + err.message));
     };
     reader.readAsDataURL(file);
-  } catch (error) {
-    showToast('Error al subir foto: ' + error.message);
-  }
-});
+  });
+}
 
-// Guardar cambios de perfil (nombre)
-saveProfileBtn.addEventListener('click', async () => {
-  const newName = editNameInput.value.trim();
-  if (!newName) {
-    showToast('El nombre no puede estar vacío.');
-    return;
-  }
-  try {
+// Guardar nombre
+if (saveProfileBtn) {
+  saveProfileBtn.addEventListener('click', function() {
+    const newName = editNameInput.value.trim();
+    if (!newName) { showToast('El nombre no puede estar vacío.'); return; }
     const user = auth.currentUser;
-    // Actualizar en Auth
-    await updateProfile(user, { displayName: newName });
-    // Actualizar en Firestore
-    await updateDoc(doc(db, 'usuarios', user.uid), { nombre: newName });
-    // Actualizar UI
-    profileNameDisplay.textContent = newName;
-    if (userNameSpan) userNameSpan.textContent = newName;
-    showToast('Perfil actualizado');
-    closeEditModal();
-  } catch (error) {
-    showToast('Error: ' + error.message);
-  }
-});
+    user.updateProfile({ displayName: newName })
+      .then(() => db.collection('usuarios').doc(user.uid).update({ nombre: newName }))
+      .then(() => {
+        profileNameDisplay.textContent = newName;
+        showToast('Perfil actualizado');
+        closeEditModal();
+      })
+      .catch(err => showToast('Error: ' + err.message));
+  });
+}
 
 // Cargar avatares predeterminados
 function loadAvatarGrid() {
@@ -365,65 +285,47 @@ function loadAvatarGrid() {
     img.src = url;
     img.className = 'avatar-pred';
     if (profileAvatar.src === url) img.classList.add('selected');
-    img.addEventListener('click', async () => {
-      try {
-        // Actualizar en Firestore
-        await updateDoc(doc(db, 'usuarios', auth.currentUser.uid), { avatar: url });
-        profileAvatar.src = url;
-        modalProfileImage.src = url;
-        document.querySelectorAll('.avatar-pred').forEach(el => el.classList.remove('selected'));
-        img.classList.add('selected');
-        showToast('Avatar cambiado');
-      } catch (error) {
-        showToast('Error: ' + error.message);
-      }
+    img.addEventListener('click', function() {
+      db.collection('usuarios').doc(auth.currentUser.uid).update({ avatar: url })
+        .then(() => {
+          profileAvatar.src = url;
+          modalProfileImage.src = url;
+          document.querySelectorAll('.avatar-pred').forEach(el => el.classList.remove('selected'));
+          img.classList.add('selected');
+          showToast('Avatar cambiado');
+        })
+        .catch(err => showToast('Error: ' + err.message));
     });
     avatarGrid.appendChild(img);
   });
 }
 
-// ===== CARGAR INSIGNIAS (ejemplo) =====
-async function loadBadges(uid) {
-  // Puedes obtener las insignias reales desde Firestore si las guardas
-  // Aquí dejamos las estáticas que se muestran en el diseño.
-  // El HTML ya tiene la lista fija, pero podrías actualizarla dinámicamente.
-  // Por ahora no hacemos nada.
+// ===== WHATSAPP =====
+if (whatsappBtn) {
+  whatsappBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    window.open('https://wa.me/505XXXXXXXX?text=Hola%20Guía%20Pinolero', '_blank');
+  });
 }
 
-// ===== WHATSAPP (solo enlace) =====
-document.getElementById('whatsappBtn').addEventListener('click', (e) => {
-  e.preventDefault();
-  // Reemplazar con número real
-  window.open('https://wa.me/505XXXXXXXX?text=Hola%20Guía%20Pinolero', '_blank');
+// ===== BÚSQUEDA (placeholder) =====
+if (searchInput) {
+  searchInput.addEventListener('input', function() {
+    const query = this.value.toLowerCase();
+    // Aquí podrías filtrar juegos o destinos, por ahora solo consola
+    console.log('Buscando:', query);
+  });
+}
+
+// ===== BOTONES "JUGAR" =====
+document.querySelectorAll('.btn-jugar').forEach(btn => {
+  btn.addEventListener('click', function(e) {
+    e.preventDefault();
+    const game = this.dataset.game || 'default';
+    showToast('Abriendo juego: ' + game);
+    // Redirigir o abrir modal según corresponda
+    // Ejemplo: window.location.href = 'juego-' + game + '.html';
+  });
 });
 
-// ===== INSTALACIÓN PWA =====
-let deferredPrompt;
-const installBtn = document.getElementById('installBtn');
-
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-  installBtn.style.display = 'flex';
-});
-
-installBtn.addEventListener('click', async () => {
-  if (deferredPrompt) {
-    deferredPrompt.prompt();
-    const result = await deferredPrompt.userChoice;
-    if (result.outcome === 'accepted') {
-      console.log('Usuario aceptó la instalación');
-    } else {
-      console.log('Usuario rechazó la instalación');
-    }
-    deferredPrompt = null;
-    installBtn.style.display = 'none';
-  }
-});
-
-window.addEventListener('appinstalled', () => {
-  installBtn.style.display = 'none';
-});
-
-// ===== CARRUSEL (se mantiene oculto, pero su lógica puede estar en inicio.js) =====
-// No se modifica nada, el carrusel sigue en el DOM pero oculto.
+console.log('Todos los eventos cargados correctamente');
