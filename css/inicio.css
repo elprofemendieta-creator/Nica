@@ -122,7 +122,7 @@ body {
 }
 h1 {
   font-size: 2.8rem;
-  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  background: rgba(35, 32, 73);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -132,7 +132,7 @@ h1 {
   font-family: var(--font-title);
 }
 .subtitle {
-  color: rgba(251, 251, 251, 0.8);
+  color: rgba(35, 32, 73);
   margin-bottom: 2rem;
   font-size: 0.95rem;
 }
