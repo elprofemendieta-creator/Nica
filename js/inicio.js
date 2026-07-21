@@ -48,9 +48,6 @@ const saveProfileBtn = document.getElementById('saveProfileBtn');
 const closeModalBtn = document.getElementById('closeModalBtn');
 const avatarGrid = document.getElementById('avatarGrid');
 const toast = document.getElementById('toast');
-const whatsappBtn = document.getElementById('whatsappBtn');
-const searchInput = document.getElementById('searchInput');
-const searchResults = document.getElementById('searchResults');
 
 // ===== TOAST =====
 function showToast(msg, duration = 3000) {
@@ -59,7 +56,7 @@ function showToast(msg, duration = 3000) {
   setTimeout(() => { toast.style.display = 'none'; }, duration);
 }
 
-// ===== EVENTOS LOGIN / REGISTRO =====
+// ===== LOGIN / REGISTRO =====
 doLoginBtn.addEventListener('click', function() {
   const email = loginEmail.value.trim();
   const pass = loginPassword.value.trim();
@@ -123,7 +120,7 @@ forgotPasswordLink.addEventListener('click', function(e) {
     .catch(error => showToast('Error: ' + error.message));
 });
 
-// ===== ESTADO DE AUTENTICACIÓN (con actualización en tiempo real) =====
+// ===== ESTADO DE AUTENTICACIÓN =====
 let currentUserUid = null;
 
 auth.onAuthStateChanged(function(user) {
@@ -133,7 +130,6 @@ auth.onAuthStateChanged(function(user) {
     authCard.style.display = 'none';
     menuSection.style.display = 'block';
 
-    // Cargar datos del usuario y escuchar cambios
     const userRef = db.collection('usuarios').doc(user.uid);
     userRef.get()
       .then((docSnap) => {
@@ -141,7 +137,6 @@ auth.onAuthStateChanged(function(user) {
           const data = docSnap.data();
           actualizarPerfil(data, user);
         } else {
-          // Crear documento
           userRef.set({
             nombre: user.displayName || 'Usuario',
             email: user.email,
@@ -149,7 +144,6 @@ auth.onAuthStateChanged(function(user) {
             avatar: '',
             createdAt: new Date().toISOString()
           }).then(() => {
-            // Recargar después de crear
             userRef.get().then((newSnap) => {
               if (newSnap.exists) actualizarPerfil(newSnap.data(), user);
             });
@@ -163,7 +157,6 @@ auth.onAuthStateChanged(function(user) {
       if (docSnap.exists) {
         const data = docSnap.data();
         actualizarPerfil(data, user);
-        // Actualizar puntos y posición
         updateUserStats(user.uid);
       }
     });
@@ -177,7 +170,6 @@ auth.onAuthStateChanged(function(user) {
   }
 });
 
-// Función para actualizar la UI del perfil
 function actualizarPerfil(data, user) {
   const nombre = data.nombre || user.displayName || 'Usuario';
   profileNameDisplay.textContent = nombre;
@@ -189,7 +181,6 @@ function actualizarPerfil(data, user) {
     profileAvatar.src = avatarUrl;
     modalProfileImage.src = avatarUrl;
   }
-  // Los puntos se actualizan en updateUserStats
 }
 
 // ===== ACTUALIZAR PUNTOS Y POSICIÓN =====
@@ -201,7 +192,6 @@ function updateUserStats(uid) {
       const puntos = data.puntos || 0;
       userPointsDisplay.textContent = '⭐ ' + puntos + ' puntos';
 
-      // Calcular posición global
       return db.collection('usuarios').orderBy('puntos', 'desc').get()
         .then((querySnap) => {
           let posicion = 0;
@@ -231,7 +221,16 @@ if (logoutBtn) {
   });
 }
 
-// ===== MODAL PERFIL =====
+// ===== REDIRECCIÓN DEL PERFIL A COMUNIDAD (solo el área, no los botones) =====
+if (profileTrigger) {
+  profileTrigger.addEventListener('click', function(e) {
+    // Si el clic fue en un botón de acción, no redirigir
+    if (e.target.closest('.profile-btn')) return;
+    window.location.href = 'comunidad.html';
+  });
+}
+
+// ===== MODAL DE EDICIÓN (solo botón lápiz) =====
 function openEditModal() {
   editProfileModal.style.display = 'flex';
   editNameInput.value = profileNameDisplay.textContent;
@@ -242,12 +241,16 @@ function closeEditModal() {
   editProfileModal.style.display = 'none';
 }
 
-if (profileTrigger) profileTrigger.addEventListener('click', openEditModal);
-if (editProfileBtn) editProfileBtn.addEventListener('click', function(e) { e.stopPropagation(); openEditModal(); });
+if (editProfileBtn) {
+  editProfileBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    openEditModal();
+  });
+}
 if (closeModalBtn) closeModalBtn.addEventListener('click', closeEditModal);
 window.addEventListener('click', function(e) { if (e.target === editProfileModal) closeEditModal(); });
 
-// Subir foto
+// ===== SUBIR FOTO =====
 if (uploadPhotoIcon) {
   uploadPhotoIcon.addEventListener('click', function() {
     uploadPhotoInput.click();
@@ -277,7 +280,7 @@ if (uploadPhotoInput) {
   });
 }
 
-// Guardar nombre
+// ===== GUARDAR NOMBRE =====
 if (saveProfileBtn) {
   saveProfileBtn.addEventListener('click', function() {
     const newName = editNameInput.value.trim();
@@ -294,7 +297,7 @@ if (saveProfileBtn) {
   });
 }
 
-// Cargar avatares predeterminados
+// ===== AVATARES PREDETERMINADOS =====
 function loadAvatarGrid() {
   const avatars = [
     'https://ui-avatars.com/api/?name=A&background=a4c737&color=fff&size=128',
@@ -324,111 +327,32 @@ function loadAvatarGrid() {
   });
 }
 
-// ===== WHATSAPP =====
-if (whatsappBtn) {
-  whatsappBtn.addEventListener('click', function(e) {
-    e.preventDefault();
-    window.open('https://wa.me/505XXXXXXXX?text=Hola%20Guía%20Pinolero', '_blank');
-  });
-}
-
-// ===== BUSCADOR =====
-// Datos de búsqueda: juegos y destinos
-const searchData = [
-  // Juegos
-  { type: 'juego', name: 'Gran Mapa Misterioso', icon: '🎮', ref: 'mapa' },
-  { type: 'juego', name: 'Pinolero Millonario', icon: '💰', ref: 'millonario' },
-  { type: 'juego', name: 'Stop Pinolero', icon: '🛑', ref: 'stop' },
-  { type: 'juego', name: 'Memoria Pinolera', icon: '🧠', ref: 'memoria' },
-  { type: 'juego', name: 'Laberinto Turístico', icon: '🌀', ref: 'laberinto' },
-  // Destinos
-  { type: 'destino', name: 'Volcán Masaya', icon: '🌋', ref: 'masaya' },
-  { type: 'destino', name: 'Laguna de Apoyo', icon: '🏞️', ref: 'apoyo' },
-  { type: 'destino', name: 'Granada', icon: '🏛️', ref: 'granada' },
-  { type: 'destino', name: 'Orm', icon: '🏝️', ref: 'orm' }
-];
-
-searchInput.addEventListener('input', function() {
-  const query = this.value.trim().toLowerCase();
-  if (query.length === 0) {
-    searchResults.classList.remove('show');
-    return;
-  }
-
-  const results = searchData.filter(item =>
-    item.name.toLowerCase().includes(query)
-  );
-
-  if (results.length === 0) {
-    searchResults.innerHTML = `<div class="search-result-item" style="color:rgba(255,255,255,0.4);">No se encontraron resultados</div>`;
-    searchResults.classList.add('show');
-    return;
-  }
-
-  let html = '';
-  results.forEach(item => {
-    html += `
-      <div class="search-result-item" data-ref="${item.ref}" data-type="${item.type}">
-        <span class="icon">${item.icon}</span>
-        <span class="text">${item.name}</span>
-        <span class="category">${item.type}</span>
-      </div>
-    `;
-  });
-  searchResults.innerHTML = html;
-  searchResults.classList.add('show');
-
-  // Evento de clic en cada resultado
-  document.querySelectorAll('.search-result-item').forEach(el => {
-    el.addEventListener('click', function() {
-      const ref = this.dataset.ref;
-      const type = this.dataset.type;
-      showToast(`Abriendo ${type}: ${ref}`);
-      // Aquí podrías redirigir o ejecutar una acción
-      searchResults.classList.remove('show');
-      searchInput.value = '';
-    });
-  });
-});
-
-// Ocultar resultados al hacer clic fuera
-document.addEventListener('click', function(e) {
-  if (!e.target.closest('.search-bar')) {
-    searchResults.classList.remove('show');
-  }
-});
-
 // ===== BOTONES "JUGAR" =====
 document.querySelectorAll('.btn-jugar').forEach(btn => {
   btn.addEventListener('click', function(e) {
     e.preventDefault();
     const game = this.dataset.game || 'default';
     showToast('Abriendo juego: ' + game);
-    // Redirigir o abrir modal según corresponda
-    // Ejemplo: window.location.href = 'juego-' + game + '.html';
+    // Aquí redirigir si es necesario: window.location.href = 'juego-' + game + '.html';
   });
 });
 
-// ===== MENÚ INFERIOR - NAVEGACIÓN =====
+// ===== MENÚ INFERIOR - NAVEGACIÓN (solo 5) =====
 document.querySelectorAll('.nav-item').forEach(item => {
   item.addEventListener('click', function(e) {
     e.preventDefault();
     const url = this.dataset.url;
     if (url && url !== '#') {
-      // Redirigir a la URL
       window.location.href = url;
     } else {
-      // Si es "Inicio", simplemente mostrar toast o recargar
       showToast('Página de inicio');
     }
-    // Marcar como activo
     document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
     this.classList.add('active');
-    // Si es el mapa, no se marca como active porque es especial, pero lo dejamos
-    if (this.classList.contains('nav-map')) {
-      // Opcional: resaltar el mapa
-    }
   });
 });
+
+// ===== EVENTOS PARA LOS BOTONES DE PERFIL (Comunidad y Promociones) =====
+// Ya tienen enlaces directos en el HTML, no necesitan JS adicional.
 
 console.log('Todos los eventos cargados correctamente');
