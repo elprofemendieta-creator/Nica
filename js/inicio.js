@@ -14,6 +14,15 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 
+// Configurar persistencia de sesión
+auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+  .then(() => {
+    console.log('✅ Persistencia de sesión configurada');
+  })
+  .catch((error) => {
+    console.error('❌ Error en persistencia:', error);
+  });
+
 console.log('🔥 Firebase inicializado (Compat)');
 
 // ================================================================
@@ -33,6 +42,7 @@ const FALLBACK = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
 
 let fotoTemporal = null;
 let isSaving = false;
+let isProcessing = false;
 
 // ================================================================
 // REFERENCIAS DOM
@@ -76,8 +86,22 @@ function showToast(msg, isError = false, duration = 5000) {
   toastDiv.textContent = msg;
   toastDiv.style.display = 'block';
   toastDiv.style.background = isError ? 'rgba(220,53,69,0.95)' : 'rgba(0,0,0,0.85)';
+  toastDiv.style.color = 'white';
+  toastDiv.style.padding = '12px 24px';
+  toastDiv.style.borderRadius = '8px';
+  toastDiv.style.position = 'fixed';
+  toastDiv.style.bottom = '20px';
+  toastDiv.style.left = '50%';
+  toastDiv.style.transform = 'translateX(-50%)';
+  toastDiv.style.zIndex = '9999';
+  toastDiv.style.maxWidth = '90%';
+  toastDiv.style.textAlign = 'center';
+  toastDiv.style.boxShadow = '0 4px 12px rgba(0,0,0,0.3)';
+
   clearTimeout(toastDiv._timeout);
-  toastDiv._timeout = setTimeout(() => toastDiv.style.display = 'none', duration);
+  toastDiv._timeout = setTimeout(() => {
+    toastDiv.style.display = 'none';
+  }, duration);
 }
 
 function compressImage(file) {
@@ -177,25 +201,41 @@ async function guardarEnFirestore(user, extra = {}) {
 }
 
 async function cargarPerfil(user) {
-  if (!user) return;
-  const ref = db.collection('usuarios').doc(user.uid);
-  const snap = await ref.get();
-  let nombre, fotoURL;
-  if (snap.exists) {
-    const data = snap.data();
-    nombre = data.nombre || user.displayName || user.email.split('@')[0];
-    fotoURL = data.fotoURL || user.photoURL || FALLBACK;
-  } else {
-    nombre = user.displayName || user.email.split('@')[0];
-    fotoURL = user.photoURL || FALLBACK;
-    await guardarEnFirestore(user, { nombre, fotoURL });
+  if (!user) {
+    console.warn('⚠️ No hay usuario para cargar perfil');
+    return;
   }
-  // Actualizar UI
-  profileNameDisplay.textContent = nombre;
-  profileAvatar.src = fotoURL;
-  profileAvatar.onerror = () => profileAvatar.src = FALLBACK;
-  // También actualizar puntos y posición
-  await updateUserStats(user.uid);
+
+  try {
+    const ref = db.collection('usuarios').doc(user.uid);
+    const snap = await ref.get();
+    let nombre, fotoURL;
+
+    if (snap.exists) {
+      const data = snap.data();
+      nombre = data.nombre || user.displayName || user.email.split('@')[0];
+      fotoURL = data.fotoURL || user.photoURL || FALLBACK;
+    } else {
+      nombre = user.displayName || user.email.split('@')[0];
+      fotoURL = user.photoURL || FALLBACK;
+      await guardarEnFirestore(user, { nombre, fotoURL });
+    }
+
+    // Actualizar UI
+    profileNameDisplay.textContent = nombre;
+    profileAvatar.src = fotoURL;
+    profileAvatar.onerror = () => profileAvatar.src = FALLBACK;
+
+    // También actualizar puntos y posición
+    await updateUserStats(user.uid);
+
+    console.log('✅ Perfil cargado correctamente');
+    return true;
+  } catch (error) {
+    console.error('❌ Error al cargar perfil:', error);
+    showToast('Error al cargar perfil', true);
+    return false;
+  }
 }
 
 function renderAvatars(selected) {
@@ -326,129 +366,332 @@ function actualizarPasaporte(lugares) {
 }
 
 // ================================================================
-// EVENTOS DE LOGIN / REGISTRO / RECUPERACIÓN
+// EVENTOS DE LOGIN / REGISTRO / RECUPERACIÓN (MEJORADOS)
 // ================================================================
-doLoginBtn.addEventListener('click', () => {
+
+// FUNCIÓN DE LOGIN CON MANEJO DE ERRORES MEJORADO
+async function handleLogin() {
+  if (isProcessing) return;
+
   const email = loginEmail.value.trim();
   const pass = loginPassword.value.trim();
-  if (!email || !pass) {
-    showToast('Completa todos los campos.', true);
+
+  // Validaciones
+  if (!email) {
+    showToast('❌ Ingresa tu correo electrónico', true);
+    loginEmail.focus();
     return;
   }
-  auth.signInWithEmailAndPassword(email, pass)
-    .then(() => showToast('¡Bienvenido de vuelta!'))
-    .catch(error => showToast('Error: ' + error.message, true));
+
+  if (!pass) {
+    showToast('❌ Ingresa tu contraseña', true);
+    loginPassword.focus();
+    return;
+  }
+
+  // Validar formato de email
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    showToast('❌ Correo electrónico inválido', true);
+    loginEmail.focus();
+    return;
+  }
+
+  isProcessing = true;
+  doLoginBtn.disabled = true;
+  doLoginBtn.innerHTML = '⏳ Iniciando...';
+
+  try {
+    console.log('🔐 Intentando iniciar sesión con:', email);
+    const userCredential = await auth.signInWithEmailAndPassword(email, pass);
+    console.log('✅ Login exitoso:', userCredential.user.uid);
+    showToast('🎉 ¡Bienvenido de vuelta!');
+
+    // Limpiar campos
+    loginEmail.value = '';
+    loginPassword.value = '';
+
+  } catch (error) {
+    console.error('❌ Error en login:', error);
+
+    // Manejo de errores específicos
+    let mensaje = 'Error al iniciar sesión';
+    switch (error.code) {
+      case 'auth/user-not-found':
+        mensaje = '❌ Usuario no encontrado. ¿Estás registrado?';
+        break;
+      case 'auth/wrong-password':
+        mensaje = '❌ Contraseña incorrecta. Intenta de nuevo';
+        loginPassword.value = '';
+        loginPassword.focus();
+        break;
+      case 'auth/invalid-email':
+        mensaje = '❌ Correo electrónico inválido';
+        loginEmail.focus();
+        break;
+      case 'auth/user-disabled':
+        mensaje = '❌ Esta cuenta ha sido deshabilitada';
+        break;
+      case 'auth/too-many-requests':
+        mensaje = '❌ Demasiados intentos. Espera un momento';
+        break;
+      case 'auth/network-request-failed':
+        mensaje = '❌ Error de conexión. Verifica tu internet';
+        break;
+      default:
+        mensaje = `❌ ${error.message}`;
+    }
+    showToast(mensaje, true, 6000);
+  } finally {
+    isProcessing = false;
+    doLoginBtn.disabled = false;
+    doLoginBtn.innerHTML = 'Iniciar sesión';
+  }
+}
+
+// FUNCIÓN DE REGISTRO MEJORADA
+async function handleRegister() {
+  if (isProcessing) return;
+
+  const name = regName.value.trim();
+  const email = regEmail.value.trim();
+  const pass = regPassword.value.trim();
+
+  // Validaciones
+  if (!name) {
+    showToast('❌ Ingresa tu nombre completo', true);
+    regName.focus();
+    return;
+  }
+
+  if (!email) {
+    showToast('❌ Ingresa tu correo electrónico', true);
+    regEmail.focus();
+    return;
+  }
+
+  if (!pass) {
+    showToast('❌ Ingresa una contraseña', true);
+    regPassword.focus();
+    return;
+  }
+
+  if (pass.length < 6) {
+    showToast('❌ La contraseña debe tener al menos 6 caracteres', true);
+    regPassword.value = '';
+    regPassword.focus();
+    return;
+  }
+
+  // Validar formato de email
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    showToast('❌ Correo electrónico inválido', true);
+    regEmail.focus();
+    return;
+  }
+
+  isProcessing = true;
+  doRegisterBtn.disabled = true;
+  doRegisterBtn.innerHTML = '⏳ Registrando...';
+
+  try {
+    console.log('🔐 Registrando usuario:', email);
+    const userCredential = await auth.createUserWithEmailAndPassword(email, pass);
+    const user = userCredential.user;
+
+    // Actualizar perfil
+    await user.updateProfile({ displayName: name });
+
+    // Guardar en Firestore
+    await db.collection('usuarios').doc(user.uid).set({
+      uid: user.uid,
+      email: email,
+      nombre: name,
+      fotoURL: DEFAULT_AVATARS[0],
+      puntos: 0,
+      lugares_visitados: [],
+      fechaRegistro: new Date()
+    });
+
+    console.log('✅ Registro exitoso:', user.uid);
+    showToast('🎉 ¡Cuenta creada exitosamente!');
+
+    // Limpiar campos
+    regName.value = '';
+    regEmail.value = '';
+    regPassword.value = '';
+
+  } catch (error) {
+    console.error('❌ Error en registro:', error);
+
+    // Manejo de errores específicos
+    let mensaje = 'Error al registrar';
+    switch (error.code) {
+      case 'auth/email-already-in-use':
+        mensaje = '❌ Este correo ya está registrado';
+        regEmail.focus();
+        break;
+      case 'auth/invalid-email':
+        mensaje = '❌ Correo electrónico inválido';
+        regEmail.focus();
+        break;
+      case 'auth/weak-password':
+        mensaje = '❌ La contraseña debe tener al menos 6 caracteres';
+        regPassword.value = '';
+        regPassword.focus();
+        break;
+      case 'auth/network-request-failed':
+        mensaje = '❌ Error de conexión. Verifica tu internet';
+        break;
+      default:
+        mensaje = `❌ ${error.message}`;
+    }
+    showToast(mensaje, true, 6000);
+  } finally {
+    isProcessing = false;
+    doRegisterBtn.disabled = false;
+    doRegisterBtn.innerHTML = 'Registrarse';
+  }
+}
+
+// EVENTOS DE LOGIN
+doLoginBtn.addEventListener('click', handleLogin);
+
+// Permitir login con Enter
+loginPassword.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    handleLogin();
+  }
 });
 
+loginEmail.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    loginPassword.focus();
+  }
+});
+
+// EVENTOS DE REGISTRO
+doRegisterBtn.addEventListener('click', handleRegister);
+
+regPassword.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    handleRegister();
+  }
+});
+
+// Mostrar formulario de registro
 showRegisterBtn.addEventListener('click', () => {
   loginForm.style.display = 'none';
   registerForm.style.display = 'block';
 });
 
+// Volver al login
 backToLoginBtn.addEventListener('click', () => {
   registerForm.style.display = 'none';
   loginForm.style.display = 'block';
 });
 
-doRegisterBtn.addEventListener('click', () => {
-  const name = regName.value.trim();
-  const email = regEmail.value.trim();
-  const pass = regPassword.value.trim();
-  if (!name || !email || !pass) {
-    showToast('Completa todos los campos.', true);
-    return;
-  }
-  if (pass.length < 6) {
-    showToast('La contraseña debe tener al menos 6 caracteres.', true);
-    return;
-  }
-  auth.createUserWithEmailAndPassword(email, pass)
-    .then(cred => {
-      return cred.user.updateProfile({ displayName: name })
-        .then(() => {
-          return db.collection('usuarios').doc(cred.user.uid).set({
-            uid: cred.user.uid,
-            email: email,
-            nombre: name,
-            fotoURL: DEFAULT_AVATARS[0],
-            puntos: 0,
-            lugares_visitados: [],
-            fechaRegistro: new Date()
-          });
-        });
-    })
-    .then(() => showToast('¡Cuenta creada exitosamente!'))
-    .catch(error => showToast('Error: ' + error.message, true));
-});
-
-forgotPasswordLink.addEventListener('click', (e) => {
+// Recuperar contraseña
+forgotPasswordLink.addEventListener('click', async (e) => {
   e.preventDefault();
   const email = loginEmail.value.trim();
   if (!email) {
-    showToast('Ingresa tu correo para restablecer.', true);
+    showToast('❌ Ingresa tu correo para restablecer', true);
+    loginEmail.focus();
     return;
   }
-  auth.sendPasswordResetEmail(email)
-    .then(() => showToast('Revisa tu correo para restablecer la contraseña.'))
-    .catch(error => showToast('Error: ' + error.message, true));
+
+  try {
+    await auth.sendPasswordResetEmail(email);
+    showToast('📧 Revisa tu correo para restablecer la contraseña');
+  } catch (error) {
+    let mensaje = 'Error al enviar el correo';
+    if (error.code === 'auth/user-not-found') {
+      mensaje = '❌ Usuario no encontrado';
+    } else {
+      mensaje = `❌ ${error.message}`;
+    }
+    showToast(mensaje, true);
+  }
 });
 
 // ================================================================
-// ESTADO DE AUTENTICACIÓN
+// ESTADO DE AUTENTICACIÓN (MEJORADO)
 // ================================================================
 auth.onAuthStateChanged(async (user) => {
-  console.log('onAuthStateChanged:', user ? user.uid : 'null');
+  console.log('🔄 onAuthStateChanged:', user ? `Usuario: ${user.uid}` : 'No autenticado');
+
   if (user) {
+    // Ocultar auth y mostrar app
     authCard.style.display = 'none';
     menuSection.style.display = 'block';
 
-    // Cargar perfil (incluye puntos y posición)
-    await cargarPerfil(user);
+    try {
+      // Cargar perfil
+      await cargarPerfil(user);
 
-    // Escuchar cambios en tiempo real en el documento del usuario
-    const userRef = db.collection('usuarios').doc(user.uid);
-    userRef.onSnapshot((docSnap) => {
-      if (docSnap.exists) {
-        const data = docSnap.data();
-        // Actualizar nombre y foto si cambian
-        const nombre = data.nombre || user.displayName || user.email.split('@')[0];
-        profileNameDisplay.textContent = nombre;
-        if (data.fotoURL) {
-          profileAvatar.src = data.fotoURL;
-          profileAvatar.onerror = () => profileAvatar.src = FALLBACK;
+      // Escuchar cambios en tiempo real
+      const userRef = db.collection('usuarios').doc(user.uid);
+      userRef.onSnapshot((docSnap) => {
+        if (docSnap.exists) {
+          const data = docSnap.data();
+          // Actualizar nombre y foto si cambian
+          const nombre = data.nombre || user.displayName || user.email.split('@')[0];
+          profileNameDisplay.textContent = nombre;
+          if (data.fotoURL) {
+            profileAvatar.src = data.fotoURL;
+            profileAvatar.onerror = () => profileAvatar.src = FALLBACK;
+          }
+          // Actualizar puntos y posición
+          updateUserStats(user.uid);
+          // Actualizar pasaporte
+          actualizarPasaporte(data.lugares_visitados || []);
         }
-        // Actualizar puntos y posición
-        updateUserStats(user.uid);
-        // Actualizar pasaporte
-        actualizarPasaporte(data.lugares_visitados || []);
-      }
-    });
+      });
+
+      console.log('✅ Autenticación completada');
+    } catch (error) {
+      console.error('❌ Error al cargar perfil del usuario:', error);
+      showToast('Error al cargar tu perfil', true);
+    }
   } else {
+    // Mostrar auth y ocultar app
     authCard.style.display = 'block';
     menuSection.style.display = 'none';
     loginForm.style.display = 'block';
     registerForm.style.display = 'none';
-    // Limpiar campos
-    loginEmail.value = '';
+
+    // Limpiar campos de contraseña por seguridad
     loginPassword.value = '';
-    regEmail.value = '';
     regPassword.value = '';
-    regName.value = '';
+
+    console.log('👤 Usuario no autenticado');
   }
 });
 
 // ================================================================
 // CERRAR SESIÓN
 // ================================================================
-logoutBtn.addEventListener('click', () => {
-  auth.signOut().then(() => showToast('Sesión cerrada'));
+logoutBtn.addEventListener('click', async () => {
+  try {
+    await auth.signOut();
+    showToast('👋 Sesión cerrada');
+    console.log('👋 Sesión cerrada correctamente');
+  } catch (error) {
+    console.error('❌ Error al cerrar sesión:', error);
+    showToast('Error al cerrar sesión', true);
+  }
 });
 
 // ================================================================
 // REDIRECCIÓN DEL PERFIL A COMUNIDAD
 // ================================================================
 profileTrigger.addEventListener('click', (e) => {
-  if (e.target.closest('.edit-btn')) return;
+  if (e.target.closest('.edit-btn') || e.target.closest('#editProfileBtn')) return;
   window.location.href = 'comunidad.html';
 });
 
@@ -463,6 +706,7 @@ function openEditModal() {
   // Cargar avatares predeterminados
   renderAvatars(profileAvatar.src);
 }
+
 function closeEditModal() {
   editProfileModal.style.display = 'none';
 }
@@ -525,7 +769,6 @@ document.querySelectorAll('.btn-jugar').forEach(btn => {
   btn.addEventListener('click', function(e) {
     const game = this.dataset.game || 'default';
     showToast('Abriendo juego: ' + game);
-    // No usamos preventDefault, el enlace navega normalmente
   });
 });
 
@@ -558,3 +801,234 @@ document.getElementById('whatsappBtn')?.addEventListener('click', (e) => {
 });
 
 console.log('✅ Todos los eventos cargados correctamente');
+
+// ================================================================
+// FUNCIONES PARA TIPS PINOLEROS
+// ================================================================
+
+// Datos de los tips
+const tipsData = {
+    clima: {
+        icon: '🌤️',
+        title: 'Mejor época para viajar',
+        description: 'Nicaragua tiene un clima tropical con dos estaciones bien definidas. La mejor época para visitar es durante la temporada seca.',
+        details: [
+            'Temporada seca: Diciembre - Abril (ideal para playas y tours)',
+            'Temporada lluviosa: Mayo - Noviembre (paisajes verdes)',
+            'Temperatura promedio: 27°C - 32°C',
+            'Lleva ropa ligera y protector solar'
+        ],
+        tag: 'Clima'
+    },
+    moneda: {
+        icon: '💰',
+        title: 'Moneda local',
+        description: 'La moneda oficial de Nicaragua es el Córdoba (NIO). Es recomendable llevar efectivo en córdobas para compras locales.',
+        details: [
+            '1 USD ≈ 36 Córdobas (tasa variable)',
+            'Aceptan dólares en lugares turísticos',
+            'Usa tarjeta en hoteles y restaurantes grandes',
+            'Cambia dinero en bancos o casas de cambio oficiales'
+        ],
+        tag: 'Dinero'
+    },
+    transporte: {
+        icon: '🚌',
+        title: 'Transporte en Nicaragua',
+        description: 'Nicaragua ofrece varias opciones de transporte para moverse entre ciudades y lugares turísticos.',
+        details: [
+            'Buses interurbanos: Económicos y frecuentes',
+            'Taxis: Negocia el precio antes de subir',
+            'Shuttles turísticos: Para tours organizados',
+            'Alquiler de autos: Disponible en aeropuertos'
+        ],
+        tag: 'Movilidad'
+    },
+    comida: {
+        icon: '🍽️',
+        title: 'Gastronomía típica',
+        description: 'La comida nicaragüense es variada y deliciosa, con influencias indígenas y españolas.',
+        details: [
+            'Gallo pinto: Arroz y frijoles (desayuno típico)',
+            'Nacatamales: Masa rellena con carne y verduras',
+            'Quesillo: Tortilla con queso y cebolla',
+            'Indio Viejo: Sopa espesa de maíz y carne',
+            'Bebidas: Chicha, tiste y cacao'
+        ],
+        tag: 'Comida'
+    },
+    seguridad: {
+        icon: '🛡️',
+        title: 'Seguridad para turistas',
+        description: 'Nicaragua es generalmente seguro para turistas, pero es importante tomar precauciones básicas.',
+        details: [
+            'Evita mostrar objetos de valor en público',
+            'Usa taxis oficiales o apps de transporte',
+            'No camines solo por zonas desconocidas de noche',
+            'Guarda copias de tus documentos importantes',
+            'Números de emergencia: 911 (policía)'
+        ],
+        tag: 'Seguridad'
+    }
+};
+
+// Función para mostrar el detalle del tip
+function showTipDetail(tipId) {
+    const tip = tipsData[tipId];
+    if (!tip) return;
+
+    const modal = document.getElementById('tipModal');
+    const body = document.getElementById('tipModalBody');
+
+    body.innerHTML = `
+        <span class="modal-tip-icon">${tip.icon}</span>
+        <h2>${tip.title}</h2>
+        <p class="modal-tip-description">${tip.description}</p>
+        <div class="modal-tip-details">
+            ${tip.details.map(detail => `<li>${detail}</li>`).join('')}
+        </div>
+        <span class="modal-tip-tag">#${tip.tag}</span>
+    `;
+
+    modal.style.display = 'block';
+    document.body.style.overflow = 'hidden';
+}
+
+// Función para cerrar el modal
+function closeTipModal() {
+    document.getElementById('tipModal').style.display = 'none';
+    document.body.style.overflow = 'auto';
+}
+
+// Cerrar modal al hacer clic fuera
+window.addEventListener('click', (e) => {
+    const modal = document.getElementById('tipModal');
+    if (e.target === modal) {
+        closeTipModal();
+    }
+});
+
+// Cerrar modal con tecla ESC
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        closeTipModal();
+    }
+});
+
+// ================================================================
+// FILTRO DE DESTINOS POR CATEGORÍA
+// ================================================================
+
+function filterDestinations(category) {
+    // Actualizar la clase active en las categorías
+    document.querySelectorAll('.category-item').forEach(item => {
+        item.classList.remove('active');
+    });
+
+    // Encontrar y activar la categoría seleccionada
+    const categoryItems = document.querySelectorAll('.category-item');
+    const categoryMap = {
+        'todos': 0,
+        'playas': 1,
+        'volcanes': 2,
+        'coloniales': 3,
+        'naturaleza': 4
+    };
+
+    const index = categoryMap[category];
+    if (index !== undefined && categoryItems[index]) {
+        categoryItems[index].classList.add('active');
+    }
+
+    // Filtrar los destinos
+    const destinations = document.querySelectorAll('.destination-card');
+
+    destinations.forEach(dest => {
+        if (category === 'todos') {
+            dest.style.display = 'block';
+            dest.style.animation = 'fadeIn 0.3s ease forwards';
+        } else {
+            const destCategory = dest.dataset.category;
+            if (destCategory === category) {
+                dest.style.display = 'block';
+                dest.style.animation = 'fadeIn 0.3s ease forwards';
+            } else {
+                dest.style.display = 'none';
+            }
+        }
+    });
+
+    // Mostrar mensaje si no hay resultados
+    const container = document.getElementById('destinationsContainer');
+    const existingMessage = document.querySelector('.no-results-message');
+
+    if (category !== 'todos') {
+        const visible = document.querySelectorAll('.destination-card[style*="display: block"]');
+        if (visible.length === 0) {
+            if (!existingMessage) {
+                const message = document.createElement('div');
+                message.className = 'no-results-message';
+                message.innerHTML = `
+                    <i class="fas fa-search" style="font-size: 2rem; color: #6aba42;"></i>
+                    <p>No hay destinos en esta categoría</p>
+                    <span style="font-size: 0.8rem; color: rgba(255,255,255,0.5);">Pronto agregaremos más</span>
+                `;
+                container.parentNode.insertBefore(message, container.nextSibling);
+            }
+        } else if (existingMessage) {
+            existingMessage.remove();
+        }
+    } else {
+        if (existingMessage) {
+            existingMessage.remove();
+        }
+    }
+}
+
+// ================================================================
+// ANIMACIÓN DE ENTRADA PARA DESTINOS FILTRADOS
+// ================================================================
+
+// Agregar estilo para la animación fadeIn si no existe
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: scale(0.9);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+    
+    .no-results-message {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 20px;
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 24px;
+        margin: 20px 0;
+        border: 2px dashed rgba(255, 255, 255, 0.05);
+    }
+    
+    .no-results-message p {
+        color: rgba(255, 255, 255, 0.7);
+        margin: 8px 0;
+        font-weight: 500;
+    }
+`;
+document.head.appendChild(style);
+
+// Inicializar con "Todos" activo
+document.addEventListener('DOMContentLoaded', () => {
+    // Activar la primera categoría (Todos)
+    const firstCategory = document.querySelector('.category-item');
+    if (firstCategory) {
+        firstCategory.classList.add('active');
+    }
+});
+
