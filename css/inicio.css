@@ -17,12 +17,12 @@
 
 body {
   font-family: var(--font-main);
-  /* ===== FONDO CON DEGRADADO + PATRÓN INSPIRADO EN NICARAGUA ===== */
-  background-image: 
-    /* Patrón de ondas (costas/lagos) */
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cpath d='M10 40 Q 30 20 50 40 T 90 40' stroke='rgba(255,255,255,0.03)' stroke-width='2' fill='none'/%3E%3Cpath d='M10 70 Q 30 50 50 70 T 90 70' stroke='rgba(255,255,255,0.02)' stroke-width='2' fill='none'/%3E%3Cpath d='M10 100 Q 30 80 50 100 T 90 100' stroke='rgba(164,199,55,0.02)' stroke-width='1.5' fill='none'/%3E%3C/svg%3E"),
+  /* ===== FONDO CON DEGRADADO Y PATRÓN CORREGIDO ===== */
+  background: 
+    /* Patrón de ondas (inspirado en costas y lagos de Nicaragua) */
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cpath d='M10 40 Q30 20 50 40 T90 40' stroke='rgba(255,255,255,0.03)' stroke-width='2' fill='none'/%3E%3Cpath d='M10 70 Q30 50 50 70 T90 70' stroke='rgba(255,255,255,0.02)' stroke-width='2' fill='none'/%3E%3Cpath d='M10 100 Q30 80 50 100 T90 100' stroke='rgba(164,199,55,0.02)' stroke-width='1.5' fill='none'/%3E%3C/svg%3E"),
     /* Degradado sutil */
-    radial-gradient(ellipse at 20% 50%, rgba(35, 32, 73, 0.6) 0%, transparent 70%),
+    radial-gradient(ellipse at 20% 50%, rgba(35, 32, 73, 0.5) 0%, transparent 70%),
     radial-gradient(ellipse at 80% 20%, rgba(164, 199, 55, 0.08) 0%, transparent 50%),
     radial-gradient(ellipse at 50% 100%, rgba(108, 99, 255, 0.05) 0%, transparent 60%),
     #0b0d17;
@@ -836,7 +836,7 @@ body {
 }
 
 /* ============================================================
-   BOTÓN WHATSAPP FLOTANTE (FUNCIONALIDAD ORIGINAL)
+   BOTÓN WHATSAPP FLOTANTE
    ============================================================ */
 .whatsapp-float {
     position: fixed;
