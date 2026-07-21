@@ -790,7 +790,7 @@ document.querySelectorAll('.nav-item').forEach(item => {
 });
 
 // ================================================================
-// WHATSAPP (flotante)
+// WHATSAPP (flotante) - FUNCIONALIDAD ORIGINAL PRESERVADA
 // ================================================================
 document.getElementById('whatsappBtn')?.addEventListener('click', (e) => {
   e.preventDefault();
@@ -932,7 +932,9 @@ function filterDestinations(category) {
         'playas': 1,
         'volcanes': 2,
         'coloniales': 3,
-        'naturaleza': 4
+        'naturaleza': 4,
+        'aventura': 5,
+        'gastronomia': 6
     };
 
     const index = categoryMap[category];
@@ -986,9 +988,47 @@ function filterDestinations(category) {
 }
 
 // ================================================================
-// ANIMACIÓN DE ENTRADA PARA DESTINOS FILTRADOS
+// BOTÓN FLOTANTE IA - FUNCIONALIDAD MEJORADA
 // ================================================================
+document.getElementById('boton-ia')?.addEventListener('click', function() {
+    const user = auth.currentUser;
+    const userName = user?.displayName || 'Explorador Pinolero';
+    
+    // Mostrar toast con mensaje personalizado
+    showToast('🧠 ' + userName + ', ¿en qué puedo ayudarte a planificar tu viaje por Nicaragua?');
+    
+    // Aquí puedes agregar integración con un chat real
+    // Ejemplo: window.open('https://tu-chat-ia.com', '_blank', 'width=400,height=600');
+});
 
+// ================================================================
+// INICIALIZACIÓN
+// ================================================================
+document.addEventListener('DOMContentLoaded', () => {
+    // Activar la primera categoría (Todos)
+    const firstCategory = document.querySelector('.category-item');
+    if (firstCategory) {
+        firstCategory.classList.add('active');
+    }
+    
+    // Verificar si el botón de WhatsApp existe
+    const whatsappBtn = document.getElementById('whatsappBtn');
+    if (!whatsappBtn) {
+        console.warn('⚠️ Botón de WhatsApp no encontrado en el DOM');
+    }
+    
+    // Verificar si el botón IA existe
+    const iaBtn = document.getElementById('boton-ia');
+    if (!iaBtn) {
+        console.warn('⚠️ Botón IA no encontrado en el DOM');
+    }
+    
+    console.log('✅ Inicialización completada');
+});
+
+// ================================================================
+// FUNCIÓN GLOBAL PARA ANIMACIONES DE ENTRADA
+// ================================================================
 // Agregar estilo para la animación fadeIn si no existe
 const style = document.createElement('style');
 style.textContent = `
@@ -1002,33 +1042,8 @@ style.textContent = `
             transform: scale(1);
         }
     }
-    
-    .no-results-message {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        padding: 40px 20px;
-        background: rgba(255, 255, 255, 0.03);
-        border-radius: 24px;
-        margin: 20px 0;
-        border: 2px dashed rgba(255, 255, 255, 0.05);
-    }
-    
-    .no-results-message p {
-        color: rgba(255, 255, 255, 0.7);
-        margin: 8px 0;
-        font-weight: 500;
-    }
 `;
 document.head.appendChild(style);
 
-// Inicializar con "Todos" activo
-document.addEventListener('DOMContentLoaded', () => {
-    // Activar la primera categoría (Todos)
-    const firstCategory = document.querySelector('.category-item');
-    if (firstCategory) {
-        firstCategory.classList.add('active');
-    }
-});
-
+console.log('🚀 Guía Pinolera - JavaScript cargado completamente');
+console.log('📌 Funcionalidades activas: Login, Registro, Perfil, Categorías, Tips, Juegos, Pasaporte, WhatsApp, IA');
