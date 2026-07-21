@@ -4,7 +4,532 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
   <title>🔤 Ordena la Palabra - Guía Pinolero</title>
-  <link rel="stylesheet" href="/juegos/css/palabra.css">
+
+  <style>
+    /* ============================================================
+       ORDENA LA PALABRA - Guía Pinolero
+       Paleta: #232049, #a4c737, #a287be, #fbfbfb
+       Fuentes: Myriad Pro, Cascadia Mono Light
+       ============================================================ */
+
+    /* ===== CARGA DE FUENTES ===== */
+    @font-face {
+      font-family: 'Myriad Pro';
+      src: local('Myriad Pro'), local('MyriadPro-Regular');
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: 'Myriad Pro';
+      src: local('Myriad Pro Bold'), local('MyriadPro-Bold');
+      font-weight: 700;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: 'Cascadia Mono Light';
+      src: local('Cascadia Mono Light'), local('CascadiaMono-Light');
+      font-weight: 300;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    /* ===== RESET Y BASE ===== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Myriad Pro', 'Segoe UI', system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(145deg, #232049 0%, #1a1738 50%, #232049 100%);
+      color: #fbfbfb;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      overflow-x: hidden;
+      background-attachment: fixed;
+      position: relative;
+    }
+
+    /* Decoración de fondo */
+    body::before {
+      content: "🔤";
+      position: fixed;
+      top: -50px;
+      right: -50px;
+      font-size: 250px;
+      opacity: 0.03;
+      pointer-events: none;
+      z-index: 0;
+      transform: rotate(20deg);
+    }
+
+    body::after {
+      content: "📝";
+      position: fixed;
+      bottom: -50px;
+      left: -50px;
+      font-size: 250px;
+      opacity: 0.03;
+      pointer-events: none;
+      z-index: 0;
+      transform: rotate(-15deg);
+    }
+
+    /* ===== TÍTULOS ===== */
+    h1 {
+      font-family: 'Myriad Pro', 'Poppins', sans-serif;
+      font-size: clamp(2rem, 8vw, 3.8rem);
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      text-align: center;
+      margin-bottom: 6px;
+      background: linear-gradient(135deg, #a4c737, #a287be);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      position: relative;
+      z-index: 1;
+    }
+
+    h1::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 3px;
+      background: linear-gradient(90deg, #a4c737, #a287be);
+      border-radius: 4px;
+      animation: linePulse 2s ease-in-out infinite;
+    }
+
+    @keyframes linePulse {
+      0%, 100% { width: 80px; opacity: 1; }
+      50% { width: 130px; opacity: 0.6; }
+    }
+
+    .subtitle {
+      font-family: 'Myriad Pro', 'Inter', sans-serif;
+      font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+      text-align: center;
+      max-width: 600px;
+      opacity: 0.9;
+      margin-bottom: 28px;
+      font-weight: 300;
+      letter-spacing: 0.3px;
+      background: rgba(251, 251, 251, 0.04);
+      padding: 8px 24px;
+      border-radius: 40px;
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      border: 1px solid rgba(251, 251, 251, 0.04);
+      color: rgba(251, 251, 251, 0.7);
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ===== CONTENEDOR PRINCIPAL ===== */
+    .game-container {
+      width: 100%;
+      max-width: 640px;
+      background: rgba(251, 251, 251, 0.06);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-radius: 40px;
+      padding: clamp(24px, 5vw, 40px);
+      text-align: center;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(164, 199, 55, 0.08);
+      transition: all 0.3s ease;
+      position: relative;
+      z-index: 1;
+      animation: fadeInUp 0.6s ease;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px) scale(0.95); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* Borde decorativo superior */
+    .game-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #a4c737, #a287be, #a4c737);
+      background-size: 200% 100%;
+      border-radius: 40px 40px 0 0;
+      animation: gradientMove 3s ease-in-out infinite;
+    }
+
+    @keyframes gradientMove {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    .game-container h2 {
+      font-family: 'Myriad Pro', 'Inter', sans-serif;
+      font-size: clamp(0.9rem, 2vw, 1.2rem);
+      font-weight: 400;
+      text-transform: uppercase;
+      letter-spacing: 4px;
+      opacity: 0.6;
+      margin-bottom: 10px;
+      color: rgba(251, 251, 251, 0.6);
+    }
+
+    /* ===== PALABRA DESORDENADA ===== */
+    .scrambled-word {
+      margin: 18px 0 10px 0;
+      font-family: 'Myriad Pro', 'Poppins', sans-serif;
+      font-size: clamp(2.2rem, 10vw, 3.8rem);
+      font-weight: 800;
+      letter-spacing: clamp(6px, 2vw, 14px);
+      background: linear-gradient(135deg, #a4c737, #a287be);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      word-break: break-word;
+      line-height: 1.3;
+      min-height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.15);
+      border-radius: 28px;
+      padding: 16px 12px;
+      border: 1px solid rgba(251, 251, 251, 0.04);
+    }
+
+    /* ===== INPUT ===== */
+    .input-word {
+      width: 100%;
+      margin-top: 22px;
+      padding: 16px 20px;
+      border: 2px solid rgba(164, 199, 55, 0.15);
+      border-radius: 60px;
+      font-family: 'Myriad Pro', 'Inter', sans-serif;
+      font-size: 1rem;
+      font-weight: 500;
+      outline: none;
+      background: rgba(251, 251, 251, 0.06);
+      color: #fbfbfb;
+      text-align: center;
+      letter-spacing: 1px;
+      transition: all 0.25s ease;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .input-word:focus {
+      transform: scale(1.01);
+      border-color: #a4c737;
+      box-shadow: 0 0 0 4px rgba(164, 199, 55, 0.15), 0 8px 25px rgba(0, 0, 0, 0.2);
+      background: rgba(251, 251, 251, 0.08);
+    }
+
+    .input-word::placeholder {
+      color: rgba(251, 251, 251, 0.5);
+      font-weight: 400;
+      letter-spacing: 0.5px;
+    }
+
+    /* ===== BOTONES ===== */
+    .buttons {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 28px;
+    }
+
+    button {
+      border: none;
+      padding: 14px 22px;
+      border-radius: 60px;
+      font-family: 'Myriad Pro', 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background: rgba(251, 251, 251, 0.04);
+      color: #fbfbfb;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      flex: 1 1 auto;
+      min-width: 100px;
+      justify-content: center;
+      letter-spacing: 0.3px;
+      border: 2px solid rgba(251, 251, 251, 0.04);
+      position: relative;
+      overflow: hidden;
+    }
+
+    button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+      transition: left 0.6s ease;
+    }
+
+    button:hover::before {
+      left: 100%;
+    }
+
+    button:hover {
+      transform: translateY(-3px) scale(1.02);
+      background: rgba(251, 251, 251, 0.08);
+      border-color: rgba(164, 199, 55, 0.2);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.25);
+    }
+
+    button:active {
+      transform: scale(0.96);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    button:nth-child(1) {
+      background: rgba(164, 199, 55, 0.15);
+      border-color: rgba(164, 199, 55, 0.2);
+    }
+
+    button:nth-child(1):hover {
+      background: rgba(164, 199, 55, 0.25);
+    }
+
+    button:nth-child(2) {
+      background: rgba(162, 135, 190, 0.15);
+      border-color: rgba(162, 135, 190, 0.2);
+    }
+
+    button:nth-child(2):hover {
+      background: rgba(162, 135, 190, 0.25);
+    }
+
+    button:nth-child(3) {
+      background: rgba(164, 199, 55, 0.1);
+      border-color: rgba(164, 199, 55, 0.15);
+    }
+
+    button:nth-child(3):hover {
+      background: rgba(164, 199, 55, 0.2);
+    }
+
+    /* ===== PISTA ===== */
+    .hint-box {
+      margin-top: 22px;
+      background: rgba(35, 32, 73, 0.6);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      padding: 18px 22px;
+      border-radius: 60px;
+      display: none;
+      font-family: 'Myriad Pro', 'Inter', sans-serif;
+      font-size: 1rem;
+      line-height: 1.5;
+      border-left: 4px solid #a4c737;
+      font-weight: 400;
+      letter-spacing: 0.3px;
+      color: #fbfbfb;
+      word-break: break-word;
+    }
+
+    .hint-box.show {
+      display: block;
+      animation: fadeSlide 0.3s ease;
+    }
+
+    @keyframes fadeSlide {
+      0% { opacity: 0; transform: translateY(-6px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ===== MENSAJE ===== */
+    .message {
+      margin-top: 20px;
+      font-family: 'Myriad Pro', 'Poppins', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      min-height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 6px 12px;
+    }
+
+    .message.correct {
+      color: #a4c737;
+    }
+    .message.incorrect {
+      color: #ffab91;
+    }
+
+    /* ===== PUNTUACIÓN ===== */
+    .score {
+      margin-top: 18px;
+      font-family: 'Cascadia Mono Light', 'Cascadia Mono', monospace;
+      font-size: 1.1rem;
+      font-weight: 500;
+      background: rgba(0, 0, 0, 0.2);
+      padding: 10px 24px;
+      border-radius: 60px;
+      display: inline-block;
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      border: 1px solid rgba(251, 251, 251, 0.04);
+      letter-spacing: 1px;
+      color: #fbfbfb;
+    }
+
+    /* ===== BOTÓN VOLVER ===== */
+    .back-btn {
+      margin-top: 28px;
+      text-decoration: none;
+      font-family: 'Myriad Pro', 'Poppins', sans-serif;
+      background: rgba(251, 251, 251, 0.04);
+      color: #fbfbfb;
+      padding: 14px 30px;
+      border-radius: 60px;
+      font-weight: 700;
+      transition: all 0.25s ease;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      border: 2px solid rgba(251, 251, 251, 0.04);
+      position: relative;
+      z-index: 1;
+    }
+
+    .back-btn:hover {
+      transform: translateY(-3px) scale(1.03);
+      background: rgba(251, 251, 251, 0.08);
+      border-color: rgba(164, 199, 55, 0.15);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    .back-btn:active {
+      transform: scale(0.96);
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 640px) {
+      body {
+        padding: 16px;
+        justify-content: flex-start;
+        padding-top: 30px;
+      }
+
+      .game-container {
+        padding: 22px 18px;
+        border-radius: 32px;
+      }
+
+      .buttons {
+        gap: 10px;
+      }
+
+      button {
+        padding: 13px 16px;
+        font-size: 0.85rem;
+        min-width: 80px;
+        flex: 1 1 40%;
+      }
+
+      .scrambled-word {
+        font-size: clamp(1.8rem, 8vw, 2.6rem);
+        letter-spacing: 4px;
+        padding: 14px 10px;
+        min-height: 70px;
+      }
+
+      .input-word {
+        padding: 14px 16px;
+        font-size: 0.95rem;
+      }
+
+      .hint-box {
+        padding: 14px 18px;
+        font-size: 0.9rem;
+        border-radius: 40px;
+      }
+
+      .back-btn {
+        padding: 12px 24px;
+        font-size: 0.9rem;
+      }
+
+      .score {
+        font-size: 0.95rem;
+        padding: 8px 18px;
+      }
+
+      .message {
+        font-size: 1rem;
+        min-height: 34px;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .game-container {
+        padding: 16px 12px;
+      }
+
+      button {
+        font-size: 0.75rem;
+        padding: 10px 12px;
+        min-width: 60px;
+      }
+
+      .scrambled-word {
+        font-size: 1.6rem;
+        letter-spacing: 3px;
+      }
+    }
+
+    /* ===== SCROLLBAR ===== */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #232049;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #a4c737;
+      border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #a287be;
+    }
+
+    /* ===== SELECTION ===== */
+    ::selection {
+      background: #a4c737;
+      color: #232049;
+    }
+  </style>
 </head>
 <body>
 
@@ -64,7 +589,211 @@
     }
   </script>
 
-  <script type="module" src="/juegos/js/palabra.js"></script>
+  <script type="module">
+    // ============================================================
+    // 1. IMPORTS Y CONFIGURACIÓN DE FIREBASE
+    // ============================================================
+    import { initializeApp } from "firebase/app";
+    import { getAuth, onAuthStateChanged } from "firebase/auth";
+    import {
+      getFirestore,
+      doc,
+      getDoc,
+      updateDoc,
+      collection,
+      addDoc,
+      query,
+      where,
+      getDocs
+    } from "firebase/firestore";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyA6jVICuE17KJcO34gE1brMxqWEfNd3Fy0",
+      authDomain: "mapa-41b00.firebaseapp.com",
+      projectId: "mapa-41b00",
+      storageBucket: "mapa-41b00.firebasestorage.app",
+      messagingSenderId: "535032835400",
+      appId: "1:535032835400:web:68c079cbc3f419eafd177d",
+      measurementId: "G-7R3DSH7PPN"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // ============================================================
+    // 2. EXPONER FUNCIONES Y VARIABLES AL SCOPE GLOBAL
+    // ============================================================
+
+    const lugares = [
+      { palabra: "GRANADA", pista: "Ciudad colonial famosa por su arquitectura histórica." },
+      { palabra: "LEON", pista: "Ciudad reconocida por su cultura y volcanes." },
+      { palabra: "OMETEPE", pista: "Isla formada por dos volcanes en el Lago Cocibolca." },
+      { palabra: "MASAYA", pista: "Lugar famoso por su volcán activo y artesanías." },
+      { palabra: "MATAGALPA", pista: "Región montañosa conocida por el café." },
+      { palabra: "ESTELI", pista: "Ciudad rodeada de naturaleza y paisajes." },
+      { palabra: "BLUEFIELDS", pista: "Ciudad caribeña con ambiente tropical." },
+      { palabra: "JINOTEGA", pista: "Conocida como la ciudad de las brumas." },
+      { palabra: "CORNISLAND", pista: "Destino paradisíaco del Caribe nicaragüense." },
+      { palabra: "SANJUANDELSUR", pista: "Destino turístico famoso por playas y surf." }
+    ];
+
+    let current = 0;
+    let points = 0;
+    let gameCompleted = false;
+    let currentUser = null;
+
+    const scrambledWordEl = document.getElementById("scrambledWord");
+    const hintBoxEl = document.getElementById("hintBox");
+    const messageEl = document.getElementById("message");
+    const scoreEl = document.getElementById("score");
+    const userInputEl = document.getElementById("userInput");
+
+    // ============================================================
+    // 3. FUNCIONES DEL JUEGO
+    // ============================================================
+
+    function shuffleWord(word) {
+      return word
+        .split("")
+        .sort(() => Math.random() - 0.5)
+        .join("");
+    }
+
+    window.loadWord = function() {
+      const actual = lugares[current];
+      scrambledWordEl.innerText = shuffleWord(actual.palabra);
+      hintBoxEl.innerText = actual.pista;
+      hintBoxEl.classList.remove("show");
+      hintBoxEl.style.display = "none";
+      messageEl.innerText = "";
+      messageEl.className = "message";
+      userInputEl.value = "";
+      userInputEl.focus();
+    };
+
+    window.checkWord = function() {
+      const input = userInputEl.value.toUpperCase().replace(/\s/g, '');
+      const correct = lugares[current].palabra;
+
+      if (input === correct) {
+        points++;
+        scoreEl.innerText = `🏆 Puntos: ${points}`;
+        messageEl.innerHTML = "✅ ¡Correcto!";
+        messageEl.className = "message correct";
+        if (currentUser && !gameCompleted) {
+          awardPoints(10, "ordena_palabra_nicaragua");
+        }
+      } else {
+        messageEl.innerHTML = "❌ Intenta nuevamente";
+        messageEl.className = "message incorrect";
+      }
+    };
+
+    window.showHint = function() {
+      hintBoxEl.style.display = "block";
+      void hintBoxEl.offsetWidth;
+      hintBoxEl.classList.add("show");
+    };
+
+    window.nextWord = function() {
+      current = (current + 1) % lugares.length;
+      loadWord();
+      messageEl.className = "message";
+    };
+
+    // ============================================================
+    // 4. FUNCIÓN PARA OTORGAR PUNTOS EN FIRESTORE
+    // ============================================================
+
+    async function awardPoints(pointsToAdd, gameId) {
+      if (!currentUser) {
+        console.warn("No hay usuario autenticado. Puntos no guardados.");
+        return;
+      }
+
+      if (gameCompleted) {
+        console.log("Puntos ya otorgados para este juego.");
+        return;
+      }
+
+      try {
+        const usersRef = collection(db, "usuarios");
+        const q = query(usersRef, where("uid", "==", currentUser.uid));
+        const querySnapshot = await getDocs(q);
+
+        if (querySnapshot.empty) {
+          console.error("Usuario no encontrado en Firestore");
+          return;
+        }
+
+        const userDoc = querySnapshot.docs[0];
+        const userDocRef = userDoc.ref;
+        const currentPoints = userDoc.data().puntos || 0;
+
+        const progressRef = collection(db, "progreso_juegos");
+        const qProgress = query(
+          progressRef,
+          where("usuarioId", "==", currentUser.uid),
+          where("juegoId", "==", gameId)
+        );
+        const progressSnap = await getDocs(qProgress);
+
+        if (!progressSnap.empty) {
+          alert("Ya recibiste los puntos por este juego anteriormente.");
+          gameCompleted = true;
+          return;
+        }
+
+        const nuevosPuntos = currentPoints + pointsToAdd;
+        await updateDoc(userDocRef, { puntos: nuevosPuntos });
+
+        await addDoc(progressRef, {
+          usuarioId: currentUser.uid,
+          juegoId: gameId,
+          puntosObtenidos: pointsToAdd,
+          completado: true,
+          fecha: new Date()
+        });
+
+        gameCompleted = true;
+        alert(`¡Felicidades! Has ganado ${pointsToAdd} puntos. Total: ${nuevosPuntos}`);
+        scoreEl.innerText = `🏆 Puntos: ${points}`;
+
+      } catch (error) {
+        console.error("Error al guardar puntos:", error);
+        alert("Ocurrió un error al guardar los puntos. Intenta de nuevo.");
+      }
+    }
+
+    // ============================================================
+    // 5. AUTENTICACIÓN Y CARGA INICIAL
+    // ============================================================
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        currentUser = user;
+        console.log("Usuario autenticado:", user.email);
+      } else {
+        currentUser = null;
+        console.log("Usuario no autenticado. Los puntos no se guardarán.");
+      }
+    });
+
+    window.loadWord();
+    userInputEl.focus();
+
+    userInputEl.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        checkWord();
+      }
+    });
+
+    window.awardPoints = awardPoints;
+
+    console.log("¡Juego 'Ordena la Palabra' cargado correctamente!");
+  </script>
 
 </body>
 </html>
