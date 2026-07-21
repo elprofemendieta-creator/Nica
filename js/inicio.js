@@ -1,7 +1,6 @@
 // ================================================================
-// Configuración e inicialización de Firebase (versión compat)
+// Configuración Firebase (Compat)
 // ================================================================
-
 const firebaseConfig = {
   apiKey: "AIzaSyA6jVICuE17KJcO34gE1brMxqWEfNd3Fy0",
   authDomain: "mapa-41b00.firebaseapp.com",
@@ -51,15 +50,16 @@ const avatarGrid = document.getElementById('avatarGrid');
 const toast = document.getElementById('toast');
 const whatsappBtn = document.getElementById('whatsappBtn');
 const searchInput = document.getElementById('searchInput');
+const searchResults = document.getElementById('searchResults');
 
-// ===== FUNCIÓN TOAST =====
+// ===== TOAST =====
 function showToast(msg, duration = 3000) {
   toast.textContent = msg;
   toast.style.display = 'block';
   setTimeout(() => { toast.style.display = 'none'; }, duration);
 }
 
-// ===== EVENTOS DE LOGIN =====
+// ===== EVENTOS LOGIN / REGISTRO =====
 doLoginBtn.addEventListener('click', function() {
   const email = loginEmail.value.trim();
   const pass = loginPassword.value.trim();
@@ -123,50 +123,74 @@ forgotPasswordLink.addEventListener('click', function(e) {
     .catch(error => showToast('Error: ' + error.message));
 });
 
-// ===== ESTADO DE AUTENTICACIÓN =====
+// ===== ESTADO DE AUTENTICACIÓN (con actualización en tiempo real) =====
+let currentUserUid = null;
+
 auth.onAuthStateChanged(function(user) {
   console.log('onAuthStateChanged:', user ? user.uid : 'null');
   if (user) {
+    currentUserUid = user.uid;
     authCard.style.display = 'none';
     menuSection.style.display = 'block';
 
-    // Cargar datos del usuario
-    db.collection('usuarios').doc(user.uid).get()
+    // Cargar datos del usuario y escuchar cambios
+    const userRef = db.collection('usuarios').doc(user.uid);
+    userRef.get()
       .then((docSnap) => {
         if (docSnap.exists) {
           const data = docSnap.data();
-          const nombre = data.nombre || user.displayName || 'Usuario';
-          profileNameDisplay.textContent = nombre;
-          if (data.avatar) {
-            profileAvatar.src = data.avatar;
-            modalProfileImage.src = data.avatar;
-          } else {
-            const avatarUrl = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(nombre) + '&background=a4c737&color=fff&size=128';
-            profileAvatar.src = avatarUrl;
-            modalProfileImage.src = avatarUrl;
-          }
-          // Actualizar puntos y posición
-          updateUserStats(user.uid);
+          actualizarPerfil(data, user);
         } else {
-          // Crear documento si no existe
-          db.collection('usuarios').doc(user.uid).set({
+          // Crear documento
+          userRef.set({
             nombre: user.displayName || 'Usuario',
             email: user.email,
             puntos: 0,
             avatar: '',
             createdAt: new Date().toISOString()
+          }).then(() => {
+            // Recargar después de crear
+            userRef.get().then((newSnap) => {
+              if (newSnap.exists) actualizarPerfil(newSnap.data(), user);
+            });
           });
-          profileNameDisplay.textContent = user.displayName || 'Usuario';
         }
       })
       .catch(err => console.error('Error al cargar usuario:', err));
+
+    // Escuchar cambios en tiempo real
+    userRef.onSnapshot((docSnap) => {
+      if (docSnap.exists) {
+        const data = docSnap.data();
+        actualizarPerfil(data, user);
+        // Actualizar puntos y posición
+        updateUserStats(user.uid);
+      }
+    });
+
   } else {
+    currentUserUid = null;
     authCard.style.display = 'block';
     menuSection.style.display = 'none';
     loginForm.style.display = 'block';
     registerForm.style.display = 'none';
   }
 });
+
+// Función para actualizar la UI del perfil
+function actualizarPerfil(data, user) {
+  const nombre = data.nombre || user.displayName || 'Usuario';
+  profileNameDisplay.textContent = nombre;
+  if (data.avatar) {
+    profileAvatar.src = data.avatar;
+    modalProfileImage.src = data.avatar;
+  } else {
+    const avatarUrl = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(nombre) + '&background=a4c737&color=fff&size=128';
+    profileAvatar.src = avatarUrl;
+    modalProfileImage.src = avatarUrl;
+  }
+  // Los puntos se actualizan en updateUserStats
+}
 
 // ===== ACTUALIZAR PUNTOS Y POSICIÓN =====
 function updateUserStats(uid) {
@@ -308,14 +332,71 @@ if (whatsappBtn) {
   });
 }
 
-// ===== BÚSQUEDA (placeholder) =====
-if (searchInput) {
-  searchInput.addEventListener('input', function() {
-    const query = this.value.toLowerCase();
-    // Aquí podrías filtrar juegos o destinos, por ahora solo consola
-    console.log('Buscando:', query);
+// ===== BUSCADOR =====
+// Datos de búsqueda: juegos y destinos
+const searchData = [
+  // Juegos
+  { type: 'juego', name: 'Gran Mapa Misterioso', icon: '🎮', ref: 'mapa' },
+  { type: 'juego', name: 'Pinolero Millonario', icon: '💰', ref: 'millonario' },
+  { type: 'juego', name: 'Stop Pinolero', icon: '🛑', ref: 'stop' },
+  { type: 'juego', name: 'Memoria Pinolera', icon: '🧠', ref: 'memoria' },
+  { type: 'juego', name: 'Laberinto Turístico', icon: '🌀', ref: 'laberinto' },
+  // Destinos
+  { type: 'destino', name: 'Volcán Masaya', icon: '🌋', ref: 'masaya' },
+  { type: 'destino', name: 'Laguna de Apoyo', icon: '🏞️', ref: 'apoyo' },
+  { type: 'destino', name: 'Granada', icon: '🏛️', ref: 'granada' },
+  { type: 'destino', name: 'Orm', icon: '🏝️', ref: 'orm' }
+];
+
+searchInput.addEventListener('input', function() {
+  const query = this.value.trim().toLowerCase();
+  if (query.length === 0) {
+    searchResults.classList.remove('show');
+    return;
+  }
+
+  const results = searchData.filter(item =>
+    item.name.toLowerCase().includes(query)
+  );
+
+  if (results.length === 0) {
+    searchResults.innerHTML = `<div class="search-result-item" style="color:rgba(255,255,255,0.4);">No se encontraron resultados</div>`;
+    searchResults.classList.add('show');
+    return;
+  }
+
+  let html = '';
+  results.forEach(item => {
+    html += `
+      <div class="search-result-item" data-ref="${item.ref}" data-type="${item.type}">
+        <span class="icon">${item.icon}</span>
+        <span class="text">${item.name}</span>
+        <span class="category">${item.type}</span>
+      </div>
+    `;
   });
-}
+  searchResults.innerHTML = html;
+  searchResults.classList.add('show');
+
+  // Evento de clic en cada resultado
+  document.querySelectorAll('.search-result-item').forEach(el => {
+    el.addEventListener('click', function() {
+      const ref = this.dataset.ref;
+      const type = this.dataset.type;
+      showToast(`Abriendo ${type}: ${ref}`);
+      // Aquí podrías redirigir o ejecutar una acción
+      searchResults.classList.remove('show');
+      searchInput.value = '';
+    });
+  });
+});
+
+// Ocultar resultados al hacer clic fuera
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.search-bar')) {
+    searchResults.classList.remove('show');
+  }
+});
 
 // ===== BOTONES "JUGAR" =====
 document.querySelectorAll('.btn-jugar').forEach(btn => {
@@ -325,6 +406,28 @@ document.querySelectorAll('.btn-jugar').forEach(btn => {
     showToast('Abriendo juego: ' + game);
     // Redirigir o abrir modal según corresponda
     // Ejemplo: window.location.href = 'juego-' + game + '.html';
+  });
+});
+
+// ===== MENÚ INFERIOR - NAVEGACIÓN =====
+document.querySelectorAll('.nav-item').forEach(item => {
+  item.addEventListener('click', function(e) {
+    e.preventDefault();
+    const url = this.dataset.url;
+    if (url && url !== '#') {
+      // Redirigir a la URL
+      window.location.href = url;
+    } else {
+      // Si es "Inicio", simplemente mostrar toast o recargar
+      showToast('Página de inicio');
+    }
+    // Marcar como activo
+    document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+    this.classList.add('active');
+    // Si es el mapa, no se marca como active porque es especial, pero lo dejamos
+    if (this.classList.contains('nav-map')) {
+      // Opcional: resaltar el mapa
+    }
   });
 });
 
