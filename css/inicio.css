@@ -21,10 +21,9 @@
 
 body {
   font-family: var(--font-body);
- background: radial-gradient(circle at top, #2a2560 0%, #1a1738 100%);
- border: 2px solid rgba(251, 251, 251, 0.4);
+  background: radial-gradient(circle at top left, #a4c737 0%, #a287be 30%, #fbfbfb 70%);
   background-attachment: fixed;
-  color: var(--text-light);
+  color: var(--text-dark);
   margin: 0;
   padding: 0;
   min-height: 100vh;
@@ -88,7 +87,7 @@ body {
   width: 100%;
   height: 280px;
   z-index: 0;
-  opacity: 0.10;
+  opacity: 0.05;
   pointer-events: none;
 }
 .wave-bg svg {
@@ -116,7 +115,7 @@ body {
   backdrop-filter: blur(16px);
   border-radius: 2.5rem;
   padding: 2.5rem 2rem;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
   border: 1px solid rgba(162, 135, 190, 0.3);
   width: 100%;
   max-width: 480px;
@@ -131,7 +130,7 @@ body {
 }
 .mascota img {
   width: 90px;
-  filter: drop-shadow(0 8px 20px rgba(0,0,0,0.4));
+  filter: drop-shadow(0 8px 20px rgba(0,0,0,0.2));
   animation: float 3s ease-in-out infinite;
 }
 @keyframes float {
@@ -259,13 +258,13 @@ h1 {
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* ----- Encabezado con logo ----- */
+/* ----- Encabezado ----- */
 .app-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0.5rem 0 1rem 0;
-  border-bottom: 1px solid rgba(162, 135, 190, 0.15);
+  border-bottom: 1px solid rgba(162, 135, 190, 0.2);
   margin-bottom: 1.2rem;
   flex-wrap: wrap;
 }
@@ -321,99 +320,25 @@ h1 {
   transform: scale(1.05);
 }
 
-/* ----- Barra de búsqueda con resultados ----- */
-.search-bar {
-  position: relative;
-  background: rgba(251, 251, 251, 0.08);
-  border-radius: 60px;
-  padding: 0.6rem 1.2rem;
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  border: 1px solid rgba(162, 135, 190, 0.2);
-  margin-bottom: 1.5rem;
-  transition: all 0.3s;
-}
-.search-bar:focus-within {
-  border-color: var(--primary-color);
-  box-shadow: 0 0 20px rgba(164, 199, 55, 0.1);
-}
-.search-bar i {
-  color: rgba(251, 251, 251, 0.4);
-  font-size: 1.1rem;
-}
-.search-bar input {
-  background: transparent;
-  border: none;
-  outline: none;
-  color: var(--text-light);
-  font-size: 0.95rem;
-  width: 100%;
-  font-family: var(--font-body);
-}
-.search-bar input::placeholder {
-  color: rgba(251, 251, 251, 0.4);
-}
-.search-results {
-  position: absolute;
-  top: calc(100% + 8px);
-  left: 0;
-  right: 0;
-  background: var(--bg-dark);
-  border-radius: 16px;
-  padding: 0.5rem 0;
-  border: 1px solid rgba(162, 135, 190, 0.2);
-  max-height: 200px;
-  overflow-y: auto;
-  display: none;
-  z-index: 50;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-}
-.search-results.show {
-  display: block;
-}
-.search-result-item {
-  padding: 0.6rem 1.2rem;
-  cursor: pointer;
-  transition: background 0.2s;
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  color: var(--text-light);
-}
-.search-result-item:hover {
-  background: rgba(164, 199, 55, 0.1);
-}
-.search-result-item .icon {
-  font-size: 1.2rem;
-}
-.search-result-item .text {
-  font-size: 0.9rem;
-}
-.search-result-item .category {
-  font-size: 0.7rem;
-  color: rgba(251,251,251,0.4);
-  margin-left: auto;
-}
-
-/* ----- Tarjeta de perfil ----- */
+/* ===== TARJETA DE PERFIL ===== */
 .profile-card {
-  background: rgba(162, 135, 190, 0.08);
+  background: rgba(255,255,255,0.6);
   backdrop-filter: blur(10px);
   border-radius: 20px;
   padding: 1.2rem 1.5rem;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 1rem;
-  border: 1px solid rgba(162, 135, 190, 0.15);
+  border: 1px solid rgba(162, 135, 190, 0.2);
   margin-bottom: 0.8rem;
-  cursor: pointer;
   transition: all 0.3s;
   position: relative;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
 }
 .profile-card:hover {
-  background: rgba(162, 135, 190, 0.15);
+  background: rgba(255,255,255,0.8);
   transform: translateY(-2px);
+  box-shadow: 0 6px 25px rgba(0,0,0,0.08);
 }
 .profile-avatar {
   width: 60px;
@@ -430,7 +355,7 @@ h1 {
 .profile-name {
   font-size: 1.1rem;
   font-weight: 700;
-  color: var(--text-light);
+  color: var(--text-dark);
   margin-bottom: 0.2rem;
 }
 .profile-stats-row {
@@ -462,17 +387,63 @@ h1 {
   flex-wrap: wrap;
   gap: 0.8rem 1.5rem;
   font-size: 0.85rem;
-  color: rgba(251, 251, 251, 0.7);
+  color: rgba(35, 32, 73, 0.7);
+  margin-bottom: 0.6rem;
 }
 .profile-metrics span {
   display: flex;
   align-items: center;
   gap: 4px;
 }
+/* Nuevos botones de perfil */
+.profile-actions {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-top: 0.2rem;
+}
+.profile-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0.3rem 1rem;
+  border-radius: 50px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s;
+  background: rgba(164, 199, 55, 0.1);
+  color: var(--primary-color);
+  border: 1px solid rgba(164, 199, 55, 0.2);
+}
+.profile-btn:hover {
+  background: var(--primary-color);
+  color: white;
+  transform: scale(1.05);
+}
+.profile-btn-comunidad {
+  background: rgba(162, 135, 190, 0.1);
+  color: var(--secondary-color);
+  border-color: rgba(162, 135, 190, 0.2);
+}
+.profile-btn-comunidad:hover {
+  background: var(--secondary-color);
+  color: white;
+}
+.profile-btn-promociones {
+  background: rgba(245, 179, 66, 0.1);
+  color: #f5b342;
+  border-color: rgba(245, 179, 66, 0.2);
+}
+.profile-btn-promociones:hover {
+  background: #f5b342;
+  color: white;
+}
+
 .edit-btn {
   background: rgba(162, 135, 190, 0.1);
   border: none;
-  color: var(--text-light);
+  color: var(--text-dark);
   width: 36px;
   height: 36px;
   border-radius: 50%;
@@ -495,13 +466,13 @@ h1 {
   display: flex;
   align-items: center;
   gap: 0.6rem;
-  background: rgba(162, 135, 190, 0.08);
+  background: rgba(255,255,255,0.5);
   padding: 0.4rem 1.2rem;
   border-radius: 50px;
   border: 1px solid rgba(162, 135, 190, 0.1);
   margin-bottom: 1.8rem;
   font-size: 0.85rem;
-  color: rgba(251, 251, 251, 0.7);
+  color: rgba(35, 32, 73, 0.7);
   justify-content: center;
 }
 .badge-icon {
@@ -509,17 +480,19 @@ h1 {
 }
 #positionBadge {
   font-weight: 600;
-  color: var(--text-light);
+  color: var(--text-dark);
 }
 
-/* ----- Juegos, Destinos, Insignias (sin cambios) ----- */
-.games-section, .destinations-section, .badges-section {
+/* ----- Juegos y Pasaporte ----- */
+.games-section,
+.passport-section {
   margin-bottom: 2rem;
 }
-.games-section h2, .destinations-section h2, .badges-section h2 {
+.games-section h2,
+.passport-section h2 {
   font-size: 1.2rem;
   font-weight: 700;
-  color: var(--text-light);
+  color: var(--text-dark);
   margin-bottom: 1rem;
   letter-spacing: 0.5px;
 }
@@ -530,17 +503,17 @@ h1 {
   gap: 0.6rem;
 }
 .game-list li {
-  background: rgba(162, 135, 190, 0.06);
+  background: rgba(255,255,255,0.5);
   border-radius: 16px;
   padding: 0.8rem 1.2rem;
   display: flex;
   align-items: center;
   gap: 0.8rem;
-  border: 1px solid rgba(162, 135, 190, 0.08);
+  border: 1px solid rgba(162, 135, 190, 0.1);
   transition: all 0.3s;
 }
 .game-list li:hover {
-  background: rgba(162, 135, 190, 0.12);
+  background: rgba(255,255,255,0.8);
   transform: translateX(4px);
 }
 .game-icon {
@@ -551,6 +524,7 @@ h1 {
   flex: 1;
   font-weight: 500;
   font-size: 0.95rem;
+  color: var(--text-dark);
 }
 .btn-jugar {
   background: linear-gradient(135deg, var(--primary-color), #8ab32e);
@@ -571,67 +545,37 @@ h1 {
   transform: scale(1.05);
   box-shadow: 0 6px 20px rgba(164, 199, 55, 0.3);
 }
-.destinations-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.8rem;
-}
-.dest-item {
-  background: rgba(162, 135, 190, 0.06);
-  border-radius: 14px;
-  padding: 0.8rem 1rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border: 1px solid rgba(162, 135, 190, 0.08);
-  transition: all 0.3s;
-}
-.dest-item:hover {
-  background: rgba(162, 135, 190, 0.12);
-  transform: translateY(-2px);
-}
-.dest-name {
-  font-weight: 500;
-  font-size: 0.9rem;
-}
-.dest-stars {
-  color: #f5b342;
-  font-size: 0.85rem;
-  letter-spacing: 1px;
-}
-.badge-list {
+.passport-list {
   list-style: none;
+  padding: 0;
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 0.6rem;
 }
-.badge-list li {
-  background: rgba(162, 135, 190, 0.08);
-  padding: 0.4rem 1.2rem;
-  border-radius: 50px;
-  font-size: 0.85rem;
-  font-weight: 500;
+.passport-list li {
+  background: rgba(255,255,255,0.5);
+  border-radius: 12px;
+  padding: 0.6rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
   border: 1px solid rgba(162, 135, 190, 0.1);
-  transition: all 0.3s;
+  font-weight: 500;
+  color: var(--text-dark);
 }
-.badge-list li:hover {
-  background: rgba(164, 199, 55, 0.1);
-  border-color: var(--primary-color);
-  transform: scale(1.03);
-}
-.badge-list .next-badge {
-  background: rgba(162, 135, 190, 0.03);
-  border-style: dashed;
-  color: rgba(251, 251, 251, 0.4);
+.passport-list li i {
+  font-size: 1.2rem;
+  width: 1.6rem;
+  text-align: center;
 }
 
-/* ----- MENÚ INFERIOR RENOVADO ----- */
+/* ===== MENÚ INFERIOR (5 botones) ===== */
 .bottom-nav {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
-  background: rgba(35, 32, 73, 0.95);
+  background: rgba(255,255,255,0.95);
   backdrop-filter: blur(12px);
   display: flex;
   justify-content: space-around;
@@ -645,44 +589,55 @@ h1 {
   flex-direction: column;
   align-items: center;
   text-decoration: none;
-  color: rgba(251, 251, 251, 0.5);
+  color: rgba(35, 32, 73, 0.4);
   font-size: 0.6rem;
   transition: all 0.3s;
   padding: 0.2rem 0.3rem;
   position: relative;
   flex: 1;
   text-align: center;
+  /* Animación al hacer clic */
+  -webkit-tap-highlight-color: transparent;
 }
 .bottom-nav .nav-item i {
-  font-size: 1.2rem;
+  font-size: 1.6rem;  /* Iconos más grandes */
   margin-bottom: 2px;
-  transition: all 0.3s;
+  transition: all 0.3s ease;
 }
 .bottom-nav .nav-item span {
   line-height: 1;
+  font-weight: 500;
+  letter-spacing: 0.3px;
 }
+/* Estado activo y hover */
 .bottom-nav .nav-item.active,
 .bottom-nav .nav-item:hover {
   color: var(--primary-color);
 }
 .bottom-nav .nav-item.active i,
 .bottom-nav .nav-item:hover i {
-  transform: translateY(-2px);
+  transform: translateY(-3px) scale(1.05);
+  color: var(--primary-color);
+}
+/* Animación de clic (presionado) */
+.bottom-nav .nav-item:active {
+  transform: scale(0.85);
+  transition: transform 0.1s;
 }
 /* Botón Mapa destacado */
 .bottom-nav .nav-map {
   background: var(--primary-color);
-  color: var(--text-dark);
+  color: var(--text-light);
   border-radius: 50%;
-  width: 56px;
-  height: 56px;
+  width: 64px;
+  height: 64px;
   justify-content: center;
-  margin-top: -16px;
-  box-shadow: 0 4px 15px rgba(164, 199, 55, 0.4);
-  flex: 0 0 56px;
+  margin-top: -20px;
+  box-shadow: 0 4px 20px rgba(164, 199, 55, 0.4);
+  flex: 0 0 64px;
 }
 .bottom-nav .nav-map i {
-  font-size: 1.8rem;
+  font-size: 2.2rem;  /* Más grande */
   margin-bottom: 0;
 }
 .bottom-nav .nav-map span {
@@ -690,7 +645,16 @@ h1 {
 }
 .bottom-nav .nav-map:hover {
   transform: scale(1.05);
-  color: var(--text-dark);
+  color: var(--text-light);
+  background: #8ab32e;
+}
+.bottom-nav .nav-map:active {
+  transform: scale(0.85);
+}
+.bottom-nav .nav-map.active {
+  background: var(--primary-color);
+  color: var(--text-light);
+  box-shadow: 0 0 30px rgba(164, 199, 55, 0.6);
 }
 
 /* ===== MODAL ===== */
@@ -708,13 +672,13 @@ h1 {
   justify-content: center;
 }
 .modal-content {
-  background: linear-gradient(145deg, #1e1b3e, var(--bg-dark));
+  background: var(--bg-light);
   border-radius: 2rem;
   padding: 2rem;
   width: 90%;
   max-width: 450px;
-  color: var(--text-light);
-  border: 1px solid rgba(162, 135, 190, 0.3);
+  color: var(--text-dark);
+  border: 1px solid rgba(162, 135, 190, 0.2);
   max-height: 90vh;
   overflow-y: auto;
 }
@@ -750,7 +714,7 @@ h1 {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  color: var(--bg-dark);
+  color: var(--bg-light);
 }
 .avatar-grid {
   display: flex;
@@ -772,14 +736,13 @@ h1 {
   transform: scale(1.05);
 }
 
-/* ===== TOAST y WHATSAPP ===== */
+/* ===== TOAST ===== */
 .toast-message {
   position: fixed;
   bottom: 100px;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(35, 32, 73, 0.9);
-  backdrop-filter: blur(8px);
+  background: var(--bg-dark);
   color: var(--text-light);
   padding: 12px 24px;
   border-radius: 60px;
@@ -787,31 +750,6 @@ h1 {
   font-size: 0.9rem;
   white-space: nowrap;
   border: 1px solid rgba(164, 199, 55, 0.3);
-}
-.whatsapp-container {
-  position: fixed;
-  bottom: 90px;
-  right: 25px;
-  z-index: 1000;
-}
-.whatsapp-float {
-  background: linear-gradient(135deg, var(--primary-color), #8ab32e);
-  color: var(--text-light);
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 32px;
-  text-decoration: none;
-  animation: pulse 2s infinite;
-  box-shadow: 0 8px 25px rgba(164, 199, 55, 0.4);
-}
-@keyframes pulse {
-  0% { box-shadow: 0 0 0 0 rgba(164, 199, 55, 0.6); }
-  70% { box-shadow: 0 0 0 15px rgba(164, 199, 55, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(164, 199, 55, 0); }
 }
 
 /* ===== RESPONSIVE ===== */
@@ -825,11 +763,33 @@ h1 {
   .profile-details { flex: 1 1 100%; text-align: center; }
   .profile-stats-row { justify-content: center; }
   .profile-metrics { justify-content: center; }
+  .profile-actions { justify-content: center; }
   .edit-btn { position: absolute; top: 10px; right: 10px; }
-  .destinations-grid { grid-template-columns: 1fr; }
-  .badge-list { justify-content: center; }
-  .bottom-nav .nav-item { font-size: 0.5rem; }
-  .bottom-nav .nav-item i { font-size: 1rem; }
+  .bottom-nav .nav-item i { font-size: 1.4rem; }
+  .bottom-nav .nav-map { width: 56px; height: 56px; flex: 0 0 56px; margin-top: -16px; }
+  .bottom-nav .nav-map i { font-size: 1.8rem; }
+  .passport-list li { font-size: 0.9rem; }
+}
+
+@media (max-width: 480px) {
+  .games-section h2,
+  .passport-section h2 {
+    font-size: 1rem;
+  }
+  .game-list li {
+    padding: 0.6rem 1rem;
+  }
+  .game-icon {
+    font-size: 1.5rem;
+  }
+  .game-name {
+    font-size: 0.85rem;
+  }
+  .btn-jugar {
+    font-size: 0.7rem;
+    padding: 0.3rem 1rem;
+  }
+  .bottom-nav .nav-item i { font-size: 1.2rem; }
   .bottom-nav .nav-map { width: 48px; height: 48px; flex: 0 0 48px; }
   .bottom-nav .nav-map i { font-size: 1.5rem; }
 }
