@@ -18,13 +18,6 @@
     </div>
   </div>
 
-  <!-- Fondo decorativo -->
-  <div class="wave-bg">
-    <svg viewBox="0 0 1440 320" preserveAspectRatio="none">
-      <path fill="rgba(0,0,0,0.03)" d="M0,192L48,197.3C96,203,192,213,288,208C384,203,480,181,576,176C672,171,768,181,864,197.3C960,213,1056,235,1152,224C1248,213,1344,171,1392,149.3L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
-    </svg>
-  </div>
-
   <div class="container">
     <!-- Login/Registro -->
     <div id="authCard" class="glass-card">
@@ -66,7 +59,7 @@
 
     <!-- MENÚ PRINCIPAL -->
     <div id="menuSection" style="display:none;">
-      <!-- Encabezado con logo -->
+      <!-- Encabezado con logo más grande -->
       <header class="app-header">
         <div class="header-left">
           <img src="logo.png" alt="Logo" class="header-logo" />
@@ -82,29 +75,13 @@
         </div>
       </header>
 
-      <!-- Tarjeta de perfil (con redirección a comunidad al hacer clic en el área) -->
+      <!-- Tarjeta de perfil (simplificada) -->
       <div class="profile-card" id="profileTrigger" style="cursor:pointer;">
         <img id="profileAvatar" class="profile-avatar" src="" alt="Avatar" />
         <div class="profile-details">
           <div class="profile-name" id="profileNameDisplay">Usuario</div>
-          <div class="profile-stats-row">
-            <span class="level-badge">Nivel 7</span>
-            <span class="explorer-badge">Explorador</span>
-            <span class="progress-badge">80%</span>
-          </div>
           <div class="profile-metrics">
             <span id="userPointsDisplay">⭐ 0 puntos</span>
-            <span>12 insignias</span>
-            <span>7 racha diaria</span>
-          </div>
-          <!-- NUEVOS BOTONES: Comunidad y Promociones -->
-          <div class="profile-actions">
-            <a href="comunidad.html" class="profile-btn profile-btn-comunidad">
-              <i class="fas fa-users"></i> Comunidad
-            </a>
-            <a href="promociones.html" class="profile-btn profile-btn-promociones">
-              <i class="fas fa-tags"></i> Promociones
-            </a>
           </div>
         </div>
         <button id="editProfileBtn" class="edit-btn" title="Editar perfil">
@@ -112,10 +89,20 @@
         </button>
       </div>
 
-      <!-- Posición global -->
+      <!-- Posición global (se mantiene) -->
       <div class="position-badge-wrapper">
         <span class="badge-icon">🏆</span>
         <span id="positionBadge">Calculando posición...</span>
+      </div>
+
+      <!-- Botones independientes: Comunidad y Promociones -->
+      <div class="profile-actions-wrapper">
+        <a href="comunidad.html" class="profile-btn profile-btn-comunidad">
+          <i class="fas fa-users"></i> Comunidad
+        </a>
+        <a href="promociones.html" class="profile-btn profile-btn-promociones">
+          <i class="fas fa-tags"></i> Promociones
+        </a>
       </div>
 
       <!-- Juegos -->
@@ -150,20 +137,17 @@
         </ul>
       </section>
 
-      <!-- Pasaporte (lugares visitados) -->
+      <!-- Pasaporte (lugares visitados) dinámico -->
       <section class="passport-section">
         <h2>Pasaporte (lugares visitados)</h2>
-        <ul class="passport-list">
-          <li><i class="fas fa-check-circle" style="color:#a4c737;"></i> Volcán Masaya</li>
-          <li><i class="fas fa-check-circle" style="color:#a4c737;"></i> Laguna de Apoyo</li>
-          <li><i class="fas fa-circle" style="color:#ccc;"></i> Granada</li>
-          <li><i class="fas fa-circle" style="color:#ccc;"></i> Orm</li>
-          <li><i class="fas fa-circle" style="color:#ccc;"></i> León</li>
+        <ul class="passport-list" id="passportList">
+          <!-- Se llenará desde JS -->
+          <li class="passport-empty">No has visitado ningún lugar aún.</li>
         </ul>
-        <p style="font-size:0.8rem; color:#888; margin-top:0.5rem;">✅ Visitados  •  ⭕ Pendientes</p>
+        <p style="font-size:0.8rem; color:rgba(255,255,255,0.4); margin-top:0.5rem;">✅ Visitados  •  ⭕ Pendientes</p>
       </section>
 
-      <!-- MENÚ INFERIOR RENOVADO (5 botones: Inicio, Visitas, Mapa, Escanea, Juegos) -->
+      <!-- MENÚ INFERIOR RENOVADO (5 botones) -->
       <nav class="bottom-nav">
         <a href="#" class="nav-item active" data-url="#">
           <i class="fas fa-home"></i>
