@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
-  <title>Guía Pinolero - Juegos Turísticos</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet" />
+  <title>Guía Pinolera - Juegos Turísticos</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
   <link rel="stylesheet" href="juegos.css" />
 </head>
@@ -21,10 +20,9 @@
       </a>
     </div>
     <h1>🎮 Juegos Turísticos</h1>
-     <!-- ===== Boton de Admin ===== -->
     <div class="topbar-right">
       <a href="../estadisticas.html" class="btn-admin">
-        <i class="fas fa-chart-bar"></i> <small>.</small> 
+        <i class="fas fa-chart-bar"></i>
       </a>
     </div>
   </header>
@@ -33,13 +31,13 @@
   <main class="games-container">
     <div class="carousel-premium-container">
       <div class="carousel-premium-wrapper">
-        <button class="carousel-nav-btn prev-btn">‹</button>
-        
+        <button class="carousel-nav-btn prev-btn" aria-label="Anterior">‹</button>
+
         <div class="carousel-track-wrapper">
           <div class="carousel-track">
-            
+
             <!-- Juego 1: Mapa Misterioso -->
-            <div class="carousel-slide" data-url="mapamisterioso.html" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+            <div class="carousel-slide" data-url="mapamisterioso.html" style="background: linear-gradient(135deg, #232049 0%, #a287be 100%);">
               <div class="slide-content">
                 <div class="slide-icon">🗺️</div>
                 <h3>El Gran Mapa Misterioso</h3>
@@ -50,19 +48,19 @@
             </div>
 
             <!-- Juego 2: Pinolero Millonario -->
-            <div class="carousel-slide" data-url="millonario.html" style="background: linear-gradient(135deg, #FF758C 0%, #48BB78 100%);">
+            <div class="carousel-slide" data-url="millonario.html" style="background: linear-gradient(135deg, #a4c737 0%, #232049 100%);">
               <div class="slide-content">
                 <div class="slide-icon">💰</div>
                 <h3>Pinolero Millonario</h3>
                 <p>Conviértete en millonario respondiendo</p>
-                <p>Juego con fines de entretenimiento adaptado a Nicaragua. No se gana dinero real.</p>
+                <p class="slide-sub">Juego con fines de entretenimiento adaptado a Nicaragua. No se gana dinero real.</p>
                 <div class="slide-stats">💰</div>
                 <div class="slide-glow"></div>
               </div>
             </div>
 
             <!-- Juego 3: Stopinolero -->
-            <div class="carousel-slide" data-url="stop.html" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+            <div class="carousel-slide" data-url="stop.html" style="background: linear-gradient(135deg, #a287be 0%, #232049 100%);">
               <div class="slide-content">
                 <div class="slide-icon">🛑</div>
                 <h3>Stopinolero</h3>
@@ -73,7 +71,7 @@
             </div>
 
             <!-- Juego 4: Memoria -->
-            <div class="carousel-slide" data-url="pareja.html" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+            <div class="carousel-slide" data-url="pareja.html" style="background: linear-gradient(135deg, #232049 0%, #a4c737 100%);">
               <div class="slide-content">
                 <div class="slide-icon">🃏</div>
                 <h3>Memoria de Cartas</h3>
@@ -84,7 +82,7 @@
             </div>
 
             <!-- Juego 5: Ordena Palabra -->
-            <div class="carousel-slide" data-url="palabra.html" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+            <div class="carousel-slide" data-url="palabra.html" style="background: linear-gradient(135deg, #a4c737 0%, #a287be 100%);">
               <div class="slide-content">
                 <div class="slide-icon">🔤</div>
                 <h3>Ordena la Palabra</h3>
@@ -95,7 +93,7 @@
             </div>
 
             <!-- Juego 6: Laberinto -->
-            <div class="carousel-slide" data-url="laberinto.html" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+            <div class="carousel-slide" data-url="laberinto.html" style="background: linear-gradient(135deg, #a287be 0%, #a4c737 100%);">
               <div class="slide-content">
                 <div class="slide-icon">🌋</div>
                 <h3>Laberinto</h3>
@@ -106,7 +104,7 @@
             </div>
 
             <!-- Juego 7: Varios -->
-            <div class="carousel-slide" data-url="SOPA.html" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);">
+            <div class="carousel-slide" data-url="SOPA.html" style="background: linear-gradient(135deg, #232049 0%, #a4c737 100%);">
               <div class="slide-content">
                 <div class="slide-icon">🧩</div>
                 <h3>Varios</h3>
@@ -119,18 +117,18 @@
           </div>
         </div>
 
-        <button class="carousel-nav-btn next-btn">›</button>
+        <button class="carousel-nav-btn next-btn" aria-label="Siguiente">›</button>
       </div>
 
       <!-- Indicadores -->
       <div class="carousel-indicators">
-        <span class="indicator-dot active" data-index="0"></span>
-        <span class="indicator-dot" data-index="1"></span>
-        <span class="indicator-dot" data-index="2"></span>
-        <span class="indicator-dot" data-index="3"></span>
-        <span class="indicator-dot" data-index="4"></span>
-        <span class="indicator-dot" data-index="5"></span>
-        <span class="indicator-dot" data-index="6"></span>
+        <span class="indicator-dot active" data-index="0" role="button" tabindex="0"></span>
+        <span class="indicator-dot" data-index="1" role="button" tabindex="0"></span>
+        <span class="indicator-dot" data-index="2" role="button" tabindex="0"></span>
+        <span class="indicator-dot" data-index="3" role="button" tabindex="0"></span>
+        <span class="indicator-dot" data-index="4" role="button" tabindex="0"></span>
+        <span class="indicator-dot" data-index="5" role="button" tabindex="0"></span>
+        <span class="indicator-dot" data-index="6" role="button" tabindex="0"></span>
       </div>
     </div>
   </main>
@@ -149,7 +147,7 @@
 
   <!-- ===== WHATSAPP FLOTANTE ===== -->
   <div class="whatsapp-container">
-    <a href="#" class="whatsapp-float" id="whatsappBtn">
+    <a href="#" class="whatsapp-float" id="whatsappBtn" aria-label="WhatsApp">
       <i class="fab fa-whatsapp"></i>
     </a>
   </div>
@@ -161,7 +159,7 @@
     (function createParticles() {
       const container = document.getElementById('particlesBg');
       if (!container) return;
-      
+
       for (let i = 0; i < 30; i++) {
         const particle = document.createElement('div');
         particle.className = 'particle';
