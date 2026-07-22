@@ -759,9 +759,11 @@ body {
   flex-direction: column;
   align-items: center;
   gap: 12px;
-  z-index: 9999 !important;
+  z-index: 9999;
+  width: 60px; /* ANCHO FIJO PARA MANTENER ALINEACIÓN */
 }
 
+/* Estilo base para ambos botones */
 .floating-btn {
   width: 60px !important;
   height: 60px !important;
@@ -784,6 +786,7 @@ body {
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4) !important;
 }
 
+/* WhatsApp - Verde */
 .whatsapp-btn {
   background: linear-gradient(135deg, #25D366, #128C7E) !important;
   box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4) !important;
@@ -793,18 +796,37 @@ body {
   box-shadow: 0 8px 30px rgba(37, 211, 102, 0.6) !important;
 }
 
-/* ===== FORZAR BOTÓN DE DIFY ===== */
+/* ============================================================
+   FORZAR BOTÓN DE DIFY - MISMA ALINEACIÓN
+   ============================================================ */
 
+/* Resetear el contenedor de Dify */
 #dify-chatbot-bubble-button-container {
   all: unset !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
+  width: 60px !important;
+  height: 60px !important;
+  flex-shrink: 0 !important;
 }
 
+/* Forzar el placeholder */
+#dify-button-placeholder {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 60px !important;
+  height: 60px !important;
+  flex-shrink: 0 !important;
+}
+
+/* El botón de Dify hereda los estilos de .floating-btn */
 #dify-chatbot-bubble-button {
   width: 60px !important;
   height: 60px !important;
+  min-width: 60px !important;
+  min-height: 60px !important;
   border-radius: 50% !important;
   display: flex !important;
   align-items: center !important;
@@ -816,8 +838,13 @@ body {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
   position: relative !important;
   flex-shrink: 0 !important;
-  margin: 0 !important;
+  margin: 0 auto !important;
   padding: 0 !important;
+  left: auto !important;
+  right: auto !important;
+  top: auto !important;
+  bottom: auto !important;
+  transform: none !important;
 }
 
 #dify-chatbot-bubble-button:hover {
@@ -830,9 +857,13 @@ body {
   height: 28px !important;
   stroke: white !important;
   fill: none !important;
+  margin: 0 auto !important;
+  display: block !important;
 }
 
-/* Ventana del chat */
+/* ============================================================
+   VENTANA DEL CHAT
+   ============================================================ */
 #dify-chatbot-bubble-window {
   width: 24rem !important;
   height: 40rem !important;
@@ -904,6 +935,7 @@ body {
     .floating-buttons-container {
         bottom: 90px;
         right: 16px;
+        width: 52px;
         gap: 10px;
     }
 
@@ -914,6 +946,18 @@ body {
     }
 
     #dify-chatbot-bubble-button {
+        width: 52px !important;
+        height: 52px !important;
+        min-width: 52px !important;
+        min-height: 52px !important;
+    }
+
+    #dify-chatbot-bubble-button-container {
+        width: 52px !important;
+        height: 52px !important;
+    }
+
+    #dify-button-placeholder {
         width: 52px !important;
         height: 52px !important;
     }
