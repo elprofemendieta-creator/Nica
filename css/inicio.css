@@ -748,26 +748,20 @@ body {
 }
 
 /* ============================================================
-   BOTONES FLOTANTES: WHATSAPP ARRIBA - IA ABAJO
+   BOTONES FLOTANTES - DENTRO DE MENUSECTION
    SOLO VISIBLES DESPUÉS DEL LOGIN
    ============================================================ */
 
-/* Ocultos por defecto */
 .floating-buttons-container {
-  display: none !important;
   position: fixed;
   bottom: 100px;
   right: 20px;
+  display: flex;
   flex-direction: column;
   align-items: center;
   gap: 12px;
   z-index: 9999;
   width: 60px;
-}
-
-/* Mostrar SOLO cuando el menú principal está visible (usuario logueado) */
-#menuSection[style*="display: block"] ~ .floating-buttons-container {
-  display: flex !important;
 }
 
 /* Estilo base para ambos botones */
