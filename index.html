@@ -21,7 +21,7 @@
 
   <div class="app-container">
 
-    <!-- ==================== LOGIN / REGISTRO ==================== -->
+    <!-- ===== LOGIN / REGISTRO ===== -->
     <div id="authCard" class="auth-wrapper">
       <div class="auth-glass">
         <div class="auth-mascot">
@@ -30,7 +30,6 @@
         <h1 class="auth-title">Guía Pinolera</h1>
         <p class="auth-subtitle">🌋 Explora Nicaragua jugando 🌊</p>
 
-        <!-- Formulario Login -->
         <div id="loginForm">
           <div class="input-group">
             <i class="fas fa-envelope input-icon"></i>
@@ -46,7 +45,6 @@
           <button id="showRegisterBtn" class="btn btn-outline-full">✨ Crear cuenta nueva</button>
         </div>
 
-        <!-- Formulario Registro -->
         <div id="registerForm" style="display:none;">
           <div class="input-group">
             <i class="fas fa-user input-icon"></i>
@@ -66,7 +64,7 @@
       </div>
     </div>
 
-    <!-- ==================== MENÚ PRINCIPAL (APP) ==================== -->
+    <!-- ===== MENÚ PRINCIPAL ===== -->
     <div id="menuSection" style="display:none;">
 
       <!-- HEADER -->
@@ -85,7 +83,7 @@
         </div>
       </header>
 
-      <!-- ===== CATEGORÍAS RÁPIDAS ===== -->
+      <!-- CATEGORÍAS -->
       <div class="quick-categories-wrapper">
         <div class="quick-categories" id="categoriesContainer">
           <div class="category-item active" onclick="filterDestinations('todos')">
@@ -120,7 +118,7 @@
         <div class="scroll-indicator">→</div>
       </div>
 
-      <!-- PERFIL Y ACCIONES -->
+      <!-- PERFIL -->
       <div class="profile-wrapper">
         <div class="profile-card" id="profileTrigger">
           <div class="profile-info">
@@ -132,12 +130,10 @@
           </div>
           <button id="editProfileBtn" class="btn-icon-edit"><i class="fas fa-pen"></i></button>
         </div>
-
         <div class="position-badge">
           <i class="fas fa-trophy" style="color: #ffd700;"></i>
           <span id="positionBadge">Calculando...</span>
         </div>
-
         <div class="action-grid">
           <a href="comunidad.html" class="action-btn gradient-purple"><i class="fas fa-users"></i> Comunidad</a>
           <a href="../temporal.html" class="action-btn gradient-purple"><i class="fas fa-tags"></i> Promociones</a>
@@ -155,7 +151,7 @@
         <div style="width:30%; text-align:center; font-size:3rem;">🇳🇮</div>
       </div>
 
-      <!-- DESTINOS POPULARES -->
+      <!-- DESTINOS -->
       <div class="section-header">
         <h2>🌍 Destinos populares</h2>
       </div>
@@ -168,7 +164,6 @@
             <a href="destinos/granada.html" class="btn-visitar">Visitar</a>
           </div>
         </div>
-
         <div class="destination-card" data-category="volcanes">
           <img src="https://www.visitcentroamerica.com/wp-content/uploads/2025/04/Ometepe-Island-Concepcion-and-Maderas-Volcanoes-Nicaragua-Centroamerica-02.webp" alt="Ometepe" />
           <div class="card-overlay">
@@ -177,7 +172,6 @@
             <a href="destinos/ometepe.html" class="btn-visitar">Visitar</a>
           </div>
         </div>
-
         <div class="destination-card" data-category="coloniales">
           <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBKh9SQDQA8WI1MB1e6rMhHchGKT6B2rmQ3wCwyewnMMk5F3y_YOBMDe8&s=10" alt="Diriamba" />
           <div class="card-overlay">
@@ -186,7 +180,6 @@
             <a href="destinos/diriamba.html" class="btn-visitar">Visitar</a>
           </div>
         </div>
-
         <div class="destination-card" data-category="playas">
           <img src="https://media-cdn.tripadvisor.com/media/attractions-splice-spp-674x446/10/60/45/03.jpg" alt="San Juan" />
           <div class="card-overlay">
@@ -195,7 +188,6 @@
             <a href="destinos/sanjuan.html" class="btn-visitar">Visitar</a>
           </div>
         </div>
-
         <div class="destination-card" data-category="naturaleza">
           <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQbPge93TWXlnUtgUxMURs2vINh453tvY_pcePAtjI23ThaIASH-kfNOkk&s=10" alt="Selva" />
           <div class="card-overlay">
@@ -204,7 +196,6 @@
             <a href="destinos/indiomaiz.html" class="btn-visitar">Visitar</a>
           </div>
         </div>
-
         <div class="destination-card" data-category="volcanes">
           <img src="https://imagenes.elpais.com/resizer/v2/A4DCML6HXNDXGEM6HXMW4VVKY4.jpg?auth=866ffed519e64ccacd4e4b929521b4353c0374c5c8ba99eeef8a6ae1db4f076a&width=1960&height=1470&smart=true" alt="Volcán" />
           <div class="card-overlay">
@@ -215,14 +206,13 @@
         </div>
       </div>
 
-      <!-- TIPS PINOLEROS -->
+      <!-- TIPS -->
       <div class="tips-section">
         <div class="tips-header">
           <div class="tips-header-icon">💡</div>
           <h3>Tips Pinoleros</h3>
           <p>Consejos para tu viaje por Nicaragua</p>
         </div>
-
         <div class="tips-grid">
           <div class="tip-card" onclick="showTipDetail('clima')">
             <div class="tip-icon">🌤️</div>
@@ -233,7 +223,6 @@
             </div>
             <i class="fas fa-chevron-right tip-arrow"></i>
           </div>
-
           <div class="tip-card" onclick="showTipDetail('moneda')">
             <div class="tip-icon">💰</div>
             <div class="tip-content">
@@ -243,7 +232,6 @@
             </div>
             <i class="fas fa-chevron-right tip-arrow"></i>
           </div>
-
           <div class="tip-card" onclick="showTipDetail('transporte')">
             <div class="tip-icon">🚌</div>
             <div class="tip-content">
@@ -253,7 +241,6 @@
             </div>
             <i class="fas fa-chevron-right tip-arrow"></i>
           </div>
-
           <div class="tip-card" onclick="showTipDetail('comida')">
             <div class="tip-icon">🍽️</div>
             <div class="tip-content">
@@ -263,7 +250,6 @@
             </div>
             <i class="fas fa-chevron-right tip-arrow"></i>
           </div>
-
           <div class="tip-card" onclick="showTipDetail('seguridad')">
             <div class="tip-icon">🛡️</div>
             <div class="tip-content">
@@ -364,7 +350,7 @@
     </div>
   </div>
 
-  <!-- MODAL DE PERFIL -->
+  <!-- MODAL PERFIL -->
   <div id="editProfileModal" class="modal-overlay">
     <div class="modal-box">
       <h3><i class="fas fa-user-edit"></i> Editar perfil</h3>
@@ -385,27 +371,22 @@
     </div>
   </div>
 
-  <!-- ============================================================
-       BOTONES FLOTANTES ORDENADOS: WHATSAPP ARRIBA - IA ABAJO
-       ============================================================ -->
-
-  <!-- CONTENEDOR DE BOTONES FLOTANTES -->
+  <!-- ===== BOTONES FLOTANTES ===== -->
+  
+  <!-- CONTENEDOR: WhatsApp ARRIBA - IA ABAJO -->
   <div class="floating-buttons-container">
-    
-    <!-- Botón WhatsApp (ARRIBA) -->
+    <!-- WhatsApp (ARRIBA) -->
     <a href="#" id="whatsappBtn" class="floating-btn whatsapp-btn" target="_blank">
       <i class="fab fa-whatsapp"></i>
     </a>
-
-    <!-- Botón IA (ABAJO) - Dify se inserta aquí -->
+    <!-- IA (ABAJO) - Dify se inserta aquí -->
     <div id="dify-button-placeholder"></div>
-
   </div>
 
   <!-- TOAST -->
   <div id="toast" class="toast-message" style="display:none;"></div>
 
-  <!-- ===== BOTÓN FLOTANTE IA (DIFY) ===== -->
+  <!-- ===== DIFY SCRIPT ===== -->
   <script>
     window.difyChatbotConfig = {
       token: 'gw2xWn1l5DavvTp9',
@@ -416,7 +397,21 @@
   </script>
   <script src="https://udify.app/embed.min.js" id="gw2xWn1l5DavvTp9" defer></script>
 
-  <!-- Firebase Compat -->
+  <!-- FORZAR POSICIÓN DEL BOTÓN DE DIFY -->
+  <script>
+    setTimeout(function() {
+      const difyButton = document.getElementById('dify-chatbot-bubble-button');
+      const placeholder = document.getElementById('dify-button-placeholder');
+      
+      if (difyButton && placeholder) {
+        // Mover el botón de Dify al placeholder
+        placeholder.appendChild(difyButton);
+        console.log('✅ Botón de Dify movido al placeholder');
+      }
+    }, 1500);
+  </script>
+
+  <!-- FIREBASE -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
