@@ -350,6 +350,17 @@
     </div>
   </div>
 
+  <!-- ===== BOTONES FLOTANTES ===== -->
+  <!-- Solo visibles cuando el usuario ha iniciado sesión -->
+  <div class="floating-buttons-container">
+    <!-- WhatsApp (ARRIBA) -->
+    <a href="#" id="whatsappBtn" class="floating-btn whatsapp-btn" target="_blank">
+      <i class="fab fa-whatsapp"></i>
+    </a>
+    <!-- IA (ABAJO) - Dify se inserta aquí -->
+    <div id="dify-button-placeholder"></div>
+  </div>
+
   <!-- MODAL PERFIL -->
   <div id="editProfileModal" class="modal-overlay">
     <div class="modal-box">
@@ -371,18 +382,6 @@
     </div>
   </div>
 
-  <!-- ===== BOTONES FLOTANTES ===== -->
-  
-  <!-- CONTENEDOR: WhatsApp ARRIBA - IA ABAJO -->
-  <div class="floating-buttons-container">
-    <!-- WhatsApp (ARRIBA) -->
-    <a href="#" id="whatsappBtn" class="floating-btn whatsapp-btn" target="_blank">
-      <i class="fab fa-whatsapp"></i>
-    </a>
-    <!-- IA (ABAJO) - Dify se inserta aquí -->
-    <div id="dify-button-placeholder"></div>
-  </div>
-
   <!-- TOAST -->
   <div id="toast" class="toast-message" style="display:none;"></div>
 
@@ -397,7 +396,7 @@
   </script>
   <script src="https://udify.app/embed.min.js" id="gw2xWn1l5DavvTp9" defer></script>
 
-  <!-- FORZAR POSICIÓN DEL BOTÓN DE DIFY -->
+  <!-- FORZAR POSICIÓN DEL BOTÓN DE DIFY Y QUITAR LA X -->
   <script>
     setTimeout(function() {
       const difyButton = document.getElementById('dify-chatbot-bubble-button');
@@ -406,7 +405,14 @@
       if (difyButton && placeholder) {
         // Mover el botón de Dify al placeholder
         placeholder.appendChild(difyButton);
-        console.log('✅ Botón de Dify movido al placeholder');
+        
+        // Quitar la X superpuesta
+        const closeBtn = difyButton.querySelector('.dify-chatbot-bubble-close');
+        if (closeBtn) {
+          closeBtn.style.display = 'none';
+        }
+        
+        console.log('✅ Botón de Dify movido al placeholder y X ocultada');
       }
     }, 1500);
   </script>
