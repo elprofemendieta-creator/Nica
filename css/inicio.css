@@ -119,9 +119,7 @@ body {
 .header-subtitle { display: block; font-size: 0.65rem; letter-spacing: 2px; color: var(--accent-purple); font-weight: 600; }
 .btn-icon { background: rgba(255,255,255,0.1); border: none; color: #fff; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; }
 
-/* ============================================================
-   CATEGORÍAS RÁPIDAS
-   ============================================================ */
+/* ===== CATEGORÍAS ===== */
 .quick-categories-wrapper {
     position: relative;
     margin: 0 -4px;
@@ -750,7 +748,7 @@ body {
 }
 
 /* ============================================================
-   BOTONES FLOTANTES UNIFICADOS: WHATSAPP ARRIBA - IA ABAJO
+   BOTONES FLOTANTES: WHATSAPP ARRIBA - IA ABAJO
    ============================================================ */
 
 .floating-buttons-container {
@@ -761,7 +759,7 @@ body {
   flex-direction: column;
   align-items: center;
   gap: 12px;
-  z-index: 999;
+  z-index: 9999 !important;
 }
 
 .floating-btn {
@@ -778,6 +776,7 @@ body {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
   border: none !important;
   cursor: pointer !important;
+  flex-shrink: 0 !important;
 }
 
 .floating-btn:hover {
@@ -794,14 +793,13 @@ body {
   box-shadow: 0 8px 30px rgba(37, 211, 102, 0.6) !important;
 }
 
-/* ===== ESTILOS DIFY (hereda de .floating-btn) ===== */
+/* ===== FORZAR BOTÓN DE DIFY ===== */
+
 #dify-chatbot-bubble-button-container {
-  position: static !important;
+  all: unset !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  width: auto !important;
-  height: auto !important;
 }
 
 #dify-chatbot-bubble-button {
@@ -817,9 +815,9 @@ body {
   cursor: pointer !important;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
   position: relative !important;
-  bottom: auto !important;
-  right: auto !important;
-  z-index: auto !important;
+  flex-shrink: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
 #dify-chatbot-bubble-button:hover {
@@ -834,7 +832,7 @@ body {
   fill: none !important;
 }
 
-/* ===== VENTANA DEL CHAT ===== */
+/* Ventana del chat */
 #dify-chatbot-bubble-window {
   width: 24rem !important;
   height: 40rem !important;
@@ -844,7 +842,7 @@ body {
   position: fixed !important;
   bottom: 180px !important;
   right: 20px !important;
-  z-index: 998 !important;
+  z-index: 9998 !important;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5) !important;
   background: #0b0d17 !important;
 }
@@ -858,35 +856,77 @@ body {
 }
 
 /* ============================================================
-   RESPONSIVE
+   ANIMACIONES Y RESPONSIVE
    ============================================================ */
+@keyframes categorySlide {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.quick-categories .category-item {
+    animation: categorySlide 0.4s ease forwards;
+    opacity: 0;
+}
+
+.quick-categories .category-item:nth-child(1) { animation-delay: 0.05s; }
+.quick-categories .category-item:nth-child(2) { animation-delay: 0.1s; }
+.quick-categories .category-item:nth-child(3) { animation-delay: 0.15s; }
+.quick-categories .category-item:nth-child(4) { animation-delay: 0.2s; }
+.quick-categories .category-item:nth-child(5) { animation-delay: 0.25s; }
+.quick-categories .category-item:nth-child(6) { animation-delay: 0.3s; }
+.quick-categories .category-item:nth-child(7) { animation-delay: 0.35s; }
+
+.no-results-message {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 24px;
+    margin: 20px 0;
+    border: 2px dashed rgba(255, 255, 255, 0.05);
+}
+
+.no-results-message p {
+    color: rgba(255, 255, 255, 0.7);
+    margin: 8px 0;
+    font-weight: 500;
+}
+
 @media (max-width: 480px) {
-  .floating-buttons-container {
-    bottom: 90px;
-    right: 16px;
-    gap: 10px;
-  }
+    .floating-buttons-container {
+        bottom: 90px;
+        right: 16px;
+        gap: 10px;
+    }
 
-  .floating-btn {
-    width: 52px !important;
-    height: 52px !important;
-    font-size: 24px !important;
-  }
+    .floating-btn {
+        width: 52px !important;
+        height: 52px !important;
+        font-size: 24px !important;
+    }
 
-  #dify-chatbot-bubble-button {
-    width: 52px !important;
-    height: 52px !important;
-  }
+    #dify-chatbot-bubble-button {
+        width: 52px !important;
+        height: 52px !important;
+    }
 
-  #dify-chatbot-bubble-button svg {
-    width: 24px !important;
-    height: 24px !important;
-  }
+    #dify-chatbot-bubble-button svg {
+        width: 24px !important;
+        height: 24px !important;
+    }
 
-  #dify-chatbot-bubble-window {
-    width: 20rem !important;
-    height: 32rem !important;
-    bottom: 160px !important;
-    right: 16px !important;
-  }
+    #dify-chatbot-bubble-window {
+        width: 20rem !important;
+        height: 32rem !important;
+        bottom: 160px !important;
+        right: 16px !important;
+    }
 }
