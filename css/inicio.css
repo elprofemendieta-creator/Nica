@@ -111,6 +111,18 @@ body {
 .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid rgba(255,255,255,0.1); }
 .divider span { margin: 0 10px; font-size: 0.8rem; }
 
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* ===== HEADER APP ===== */
 .app-header { display: flex; justify-content: space-between; margin-bottom: 1.5rem; }
 .header-left { display: flex; align-items: center; gap: 12px; }
