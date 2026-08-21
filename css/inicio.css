@@ -15,6 +15,10 @@
   --font-mono: 'Cascadia Mono', 'Cascadia Code', monospace;
 }
 
+/* ============================================================
+   FONDO CON OLAS ANIMADAS (NUEVO)
+   ============================================================ */
+
 body {
   font-family: var(--font-main);
   background: 
@@ -29,6 +33,87 @@ body {
   padding-bottom: 100px;
   overflow-x: hidden;
   color: var(--text-main);
+  /* Animación del fondo SVG */
+  animation: moverFondo 25s ease-in-out infinite alternate;
+}
+
+@keyframes moverFondo {
+  0% {
+    background-position: 0% 0%, 0% 0%, 0% 0%, 0% 0%;
+  }
+  100% {
+    background-position: 15% 10%, 5% 5%, -5% 10%, 10% 5%;
+  }
+}
+
+/* ============================================================
+   CAPA DE OLAS ANIMADAS (NUEVO)
+   ============================================================ */
+
+.olas-animadas {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 150px;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.ola-capa {
+  position: absolute;
+  bottom: -20px;
+  left: -50%;
+  width: 200%;
+  height: 100%;
+  border-radius: 45% 45% 0 0 / 30% 30% 0 0;
+  opacity: 0.5;
+}
+
+.ola-1 {
+  animation: moverOla 9s ease-in-out infinite alternate;
+  background: radial-gradient(ellipse at 30% 100%, rgba(164, 199, 55, 0.08), transparent 70%);
+  border-radius: 55% 35% 0 0 / 40% 25% 0 0;
+  height: 95%;
+  bottom: -10px;
+}
+
+.ola-2 {
+  animation: moverOla 12s ease-in-out infinite alternate-reverse;
+  background: radial-gradient(ellipse at 70% 100%, rgba(108, 99, 255, 0.06), transparent 70%);
+  border-radius: 35% 55% 0 0 / 25% 40% 0 0;
+  height: 75%;
+  bottom: -5px;
+  animation-delay: -2s;
+}
+
+.ola-3 {
+  animation: moverOla 15s ease-in-out infinite alternate;
+  background: radial-gradient(ellipse at 50% 100%, rgba(255, 255, 255, 0.04), transparent 70%);
+  border-radius: 45% 45% 0 0 / 30% 30% 0 0;
+  height: 55%;
+  animation-delay: -4s;
+}
+
+.ola-4 {
+  animation: moverOla 18s ease-in-out infinite alternate-reverse;
+  background: radial-gradient(ellipse at 20% 100%, rgba(164, 199, 55, 0.03), transparent 70%);
+  border-radius: 60% 30% 0 0 / 35% 45% 0 0;
+  height: 35%;
+  animation-delay: -6s;
+}
+
+@keyframes moverOla {
+  0% {
+    transform: translateX(0) scaleY(1);
+  }
+  50% {
+    transform: translateX(15%) scaleY(1.05);
+  }
+  100% {
+    transform: translateX(30%) scaleY(1);
+  }
 }
 
 /* ===== INTRO SCREEN ===== */
@@ -60,6 +145,8 @@ body {
   max-width: 480px;
   margin: 0 auto;
   padding: 1.5rem 1.2rem;
+  position: relative;
+  z-index: 1;
 }
 
 /* ===== LOGIN/REGISTRO ===== */
