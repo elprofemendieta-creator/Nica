@@ -981,13 +981,15 @@ function filterDestinations(category) {
 // NEGOCIOS DESTACADOS - FUNCIONALIDADES
 // ================================================================
 
-// Manejar clics en tarjetas de negocios
+// Los botones ya tienen enlaces directos en el HTML (href="negocios/...")
+// Este código adicional es opcional para tracking
+
 document.querySelectorAll('.negocio-card .btn-visitar').forEach(btn => {
     btn.addEventListener('click', function(e) {
-        e.preventDefault();
+        // El enlace ya funciona por sí solo
         const card = this.closest('.negocio-card');
         const nombre = card.querySelector('h3')?.textContent || 'Negocio';
-        showToast(`🏢 Explorando ${nombre}...`);
+        console.log(`🔄 Navegando a: ${nombre} - ${this.href}`);
     });
 });
 
@@ -1019,14 +1021,10 @@ async function cargarNegociosDesdeFirebase() {
                         <div class="negocio-badge">${data.badge}</div>
                         <h3>${data.nombre}</h3>
                         <p><i class="fas fa-map-marker-alt"></i> ${data.ubicacion}</p>
-                        <div class="negocio-rating">
-                            <span class="stars">${'★'.repeat(Math.floor(data.rating))}${data.rating % 1 >= 0.5 ? '☆' : ''}</span>
-                            <span class="rating-num">${data.rating}</span>
-                        </div>
                         <div class="negocio-servicios">
                             ${data.servicios.map(s => `<span class="servicio-tag">${s}</span>`).join('')}
                         </div>
-                        <a href="#" class="btn-visitar">Ver negocio →</a>
+                        <a href="${data.enlace}" class="btn-visitar">Ver negocio →</a>
                     </div>
                 </div>
             `;
