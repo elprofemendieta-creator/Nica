@@ -763,16 +763,6 @@ saveProfileBtn.addEventListener('click', async () => {
 });
 
 // ================================================================
-// BOTONES "JUGAR" (NAVEGACIÓN REAL)
-// ================================================================
-document.querySelectorAll('.btn-jugar').forEach(btn => {
-  btn.addEventListener('click', function(e) {
-    const game = this.dataset.game || 'default';
-    showToast('Abriendo juego: ' + game);
-  });
-});
-
-// ================================================================
 // MENÚ INFERIOR - NAVEGACIÓN
 // ================================================================
 document.querySelectorAll('.nav-item').forEach(item => {
@@ -988,18 +978,68 @@ function filterDestinations(category) {
 }
 
 // ================================================================
-// BOTÓN FLOTANTE IA - FUNCIONALIDAD MEJORADA
+// NEGOCIOS DESTACADOS - FUNCIONALIDADES
 // ================================================================
-document.getElementById('boton-ia')?.addEventListener('click', function() {
-    const user = auth.currentUser;
-    const userName = user?.displayName || 'Explorador Pinolero';
-    
-    // Mostrar toast con mensaje personalizado
-    showToast('🧠 ' + userName + ', ¿en qué puedo ayudarte a planificar tu viaje por Nicaragua?');
-    
-    // Aquí puedes agregar integración con un chat real
-    // Ejemplo: window.open('https://tu-chat-ia.com', '_blank', 'width=400,height=600');
+
+// Manejar clics en tarjetas de negocios
+document.querySelectorAll('.negocio-card .btn-visitar').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const card = this.closest('.negocio-card');
+        const nombre = card.querySelector('h3')?.textContent || 'Negocio';
+        showToast(`🏢 Explorando ${nombre}...`);
+    });
 });
+
+// Función para cargar negocios desde Firebase (opcional)
+async function cargarNegociosDesdeFirebase() {
+    const container = document.getElementById('negociosContainer');
+    if (!container) return;
+    
+    try {
+        // Ejemplo con Firestore - Descomentar para usar
+        /*
+        const snapshot = await db.collection('negocios')
+            .where('destacado', '==', true)
+            .limit(10)
+            .get();
+        
+        if (snapshot.empty) {
+            console.log('No hay negocios destacados');
+            return;
+        }
+        
+        let html = '';
+        snapshot.forEach(doc => {
+            const data = doc.data();
+            html += `
+                <div class="negocio-card" data-category="${data.categoria}">
+                    <img src="${data.imagen}" alt="${data.nombre}" />
+                    <div class="card-overlay">
+                        <div class="negocio-badge">${data.badge}</div>
+                        <h3>${data.nombre}</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> ${data.ubicacion}</p>
+                        <div class="negocio-rating">
+                            <span class="stars">${'★'.repeat(Math.floor(data.rating))}${data.rating % 1 >= 0.5 ? '☆' : ''}</span>
+                            <span class="rating-num">${data.rating}</span>
+                        </div>
+                        <div class="negocio-servicios">
+                            ${data.servicios.map(s => `<span class="servicio-tag">${s}</span>`).join('')}
+                        </div>
+                        <a href="#" class="btn-visitar">Ver negocio →</a>
+                    </div>
+                </div>
+            `;
+        });
+        
+        container.innerHTML = html;
+        */
+        
+        console.log('🏢 Negocios destacados listos');
+    } catch (error) {
+        console.error('Error al cargar negocios:', error);
+    }
+}
 
 // ================================================================
 // INICIALIZACIÓN
@@ -1010,20 +1050,18 @@ document.addEventListener('DOMContentLoaded', () => {
     if (firstCategory) {
         firstCategory.classList.add('active');
     }
-    
+
+    // Si tienes Firebase configurado, descomenta la siguiente línea
+    // cargarNegociosDesdeFirebase();
+
     // Verificar si el botón de WhatsApp existe
     const whatsappBtn = document.getElementById('whatsappBtn');
     if (!whatsappBtn) {
         console.warn('⚠️ Botón de WhatsApp no encontrado en el DOM');
     }
-    
-    // Verificar si el botón IA existe
-    const iaBtn = document.getElementById('boton-ia');
-    if (!iaBtn) {
-        console.warn('⚠️ Botón IA no encontrado en el DOM');
-    }
-    
+
     console.log('✅ Inicialización completada');
+    console.log('🏢 Sección de Negocios Destacados inicializada');
 });
 
 // ================================================================
@@ -1046,4 +1084,4 @@ style.textContent = `
 document.head.appendChild(style);
 
 console.log('🚀 Guía Pinolera - JavaScript cargado completamente');
-console.log('📌 Funcionalidades activas: Login, Registro, Perfil, Categorías, Tips, Juegos, Pasaporte, WhatsApp, IA');
+console.log('📌 Funcionalidades activas: Login, Registro, Perfil, Categorías, Tips, Juegos, Pasaporte, WhatsApp, IA, Negocios Destacados');
