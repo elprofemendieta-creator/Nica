@@ -287,28 +287,6 @@ body {
   box-shadow: 0 6px 20px rgba(162, 135, 190, 0.4);
 }
 
-/* ===== WAO BANNER ===== */
-.wao-banner {
-  background: linear-gradient(135deg, var(--secondary-purple), #2a2555);
-  border-radius: 24px; padding: 20px; margin: 2rem 0; display: flex; align-items: center;
-}
-.wao-content { width: 70%; }
-.wao-title { 
-  font-size: 2.5rem; font-weight: 800; 
-  background: linear-gradient(135deg, var(--primary-green), #8fb32e);
-  -webkit-background-clip: text; background-clip: text; color: transparent;
-  display: block; line-height: 1; 
-}
-.wao-content h3 { font-size: 1.2rem; }
-.wao-content p { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 10px; }
-.btn-primary-small { 
-  background: var(--primary-green); 
-  border: none; padding: 8px 20px; 
-  border-radius: 40px; color: #232049; 
-  font-weight: 600; cursor: pointer; 
-  font-family: var(--font-main);
-}
-
 /* ===== DESTINOS ===== */
 .section-header { display: flex; justify-content: space-between; align-items: center; margin: 1.5rem 0 1rem; }
 .section-header h2 { 
@@ -413,6 +391,177 @@ body {
 .destination-card .btn-visitar:active {
     transform: scale(0.95) !important;
     box-shadow: 0 2px 10px rgba(164, 199, 55, 0.3) !important;
+}
+
+/* ============================================================
+   NEGOCIOS DESTACADOS
+   ============================================================ */
+
+.negocio-card {
+    min-width: 200px;
+    height: 260px;
+    border-radius: 24px;
+    overflow: hidden;
+    position: relative;
+    flex-shrink: 0;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+}
+
+.negocio-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    border-color: rgba(164, 199, 55, 0.3);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+}
+
+.negocio-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.negocio-card:hover img {
+    transform: scale(1.05);
+}
+
+.negocio-card .card-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 20px 16px 16px;
+    background: linear-gradient(to top, rgba(11, 13, 23, 0.95) 0%, rgba(11, 13, 23, 0.7) 50%, transparent 100%);
+    color: #fff;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    height: 100%;
+}
+
+.negocio-card .card-overlay * {
+    pointer-events: auto;
+}
+
+.negocio-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.65rem;
+    font-weight: 600;
+    background: linear-gradient(135deg, #a4c737, #8fb32e);
+    color: #232049;
+    margin-bottom: 6px;
+    width: fit-content;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 10px rgba(164, 199, 55, 0.3);
+}
+
+.negocio-card h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 0 0 2px 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.negocio-card .card-overlay p {
+    font-size: 0.75rem;
+    opacity: 0.9;
+    margin: 0 0 6px 0;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.negocio-rating {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+
+.negocio-rating .stars {
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+    color: #ffd700;
+}
+
+.negocio-rating .rating-num {
+    font-size: 0.75rem;
+    font-weight: 600;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 2px 10px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.negocio-servicios {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+}
+
+.servicio-tag {
+    font-size: 0.6rem;
+    padding: 3px 10px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 500;
+    letter-spacing: 0.3px;
+}
+
+.negocio-card .btn-visitar {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    margin-top: 4px !important;
+    padding: 6px 16px !important;
+    background: linear-gradient(135deg, var(--primary-green), #8fb32e) !important;
+    color: #232049 !important;
+    border: none !important;
+    border-radius: 30px !important;
+    font-size: 0.7rem !important;
+    font-weight: 600 !important;
+    text-decoration: none !important;
+    cursor: pointer !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    box-shadow: 0 4px 15px rgba(164, 199, 55, 0.25) !important;
+    letter-spacing: 0.3px !important;
+    backdrop-filter: blur(4px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    width: fit-content !important;
+}
+
+.negocio-card .btn-visitar:hover {
+    transform: translateY(-2px) scale(1.05) !important;
+    box-shadow: 0 6px 25px rgba(164, 199, 55, 0.4) !important;
+}
+
+.negocio-card .btn-visitar:active {
+    transform: scale(0.95) !important;
+}
+
+/* Animación de entrada para las tarjetas de negocios */
+.negocio-card {
+    animation: slideUpCards 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+.negocio-card:nth-child(1) { animation-delay: 0.05s; }
+.negocio-card:nth-child(2) { animation-delay: 0.1s; }
+.negocio-card:nth-child(3) { animation-delay: 0.15s; }
+.negocio-card:nth-child(4) { animation-delay: 0.2s; }
+
+@keyframes slideUpCards {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* ===== TIPS ===== */
@@ -683,31 +832,6 @@ body {
     margin-top: 8px;
 }
 
-/* ===== JUEGOS ===== */
-.games-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-.game-card {
-  background: var(--bg-card); border-radius: 20px; padding: 16px;
-  display: flex; flex-direction: column; justify-content: space-between;
-  border: 1px solid rgba(255,255,255,0.05);
-}
-.game-icon-wrapper { font-size: 2.5rem; margin-bottom: 10px; }
-.game-info h4 { font-size: 1rem; font-weight: 700; }
-.game-info p { font-size: 0.75rem; color: var(--text-muted); }
-.btn-game-play {
-  align-self: flex-end; background: var(--primary-green); color: #232049;
-  padding: 6px 16px; border-radius: 30px; text-decoration: none;
-  font-size: 0.8rem; font-weight: 600; transition: 0.3s;
-}
-.btn-game-play:hover { transform: scale(1.05); }
-
-/* ===== PASAPORTE ===== */
-.passport-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
-.passport-list li {
-  background: var(--bg-card); border-radius: 16px; padding: 12px 16px;
-  display: flex; align-items: center; gap: 10px; font-size: 0.9rem;
-}
-.passport-empty { color: var(--text-muted); justify-content: center; }
-
 /* ===== MENÚ INFERIOR ===== */
 .bottom-nav {
   position: fixed; bottom: 0; left: 0; right: 0;
@@ -760,8 +884,7 @@ body {
 }
 
 /* ============================================================
-   BOTONES FLOTANTES - DENTRO DE MENUSECTION
-   SOLO VISIBLES DESPUÉS DEL LOGIN
+   BOTONES FLOTANTES
    ============================================================ */
 
 .floating-buttons-container {
@@ -776,7 +899,6 @@ body {
   width: 60px;
 }
 
-/* Estilo base para ambos botones */
 .floating-btn {
   width: 60px !important;
   height: 60px !important;
@@ -799,7 +921,6 @@ body {
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4) !important;
 }
 
-/* WhatsApp - Verde */
 .whatsapp-btn {
   background: linear-gradient(135deg, #25D366, #128C7E) !important;
   box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4) !important;
@@ -809,11 +930,6 @@ body {
   box-shadow: 0 8px 30px rgba(37, 211, 102, 0.6) !important;
 }
 
-/* ============================================================
-   FORZAR BOTÓN DE DIFY - MISMA ALINEACIÓN
-   ============================================================ */
-
-/* Resetear el contenedor de Dify */
 #dify-chatbot-bubble-button-container {
   all: unset !important;
   display: flex !important;
@@ -824,7 +940,6 @@ body {
   flex-shrink: 0 !important;
 }
 
-/* Forzar el placeholder */
 #dify-button-placeholder {
   display: flex !important;
   align-items: center !important;
@@ -834,7 +949,6 @@ body {
   flex-shrink: 0 !important;
 }
 
-/* El botón de Dify hereda los estilos de .floating-btn */
 #dify-chatbot-bubble-button {
   width: 60px !important;
   height: 60px !important;
@@ -874,19 +988,14 @@ body {
   display: block !important;
 }
 
-/* Ocultar la X superpuesta dentro del botón de Dify */
 #dify-chatbot-bubble-button .dify-chatbot-bubble-close {
   display: none !important;
 }
 
-/* Si hay dos SVGs, ocultar el segundo (el de la X) */
 #dify-chatbot-bubble-button svg + svg {
   display: none !important;
 }
 
-/* ============================================================
-   VENTANA DEL CHAT
-   ============================================================ */
 #dify-chatbot-bubble-window {
   width: 24rem !important;
   height: 40rem !important;
@@ -954,7 +1063,48 @@ body {
     font-weight: 500;
 }
 
+/* ============================================================
+   RESPONSIVE PARA NEGOCIOS
+   ============================================================ */
+
 @media (max-width: 480px) {
+    .negocio-card {
+        min-width: 170px;
+        height: 230px;
+    }
+
+    .negocio-card h3 {
+        font-size: 0.95rem;
+    }
+
+    .negocio-servicios {
+        gap: 4px;
+    }
+
+    .servicio-tag {
+        font-size: 0.5rem;
+        padding: 2px 8px;
+    }
+
+    .negocio-card .btn-visitar {
+        font-size: 0.6rem !important;
+        padding: 5px 12px !important;
+    }
+
+    .negocio-badge {
+        font-size: 0.55rem;
+        padding: 3px 10px;
+    }
+
+    .negocio-rating .stars {
+        font-size: 0.7rem;
+    }
+
+    .negocio-rating .rating-num {
+        font-size: 0.65rem;
+        padding: 1px 8px;
+    }
+
     .floating-buttons-container {
         bottom: 90px;
         right: 16px;
