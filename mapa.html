@@ -17,6 +17,11 @@
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/mapa.css"> 
+<style id="mapa-modern-markers">
+.gp-marker-wrap{background:transparent;border:0!important}.gp-marker{width:46px;height:46px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:linear-gradient(145deg,#8bcf28,#4f9d19);border:3px solid #fff;box-shadow:0 5px 14px rgba(30,80,20,.3);display:flex;align-items:center;justify-content:center;transition:transform .18s ease,filter .18s ease;position:relative}.gp-marker::after{content:"";position:absolute;inset:4px;border:1px solid rgba(255,255,255,.35);border-radius:50% 50% 50% 0}.gp-marker i{color:#fff;font-size:18px;transform:rotate(45deg);z-index:1;text-shadow:0 1px 2px rgba(0,0,0,.18)}.gp-marker:hover{filter:brightness(1.06);transform:rotate(-45deg) scale(1.08)}.gp-marker.selected{animation:gpMarkerPulse 1.4s infinite}@keyframes gpMarkerPulse{0%,100%{box-shadow:0 5px 14px rgba(30,80,20,.3),0 0 0 0 rgba(139,207,40,.35)}50%{box-shadow:0 5px 14px rgba(30,80,20,.3),0 0 0 13px rgba(139,207,40,0)}}
+.marker-cluster.gp-cluster{background:rgba(139,207,40,.2)!important;border:1px solid rgba(95,157,25,.18)}.marker-cluster.gp-cluster div{width:38px!important;height:38px!important;margin-left:6px!important;margin-top:6px!important;border-radius:50%!important;background:linear-gradient(145deg,#8bcf28,#4f9d19)!important;color:#fff!important;font:700 15px/38px Poppins,Arial,sans-serif!important;border:2px solid #fff;box-shadow:0 4px 12px rgba(50,100,20,.22)}
+.gp-popup .leaflet-popup-content-wrapper{padding:0!important;border-radius:20px!important;overflow:hidden;box-shadow:0 14px 35px rgba(20,45,20,.22)!important;border:1px solid rgba(90,140,40,.1)}.gp-popup .leaflet-popup-content{margin:0!important;width:300px!important}.gp-popup .leaflet-popup-close-button{top:10px!important;right:10px!important;width:30px!important;height:30px!important;border-radius:50%;background:rgba(255,255,255,.92);color:#4a4a4a!important;font-size:20px!important;line-height:28px!important;z-index:5;box-shadow:0 2px 8px rgba(0,0,0,.1)}.gp-card{background:#fff;color:#1f2a1c;padding:13px}.gp-card-title{display:flex;align-items:center;gap:10px;padding:1px 30px 11px 1px;font:700 16px/1.25 Poppins,Arial,sans-serif}.gp-card-title-icon{width:34px;height:34px;flex:0 0 34px;border-radius:11px;background:linear-gradient(145deg,#8bcf28,#4f9d19);display:flex;align-items:center;justify-content:center;color:#fff;box-shadow:0 4px 10px rgba(70,130,20,.18)}.gp-card-image{display:block;width:100%;height:145px;object-fit:cover;border-radius:14px;background:#edf3e9}.gp-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:11px}.gp-action{border:0;border-radius:13px;background:#f4f8f0;min-height:72px;padding:8px 5px;color:#263421;font:600 11px/1.15 Poppins,Arial,sans-serif;cursor:pointer;text-decoration:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;transition:transform .16s ease,box-shadow .16s ease,background .16s ease}.gp-action:hover{transform:translateY(-2px);box-shadow:0 5px 14px rgba(50,100,20,.12);background:#eef7e7}.gp-action i{width:31px;height:31px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;background:#58a51e}.gp-action.check i{background:#7bbd18}.gp-action.review i{background:#f0b900}.gp-admin-actions{display:flex;gap:7px;margin-top:8px}.gp-admin-actions button{flex:1;border:0;border-radius:10px;padding:7px;cursor:pointer;font:600 11px Poppins,Arial,sans-serif;background:#f1f1f1}.gp-admin-actions button:last-child{background:#feecec;color:#c62828}@media(max-width:520px){.gp-popup .leaflet-popup-content{width:270px!important}.gp-card-image{height:125px}.gp-actions{gap:6px}.gp-action{min-height:68px;font-size:10px}}body.dark-mode .gp-card{background:#182018;color:#eef6e9}.dark-mode .gp-action{background:#243024;color:#eef6e9}.dark-mode .gp-action:hover{background:#2c3a2b}.dark-mode .gp-popup .leaflet-popup-close-button{background:#243024;color:#fff!important}
+</style>
 </head>
 <body>
 <div class="app-container">
@@ -236,7 +241,15 @@
     map = L.map('map').setView([12.8654, -85.2072], 8);
     currentLayers.calles = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', { attribution: '&copy; OpenStreetMap' }).addTo(map);
     currentLayers.satelite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { attribution: 'Esri' });
-    markerCluster = L.markerClusterGroup();
+    markerCluster = L.markerClusterGroup({
+      showCoverageOnHover: false,
+      maxClusterRadius: 55,
+      iconCreateFunction: (cluster) => L.divIcon({
+        html: `<div>${cluster.getChildCount()}</div>`,
+        className: 'marker-cluster gp-cluster',
+        iconSize: [50, 50]
+      })
+    });
     map.addLayer(markerCluster);
     document.querySelectorAll('.layer-btn[data-layer]').forEach(btn => {
       btn.addEventListener('click', () => {
@@ -256,43 +269,74 @@
     actualizarMarcadoresMapa();
   }
 
+  function iconoCategoria(place) {
+    const cat = `${place.categoria || ''} ${place.tipoCamino || ''}`.toLowerCase();
+    let icon = 'fa-mountain-sun';
+    if (cat.includes('playa') || cat.includes('mar')) icon = 'fa-umbrella-beach';
+    else if (cat.includes('cascada') || cat.includes('agua') || cat.includes('lago') || cat.includes('laguna')) icon = 'fa-water';
+    else if (cat.includes('iglesia') || cat.includes('relig')) icon = 'fa-church';
+    else if (cat.includes('hist') || cat.includes('museo')) icon = 'fa-landmark';
+    else if (cat.includes('gastr') || cat.includes('comercial') || cat.includes('comida')) icon = 'fa-utensils';
+    else if (cat.includes('reserva') || cat.includes('natur') || cat.includes('parque')) icon = 'fa-tree';
+    else if (cat.includes('volcan')) icon = 'fa-volcano';
+    else if (cat.includes('foto') || cat.includes('mirador')) icon = 'fa-camera';
+    return icon;
+  }
+
   async function actualizarMarcadoresMapa() {
     if(!markerCluster) return;
     markerCluster.clearLayers();
     for(let place of allPlaces) {
+      const icon = iconoCategoria(place);
+      const markerIcon = L.divIcon({
+        className: 'gp-marker-wrap',
+        html: `<div class="gp-marker"><i class="fas ${icon}"></i></div>`,
+        iconSize: [46, 46],
+        iconAnchor: [23, 46],
+        popupAnchor: [0, -42]
+      });
+
       const popupDiv = document.createElement('div');
-      popupDiv.innerHTML = `<b>${place.nombre}</b><br>${place.imagen?`<img src="${place.imagen}" style="width:100%;border-radius:8px;max-width:180px;">` : ''}<br><a href="${place.url||'#'}" target="_blank">🔗 Visitar</a>`;
-      const checkBtn = document.createElement('button');
-      checkBtn.innerHTML = '<i class="fas fa-map-marker-check"></i> Hacer Check-in aquí';
-      checkBtn.style.display = 'block';
-      checkBtn.style.margin = '5px 0';
-      checkBtn.style.background = '#F57C00';
-      checkBtn.style.color = 'white';
-      checkBtn.style.border = 'none';
-      checkBtn.style.padding = '6px';
-      checkBtn.style.borderRadius = '20px';
-      checkBtn.onclick = () => realizarCheckin(place.id, place.nombre);
-      popupDiv.appendChild(checkBtn);
-      
-      // Botón comentar (solo si ya tiene visita)
+      popupDiv.className = 'gp-card';
+      popupDiv.innerHTML = `
+        <div class="gp-card-title"><span class="gp-card-title-icon"><i class="fas ${icon}"></i></span><span>${place.nombre}</span></div>
+        ${place.imagen ? `<img class="gp-card-image" src="${place.imagen}" onerror="this.style.display='none'">` : ''}
+        <div class="gp-actions">
+          <a class="gp-action visit" href="${place.url || '#'}" target="_blank" rel="noopener"><i class="fas fa-compass"></i><span>Visitar</span></a>
+          <button class="gp-action check" type="button"><i class="fas fa-location-dot"></i><span>Hacer Check-in aquí</span></button>
+          <div class="gp-review-slot"></div>
+        </div>
+        <div class="gp-admin-actions" style="display:none"></div>`;
+
+      popupDiv.querySelector('.gp-action.check').onclick = () => realizarCheckin(place.id, place.nombre);
+      const reviewSlot = popupDiv.querySelector('.gp-review-slot');
       if(currentUser) {
         const yaVisito = await verificarSiYaVisito(currentUser.uid, place.id);
         if(yaVisito) {
-          const commentBtn = document.createElement('button');
-          commentBtn.innerHTML = '<i class="fas fa-star"></i> Comentar / Puntuar';
-          commentBtn.style.display = 'block';
-          commentBtn.style.marginTop = '5px';
-          commentBtn.style.background = '#2E7D32';
-          commentBtn.onclick = () => abrirComentario(place.id, place.nombre);
-          popupDiv.appendChild(commentBtn);
+          const review = document.createElement('button');
+          review.className = 'gp-action review'; review.type = 'button';
+          review.innerHTML = '<i class="fas fa-star"></i><span>Comentar / Puntuar</span>';
+          review.onclick = () => abrirComentario(place.id, place.nombre);
+          reviewSlot.replaceWith(review);
+        } else {
+          reviewSlot.outerHTML = `<div class="gp-action review" style="opacity:.45;cursor:default"><i class="fas fa-star"></i><span>Comentar / Puntuar</span></div>`;
         }
+      } else {
+        reviewSlot.outerHTML = `<div class="gp-action review" style="opacity:.45;cursor:default"><i class="fas fa-star"></i><span>Comentar / Puntuar</span></div>`;
       }
+
       if(isAdmin) {
-        const editBtn = document.createElement('button'); editBtn.innerText='✏️ Editar'; editBtn.onclick=()=>editarLugarAdmin(place.id);
-        const delBtn = document.createElement('button'); delBtn.innerText='🗑️ Eliminar'; delBtn.onclick=()=>eliminarLugarFirestore(place.id);
-        popupDiv.appendChild(editBtn); popupDiv.appendChild(delBtn);
+        const adminActions = popupDiv.querySelector('.gp-admin-actions');
+        adminActions.style.display = 'flex';
+        const editBtn = document.createElement('button'); editBtn.innerHTML = '<i class="fas fa-pen"></i> Editar'; editBtn.onclick = () => editarLugarAdmin(place.id);
+        const delBtn = document.createElement('button'); delBtn.innerHTML = '<i class="fas fa-trash"></i> Eliminar'; delBtn.onclick = () => eliminarLugarFirestore(place.id);
+        adminActions.append(editBtn, delBtn);
       }
-      const marker = L.marker([place.lat, place.lng]).bindPopup(popupDiv);
+
+      const marker = L.marker([place.lat, place.lng], { icon: markerIcon })
+        .bindPopup(popupDiv, { className: 'gp-popup', maxWidth: 330, closeButton: true });
+      marker.on('popupopen', () => { const el = marker.getElement()?.querySelector('.gp-marker'); if(el) el.classList.add('selected'); });
+      marker.on('popupclose', () => { const el = marker.getElement()?.querySelector('.gp-marker'); if(el) el.classList.remove('selected'); });
       markerCluster.addLayer(marker);
     }
   }
