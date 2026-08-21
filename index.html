@@ -140,8 +140,6 @@
         </div>
       </div>
 
-  
-
       <!-- DESTINOS -->
       <div class="section-header">
         <h2>🌍 Destinos populares</h2>
@@ -193,6 +191,89 @@
             <h3>Volcán Masaya</h3>
             <p><i class="fas fa-map-marker-alt"></i> Cráter activo</p>
             <a href="destinos/masaya.html" class="btn-visitar">Visitar</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== NEGOCIOS DESTACADOS ===== -->
+      <div class="section-header">
+        <h2>🏢 Negocios Destacados</h2>
+        <a href="#" class="see-all">Ver todos →</a>
+      </div>
+      <div class="horizontal-scroll" id="negociosContainer">
+        <div class="negocio-card" data-category="hoteles">
+          <img src="https://imgur.com/7xqD5pZ.jpg" alt="Hotel" />
+          <div class="card-overlay">
+            <div class="negocio-badge">⭐ Destacado</div>
+            <h3>Hotel Plaza Real</h3>
+            <p><i class="fas fa-map-marker-alt"></i> Managua</p>
+            <div class="negocio-rating">
+              <span class="stars">★★★★★</span>
+              <span class="rating-num">4.8</span>
+            </div>
+            <div class="negocio-servicios">
+              <span class="servicio-tag">WiFi</span>
+              <span class="servicio-tag">Piscina</span>
+              <span class="servicio-tag">Gimnasio</span>
+            </div>
+            <a href="#" class="btn-visitar">Ver negocio →</a>
+          </div>
+        </div>
+
+        <div class="negocio-card" data-category="restaurantes">
+          <img src="https://imgur.com/LmBBFaT.jpg" alt="Restaurante" />
+          <div class="card-overlay">
+            <div class="negocio-badge">🍽️ Recomendado</div>
+            <h3>El Churrasco</h3>
+            <p><i class="fas fa-map-marker-alt"></i> Granada</p>
+            <div class="negocio-rating">
+              <span class="stars">★★★★☆</span>
+              <span class="rating-num">4.5</span>
+            </div>
+            <div class="negocio-servicios">
+              <span class="servicio-tag">Comida Nica</span>
+              <span class="servicio-tag">Terraza</span>
+              <span class="servicio-tag">Reservas</span>
+            </div>
+            <a href="#" class="btn-visitar">Ver negocio →</a>
+          </div>
+        </div>
+
+        <div class="negocio-card" data-category="tiendas">
+          <img src="https://imgur.com/rf8HVpD.jpg" alt="Tienda" />
+          <div class="card-overlay">
+            <div class="negocio-badge">🛍️ Ofertas</div>
+            <h3>Artesanías Nica</h3>
+            <p><i class="fas fa-map-marker-alt"></i> Masaya</p>
+            <div class="negocio-rating">
+              <span class="stars">★★★★☆</span>
+              <span class="rating-num">4.3</span>
+            </div>
+            <div class="negocio-servicios">
+              <span class="servicio-tag">Artesanía</span>
+              <span class="servicio-tag">Envíos</span>
+              <span class="servicio-tag">Pago Online</span>
+            </div>
+            <a href="#" class="btn-visitar">Ver negocio →</a>
+          </div>
+        </div>
+
+        <div class="negocio-card" data-category="servicios">
+          <img src="https://imgur.com/CFcEYQZ.jpg" alt="Servicios" />
+          <div class="card-overlay">
+            <div class="negocio-badge">🚗 Confiable</div>
+            <h3>Turismo Express</h3>
+            <p><i class="fas fa-map-marker-alt"></i> Rivas</p>
+            <div class="negocio-rating">
+              <span class="stars">★★★★★</span>
+              <span class="rating-num">4.9</span>
+            </div>
+            <div class="negocio-servicios">
+              <span class="servicio-tag">Tours</span>
+              <span class="servicio-tag">Transporte</span>
+              <span class="servicio-tag">Guías</span>
+            </div>
+            <a href="#" class="btn-visitar">Ver negocio →</a>
           </div>
         </div>
       </div>
@@ -261,7 +342,6 @@
         </div>
       </div>
 
-     
       <!-- MENÚ INFERIOR -->
       <nav class="bottom-nav">
         <a href="#" class="nav-item active" data-url="#">
@@ -285,23 +365,18 @@
         </a>
       </nav>
 
-      <!-- ============================================================
-           BOTONES FLOTANTES - DENTRO DE MENUSECTION
-           SOLO VISIBLES DESPUÉS DEL LOGIN
-           ============================================================ -->
+      <!-- BOTONES FLOTANTES -->
       <div class="floating-buttons-container">
-        <!-- WhatsApp (ARRIBA) -->
         <a href="#" id="whatsappBtn" class="floating-btn whatsapp-btn" target="_blank">
-          <i class="fab fa-whatsapp"><span class="visually-hidden">Comunicate por whatsapp </span></i>
+          <i class="fab fa-whatsapp"><span class="visually-hidden">Comunicate por whatsapp</span></i>
         </a>
-        <!-- IA (ABAJO) - Dify se inserta aquí -->
         <div id="dify-button-placeholder"></div>
       </div>
 
     </div> <!-- Cierra menuSection -->
   </div> <!-- Cierra app-container -->
 
-  <!-- MODAL PERFIL (fuera del app-container) -->
+  <!-- MODAL PERFIL -->
   <div id="editProfileModal" class="modal-overlay">
     <div class="modal-box">
       <h3><i class="fas fa-user-edit"></i> Editar perfil</h3>
@@ -325,7 +400,7 @@
   <!-- TOAST -->
   <div id="toast" class="toast-message" style="display:none;"></div>
 
-  <!-- ===== DIFY SCRIPT ===== -->
+  <!-- DIFY SCRIPT -->
   <script>
     window.difyChatbotConfig = {
       token: 'gw2xWn1l5DavvTp9',
@@ -336,28 +411,21 @@
   </script>
   <script src="https://udify.app/embed.min.js" id="gw2xWn1l5DavvTp9" defer></script>
 
-  <!-- FORZAR POSICIÓN DEL BOTÓN DE DIFY Y QUITAR LA X -->
   <script>
     setTimeout(function() {
       const difyButton = document.getElementById('dify-chatbot-bubble-button');
       const placeholder = document.getElementById('dify-button-placeholder');
-      
+
       if (difyButton && placeholder) {
-        // Mover el botón de Dify al placeholder
         placeholder.appendChild(difyButton);
-        
-        // Quitar la X superpuesta
         const closeBtn = difyButton.querySelector('.dify-chatbot-bubble-close');
         if (closeBtn) {
           closeBtn.style.display = 'none';
         }
-        
-        // Ocultar SVG duplicado (la X)
         const svgs = difyButton.querySelectorAll('svg');
         if (svgs.length > 1) {
           svgs[1].style.display = 'none';
         }
-        
         console.log('✅ Botón de Dify movido al placeholder y X ocultada');
       }
     }, 1500);
