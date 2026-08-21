@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Guía Pinolera - Explora Nicaragua</title>
+    <style>
+        /* ========== RESET Y BASE ========== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: #0d1a0b;
+            color: #f0e6d3;
+            min-height: 100vh;
+            padding: 1.5rem;
+        }
+        
+        /* ========== CONTENEDOR PRINCIPAL ========== */
+        .contenedor {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #121a10;
+            border-radius: 30px;
+            padding: 2rem;
+            border: 1px solid #2d3a2a;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+        }
+
+        /* ========== HEADER ========== */
+        .header-principal {
+            text-align: center;
+            padding: 1rem 0 2rem;
+            border-bottom: 2px solid #2d3a2a;
+            margin-bottom: 2rem;
+        }
+        .header-principal h1 {
+            font-size: 2.8rem;
+            background: linear-gradient(135deg, #d4a373, #f4d3b3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+        }
+        .header-principal p {
+            color: #b8a99a;
+            font-size: 1.1rem;
+            margin-top: 0.3rem;
+        }
+
+        /* ========== BOTÓN SORPRÉNDEME ========== */
+        .btn-sorpresa {
+            background: linear-gradient(135deg, #d4a373, #b8895e);
+            border: none;
+            color: #0d1a0b;
+            font-size: 1.3rem;
+            font-weight: bold;
+            padding: 0.8rem 2.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 1rem 0;
+            box-shadow: 0 4px 15px rgba(212, 163, 115, 0.3);
+        }
+        .btn-sorpresa:hover {
+            transform: scale(1.05) rotate(-2deg);
+            box-shadow: 0 6px 25px rgba(212, 163, 115, 0.5);
+        }
+        .btn-sorpresa:active { transform: scale(0.95); }
+
+        /* ========== DESTINOS (GRID) ========== */
+        .grid-destinos {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 1.2rem;
+            margin: 2rem 0;
+        }
+        .destino-item {
+            background: #1a2a1f;
+            padding: 1.5rem 0.5rem;
+            text-align: center;
+            border-radius: 15px;
+            border: 1px solid #2d3a2a;
+            transition: all 0.3s;
+            cursor: default;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        .destino-item:hover {
+            transform: translateY(-8px);
+            border-color: #d4a373;
+            box-shadow: 0 8px 25px rgba(212, 163, 115, 0.15);
+        }
+        .destino-item .emoji { font-size: 2rem; display: block; margin-bottom: 0.3rem; }
+
+        /* ========== SECCIÓN PRÁCTICA ========== */
+        .seccion-utilidad {
+            background: #0f1a0d;
+            padding: 2rem;
+            border-radius: 20px;
+            margin: 2.5rem 0;
+            border: 1px solid #2d3a2a;
+        }
+        .seccion-utilidad h2 {
+            color: #f4d3b3;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #2d3a2a;
+            padding-bottom: 0.8rem;
+        }
+        .grid-utilidad {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.8rem;
+        }
+        .tarjeta-util {
+            background: #1a2a1f;
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            transition: transform 0.3s;
+            border: 1px solid #2d3a2a;
+        }
+        .tarjeta-util:hover { transform: translateY(-5px); }
+        .tarjeta-util h3 {
+            color: #f4d3b3;
+            margin-top: 0;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #d4a373;
+            padding-bottom: 0.5rem;
+        }
+
+        /* ===== FRASES ===== */
+        .item-frase {
+            background: #243021;
+            margin: 0.5rem 0;
+            padding: 0.8rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .item-frase:hover { background: #2f3d2c; }
+        .frase { font-weight: bold; color: #d4a373; }
+        .significado {
+            margin-top: 0.5rem;
+            color: #d4c5b8;
+            border-top: 1px dashed #d4a373;
+            padding-top: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        /* ===== CALCULADORA ===== */
+        .calc-inputs {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+        .calc-inputs label {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+            font-size: 0.95rem;
+        }
+        .calc-inputs input,
+        .calc-inputs select {
+            padding: 0.6rem;
+            border-radius: 8px;
+            border: 1px solid #d4a373;
+            background: #0d1a0b;
+            color: #f0e6d3;
+            font-size: 1rem;
+        }
+        .calc-inputs button {
+            background: #d4a373;
+            color: #0d1a0b;
+            border: none;
+            padding: 0.7rem;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1rem;
+        }
+        .calc-inputs button:hover { background: #e8c4a3; }
+        .resultado-calc {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #0d1a0b;
+            border-radius: 10px;
+            border-left: 4px solid #d4a373;
+        }
+        .presupuesto-detalle p { margin: 0.4rem 0; }
+        .barra-presupuesto {
+            width: 100%;
+            height: 8px;
+            background: #2d3a2a;
+            border-radius: 4px;
+            margin: 0.6rem 0;
+        }
+        .barra-llenado {
+            height: 100%;
+            background: linear-gradient(90deg, #d4a373, #f4d3b3);
+            border-radius: 4px;
+            transition: width 0.6s ease;
+        }
+
+        /* ===== CALENDARIO ===== */
+        .item-calendario {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.6rem 0.8rem;
+            border-bottom: 1px solid #243021;
+            font-size: 0.95rem;
+        }
+        .item-calendario.destacado {
+            background: #2d3a2a;
+            border-radius: 8px;
+            border-left: 4px solid #d4a373;
+            padding-left: 0.6rem;
+        }
+        .mes-cal { font-weight: bold; color: #d4a373; }
+        .evento-cal { color: #d4c5b8; text-align: right; }
+        .alerta-mes {
+            background: #2d2a1a;
+            padding: 0.6rem;
+            border-radius: 10px;
+            margin-bottom: 0.8rem;
+            text-align: center;
+            border: 1px solid #d4a373;
+            font-size: 0.9rem;
+        }
+
+        /* ========== MODAL ========== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(6px);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal.mostrar { display: flex; }
+        .modal-contenido {
+            background: #1a2a1f;
+            padding: 2.5rem;
+            max-width: 500px;
+            width: 90%;
+            border-radius: 25px;
+            border: 2px solid #d4a373;
+            color: #f0e6d3;
+            animation: aparecerModal 0.4s ease;
+            position: relative;
+        }
+        @keyframes aparecerModal {
+            from { transform: scale(0.8) translateY(30px); opacity: 0; }
+            to { transform: scale(1) translateY(0); opacity: 1; }
+        }
+        .cerrar-modal {
+            position: absolute;
+            top: 12px;
+            right: 20px;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #d4a373;
+            transition: transform 0.3s;
+        }
+        .cerrar-modal:hover { transform: rotate(90deg); }
+        .modal-contenido h2 {
+            color: #f4d3b3;
+            margin-top: 0;
+            margin-bottom: 1rem;
+        }
+        .badge {
+            background: #d4a373;
+            color: #0d1a0b;
+            padding: 0.3rem 1.2rem;
+            border-radius: 20px;
+            margin: 0.2rem 0.3rem 0.2rem 0;
+            display: inline-block;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        .modal-contenido ul {
+            list-style: none;
+            padding: 0;
+            margin: 1rem 0;
+        }
+        .modal-contenido ul li {
+            padding: 0.4rem 0;
+            border-bottom: 1px solid #2d3a2a;
+        }
+        .modal-contenido .tip {
+            background: #2d2a1a;
+            padding: 0.8rem;
+            border-radius: 10px;
+            border-left: 4px solid #d4a373;
+            margin: 1rem 0;
+        }
+        .btn-accion {
+            background: #d4a373;
+            border: none;
+            color: #0d1a0b;
+            padding: 0.6rem 1.5rem;
+            border-radius: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-right: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        .btn-accion:hover { background: #e8c4a3; }
+        .btn-accion.secundario {
+            background: transparent;
+            border: 2px solid #d4a373;
+            color: #f0e6d3;
+        }
+        .btn-accion.secundario:hover { background: #2d3a2a; }
+
+        /* ========== FOOTER ========== */
+        .footer {
+            text-align: center;
+            margin-top: 2.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #2d3a2a;
+            color: #6a7a5a;
+            font-size: 0.9rem;
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 600px) {
+            .contenedor { padding: 1rem; }
+            .header-principal h1 { font-size: 2rem; }
+            .grid-destinos { grid-template-columns: repeat(2, 1fr); }
+            .grid-utilidad { grid-template-columns: 1fr; }
+            .modal-contenido { padding: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="contenedor">
+    <!-- ===== HEADER ===== -->
+    <header class="header-principal">
+        <h1>🌋 Guía Pinolera</h1>
+        <p>Explora Nicaragua jugando 🇳🇮</p>
+        <button class="btn-sorpresa" id="btnRuta">🎲 ¡Ruta al Azar!</button>
+    </header>
+
+    <!-- ===== DESTINOS ===== -->
+    <section>
+        <div class="grid-destinos" id="gridDestinos">
+            <!-- Se llena con JS -->
+        </div>
+    </section>
+
+    <!-- ===== SECCIÓN PRÁCTICA ===== -->
+    <section class="seccion-utilidad" id="seccionPractica">
+        <h2>🧳 Kit Práctico del Explorador</h2>
+        <div class="grid-utilidad">
+            
+            <!-- Tarjeta 1: Frases -->
+            <div class="tarjeta-util">
+                <h3>🗣️ Frases Clave Nicas</h3>
+                <div class="contenido-frases" id="contenedorFrases">
+                    <!-- Se llena con JS -->
+                </div>
+            </div>
+
+            <!-- Tarjeta 2: Calculadora -->
+            <div class="tarjeta-util">
+                <h3>💰 Calculadora de Presupuesto</h3>
+                <div class="calc-inputs">
+                    <label>Días de viaje:
+                        <input type="number" id="diasViaje" value="5" min="1" max="30" />
+                    </label>
+                    <label>Estilo:
+                        <select id="estiloViaje">
+                            <option value="mochilero">🎒 Mochilero ($30/día)</option>
+                            <option value="estandar" selected>🏨 Estándar ($60/día)</option>
+                            <option value="lujo">🌟 Lujo ($120/día)</option>
+                        </select>
+                    </label>
+                    <button onclick="calcularPresupuesto()">Calcular</button>
+                </div>
+                <div class="resultado-calc" id="resultadoCalc">
+                    <!-- Resultado dinámico -->
+                </div>
+            </div>
+
+            <!-- Tarjeta 3: Calendario -->
+            <div class="tarjeta-util">
+                <h3>📅 Calendario Pinolero</h3>
+                <div class="contenido-calendario" id="contenedorCalendario">
+                    <!-- Se llena con JS -->
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer">
+        🌿 Hecho con ❤️ para explorar Nicaragua • 2026
+    </footer>
+</div>
+
+<!-- ===== MODAL ===== -->
+<div class="modal" id="modalRuta">
+    <div class="modal-contenido">
+        <span class="cerrar-modal" id="cerrarModalBtn">&times;</span>
+        <h2 id="rutaTitulo">🌋 Aventura entre Volcanes</h2>
+        <div class="destinos-modal" id="rutaDestinos">
+            <!-- Badges dinámicos -->
+        </div>
+        <ul id="rutaActividades">
+            <!-- Actividades dinámicas -->
+        </ul>
+        <div class="tip" id="rutaTip">
+            💡 Consejo: lleva ropa cómoda
+        </div>
+        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem;">
+            <button class="btn-accion" onclick="generarRuta()">🔄 Otra Ruta</button>
+            <button class="btn-accion secundario" onclick="cerrarModal()">🗺️ Ver en Mapa</button>
+        </div>
+    </div>
+</div>
+
+<!-- ========================================================== -->
+<!-- ===== JAVASCRIPT COMPLETO ===== -->
+<script>
+    // ==========================================
+    // 1. DATOS
+    // ==========================================
+    const destinos = [
+        { nombre: "Managua", emoji: "🏙️" },
+        { nombre: "Granada", emoji: "🏛️" },
+        { nombre: "Masaya", emoji: "🌋" },
+        { nombre: "Rivas", emoji: "🌊" },
+        { nombre: "San Juan del Sur", emoji: "🏄" },
+        { nombre: "Matagalpa", emoji: "🌿" },
+        { nombre: "León", emoji: "⛪" },
+        { nombre: "Estelí", emoji: "🚬" },
+    ];
+
+    const rutas = [
+        {
+            titulo: "🌋 Aventura entre Volcanes",
+            destinos: ["León", "Masaya", "Granada"],
+            actividades: [
+                "🏄 Sandboard en Cerro Negro",
+                "🐦 Avistamiento en Laguna de Apoyo",
+                "🚤 Recorrido en lancha por isletas"
+            ],
+            tip: "Lleva ropa que no te importe manchar de azufre"
+        },
+        {
+            titulo: "🏝️ Paraíso Playero y Colonial",
+            destinos: ["San Juan del Sur", "Rivas", "Granada"],
+            actividades: [
+                "🏄 Surf en Playa Maderas",
+                "🐎 Paseo a caballo por reserva",
+                "🍽️ Cena en Calle La Calzada"
+            ],
+            tip: "El atardecer en el Cristo de la Misericordia es imperdible"
+        },
+        {
+            titulo: "🌿 Tesoros Ocultos del Norte",
+            destinos: ["Matagalpa", "Estelí", "Jinotega"],
+            actividades: [
+                "☕ Tour cafetalero en finca La Esperanza",
+                "🚶 Senderismo a Cascada La Estanzuela",
+                "🚬 Visita a fábrica de puros Joya"
+            ],
+            tip: "Lleva chaqueta ligera, las noches son frescas (15-18°C)"
+        },
+        {
+            titulo: "🏛️ Ruta Colonial y Cultural",
+            destinos: ["Granada", "León", "Masaya"],
+            actividades: [
+                "🎭 Museo del Güegüense en Masaya",
+                "⛪ Visita a la Catedral de León",
+                "🚲 Paseo en coche de caballos por Granada"
+            ],
+            tip: "Prueba el quesillo con cuajada en las calles"
+        },
+        {
+            titulo: "🌊 Aventura en el Pacífico",
+            destinos: ["San Juan del Sur", "Rivas", "Granada"],
+            actividades: [
+                "🐢 Liberación de tortugas en La Flor",
+                "🏄 Clase de surf en Playa Remanso",
+                "🌅 Cena con vista al atardecer en San Juan"
+            ],
+            tip: "De noviembre a febrero es temporada de tortugas"
+        }
+    ];
+
+    const frasesNicas = [
+        { frase: "¡Dale pues!", significado: "Vamos, adelante, OK" },
+        { frase: "¿Cómo está la vaina?", significado: "¿Cómo va todo?" },
+        { frase: "¡Qué chiva!", significado: "Qué bonito, qué bueno" },
+        { frase: "Está muy caro", significado: "Es demasiado (no solo precio)" },
+        { frase: "¡A la verga!", significado: "Expresión de sorpresa (fuerte)" },
+        { frase: "¡Pura vida!", significado: "Todo excelente (muy usado)" }
+    ];
+
+    const festivales = [
+        { mes: "Enero", evento: "Feria de San Sebastián (Diriamba)", emoji: "🎭" },
+        { mes: "Febrero", evento: "Carnaval de Managua", emoji: "🎉" },
+        { mes: "Marzo", evento: "Semana Santa (procesiones)", emoji: "✝️" },
+        { mes: "Abril", evento: "Feria del Maíz (Jinotega)", emoji: "🌽" },
+        { mes: "Mayo", evento: "Fiestas de San Isidro (León)", emoji: "🐂" },
+        { mes: "Junio", evento: "Fiesta de San Juan (San Juan del Sur)", emoji: "⛵" },
+        { mes: "Julio", evento: "Fiestas Patronales de Santiago (Estelí)", emoji: "🎆" },
+        { mes: "Agosto", evento: "Feria de la Naranja (Matagalpa)", emoji: "🍊" },
+        { mes: "Septiembre", evento: "Fiestas Patrias (desfiles)", emoji: "🇳🇮" },
+        { mes: "Octubre", evento: "Festival del Güegüense (Masaya)", emoji: "🎭" },
+        { mes: "Noviembre", evento: "Feria del Café (Matagalpa)", emoji: "☕" },
+        { mes: "Diciembre", evento: "La Gritería (Inmaculada Concepción)", emoji: "🕯️" }
+    ];
+
+    const costosDiarios = {
+        mochilero: 30,
+        estandar: 60,
+        lujo: 120
+    };
+
+    // ==========================================
+    // 2. FUNCIONES DE RENDERIZADO
+    // ==========================================
+
+    // --- Destinos ---
+    function renderizarDestinos() {
+        const grid = document.getElementById('gridDestinos');
+        grid.innerHTML = destinos.map(d => `
+            <div class="destino-item">
+                <span class="emoji">${d.emoji}</span>
+                ${d.nombre}
+            </div>
+        `).join('');
+    }
+
+    // --- Frases ---
+    function renderizarFrases() {
+        const contenedor = document.getElementById('contenedorFrases');
+        contenedor.innerHTML = frasesNicas.map((item, index) => `
+            <div class="item-frase" onclick="toggleFrase(${index})">
+                <div class="frase">${item.frase}</div>
+                <div class="significado" id="sig-${index}" style="display:none">
+                    ${item.significado}
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function toggleFrase(index) {
+        const el = document.getElementById(`sig-${index}`);
+        el.style.display = el.style.display === 'none' ? 'block' : 'none';
+    }
+
+    // --- Calendario ---
+    function renderizarCalendario() {
+        const contenedor = document.getElementById('contenedorCalendario');
+        const mesActual = new Date().getMonth(); // 0-11
+
+        let html = `<div class="alerta-mes">📌 Este mes es <strong>${festivales[mesActual].mes}</strong>: ${festivales[mesActual].emoji} ${festivales[mesActual].evento}</div>`;
+        html += festivales.map((item, index) => `
+            <div class="item-calendario ${index === mesActual ? 'destacado' : ''}">
+                <span class="mes-cal">${item.mes}</span>
+                <span class="evento-cal">${item.emoji} ${item.evento}</span>
+            </div>
+        `).join('');
+        contenedor.innerHTML = html;
+    }
+
+    // --- Calculadora ---
+    function calcularPresupuesto() {
+        const dias = parseInt(document.getElementById('diasViaje').value) || 1;
+        const estilo = document.getElementById('estiloViaje').value;
+        const costoDolar = costosDiarios[estilo];
+        const totalDolar = costoDolar * dias;
+        const totalCordobas = totalDolar * 36;
+
+        const resultado = document.getElementById('resultadoCalc');
+        resultado.innerHTML = `
+            <div class="presupuesto-detalle">
+                <p>💵 <strong>${totalDolar}</strong> USD (≈ <strong>${totalCordobas.toLocaleString()}</strong> C$)</p>
+                <p>📊 <strong>${costoDolar}</strong> USD/día × ${dias} días</p>
+                <div class="barra-presupuesto">
+                    <div class="barra-llenado" style="width: ${(costoDolar/120)*100}%"></div>
+                </div>
+                <small>💰 Incluye hospedaje, comida y transporte básico</small>
+            </div>
+        `;
+    }
+
+    // --- Modal / Ruta Aleatoria ---
+    function generarRuta() {
+        const ruta = rutas[Math.floor(Math.random() * rutas.length)];
+        document.getElementById('rutaTitulo').textContent = ruta.titulo;
+        document.getElementById('rutaDestinos').innerHTML = ruta.destinos
+            .map(d => `<span class="badge">${d}</span>`).join('');
+        document.getElementById('rutaActividades').innerHTML = ruta.actividades
+            .map(a => `<li>${a}</li>`).join('');
+        document.getElementById('rutaTip').textContent = `💡 ${ruta.tip}`;
+        document.getElementById('modalRuta').classList.add('mostrar');
+    }
+
+    function cerrarModal() {
+        document.getElementById('modalRuta').classList.remove('mostrar');
+    }
+
+    // ==========================================
+    // 3. EVENTOS E INICIALIZACIÓN
+    // ==========================================
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Renderizar todo
+        renderizarDestinos();
+        renderizarFrases();
+        renderizarCalendario();
+        calcularPresupuesto();
+
+        // Evento del botón sorpresa
+        document.getElementById('btnRuta').addEventListener('click', generarRuta);
+
+        // Cerrar modal con X
+        document.getElementById('cerrarModalBtn').addEventListener('click', cerrarModal);
+
+        // Cerrar modal al hacer clic fuera
+        document.getElementById('modalRuta').addEventListener('click', function(e) {
+            if (e.target === this) cerrarModal();
+        });
+
+        // Cerrar modal con Escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') cerrarModal();
+        });
+
+        // Recalcular al cambiar inputs
+        document.getElementById('diasViaje').addEventListener('input', calcularPresupuesto);
+        document.getElementById('estiloViaje').addEventListener('change', calcularPresupuesto);
+    });
+
+    // Exponer funciones globales para onclick
+    window.toggleFrase = toggleFrase;
+    window.calcularPresupuesto = calcularPresupuesto;
+    window.generarRuta = generarRuta;
+    window.cerrarModal = cerrarModal;
+</script>
+
+</body>
+</html>
