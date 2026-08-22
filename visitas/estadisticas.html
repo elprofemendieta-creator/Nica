@@ -1,48 +1,42 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
   <title>📊 Estadísticas – Visitas Pinolera</title>
-  
-  <!-- Font Awesome para íconos -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
   <style>
     /* ============================================================
-       ESTADÍSTICAS - Visitas Pinolera
+       ESTADÍSTICAS · Diseño inmersivo y premium
        Paleta: #232049, #a4c737, #a287be, #fbfbfb
-       Fuentes: Myriad Pro, Cascadia Mono Light
        ============================================================ */
 
-    /* ===== CARGA DE FUENTES ===== */
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    /* ----- FUENTES ----- */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
     @font-face {
       font-family: 'Myriad Pro';
       src: local('Myriad Pro'), local('MyriadPro-Regular');
       font-weight: 400;
-      font-style: normal;
       font-display: swap;
     }
-
     @font-face {
       font-family: 'Myriad Pro';
       src: local('Myriad Pro Bold'), local('MyriadPro-Bold');
       font-weight: 700;
-      font-style: normal;
       font-display: swap;
     }
-
     @font-face {
       font-family: 'Cascadia Mono Light';
       src: local('Cascadia Mono Light'), local('CascadiaMono-Light');
       font-weight: 300;
-      font-style: normal;
       font-display: swap;
     }
 
-    /* ===== VARIABLES ===== */
+    /* ----- VARIABLES ----- */
     :root {
       --primary: #a4c737;
       --primary-dark: #8ab32e;
@@ -53,28 +47,13 @@
       --bg-dark: #232049;
       --bg-light: #fbfbfb;
       --text-light: #fbfbfb;
-      --text-dark: #232049;
       --text-muted: rgba(251, 251, 251, 0.7);
-      --text-muted-dark: rgba(35, 32, 73, 0.6);
-      
-      --font-title: 'Myriad Pro', 'Poppins', 'Segoe UI', sans-serif;
-      --font-body: 'Myriad Pro', 'Inter', 'Segoe UI', sans-serif;
-      --font-mono: 'Cascadia Mono Light', 'Cascadia Mono', monospace;
-      
-      --shadow-card: 0 20px 40px rgba(0, 0, 0, 0.5);
-      --shadow-primary: 0 4px 15px rgba(164, 199, 55, 0.4);
-      --shadow-secondary: 0 4px 15px rgba(162, 135, 190, 0.4);
-      
-      --transition-fast: 0.2s ease;
-      --transition-med: 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-      --transition-slow: 0.6s ease;
-      
-      --border-radius-lg: 36px;
-      --border-radius-md: 24px;
-      --border-radius-sm: 16px;
+      --shadow-card: 0 30px 60px rgba(0, 0, 0, 0.6);
+      --border-radius: 32px;
+      --transition: 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     }
 
-    /* ===== RESET Y BASE ===== */
+    /* ----- RESET ----- */
     * {
       margin: 0;
       padding: 0;
@@ -82,169 +61,142 @@
     }
 
     body {
-      font-family: var(--font-body);
-      background: linear-gradient(135deg, var(--bg-dark), #1a1738, var(--bg-dark));
-      background-size: 300% 300%;
+      font-family: 'Myriad Pro', 'Inter', 'Segoe UI', sans-serif;
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 20px;
+      background: radial-gradient(ellipse at 40% 30%, #1e1b42, #0b0f1f);
+      background-attachment: fixed;
       position: relative;
       overflow-x: hidden;
-      animation: gradientBG 8s ease-in-out infinite;
     }
 
-    @keyframes gradientBG {
-      0%, 100% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-    }
-
-    /* Decoración de fondo */
-    body::before {
-      content: "📊";
+    /* ----- FONDO DECORATIVO ----- */
+    .bg-glow {
       position: fixed;
-      top: -50px;
-      right: -50px;
-      font-size: 250px;
-      opacity: 0.03;
-      pointer-events: none;
-      z-index: 0;
-      transform: rotate(20deg);
-    }
-
-    body::after {
-      content: "📈";
-      position: fixed;
-      bottom: -50px;
-      left: -50px;
-      font-size: 250px;
-      opacity: 0.03;
-      pointer-events: none;
-      z-index: 0;
-      transform: rotate(-15deg);
-    }
-
-    /* Partículas de fondo */
-    .particles {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 0;
-      overflow: hidden;
-    }
-
-    .particle {
-      position: absolute;
-      width: 3px;
-      height: 3px;
       border-radius: 50%;
-      opacity: 0.1;
-      animation: floatParticle 20s infinite linear;
+      filter: blur(120px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .bg-glow--1 {
+      width: 600px;
+      height: 600px;
+      background: rgba(164, 199, 55, 0.06);
+      top: -200px;
+      right: -150px;
+      animation: floatGlow 22s ease-in-out infinite alternate;
+    }
+    .bg-glow--2 {
+      width: 500px;
+      height: 500px;
+      background: rgba(162, 135, 190, 0.05);
+      bottom: -150px;
+      left: -150px;
+      animation: floatGlow 28s ease-in-out infinite alternate-reverse;
+    }
+    @keyframes floatGlow {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(50px, 40px) scale(1.15); }
     }
 
-    @keyframes floatParticle {
-      0% { transform: translateY(100vh) scale(0); opacity: 0; }
-      10% { opacity: 0.1; }
-      90% { opacity: 0.1; }
-      100% { transform: translateY(-10vh) scale(1); opacity: 0; }
-    }
-
-    /* ===== DASHBOARD PRINCIPAL ===== */
+    /* ----- DASHBOARD (Glassmorphism) ----- */
     .dashboard {
-      max-width: 850px;
+      max-width: 860px;
       width: 100%;
-      background: rgba(251, 251, 251, 0.08);
-      backdrop-filter: blur(30px);
-      -webkit-backdrop-filter: blur(30px);
-      border-radius: var(--border-radius-lg);
-      padding: 35px 30px 30px;
-      border: 1px solid rgba(164, 199, 55, 0.15);
-      color: var(--text-light);
-      box-shadow: var(--shadow-card);
+      background: rgba(35, 32, 73, 0.55);
+      backdrop-filter: blur(24px) saturate(180%);
+      -webkit-backdrop-filter: blur(24px) saturate(180%);
+      border-radius: var(--border-radius);
+      padding: 42px 38px 38px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      box-shadow: var(--shadow-card), 0 0 0 1px rgba(255, 255, 255, 0.04);
       position: relative;
       z-index: 1;
-      animation: fadeInUp 0.8s ease;
+      animation: slideUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+      transition: all var(--transition);
     }
 
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(40px) scale(0.95); }
-      to { opacity: 1; transform: translateY(0) scale(1); }
+    .dashboard:hover {
+      border-color: rgba(164, 199, 55, 0.1);
+      box-shadow: var(--shadow-card), 0 0 50px rgba(164, 199, 55, 0.04);
     }
 
-    /* Borde decorativo superior */
-    .dashboard::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 4px;
-      background: linear-gradient(90deg, var(--primary), var(--secondary), var(--primary));
-      background-size: 200% 100%;
-      border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
-      animation: gradientMove 3s ease-in-out infinite;
+    @keyframes slideUp {
+      0% { opacity: 0; transform: translateY(50px) scale(0.96); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
     }
 
-    @keyframes gradientMove {
-      0%, 100% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-    }
-
-    /* ===== TÍTULO ===== */
-    h1 {
-      font-family: var(--font-title);
+    /* ----- TÍTULO ----- */
+    .header {
       text-align: center;
-      font-size: 2.4rem;
+      margin-bottom: 32px;
+    }
+
+    .header-badge {
+      display: inline-block;
+      background: rgba(164, 199, 55, 0.10);
+      padding: 5px 18px;
+      border-radius: 60px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--primary-light);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      border: 1px solid rgba(164, 199, 55, 0.12);
+      margin-bottom: 14px;
+      backdrop-filter: blur(4px);
+    }
+
+    h1 {
+      font-family: 'Myriad Pro', 'Inter', sans-serif;
+      font-size: 2.8rem;
       font-weight: 800;
-      margin-bottom: 30px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      background: linear-gradient(135deg, var(--primary), var(--secondary), var(--primary));
-      background-size: 200% 200%;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #f5e56b, #a4c737, #a287be);
+      background-size: 300% 300%;
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
-      animation: gradientShift 4s ease-in-out infinite;
-      letter-spacing: 1px;
-    }
-
-    @keyframes gradientShift {
-      0%, 100% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
+      animation: gradShift 5s ease-in-out infinite;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
     }
 
     h1 i {
+      font-size: 2rem;
       background: none;
       -webkit-background-clip: unset;
       background-clip: unset;
       color: var(--primary);
-      font-size: 2rem;
     }
 
-    /* ===== GRID DE ESTADÍSTICAS ===== */
+    @keyframes gradShift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    /* ----- GRID DE ESTADÍSTICAS ----- */
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
-      gap: 18px;
-      margin-bottom: 30px;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 28px;
     }
 
     .stat-card {
-      background: rgba(255, 255, 255, 0.06);
-      backdrop-filter: blur(15px);
-      -webkit-backdrop-filter: blur(15px);
-      border-radius: var(--border-radius-md);
-      padding: 22px 15px 20px;
+      background: rgba(255, 255, 255, 0.04);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 20px;
+      padding: 20px 14px 18px;
       text-align: center;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      transition: all var(--transition-med);
-      animation: popIn 0.6s ease both;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      transition: all var(--transition);
       position: relative;
       overflow: hidden;
     }
@@ -252,408 +204,254 @@
     .stat-card::before {
       content: '';
       position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: radial-gradient(circle, rgba(164, 199, 55, 0.05) 0%, transparent 70%);
-      animation: rotateGlow 20s linear infinite;
-      pointer-events: none;
+      inset: 0;
+      background: radial-gradient(circle at 30% 20%, rgba(164, 199, 55, 0.04), transparent 70%);
       opacity: 0;
-      transition: opacity var(--transition-fast);
+      transition: opacity var(--transition);
     }
 
     .stat-card:hover::before {
       opacity: 1;
     }
 
-    @keyframes rotateGlow {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    .stat-card:nth-child(1) { animation-delay: 0.05s; }
-    .stat-card:nth-child(2) { animation-delay: 0.15s; }
-    .stat-card:nth-child(3) { animation-delay: 0.25s; }
-    .stat-card:nth-child(4) { animation-delay: 0.35s; }
-
     .stat-card:hover {
-      transform: translateY(-6px);
-      border-color: rgba(164, 199, 55, 0.3);
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
-      background: rgba(255, 255, 255, 0.1);
-    }
-
-    @keyframes popIn {
-      0% { opacity: 0; transform: scale(0.7) translateY(20px); }
-      100% { opacity: 1; transform: scale(1) translateY(0); }
+      transform: translateY(-4px);
+      border-color: rgba(164, 199, 55, 0.15);
+      background: rgba(255, 255, 255, 0.07);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
     }
 
     .stat-icon {
-      font-size: 2.6rem;
-      margin-bottom: 8px;
+      font-size: 2.2rem;
       display: block;
+      margin-bottom: 6px;
       filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
-      transition: transform var(--transition-fast);
+      transition: transform var(--transition);
     }
 
     .stat-card:hover .stat-icon {
-      transform: scale(1.15) rotate(-5deg);
+      transform: scale(1.1) rotate(-3deg);
     }
 
     .stat-value {
-      font-family: var(--font-mono);
-      font-size: 2.2rem;
+      font-family: 'Cascadia Mono Light', 'Cascadia Mono', monospace;
+      font-size: 2rem;
       font-weight: 700;
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      background: linear-gradient(135deg, var(--primary-light), var(--secondary));
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
       line-height: 1.2;
-      transition: all var(--transition-fast);
-    }
-
-    .stat-card:hover .stat-value {
-      transform: scale(1.05);
     }
 
     .stat-label {
-      font-family: var(--font-body);
-      opacity: 0.8;
-      font-size: 0.85rem;
-      color: var(--text-light);
-      letter-spacing: 0.3px;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      letter-spacing: 0.4px;
+      font-weight: 500;
+      text-transform: uppercase;
       margin-top: 2px;
     }
 
-    /* ===== NIVEL ===== */
+    /* ----- NIVEL (Premium) ----- */
     .level-box {
-      background: linear-gradient(135deg, var(--primary), var(--primary-dark), var(--secondary));
-      background-size: 200% 200%;
-      border-radius: var(--border-radius-md);
-      padding: 22px 20px 20px;
+      background: linear-gradient(135deg, #2a2555, var(--bg-dark));
+      border-radius: 20px;
+      padding: 22px 24px 20px;
       text-align: center;
-      color: var(--bg-dark);
-      font-weight: bold;
+      border: 1px solid rgba(164, 199, 55, 0.12);
       position: relative;
       overflow: hidden;
-      animation: levelGradient 4s ease-in-out infinite;
-      box-shadow: var(--shadow-primary);
-      transition: all var(--transition-med);
-    }
-
-    .level-box:hover {
-      transform: scale(1.02);
-      box-shadow: 0 8px 30px rgba(164, 199, 55, 0.5);
-    }
-
-    @keyframes levelGradient {
-      0%, 100% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
+      transition: all var(--transition);
+      margin-bottom: 20px;
     }
 
     .level-box::before {
       content: '';
       position: absolute;
       top: -50%;
-      left: -50%;
+      left: -30%;
       width: 200%;
       height: 200%;
-      background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 70%);
-      animation: rotateGlow 15s linear infinite;
+      background: radial-gradient(circle, rgba(164, 199, 55, 0.04), transparent 60%);
+      animation: rotateBg 25s linear infinite;
       pointer-events: none;
     }
 
+    @keyframes rotateBg {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .level-box:hover {
+      border-color: rgba(164, 199, 55, 0.25);
+      transform: scale(1.01);
+      box-shadow: 0 8px 30px rgba(164, 199, 55, 0.06);
+    }
+
     .level-title {
-      font-family: var(--font-body);
-      font-size: 1.1rem;
-      opacity: 0.85;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      font-weight: 600;
       position: relative;
       z-index: 1;
-      letter-spacing: 1px;
     }
 
     .level-name {
-      font-family: var(--font-title);
+      font-family: 'Myriad Pro', 'Inter', sans-serif;
       font-size: 2rem;
       font-weight: 800;
+      background: linear-gradient(135deg, var(--primary-light), var(--secondary-light));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
       position: relative;
       z-index: 1;
-      margin-top: 4px;
-      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-      background: rgba(35, 32, 73, 0.1);
-      padding: 4px 20px;
-      border-radius: 50px;
-      display: inline-block;
-      backdrop-filter: blur(5px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      margin-top: 2px;
+      letter-spacing: 0.5px;
     }
 
-    /* ===== BARRA DE PROGRESO ADICIONAL ===== */
+    /* ----- BARRA DE PROGRESO ----- */
     .progress-extra {
-      margin-top: 20px;
-      padding: 16px 20px;
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: var(--border-radius-sm);
-      border: 1px solid rgba(255, 255, 255, 0.06);
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 16px;
+      padding: 18px 20px 16px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
     }
 
     .progress-extra .label {
-      font-family: var(--font-body);
-      font-size: 0.9rem;
-      opacity: 0.7;
-      margin-bottom: 6px;
       display: flex;
       justify-content: space-between;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      font-weight: 500;
     }
 
-    .progress-extra .bar {
-      background: rgba(255, 255, 255, 0.08);
-      border-radius: 20px;
+    .progress-extra .label span:last-child {
+      font-family: 'Cascadia Mono Light', monospace;
+      font-weight: 600;
+      color: var(--primary-light);
+    }
+
+    .progress-extra .track {
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 40px;
       height: 10px;
       overflow: hidden;
+      box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.2);
     }
 
     .progress-extra .fill {
-      background: linear-gradient(90deg, var(--primary), var(--secondary));
       height: 100%;
-      border-radius: 20px;
+      border-radius: 40px;
       width: 0%;
-      transition: width 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      background-size: 200% 100%;
+      animation: flowGrad 2.5s ease-in-out infinite;
+      transition: width 0.8s cubic-bezier(0.22, 0.61, 0.36, 1);
+      box-shadow: 0 0 20px rgba(164, 199, 55, 0.15);
     }
 
-    /* ===== RESPONSIVE ===== */
+    @keyframes flowGrad {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    /* ============================================================
+       RESPONSIVE
+       ============================================================ */
     @media (max-width: 768px) {
-      .dashboard {
-        padding: 25px 18px 20px;
-        border-radius: 28px;
-      }
-
-      h1 {
-        font-size: 1.8rem;
-        gap: 8px;
-      }
-
-      h1 i {
-        font-size: 1.6rem;
-      }
-
-      .grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
-      }
-
-      .stat-card {
-        padding: 18px 12px 16px;
-        border-radius: 18px;
-      }
-
-      .stat-icon {
-        font-size: 2.2rem;
-      }
-
-      .stat-value {
-        font-size: 1.8rem;
-      }
-
-      .stat-label {
-        font-size: 0.75rem;
-      }
-
-      .level-box {
-        padding: 18px 16px;
-      }
-
-      .level-title {
-        font-size: 0.95rem;
-      }
-
-      .level-name {
-        font-size: 1.6rem;
-        padding: 3px 16px;
-      }
+      .dashboard { padding: 28px 20px 24px; }
+      h1 { font-size: 2rem; gap: 10px; }
+      h1 i { font-size: 1.5rem; }
+      .grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+      .stat-card { padding: 16px 10px 14px; }
+      .stat-value { font-size: 1.6rem; }
+      .stat-icon { font-size: 1.8rem; }
+      .level-name { font-size: 1.6rem; }
     }
 
-    @media (max-width: 480px) {
-      body {
-        padding: 12px;
-      }
-
-      .dashboard {
-        padding: 18px 12px 16px;
-        border-radius: 24px;
-      }
-
-      h1 {
-        font-size: 1.4rem;
-        margin-bottom: 20px;
-      }
-
-      h1 i {
-        font-size: 1.3rem;
-      }
-
-      .grid {
-        grid-template-columns: 1fr 1fr;
-        gap: 10px;
-      }
-
-      .stat-card {
-        padding: 14px 10px 12px;
-        border-radius: 14px;
-      }
-
-      .stat-icon {
-        font-size: 1.8rem;
-        margin-bottom: 4px;
-      }
-
-      .stat-value {
-        font-size: 1.5rem;
-      }
-
-      .stat-label {
-        font-size: 0.7rem;
-      }
-
-      .level-box {
-        padding: 14px 12px;
-        border-radius: 16px;
-      }
-
-      .level-title {
-        font-size: 0.85rem;
-      }
-
-      .level-name {
-        font-size: 1.3rem;
-        padding: 2px 12px;
-      }
-
-      .progress-extra {
-        padding: 12px 14px;
-        margin-top: 14px;
-      }
-
-      .progress-extra .label {
-        font-size: 0.75rem;
-      }
-
-      .progress-extra .bar {
-        height: 8px;
-      }
+    @media (max-width: 500px) {
+      body { padding: 12px; }
+      .dashboard { padding: 20px 14px 18px; border-radius: 24px; }
+      .header { margin-bottom: 20px; }
+      .header-badge { font-size: 0.6rem; padding: 4px 12px; }
+      h1 { font-size: 1.5rem; gap: 6px; flex-wrap: wrap; }
+      h1 i { font-size: 1.2rem; }
+      .grid { gap: 8px; }
+      .stat-card { padding: 12px 6px 10px; border-radius: 14px; }
+      .stat-value { font-size: 1.3rem; }
+      .stat-icon { font-size: 1.4rem; margin-bottom: 2px; }
+      .stat-label { font-size: 0.6rem; letter-spacing: 0.2px; }
+      .level-box { padding: 16px 14px; border-radius: 16px; }
+      .level-title { font-size: 0.7rem; }
+      .level-name { font-size: 1.3rem; }
+      .progress-extra { padding: 14px 14px 12px; }
+      .progress-extra .label { font-size: 0.75rem; }
+      .progress-extra .track { height: 8px; }
     }
 
-    /* Orientación horizontal en móvil */
     @media (max-height: 600px) and (orientation: landscape) {
-      .dashboard {
-        padding: 16px 20px;
-        border-radius: 24px;
-      }
-
-      h1 {
-        font-size: 1.6rem;
-        margin-bottom: 16px;
-      }
-
-      .grid {
-        grid-template-columns: repeat(4, 1fr);
-        gap: 10px;
-        margin-bottom: 16px;
-      }
-
-      .stat-card {
-        padding: 12px 8px;
-      }
-
-      .stat-icon {
-        font-size: 1.6rem;
-        margin-bottom: 2px;
-      }
-
-      .stat-value {
-        font-size: 1.4rem;
-      }
-
-      .stat-label {
-        font-size: 0.65rem;
-      }
-
-      .level-box {
-        padding: 12px 16px;
-      }
-
-      .level-title {
-        font-size: 0.8rem;
-      }
-
-      .level-name {
-        font-size: 1.4rem;
-      }
+      .dashboard { padding: 18px 22px; }
+      h1 { font-size: 1.6rem; margin-bottom: 12px; }
+      .grid { grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 16px; }
+      .stat-card { padding: 10px 8px; }
+      .stat-value { font-size: 1.3rem; }
+      .stat-icon { font-size: 1.3rem; margin-bottom: 0; }
+      .stat-label { font-size: 0.6rem; }
+      .level-box { padding: 12px 16px; margin-bottom: 12px; }
+      .level-name { font-size: 1.4rem; }
+      .progress-extra { padding: 12px 16px; }
     }
 
-    /* ===== SCROLLBAR ===== */
-    ::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
-    }
-    ::-webkit-scrollbar-track {
-      background: var(--bg-dark);
-    }
-    ::-webkit-scrollbar-thumb {
-      background: var(--primary);
-      border-radius: 10px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: var(--secondary);
-    }
+    /* ===== SCROLL ===== */
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: var(--bg-dark); }
+    ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--secondary); }
 
-    /* ===== SELECTION ===== */
     ::selection {
       background: var(--primary);
       color: var(--bg-dark);
     }
-
-    /* ===== UTILIDADES ===== */
-    .text-center { text-align: center; }
-    .text-primary { color: var(--primary); }
-    .text-secondary { color: var(--secondary); }
-    .text-muted { color: var(--text-muted); }
-
-    .mt-2 { margin-top: 8px; }
-    .mt-3 { margin-top: 16px; }
-    .mb-2 { margin-bottom: 8px; }
-    .mb-3 { margin-bottom: 16px; }
   </style>
 </head>
 <body>
 
-  <!-- Partículas de fondo -->
-  <div class="particles" id="particles"></div>
+  <!-- Luces de fondo -->
+  <div class="bg-glow bg-glow--1"></div>
+  <div class="bg-glow bg-glow--2"></div>
 
-  <!-- DASHBOARD PRINCIPAL -->
+  <!-- DASHBOARD -->
   <div class="dashboard">
-    <h1>
-      <i class="fas fa-chart-pie"></i>
-      Estadísticas Generales
-      <i class="fas fa-chart-line"></i>
-    </h1>
+    <div class="header">
+      <span class="header-badge"><i class="fas fa-chart-simple"></i> Panel de Progreso</span>
+      <h1>
+        <i class="fas fa-chart-pie"></i>
+        Estadísticas
+        <i class="fas fa-chart-line"></i>
+      </h1>
+    </div>
 
+    <!-- Grid de estadísticas -->
     <div class="grid">
       <div class="stat-card">
         <span class="stat-icon">🏆</span>
         <div class="stat-value" id="badgeCount">0</div>
-        <div class="stat-label">Insignias obtenidas</div>
+        <div class="stat-label">Insignias</div>
       </div>
       <div class="stat-card">
         <span class="stat-icon">📍</span>
         <div class="stat-value" id="placesCompleted">0/1</div>
-        <div class="stat-label">Lugares completados</div>
+        <div class="stat-label">Visitados</div>
       </div>
       <div class="stat-card">
         <span class="stat-icon">🔎</span>
         <div class="stat-value" id="tokensFound">0</div>
-        <div class="stat-label">Tokens encontrados</div>
+        <div class="stat-label">Tokens</div>
       </div>
       <div class="stat-card">
         <span class="stat-icon">📈</span>
@@ -662,32 +460,32 @@
       </div>
     </div>
 
+    <!-- Nivel -->
     <div class="level-box">
       <div class="level-title">🎖 Nivel actual</div>
-      <div class="level-name" id="levelName">Explorador Novato</div>
+      <div class="level-name" id="levelName">Aprendiz de Viajero</div>
     </div>
 
-    <!-- Barra de progreso adicional -->
+    <!-- Barra de progreso -->
     <div class="progress-extra">
       <div class="label">
         <span>Progreso total</span>
         <span id="progressLabel">0%</span>
       </div>
-      <div class="bar">
+      <div class="track">
         <div class="fill" id="progressFill" style="width: 0%;"></div>
       </div>
     </div>
   </div>
 
   <!-- ============================================================
-       FIREBASE - CONFIGURACIÓN Y LÓGICA
+       FIREBASE
        ============================================================ -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
     import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-    // Configuración de Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyA6jVICuE17KJcO34gE1brMxqWEfNd3Fy0",
       authDomain: "mapa-41b00.firebaseapp.com",
@@ -697,15 +495,12 @@
       appId: "1:535032835400:web:68c079cbc3f419eafd177d"
     };
 
-    // Inicializar Firebase
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    // Autenticación anónima automática
     signInAnonymously(auth).catch(console.error);
 
-    // Función para obtener nivel según insignias
     function getLevel(badgeCount) {
       if (badgeCount >= 50) return "🌋 Leyenda Pinolera";
       if (badgeCount >= 30) return "🏛️ Maestro del Patrimonio";
@@ -716,82 +511,43 @@
       return "🆕 Aprendiz de Viajero";
     }
 
-    // Escuchar cambios de autenticación
     onAuthStateChanged(auth, (user) => {
-      if (user) {
-        // Referencia al documento del explorador
-        const lugarRef = doc(db, "users", user.uid, "explorer", "parque_diriamba");
-        
-        // Escuchar cambios en tiempo real
-        onSnapshot(lugarRef, (docSnap) => {
-          let data = { 
-            token1: false, 
-            token2: false, 
-            progress: 0, 
-            badge: false 
-          };
-          
-          if (docSnap.exists()) {
-            data = docSnap.data();
-          }
+      if (!user) return;
 
-          // Calcular estadísticas
-          const badgeCount = data.badge ? 1 : 0;
-          const placesCompleted = data.badge ? "1/1" : "0/1";
-          const tokensFound = (data.token1 ? 1 : 0) + (data.token2 ? 1 : 0);
-          const progress = data.progress || 0;
+      const lugarRef = doc(db, "users", user.uid, "explorer", "parque_diriamba");
 
-          // Actualizar UI
-          document.getElementById("badgeCount").textContent = badgeCount;
-          document.getElementById("placesCompleted").textContent = placesCompleted;
-          document.getElementById("tokensFound").textContent = tokensFound;
-          document.getElementById("overallProgress").textContent = `${progress}%`;
-          
-          // Nivel
-          document.getElementById("levelName").textContent = getLevel(badgeCount);
+      onSnapshot(lugarRef, (docSnap) => {
+        let data = { token1: false, token2: false, progress: 0, badge: false };
+        if (docSnap.exists()) data = docSnap.data();
 
-          // Barra de progreso adicional
-          const progressFill = document.getElementById("progressFill");
-          progressFill.style.width = `${progress}%`;
-          document.getElementById("progressLabel").textContent = `${progress}%`;
+        const progress = Math.min(100, data.progress || 0);
+        const badgeCount = data.badge ? 1 : 0;
+        const tokensFound = (data.token1 ? 1 : 0) + (data.token2 ? 1 : 0);
+        const placesCompleted = data.badge ? "1/1" : "0/1";
 
-          // Efecto cuando se completa
-          if (progress === 100) {
-            progressFill.style.background = "linear-gradient(90deg, #FFD700, #FFA500, #FFD700)";
-          } else {
-            progressFill.style.background = "";
-          }
+        // Actualizar UI
+        document.getElementById("badgeCount").textContent = badgeCount;
+        document.getElementById("placesCompleted").textContent = placesCompleted;
+        document.getElementById("tokensFound").textContent = tokensFound;
+        document.getElementById("overallProgress").textContent = `${progress}%`;
 
-        }, (error) => {
-          console.error("Error al escuchar datos:", error);
-        });
-      }
+        document.getElementById("levelName").textContent = getLevel(badgeCount);
+
+        const fill = document.getElementById("progressFill");
+        fill.style.width = `${progress}%`;
+        document.getElementById("progressLabel").textContent = `${progress}%`;
+
+        // Efecto especial al 100%
+        if (progress === 100) {
+          fill.style.background = "linear-gradient(90deg, #FFD700, #FFA500, #FFD700)";
+          fill.style.backgroundSize = "200% 100%";
+          document.getElementById("progressLabel").style.color = "#FFD700";
+        } else {
+          fill.style.background = "";
+          document.getElementById("progressLabel").style.color = "";
+        }
+      });
     });
-
-    // ===== GENERAR PARTÍCULAS =====
-    function createParticles() {
-      const container = document.getElementById('particles');
-      const count = 25;
-      const colors = ['var(--primary)', 'var(--secondary)', '#fbfbfb'];
-      
-      for (let i = 0; i < count; i++) {
-        const particle = document.createElement('div');
-        particle.className = 'particle';
-        particle.style.left = `${Math.random() * 100}%`;
-        particle.style.animationDelay = `${Math.random() * 20}s`;
-        particle.style.animationDuration = `${15 + Math.random() * 25}s`;
-        particle.style.width = `${2 + Math.random() * 4}px`;
-        particle.style.height = particle.style.width;
-        particle.style.background = colors[Math.floor(Math.random() * colors.length)];
-        particle.style.opacity = 0.05 + Math.random() * 0.1;
-        container.appendChild(particle);
-      }
-    }
-
-    // Inicializar partículas
-    createParticles();
-
-    console.log('📊 Estadísticas - Visitas Pinolera cargado correctamente');
   </script>
 </body>
 </html>
