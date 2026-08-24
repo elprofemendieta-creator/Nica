@@ -1083,3 +1083,11 @@ document.head.appendChild(style);
 
 console.log('🚀 Guía Pinolera - JavaScript cargado completamente');
 console.log('📌 Funcionalidades activas: Login, Registro, Perfil, Categorías, Tips, Juegos, Pasaporte, WhatsApp, IA, Negocios Destacados');
+
+// ================================================================
+// FUNCIONES PARA REDES SOCIALES
+// ================================================================
+
+function openSocial(url) {
+    window.open(url, '_blank');
+}
