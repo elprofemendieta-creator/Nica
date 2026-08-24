@@ -61,7 +61,6 @@ async function iniciarSesionAutomatica() {
                 partidasJugadas: 0,
                 mejorPuntuacion: 0,
                 isGuest: true
-                // Sin isAdmin por defecto
             });
             currentUserData = { uid: user.uid, nombre: randomName, avatar, nivel: "Novato Pinolero", puntosGlobales: 0, victorias: 0, partidasJugadas: 0 };
         } else {
@@ -76,15 +75,9 @@ async function iniciarSesionAutomatica() {
         currentUserData.partidasJugadas = currentUserData.partidasJugadas || 0;
         currentUserData.nivel = currentUserData.nivel || "Novato Pinolero";
         currentUserData.experiencia = currentUserData.experiencia || 0;
-        // Campo isAdmin (si existe en Firestore)
-        currentUserData.isAdmin = data.isAdmin || false;
 
         updateUserUI();
         mostrarPanelPrincipal();
-        // Mostrar botón de admin si corresponde
-        if (currentUserData.isAdmin) {
-            document.getElementById('adminDeleteRoomsBtn').style.display = 'inline-block';
-        }
         if (roomCodeFromUrl) setTimeout(() => joinRoomWithCode(roomCodeFromUrl), 1000);
     } catch (error) {
         console.error(error);
@@ -642,19 +635,14 @@ document.getElementById('settingsBtn').addEventListener('click', () => {
 if (localStorage.getItem('darkMode') === 'true') document.body.classList.add('dark');
 window.loadRoomView = loadRoomView;
 
-// =================== ADMIN: BORRAR TODAS LAS SALAS ===================
+// =====================================================
+//  NUEVO: BORRAR TODAS LAS SALAS (solo con contraseña)
+// =====================================================
 document.getElementById('adminDeleteRoomsBtn').addEventListener('click', async () => {
-    // Primer paso: contraseña Admin2026
-    const pass1 = prompt("🔐 Autenticación de administrador\nIngrese la contraseña (Admin2026):");
-    if (pass1 !== "Admin2026") {
+    // Solicitar contraseña (única)
+    const pass = prompt("🔐 Acceso de administrador\nIngrese la contraseña (Admin2026):");
+    if (pass !== "Admin2026") {
         alert("Contraseña incorrecta. Operación cancelada.");
-        return;
-    }
-
-    // Segundo paso: código 1234
-    const pass2 = prompt("🔐 Segundo factor\nIngrese el código (1234):");
-    if (pass2 !== "1234") {
-        alert("Código incorrecto. Operación cancelada.");
         return;
     }
 
@@ -664,11 +652,9 @@ document.getElementById('adminDeleteRoomsBtn').addEventListener('click', async (
     }
 
     try {
-        // Eliminar toda la colección "rooms" recursivamente
         await deleteAllRooms();
         alert("✅ Todas las salas han sido eliminadas correctamente.");
-        // Recargar la vista principal
-        loadMainMenu();
+        loadMainMenu(); // Recargar vista principal
     } catch (error) {
         console.error("Error al eliminar salas:", error);
         alert("❌ Error al eliminar las salas: " + error.message);
@@ -681,12 +667,11 @@ document.getElementById('adminDeleteRoomsBtn').addEventListener('click', async (
  */
 async function deleteAllRooms() {
     const roomsSnapshot = await db.collection("rooms").get();
-    const batchSize = 10; // Eliminar en lotes para no sobrecargar
     const promises = [];
 
     roomsSnapshot.docs.forEach((doc) => {
         const roomId = doc.id;
-        // Eliminar subcolecciones de cada room
+        // Eliminar subcolecciones
         promises.push(deleteSubcollection(`rooms/${roomId}/messages`));
         promises.push(deleteSubcollection(`rooms/${roomId}/answers`));
         promises.push(deleteSubcollection(`rooms/${roomId}/votes`));
