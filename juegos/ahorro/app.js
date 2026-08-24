@@ -80,9 +80,27 @@ function iniciarSesionAnonima() {
             userId = userCredential.user.uid;
             cargando.style.display = 'none';
             btnIngresar.disabled = false;
-            // Cargar datos del usuario
             cargarDatosFirestore();
         })
+        .catch((error) => {
+            console.error("Error en auth anónima:", error);
+            // Mostrar mensaje específico
+            let msg = "No se pudo conectar con Firebase. ";
+            if (error.code === 'auth/operation-not-allowed') {
+                msg += "Habilita la autenticación anónima en Firebase Console.";
+            } else if (error.code === 'auth/network-request-failed') {
+                msg += "Revisa tu conexión a internet.";
+            } else {
+                msg += "Error: " + error.message;
+            }
+            alert(msg);
+            // Fallback a localStorage
+            cargando.style.display = 'none';
+            btnIngresar.disabled = false;
+            userId = 'local';
+            cargarDatosLocal();
+        });
+}
         .catch((error) => {
             console.error("Error en auth anónima:", error);
             alert("No se pudo conectar con Firebase. Revisa tu configuración.");
