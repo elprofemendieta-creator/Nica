@@ -640,7 +640,7 @@ window.loadRoomView = loadRoomView;
 // =====================================================
 document.getElementById('adminDeleteRoomsBtn').addEventListener('click', async () => {
     // Solicitar contraseña (única)
-    const pass = prompt("🔐 Acceso de administrador\nIngrese la contraseña (Admin2026):");
+    const pass = prompt("🔐 Acceso de administrador\nIngrese la contraseña:");
     if (pass !== "Admin2026") {
         alert("Contraseña incorrecta. Operación cancelada.");
         return;
