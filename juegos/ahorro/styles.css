@@ -1,0 +1,322 @@
+/* RESET */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    background: linear-gradient(-45deg, #ff4d4d, #ff9800, #00c853, #00b0ff, #9c27b0);
+    background-size: 400% 400%;
+    animation: fondo 15s ease infinite;
+    overflow-x: hidden;
+    color: white;
+}
+
+@keyframes fondo {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* ===== SPLASH ===== */
+#splash {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(-45deg, #ff4d4d, #ff9800, #00c853, #00b0ff, #9c27b0);
+    background-size: 400% 400%;
+    animation: fondo 15s ease infinite;
+    text-align: center;
+    padding: 20px;
+    transition: opacity 0.8s;
+}
+#splash.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+#splash h1 {
+    font-size: clamp(2.5rem, 10vw, 4.5rem);
+    text-shadow: 0 0 30px white;
+    margin-bottom: 20px;
+}
+#splash .mensaje {
+    font-size: clamp(1rem, 4vw, 1.8rem);
+    max-width: 700px;
+    line-height: 1.4;
+    text-shadow: 0 0 15px rgba(0,0,0,0.5);
+    margin-bottom: 30px;
+    padding: 0 10px;
+}
+#splash .btn-ingresar {
+    background: white;
+    color: #333;
+    border: none;
+    padding: 16px 40px;
+    border-radius: 50px;
+    font-size: clamp(1.2rem, 4vw, 1.8rem);
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 0 30px rgba(255,255,255,0.6);
+    transition: 0.3s;
+}
+#splash .btn-ingresar:hover {
+    transform: scale(1.08);
+    box-shadow: 0 0 50px white;
+}
+
+/* ===== CONTENEDOR PRINCIPAL ===== */
+.container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px 15px;
+    text-align: center;
+}
+
+h1 {
+    font-size: clamp(2rem, 8vw, 3.5rem);
+    text-shadow: 0 0 15px white;
+    margin-bottom: 5px;
+}
+.subtitulo {
+    font-size: clamp(1rem, 4vw, 1.6rem);
+    text-shadow: 0 0 10px white;
+    margin-bottom: 15px;
+    font-style: italic;
+}
+
+.panel {
+    background: rgba(255,255,255,.15);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 20px 15px;
+    box-shadow: 0 0 25px rgba(255,255,255,.4);
+}
+
+.stats {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.card {
+    background: rgba(255,255,255,.15);
+    padding: 15px;
+    border-radius: 15px;
+    min-width: 160px;
+    flex: 1 1 160px;
+    max-width: 250px;
+    box-shadow: 0 0 15px rgba(255,255,255,.3);
+}
+.card h3 {
+    margin-bottom: 8px;
+    font-size: 1rem;
+}
+.card div {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.termometro-container {
+    display: flex;
+    justify-content: center;
+    margin: 30px 0;
+}
+
+.termometro {
+    width: 80px;
+    height: 350px;
+    background: rgba(255,255,255,.2);
+    border-radius: 80px;
+    position: relative;
+    overflow: hidden;
+    border: 5px solid white;
+    box-shadow: 0 0 25px white;
+}
+@media (min-width: 600px) {
+    .termometro {
+        width: 120px;
+        height: 500px;
+    }
+}
+
+.liquido {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 0%;
+    background: linear-gradient(to top, #ff1744, #ff9100, #ffff00);
+    transition: height 1.5s ease;
+    animation: brillo 2s infinite alternate;
+}
+@keyframes brillo {
+    from { filter: brightness(1); }
+    to { filter: brightness(1.4); }
+}
+
+.porcentaje {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: clamp(1.2rem, 4vw, 2rem);
+    font-weight: bold;
+    text-shadow: 0 0 15px black;
+}
+
+.botones {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 25px;
+}
+
+button {
+    padding: 14px 24px;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+    touch-action: manipulation;
+}
+button:hover {
+    transform: scale(1.05);
+}
+button:active {
+    transform: scale(0.95);
+}
+
+.btn-abono {
+    background: #00e676;
+}
+.btn-meta {
+    background: #ff9800;
+}
+.btn-historial {
+    background: #00b0ff;
+}
+
+.mensaje {
+    margin-top: 20px;
+    font-size: clamp(1rem, 3vw, 1.4rem);
+    font-weight: bold;
+    min-height: 40px;
+    text-shadow: 0 0 10px white;
+}
+
+/* ===== MODALES ===== */
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.7);
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+    padding: 20px;
+}
+.modal-content {
+    background: white;
+    color: black;
+    padding: 25px 20px;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+.modal-content h2 {
+    margin-bottom: 15px;
+    font-size: 1.6rem;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 12px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+}
+textarea {
+    resize: vertical;
+    min-height: 60px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    font-size: 0.9rem;
+}
+table th {
+    background: #00b0ff;
+    color: white;
+    padding: 8px;
+}
+table td, table th {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: center;
+}
+table td button {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.cerrar {
+    background: red;
+    color: white;
+    margin-top: 10px;
+    margin-right: 5px;
+}
+.borrar {
+    background: #ff1744;
+    color: white;
+}
+
+/* ===== CONFETI ===== */
+.particula {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: caer 3s linear forwards;
+}
+@keyframes caer {
+    to {
+        transform: translateY(800px) rotate(720deg);
+        opacity: 0;
+    }
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 480px) {
+    .card {
+        min-width: 130px;
+        flex: 1 1 130px;
+    }
+    .botones button {
+        padding: 12px 18px;
+        font-size: 0.9rem;
+        flex: 1 1 130px;
+    }
+    .modal-content {
+        padding: 20px 15px;
+    }
+}

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Meta Pinolera</title>
+    <!-- CSS -->
+    <link rel="stylesheet" href="styles.css">
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+
+    <!-- SPLASH / PRESENTACIÓN -->
+    <div id="splash">
+        <h1>🎯 Meta Pinolera</h1>
+        <div class="mensaje">
+            Cada córdoba te acerca a tu próxima aventura.<br>
+            Guarda poco a poco y convierte tus sueños en<br>
+            experiencias inolvidables recorriendo los tesoros de Nicaragua.
+        </div>
+        <button class="btn-ingresar" id="btnIngresar">Comenzar mi aventura</button>
+        <div id="cargando" style="margin-top:20px; font-size:1.2rem; display:none;">Conectando...</div>
+    </div>
+
+    <!-- APP PRINCIPAL -->
+    <div id="app" style="display:none;">
+        <div class="container">
+            <h1>🎯 Meta Pinolera</h1>
+            <div class="subtitulo" id="sueñoMostrado">✨ ¡Define tu sueño!</div>
+
+            <div class="panel">
+                <div class="stats">
+                    <div class="card">
+                        <h3>Meta</h3>
+                        <div id="metaTxt">C$0</div>
+                    </div>
+                    <div class="card">
+                        <h3>Acumulado</h3>
+                        <div id="acumuladoTxt">C$0</div>
+                    </div>
+                    <div class="card">
+                        <h3>Faltante</h3>
+                        <div id="faltanteTxt">C$0</div>
+                    </div>
+                </div>
+
+                <div class="termometro-container">
+                    <div class="termometro">
+                        <div class="liquido" id="liquido"></div>
+                        <div class="porcentaje" id="porcentaje">0%</div>
+                    </div>
+                </div>
+
+                <div class="botones">
+                    <button class="btn-abono" id="btnAbono">💵 Agregar al Fondo</button>
+                    <button class="btn-historial" id="btnHistorial">📜 Ver Abonos</button>
+                    <button class="btn-meta" id="btnMeta">🎯 Cambiar Meta</button>
+                </div>
+
+                <div class="mensaje" id="mensaje"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL ABONO -->
+    <div class="modal" id="modalAbono">
+        <div class="modal-content">
+            <h2>Agregar al Fondo</h2>
+            <input type="date" id="fecha">
+            <input type="number" id="monto" placeholder="Cantidad en C$">
+            <textarea id="descripcion" placeholder="Descripción (opcional)"></textarea>
+            <button id="guardarAbonoBtn">Guardar</button>
+            <button class="cerrar" id="cerrarAbonoBtn">Cerrar</button>
+        </div>
+    </div>
+
+    <!-- MODAL HISTORIAL -->
+    <div class="modal" id="modalHistorial">
+        <div class="modal-content">
+            <h2>Historial de Abonos</h2>
+            <div id="tablaHistorial"></div>
+            <button class="borrar" id="borrarTodoBtn">Borrar Todo</button>
+            <button class="cerrar" id="cerrarHistorialBtn">Cerrar</button>
+        </div>
+    </div>
+
+    <!-- MODAL CONFIGURACIÓN INICIAL (sueño + meta) -->
+    <div class="modal" id="modalConfig">
+        <div class="modal-content">
+            <h2>🎯 Define tu sueño</h2>
+            <p style="margin-bottom:10px;">¿Qué sueño quieres cumplir?</p>
+            <input type="text" id="inputSueño" placeholder="Ej: Viajar a Ometepe, conocer León...">
+            <input type="number" id="inputMeta" placeholder="Monto de la meta (C$)">
+            <button id="guardarConfigBtn">Guardar y empezar</button>
+            <button class="cerrar" id="cerrarConfigBtn">Cerrar</button>
+        </div>
+    </div>
+
+    <!-- JS principal -->
+    <script src="app.js"></script>
+</body>
+</html>
