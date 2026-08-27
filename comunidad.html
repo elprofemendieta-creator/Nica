@@ -43,6 +43,12 @@
     .status-dot.status-offline {
       background-color: #6b7280;
     }
+    
+    /* Estado ausente (amarillo) */
+    .status-dot.status-away {
+      background-color: #f59e0b;
+      box-shadow: 0 0 8px #f59e0b;
+    }
   </style>
 </head>
 <body>
@@ -63,6 +69,9 @@
         <p id="globalPosition" class="position-badge">
           <i class="fas fa-chart-line"></i> 
           <span id="positionText">Calculando posición...</span>
+        </p>
+        <p id="statusText" style="font-size:0.9rem; color:#6b7280; margin-top:8px;">
+          <span id="statusEmoji">⚪</span> Desconectado
         </p>
       </div>
     </div>
@@ -156,7 +165,7 @@
 }
 </script>
 
-<!-- ===== JAVASCRIPT CON SISTEMA DE ESTADO LOCAL ===== -->
+<!-- ===== JAVASCRIPT CON SISTEMA DE ESTADO REAL ===== -->
 <script type="module">
 import { initializeApp } from "firebase/app";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -178,54 +187,71 @@ const db = getFirestore(app);
 let currentUser = null;
 let usuariosCache = new Map();
 
-// ===== SISTEMA DE ESTADO ONLINE/OFFLINE SIN FIREBASE =====
-class StatusManager {
+// ===== SISTEMA DE ESTADO ONLINE/OFFLINE REAL =====
+class RealStatusManager {
   constructor() {
-    this.statusKey = 'user_status';
+    this.userStatus = {}; // Almacena estado de todos los usuarios
+    this.myStatus = 'offline';
+    this.lastActivity = Date.now();
     this.heartbeatInterval = null;
-    this.heartbeatTime = 30000; // 30 segundos
-    this.offlineTimeout = 60000; // 1 minuto sin heartbeat = offline
-    this.isOnline = false;
-    this.listeners = [];
+    this.activeUsers = new Set(); // Usuarios que han tenido actividad reciente
+    this.offlineTimeout = 60000; // 1 minuto sin actividad = offline
   }
 
-  // Iniciar el sistema
   start(userId) {
-    // Limpiar intervalos anteriores
-    this.stop();
-    
     // Marcar como online
-    this.setStatus('online', userId);
+    this.setMyStatus('online', userId);
     
-    // Escuchar eventos de visibilidad
+    // Escuchar eventos de actividad del usuario
+    const activityEvents = ['mousemove', 'click', 'scroll', 'keydown', 'touchstart'];
+    activityEvents.forEach(event => {
+      document.addEventListener(event, () => {
+        this.lastActivity = Date.now();
+        if (this.myStatus === 'away' || this.myStatus === 'offline') {
+          this.setMyStatus('online', userId);
+        }
+      });
+    });
+
+    // Escuchar visibilidad de la página
     document.addEventListener('visibilitychange', () => {
       if (document.visibilityState === 'visible') {
-        this.setStatus('online', userId);
+        this.setMyStatus('online', userId);
       } else {
-        this.setStatus('away', userId);
+        this.setMyStatus('away', userId);
       }
     });
 
-    // Escuchar eventos de conexión de red
+    // Escuchar conexión de red
     window.addEventListener('online', () => {
-      this.setStatus('online', userId);
+      this.setMyStatus('online', userId);
     });
 
     window.addEventListener('offline', () => {
-      this.setStatus('offline', userId);
+      this.setMyStatus('offline', userId);
     });
 
-    // Heartbeat periódico
+    // Heartbeat - verificar si sigue activo
     this.heartbeatInterval = setInterval(() => {
-      if (navigator.onLine && document.visibilityState === 'visible') {
-        this.setStatus('online', userId);
+      const timeSinceLastActivity = Date.now() - this.lastActivity;
+      
+      if (timeSinceLastActivity > this.offlineTimeout) {
+        // Inactivo por más de 1 minuto
+        this.setMyStatus('offline', userId);
+      } else if (timeSinceLastActivity > 30000 && this.myStatus === 'online') {
+        // Inactivo por 30 segundos - poner como ausente
+        this.setMyStatus('away', userId);
+      } else if (timeSinceLastActivity < 30000 && this.myStatus === 'away') {
+        // Volvió a la actividad
+        this.setMyStatus('online', userId);
       }
-    }, this.heartbeatTime);
+    }, 15000); // Revisar cada 15 segundos
 
-    // Monitorear estado de otros usuarios
-    this.monitorOtherUsers();
+    // Limpiar estado al cerrar la página
+    window.addEventListener('beforeunload', () => {
+      this.setMyStatus('offline', userId);
+    });
 
-    // Actualizar el indicador principal
     this.updateUI();
   }
 
@@ -236,121 +262,220 @@ class StatusManager {
     }
   }
 
-  setStatus(status, userId) {
-    const statusData = {
+  setMyStatus(status, userId) {
+    this.myStatus = status;
+    this.userStatus[userId] = {
       state: status,
-      userId: userId,
-      timestamp: Date.now(),
-      lastSeen: new Date().toISOString()
+      lastSeen: Date.now()
     };
 
-    // Guardar en localStorage
+    // Guardar en localStorage para persistencia
     try {
-      localStorage.setItem(this.statusKey, JSON.stringify(statusData));
-    } catch (e) {
-      console.warn('No se pudo guardar en localStorage');
-    }
-
-    // Guardar en sessionStorage para compartir entre pestañas
-    try {
-      sessionStorage.setItem(this.statusKey, JSON.stringify(statusData));
+      localStorage.setItem(`status_${userId}`, JSON.stringify({
+        state: status,
+        lastSeen: Date.now()
+      }));
     } catch (e) {}
 
-    this.isOnline = status === 'online';
     this.updateUI();
-    this.notifyListeners(statusData);
+    this.broadcastStatus();
   }
 
-  getStatus() {
+  // Obtener estado de un usuario (real)
+  getUserStatus(userId) {
+    // Si es el usuario actual, usar el estado en memoria
+    if (userId === currentUser?.uid) {
+      return this.myStatus;
+    }
+
+    // Para otros usuarios, verificar en localStorage
     try {
-      const data = localStorage.getItem(this.statusKey);
-      if (data) {
-        const parsed = JSON.parse(data);
-        // Verificar si el estado sigue siendo válido
-        const age = Date.now() - parsed.timestamp;
+      const stored = localStorage.getItem(`status_${userId}`);
+      if (stored) {
+        const data = JSON.parse(stored);
+        const age = Date.now() - data.lastSeen;
         if (age < this.offlineTimeout) {
-          return parsed;
-        } else {
-          return { state: 'offline', ...parsed };
+          return data.state;
         }
       }
     } catch (e) {}
-    return { state: 'offline', userId: null };
+
+    // Si no hay datos, considerar offline (por defecto)
+    return 'offline';
   }
 
-  // Monitorear otros usuarios (simulado)
-  monitorOtherUsers() {
-    // En una app real, aquí se consultaría una API
-    // Por ahora, simulamos algunos usuarios
-    setInterval(() => {
-      this.updateOtherUsers();
-    }, 10000);
+  // Verificar si un usuario está online
+  isUserOnline(userId) {
+    // Nunca simular que está online si es el usuario actual y está offline
+    if (userId === currentUser?.uid) {
+      return this.myStatus === 'online';
+    }
+
+    // Para otros usuarios, usar estado real
+    const status = this.getUserStatus(userId);
+    return status === 'online';
   }
 
-  updateOtherUsers() {
-    // Simular actualización de otros usuarios
-    // En la vida real, esto vendría de una API o WebSocket
-    const users = document.querySelectorAll('.friend-item, .ranking-avatar');
-    users.forEach((user, index) => {
-      // Simular estado aleatorio (75% online, 25% offline)
-      const isOnline = Math.random() > 0.25;
-      const statusDot = user.closest('.friend-item')?.querySelector('.status-dot') || 
-                       user.closest('.user-cell')?.querySelector('.status-dot');
-      if (statusDot) {
-        statusDot.classList.remove('status-online', 'status-offline');
-        statusDot.classList.add(isOnline ? 'status-online' : 'status-offline');
+  // Obtener el estado completo de un usuario
+  getUserFullStatus(userId) {
+    if (userId === currentUser?.uid) {
+      return this.myStatus;
+    }
+    return this.getUserStatus(userId);
+  }
+
+  // Broadcast de estado a otras pestañas
+  broadcastStatus() {
+    try {
+      // Usar BroadcastChannel para comunicación entre pestañas
+      if (window.BroadcastChannel) {
+        const channel = new BroadcastChannel('status_channel');
+        channel.postMessage({
+          userId: currentUser?.uid,
+          status: this.myStatus,
+          timestamp: Date.now()
+        });
+        channel.close();
+      }
+    } catch (e) {}
+  }
+
+  // Escuchar cambios de estado de otros usuarios
+  listenOtherUsers() {
+    try {
+      if (window.BroadcastChannel) {
+        const channel = new BroadcastChannel('status_channel');
+        channel.onmessage = (event) => {
+          const { userId, status, timestamp } = event.data;
+          if (userId && userId !== currentUser?.uid) {
+            this.userStatus[userId] = {
+              state: status,
+              lastSeen: timestamp
+            };
+            // Guardar en localStorage
+            try {
+              localStorage.setItem(`status_${userId}`, JSON.stringify({
+                state: status,
+                lastSeen: timestamp
+              }));
+            } catch (e) {}
+            // Actualizar UI si es necesario
+            this.updateOtherUsersUI();
+          }
+        };
+      }
+    } catch (e) {}
+  }
+
+  // Actualizar UI del usuario actual
+  updateUI() {
+    const dot = document.getElementById('userMainStatusDot');
+    const statusEmoji = document.getElementById('statusEmoji');
+    const statusText = document.getElementById('statusText');
+    
+    if (!dot) return;
+
+    // Remover todas las clases de estado
+    dot.classList.remove('status-online', 'status-offline', 'status-away');
+    
+    const statusMap = {
+      'online': { class: 'status-online', emoji: '🟢', text: 'En línea' },
+      'away': { class: 'status-away', emoji: '🟡', text: 'Ausente' },
+      'offline': { class: 'status-offline', emoji: '⚪', text: 'Desconectado' }
+    };
+
+    const statusInfo = statusMap[this.myStatus] || statusMap.offline;
+    dot.classList.add(statusInfo.class);
+    
+    if (statusEmoji) statusEmoji.textContent = statusInfo.emoji;
+    if (statusText) {
+      const timeSince = Math.floor((Date.now() - this.lastActivity) / 1000);
+      let timeText = '';
+      if (this.myStatus === 'online' && timeSince > 5) {
+        timeText = ` (activo hace ${timeSince}s)`;
+      } else if (this.myStatus === 'away') {
+        timeText = ' (inactivo)';
+      }
+      statusText.innerHTML = `${statusInfo.emoji} ${statusInfo.text}${timeText}`;
+    }
+  }
+
+  // Actualizar UI de otros usuarios
+  updateOtherUsersUI() {
+    // Actualizar todos los indicadores de estado en la página
+    document.querySelectorAll('.status-dot').forEach(dot => {
+      // Buscar el contenedor más cercano para identificar al usuario
+      const container = dot.closest('.friend-item, .user-cell, .friend-info, .ranking-avatar');
+      if (!container) return;
+
+      // Intentar encontrar el UID del usuario
+      let userId = null;
+      
+      // Buscar en atributos data
+      if (container.dataset.uid) {
+        userId = container.dataset.uid;
+      } else {
+        // Buscar en elementos cercanos
+        const friendItem = container.closest('.friend-item');
+        if (friendItem && friendItem.dataset.uid) {
+          userId = friendItem.dataset.uid;
+        }
+      }
+
+      // Si no hay UID, es el usuario actual o un elemento sin identificar
+      if (!userId) return;
+
+      const status = this.getUserStatus(userId);
+      dot.classList.remove('status-online', 'status-offline', 'status-away');
+      
+      if (status === 'online') {
+        dot.classList.add('status-online');
+      } else if (status === 'away') {
+        dot.classList.add('status-away');
+      } else {
+        dot.classList.add('status-offline');
       }
     });
   }
 
-  updateUI() {
-    const dot = document.getElementById('userMainStatusDot');
-    if (!dot) return;
-
-    const status = this.getStatus();
-    dot.classList.remove('status-online', 'status-offline', 'status-away');
+  // Simular actividad de otros usuarios (para demostración)
+  // En producción, esto vendría de una API real
+  simulateOtherUsersActivity() {
+    // Solo para demostración - en producción se usaría datos reales
+    const simulatedUsers = [
+      'user1', 'user2', 'user3', 'user4', 'user5'
+    ];
     
-    if (status.state === 'online') {
-      dot.classList.add('status-online');
-    } else if (status.state === 'away') {
-      dot.classList.add('status-offline');
-      dot.style.opacity = '0.5';
-    } else {
-      dot.classList.add('status-offline');
-      dot.style.opacity = '1';
+    // Limpiar estados viejos
+    const now = Date.now();
+    simulatedUsers.forEach(uid => {
+      const stored = localStorage.getItem(`status_${uid}`);
+      if (stored) {
+        const data = JSON.parse(stored);
+        if (now - data.lastSeen > this.offlineTimeout) {
+          localStorage.removeItem(`status_${uid}`);
+        }
+      }
+    });
+
+    // Crear algunos usuarios simulados con estados aleatorios
+    if (!localStorage.getItem('simulated_users_created')) {
+      simulatedUsers.forEach((uid, index) => {
+        const statuses = ['online', 'online', 'away', 'offline'];
+        const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
+        const lastSeen = Date.now() - (Math.random() * 120000); // Entre 0 y 2 minutos
+        localStorage.setItem(`status_${uid}`, JSON.stringify({
+          state: randomStatus,
+          lastSeen: lastSeen
+        }));
+      });
+      localStorage.setItem('simulated_users_created', 'true');
     }
-
-    // Actualizar badge de estado en el perfil
-    const statusText = document.getElementById('statusText');
-    if (statusText) {
-      const statusMap = {
-        'online': '🟢 En línea',
-        'away': '🟡 Ausente',
-        'offline': '⚪ Desconectado'
-      };
-      statusText.textContent = statusMap[status.state] || statusMap.offline;
-    }
-  }
-
-  // Sistema de notificaciones para cambios de estado
-  addListener(callback) {
-    this.listeners.push(callback);
-  }
-
-  notifyListeners(status) {
-    this.listeners.forEach(callback => callback(status));
-  }
-
-  // Simular usuario en línea
-  isUserOnline(userId) {
-    // En una app real, esto consultaría el estado real del usuario
-    // Por ahora, simulamos que todos están online
-    return true;
   }
 }
 
-// Crear instancia del gestor de estado
-const statusManager = new StatusManager();
+// Crear instancia del gestor de estado real
+const statusManager = new RealStatusManager();
 
 // ===== TOAST =====
 function toast(msg, isError = false) {
@@ -472,15 +597,17 @@ async function cargarRankingGlobal() {
       else if (pos === 2) medalIcon = '🥈 ';
       else if (pos === 3) medalIcon = '🥉 ';
 
-      // Simular estado online/offline
-      const isOnline = statusManager.isUserOnline(docSnap.id);
-      const statusClass = isOnline ? 'status-online' : 'status-offline';
+      // Obtener estado real del usuario
+      const status = statusManager.getUserFullStatus(docSnap.id);
+      let statusClass = 'status-offline';
+      if (status === 'online') statusClass = 'status-online';
+      else if (status === 'away') statusClass = 'status-away';
 
       body.innerHTML += `
-        <tr class="${rowClass}">
+        <tr class="${rowClass}" data-uid="${docSnap.id}">
           <td><strong>${medalIcon}${pos}</strong></td>
           <td>
-            <div class="user-cell">
+            <div class="user-cell" data-uid="${docSnap.id}">
               <div class="avatar-wrapper">
                 <img src="${fotoURL}" class="ranking-avatar" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'" />
                 <span class="status-dot ${statusClass}"></span>
@@ -681,11 +808,13 @@ async function cargarAmigos() {
       const amigoData = await getUserData(solicitud.uid);
       const nombre = amigoData?.nombre || solicitud.nombre || "Usuario";
       const fotoURL = getFotoURL(amigoData);
-      const isOnline = statusManager.isUserOnline(solicitud.uid);
-      const statusClass = isOnline ? 'status-online' : 'status-offline';
+      const status = statusManager.getUserFullStatus(solicitud.uid);
+      let statusClass = 'status-offline';
+      if (status === 'online') statusClass = 'status-online';
+      else if (status === 'away') statusClass = 'status-away';
 
       solicitudesDiv.innerHTML += `
-        <div class="friend-item request-item">
+        <div class="friend-item request-item" data-uid="${solicitud.uid}">
           <div class="friend-info">
             <div class="avatar-wrapper">
               <img src="${fotoURL}" class="friend-avatar" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'" />
@@ -716,11 +845,13 @@ async function cargarAmigos() {
       const nombre = amigoData?.nombre || "Usuario";
       const puntos = amigoData?.puntos || 0;
       const fotoURL = getFotoURL(amigoData);
-      const isOnline = statusManager.isUserOnline(amigoUid);
-      const statusClass = isOnline ? 'status-online' : 'status-offline';
+      const status = statusManager.getUserFullStatus(amigoUid);
+      let statusClass = 'status-offline';
+      if (status === 'online') statusClass = 'status-online';
+      else if (status === 'away') statusClass = 'status-away';
 
       amigosDiv.innerHTML += `
-        <div class="friend-item">
+        <div class="friend-item" data-uid="${amigoUid}">
           <div class="friend-info">
             <div class="avatar-wrapper">
               <img src="${fotoURL}" class="friend-avatar" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'" />
@@ -772,8 +903,10 @@ searchBtn.addEventListener("click", async () => {
         const esAmigo = currentAmigos.includes(data.uid);
         const solicitudEnviada = currentSolicitudesEnviadas.includes(data.uid);
         const fotoURL = getFotoURL(data);
-        const isOnline = statusManager.isUserOnline(data.uid);
-        const statusClass = isOnline ? 'status-online' : 'status-offline';
+        const status = statusManager.getUserFullStatus(data.uid);
+        let statusClass = 'status-offline';
+        if (status === 'online') statusClass = 'status-online';
+        else if (status === 'away') statusClass = 'status-away';
 
         let boton = '';
         if (esAmigo) {
@@ -784,7 +917,7 @@ searchBtn.addEventListener("click", async () => {
           boton = `<button class="btn" onclick="window.enviarSolicitudModule('${data.uid}', '${(data.nombre || "Usuario").replace(/'/g, "\\'")}')"><i class="fas fa-user-plus"></i> Enviar solicitud</button>`;
         }
         searchResults.innerHTML += `
-          <div class="friend-item">
+          <div class="friend-item" data-uid="${data.uid}">
             <div class="friend-info">
               <div class="avatar-wrapper">
                 <img src="${fotoURL}" class="friend-avatar" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'" />
@@ -924,8 +1057,14 @@ onAuthStateChanged(auth, async (user) => {
   currentUser = user;
   console.log("✅ Usuario autenticado:", user.uid);
   
-  // Iniciar sistema de estado local
+  // Simular usuarios para demostración
+  statusManager.simulateOtherUsersActivity();
+  
+  // Iniciar sistema de estado real
   statusManager.start(user.uid);
+  
+  // Escuchar cambios de otros usuarios
+  statusManager.listenOtherUsers();
   
   await asegurarPerfilUsuario(user);
   await cargarPerfil(user);
@@ -936,6 +1075,26 @@ onAuthStateChanged(auth, async (user) => {
   onSnapshot(doc(db, "usuarios", user.uid), () => {
     cargarAmigos();
   });
+  
+  // Actualizar estados de otros usuarios cada 30 segundos
+  setInterval(() => {
+    statusManager.updateOtherUsersUI();
+    // Actualizar ranking para reflejar cambios de estado
+    // (opcional: recargar solo los indicadores)
+    document.querySelectorAll('.friend-item, .user-cell').forEach(el => {
+      const uid = el.dataset.uid;
+      if (uid) {
+        const status = statusManager.getUserFullStatus(uid);
+        const dot = el.querySelector('.status-dot');
+        if (dot) {
+          dot.classList.remove('status-online', 'status-offline', 'status-away');
+          if (status === 'online') dot.classList.add('status-online');
+          else if (status === 'away') dot.classList.add('status-away');
+          else dot.classList.add('status-offline');
+        }
+      }
+    });
+  }, 30000);
 });
 </script>
 </body>
