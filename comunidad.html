@@ -10,7 +10,6 @@
   <link rel="stylesheet" href="/css/comunidad.css" />
   
   <style>
-    /* Estilos para el indicador de estado Online/Offline */
     .avatar-wrapper {
       position: relative;
       display: inline-flex;
@@ -25,7 +24,7 @@
       width: 14px;
       height: 14px;
       border-radius: 50%;
-      border: 2px solid #1a1a3a; /* Color base adaptado al diseño de la app */
+      border: 2px solid #1a1a3a;
       transition: background-color 0.3s ease;
     }
 
@@ -37,12 +36,12 @@
     }
 
     .status-dot.status-online {
-      background-color: #22c55e; /* Verde brillante */
+      background-color: #22c55e;
       box-shadow: 0 0 8px #22c55e;
     }
 
     .status-dot.status-offline {
-      background-color: #6b7280; /* Gris */
+      background-color: #6b7280;
     }
   </style>
 </head>
@@ -52,7 +51,6 @@
 
   <!-- ===== PESTAÑA 1: PERFIL ===== -->
   <section id="tab-perfil" class="tab-content active">
-    <!-- Tarjeta de Perfil -->
     <div class="mobile-card profile-hero">
       <div class="avatar avatar-wrapper">
         <img id="userPhoto" src="" alt="Foto perfil" style="display:none;" />
@@ -69,7 +67,6 @@
       </div>
     </div>
 
-    <!-- Tarjeta de Búsqueda -->
     <div class="mobile-card">
       <h2><i class="fas fa-user-plus"></i> Buscar usuarios</h2>
       <div class="search-box">
@@ -79,7 +76,6 @@
       <div id="searchResults"></div>
     </div>
 
-    <!-- Tarjeta de Compartir -->
     <div class="mobile-card">
       <h2><i class="fas fa-qrcode"></i> Compartir perfil</h2>
       <div class="qr-container">
@@ -89,7 +85,6 @@
       </div>
     </div>
 
-    <!-- Enlace para volver al inicio -->
     <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Volver al inicio</a>
   </section>
 
@@ -107,13 +102,11 @@
 
   <!-- ===== PESTAÑA 3: RANKING Y AMIGOS ===== -->
   <section id="tab-ranking" class="tab-content">
-    <!-- Sub‑navegación con chips -->
     <div class="sub-nav-chips">
       <button class="chip active" data-subtab="ranking">🏆 Top Usuarios</button>
       <button class="chip" data-subtab="amigos">👥 Mis Amigos</button>
     </div>
 
-    <!-- Sub‑pestaña: Ranking -->
     <div id="subtab-ranking" class="subtab-content active">
       <div class="mobile-card">
         <h2><i class="fas fa-chart-line"></i> Ranking Global</h2>
@@ -126,7 +119,6 @@
       </div>
     </div>
 
-    <!-- Sub‑pestaña: Amigos -->
     <div id="subtab-amigos" class="subtab-content" style="display:none;">
       <div class="mobile-card">
         <h2><i class="fas fa-users"></i> Mis Amigos</h2>
@@ -136,7 +128,6 @@
     </div>
   </section>
 
-  <!-- ===== BARRA DE NAVEGACIÓN INFERIOR FIJA ===== -->
   <nav class="bottom-nav">
     <button class="nav-item active" data-tab="tab-perfil">
       <i class="fas fa-user-circle"></i>
@@ -166,20 +157,22 @@
 }
 </script>
 
-<!-- ===== JAVASCRIPT COMPLETO CORREGIDO ===== -->
+<!-- ===== JAVASCRIPT ===== -->
 <script type="module">
 import { initializeApp } from "firebase/app";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { getFirestore, collection, query, orderBy, limit, getDocs, where, addDoc, deleteDoc, doc, onSnapshot, updateDoc, arrayUnion, arrayRemove, getDoc, setDoc } from "firebase/firestore";
+import { getFirestore, collection, query, orderBy, limit, getDocs, addDoc, deleteDoc, doc, onSnapshot, updateDoc, arrayUnion, arrayRemove, getDoc, setDoc } from "firebase/firestore";
 import { getDatabase, ref, onValue, onDisconnect, set, serverTimestamp } from "firebase/database";
 
+// ===== CONFIGURACIÓN CON DATABASE URL CORREGIDA =====
 const firebaseConfig = {
   apiKey: "AIzaSyA6jVICuE17KJcO34gE1brMxqWEfNd3Fy0",
   authDomain: "mapa-41b00.firebaseapp.com",
   projectId: "mapa-41b00",
   storageBucket: "mapa-41b00.firebasestorage.app",
   messagingSenderId: "535032835400",
-  appId: "1:535032835400:web:68c079cbc3f419eafd177d"
+  appId: "1:535032835400:web:68c079cbc3f419eafd177d",
+  databaseURL: "https://mapa-41b00-default-rtdb.firebaseio.com/" // 👈 URL agregada
 };
 
 const app = initializeApp(firebaseConfig);
@@ -190,45 +183,17 @@ const rtdb = getDatabase(app);
 let currentUser = null;
 let usuariosCache = new Map();
 
-// ===== FUNCIONES DE DIAGNÓSTICO =====
-function testStatusManually() {
-  console.log("🔧 Probando cambio de estado manual...");
-  const dot = document.getElementById('userMainStatusDot');
-  if (dot) {
-    console.log("✅ Círculo encontrado:", dot);
-    console.log("Clases actuales:", dot.className);
-    
-    // Forzar a verde
-    dot.classList.remove('status-offline', 'status-online');
-    dot.classList.add('status-online');
-    console.log("🟢 Círculo forzado a VERDE");
-    
-    setTimeout(() => {
-      // Forzar a gris
-      dot.classList.remove('status-online', 'status-offline');
-      dot.classList.add('status-offline');
-      console.log("⚪ Círculo forzado a GRIS");
-    }, 3000);
-  } else {
-    console.error("❌ No se encontró el círculo con ID 'userMainStatusDot'");
-  }
-}
-
-// ===== SISTEMA DE PRESENCIA (ONLINE/OFFLINE) MEJORADO =====
+// ===== SISTEMA DE PRESENCIA (ONLINE/OFFLINE) =====
 function gestionarEstadoConexion(uid) {
-  console.log("🔄 Iniciando gestión de estado para:", uid);
   const userStatusRef = ref(rtdb, `/status/${uid}`);
   const connectedRef = ref(rtdb, ".info/connected");
 
   onValue(connectedRef, (snap) => {
-    const connected = snap.val();
-    console.log("📡 Estado de conexión:", connected ? "Conectado" : "Desconectado");
-    
-    if (connected === false) {
+    if (snap.val() === false) {
       set(userStatusRef, {
         state: 'offline',
         last_changed: serverTimestamp()
-      }).then(() => console.log("⚪ Estado establecido a OFFLINE"));
+      });
       return;
     }
 
@@ -236,81 +201,36 @@ function gestionarEstadoConexion(uid) {
       state: 'offline',
       last_changed: serverTimestamp()
     }).then(() => {
-      console.log("🔧 OnDisconnect configurado");
-      return set(userStatusRef, {
+      set(userStatusRef, {
         state: 'online',
         last_changed: serverTimestamp()
       });
-    }).then(() => {
-      console.log("🟢 Estado establecido a ONLINE");
-      actualizarIndicadorPrincipal(uid, 'online');
-    }).catch(error => {
-      console.error("❌ Error en onDisconnect:", error);
     });
   });
 
   onValue(userStatusRef, (snapshot) => {
     const data = snapshot.val();
-    console.log("📡 Cambio en estado de RTDB:", data);
-    if (data && data.state === 'online') {
-      actualizarIndicadorPrincipal(uid, 'online');
-    } else {
-      actualizarIndicadorPrincipal(uid, 'offline');
-    }
-  });
-}
-
-function actualizarIndicadorPrincipal(uid, estado) {
-  const statusDot = document.getElementById('userMainStatusDot');
-  console.log(`🎯 Actualizando indicador principal a: ${estado}`, statusDot);
-  if (statusDot) {
-    statusDot.classList.remove('status-online', 'status-offline');
-    statusDot.classList.add(estado === 'online' ? 'status-online' : 'status-offline');
-    console.log(`✅ Indicador actualizado: ${statusDot.className}`);
-  } else {
-    console.error("❌ No se encontró userMainStatusDot");
-  }
-}
-
-// ===== VERIFICAR CONEXIÓN A REALTIME DATABASE =====
-function verificarConexionRTDB(uid) {
-  console.log("🔍 Verificando conexión a Realtime Database...");
-  const testRef = ref(rtdb, `/status/${uid}`);
-  
-  set(testRef, {
-    state: 'online',
-    test: true,
-    timestamp: Date.now()
-  }).then(() => {
-    console.log("✅ Escritura en Realtime Database exitosa");
-    
-    onValue(testRef, (snapshot) => {
-      console.log("📡 Estado leído de RTDB:", snapshot.val());
-      const data = snapshot.val();
+    const dot = document.getElementById('userMainStatusDot');
+    if (dot) {
+      dot.classList.remove('status-online', 'status-offline');
       if (data && data.state === 'online') {
-        console.log("🟢 Estado es ONLINE");
-        const dot = document.getElementById('userMainStatusDot');
-        if (dot) {
-          dot.classList.remove('status-offline', 'status-online');
-          dot.classList.add('status-online');
-          console.log("✅ Círculo actualizado a VERDE desde RTDB");
-        }
+        dot.classList.add('status-online');
+        console.log("🟢 Estado: ONLINE");
+      } else {
+        dot.classList.add('status-offline');
+        console.log("⚪ Estado: OFFLINE");
       }
-    });
-  }).catch((error) => {
-    console.error("❌ Error escribiendo en Realtime Database:", error);
+    }
   });
 }
 
 function escucharEstadoUsuario(uid, elementId) {
   const statusRef = ref(rtdb, `/status/${uid}`);
-  
   onValue(statusRef, (snapshot) => {
     const data = snapshot.val();
     const badge = document.getElementById(elementId);
     if (badge) {
       badge.classList.remove('status-online', 'status-offline');
-      
       if (data && data.state === 'online') {
         badge.classList.add('status-online');
       } else {
@@ -845,7 +765,7 @@ window.aceptarSolicitudModule = aceptarSolicitud;
 window.rechazarSolicitudModule = rechazarSolicitud;
 window.eliminarAmigoModule = eliminarAmigo;
 
-// ===== NAVEGACIÓN POR PESTAÑAS (Mobile) =====
+// ===== NAVEGACIÓN POR PESTAÑAS =====
 function switchTab(tabId, element) {
   document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
@@ -871,14 +791,12 @@ function switchSubTab(subTabType) {
   }
 }
 
-// Asignar eventos a los botones de la barra inferior
 document.querySelectorAll('.nav-item').forEach(btn => {
   btn.addEventListener('click', function() {
     switchTab(this.dataset.tab, this);
   });
 });
 
-// Asignar eventos a los chips de sub‑navegación
 document.querySelectorAll('.chip').forEach(chip => {
   chip.addEventListener('click', function() {
     switchSubTab(this.dataset.subtab);
@@ -894,10 +812,6 @@ onAuthStateChanged(auth, async (user) => {
   currentUser = user;
   console.log("✅ Usuario autenticado:", user.uid);
   
-  // Verificar conexión a RTDB
-  verificarConexionRTDB(user.uid);
-  
-  // Iniciar control de presencia
   gestionarEstadoConexion(user.uid);
   
   await asegurarPerfilUsuario(user);
@@ -909,9 +823,6 @@ onAuthStateChanged(auth, async (user) => {
   onSnapshot(doc(db, "usuarios", user.uid), () => {
     cargarAmigos();
   });
-  
-  // Ejecutar prueba manual después de 2 segundos
-  setTimeout(testStatusManually, 2000);
 });
 </script>
 </body>
