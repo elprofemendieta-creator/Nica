@@ -166,7 +166,7 @@
 }
 </script>
 
-<!-- ===== JAVASCRIPT ===== -->
+<!-- ===== JAVASCRIPT COMPLETO CORREGIDO ===== -->
 <script type="module">
 import { initializeApp } from "firebase/app";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -190,13 +190,19 @@ const rtdb = getDatabase(app);
 let currentUser = null;
 let usuariosCache = new Map();
 
-// ===== SISTEMA DE PRESENCIA (ONLINE/OFFLINE) =====
+// ===== SISTEMA DE PRESENCIA (ONLINE/OFFLINE) MEJORADO =====
 function gestionarEstadoConexion(uid) {
   const userStatusRef = ref(rtdb, `/status/${uid}`);
   const connectedRef = ref(rtdb, ".info/connected");
 
   onValue(connectedRef, (snap) => {
-    if (snap.val() === false) return;
+    if (snap.val() === false) {
+      set(userStatusRef, {
+        state: 'offline',
+        last_changed: serverTimestamp()
+      });
+      return;
+    }
 
     onDisconnect(userStatusRef).set({
       state: 'offline',
@@ -205,22 +211,42 @@ function gestionarEstadoConexion(uid) {
       set(userStatusRef, {
         state: 'online',
         last_changed: serverTimestamp()
+      }).then(() => {
+        actualizarIndicadorPrincipal(uid, 'online');
       });
     });
   });
+
+  onValue(userStatusRef, (snapshot) => {
+    const data = snapshot.val();
+    if (data && data.state === 'online') {
+      actualizarIndicadorPrincipal(uid, 'online');
+    } else {
+      actualizarIndicadorPrincipal(uid, 'offline');
+    }
+  });
+}
+
+function actualizarIndicadorPrincipal(uid, estado) {
+  const statusDot = document.getElementById('userMainStatusDot');
+  if (statusDot) {
+    statusDot.classList.remove('status-online', 'status-offline');
+    statusDot.classList.add(estado === 'online' ? 'status-online' : 'status-offline');
+  }
 }
 
 function escucharEstadoUsuario(uid, elementId) {
   const statusRef = ref(rtdb, `/status/${uid}`);
+  
   onValue(statusRef, (snapshot) => {
     const data = snapshot.val();
     const badge = document.getElementById(elementId);
     if (badge) {
+      badge.classList.remove('status-online', 'status-offline');
+      
       if (data && data.state === 'online') {
-        badge.classList.remove('status-offline');
         badge.classList.add('status-online');
       } else {
-        badge.classList.remove('status-online');
         badge.classList.add('status-offline');
       }
     }
@@ -300,7 +326,6 @@ async function asegurarPerfilUsuario(user) {
 async function cargarPerfil(user) {
   const nombreMostrar = user.displayName || user.email.split('@')[0];
   document.getElementById("userDisplayName").innerText = nombreMostrar;
-  escucharEstadoUsuario(user.uid, "userMainStatusDot");
   
   try {
     const userRef = doc(db, "usuarios", user.uid);
