@@ -448,30 +448,27 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-// ===== INTRO: PRIMERA VEZ Y RECARGA =====
-(function() {
-  const intro = document.querySelector('.intro-screen');
-  if (!intro) return;
+// ===== INTRO: SOLO PRIMERA VEZ =====
+const intro = document.querySelector('.intro-screen');
+if (intro) {
+  // Ocultar siempre al cargar
+  intro.style.display = 'none';
   
-  const ahora = Date.now();
-  const ultimaVez = sessionStorage.getItem('introTimestamp');
+  // Mostrar solo si es la primera vez en index
+  const esIndex = window.location.pathname === '/' || window.location.pathname === '/index.html';
+  const noVisto = !sessionStorage.getItem('introVisto');
   
-  // Si pasaron más de 3 segundos, es una recarga real (F5)
-  const esRecarga = ultimaVez && (ahora - parseInt(ultimaVez) > 3000);
-  
-  if (!ultimaVez || esRecarga) {
-    // Primera vez o recarga: mostrar
-    intro.style.display = 'flex';
-    sessionStorage.setItem('introTimestamp', String(ahora));
-    
+  if (esIndex && noVisto) {
     setTimeout(() => {
-      intro.style.display = 'none';
-    }, 6000);
-  } else {
-    // Navegación normal (atrás/adelante): ocultar
-    intro.style.display = 'none';
+      intro.style.display = 'flex';
+      sessionStorage.setItem('introVisto', 'true');
+      
+      setTimeout(() => {
+        intro.style.display = 'none';
+      }, 6000);
+    }, 100);
   }
-})();
+}
   
   // -------- CARRUSEL PREMIUM (código completo) --------
   const track = document.querySelector('.carousel-track');
