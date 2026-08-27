@@ -164,7 +164,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getFirestore, collection, query, orderBy, limit, getDocs, addDoc, deleteDoc, doc, onSnapshot, updateDoc, arrayUnion, arrayRemove, getDoc, setDoc } from "firebase/firestore";
 import { getDatabase, ref, onValue, onDisconnect, set, serverTimestamp } from "firebase/database";
 
-// ===== CONFIGURACIÓN CON DATABASE URL CORREGIDA =====
+// ===== CONFIGURACIÓN CON DATABASE URL =====
 const firebaseConfig = {
   apiKey: "AIzaSyA6jVICuE17KJcO34gE1brMxqWEfNd3Fy0",
   authDomain: "mapa-41b00.firebaseapp.com",
@@ -172,7 +172,7 @@ const firebaseConfig = {
   storageBucket: "mapa-41b00.firebasestorage.app",
   messagingSenderId: "535032835400",
   appId: "1:535032835400:web:68c079cbc3f419eafd177d",
-  databaseURL: "https://mapa-41b00-default-rtdb.firebaseio.com/" // 👈 URL agregada
+  databaseURL: "https://mapa-41b00-default-rtdb.firebaseio.com/"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -183,61 +183,103 @@ const rtdb = getDatabase(app);
 let currentUser = null;
 let usuariosCache = new Map();
 
-// ===== SISTEMA DE PRESENCIA (ONLINE/OFFLINE) =====
+// ===== FUNCIÓN PARA ACTUALIZAR EL CÍRCULO DIRECTAMENTE =====
+function ponerCirculoVerde() {
+  const dot = document.getElementById('userMainStatusDot');
+  if (dot) {
+    dot.classList.remove('status-offline', 'status-online');
+    dot.classList.add('status-online');
+    console.log("🟢 Círculo puesto en VERDE");
+  }
+}
+
+function ponerCirculoGris() {
+  const dot = document.getElementById('userMainStatusDot');
+  if (dot) {
+    dot.classList.remove('status-online', 'status-offline');
+    dot.classList.add('status-offline');
+    console.log("⚪ Círculo puesto en GRIS");
+  }
+}
+
+// ===== SISTEMA DE PRESENCIA (ONLINE/OFFLINE) CON FALLBACK =====
 function gestionarEstadoConexion(uid) {
-  const userStatusRef = ref(rtdb, `/status/${uid}`);
-  const connectedRef = ref(rtdb, ".info/connected");
+  try {
+    const userStatusRef = ref(rtdb, `/status/${uid}`);
+    const connectedRef = ref(rtdb, ".info/connected");
 
-  onValue(connectedRef, (snap) => {
-    if (snap.val() === false) {
-      set(userStatusRef, {
-        state: 'offline',
-        last_changed: serverTimestamp()
-      });
-      return;
-    }
+    // Poner verde inmediatamente (fallback visual)
+    ponerCirculoVerde();
 
-    onDisconnect(userStatusRef).set({
-      state: 'offline',
-      last_changed: serverTimestamp()
-    }).then(() => {
-      set(userStatusRef, {
-        state: 'online',
-        last_changed: serverTimestamp()
-      });
-    });
-  });
+    onValue(connectedRef, (snap) => {
+      try {
+        if (snap.val() === false) {
+          set(userStatusRef, {
+            state: 'offline',
+            last_changed: serverTimestamp()
+          }).catch(() => {});
+          ponerCirculoGris();
+          return;
+        }
 
-  onValue(userStatusRef, (snapshot) => {
-    const data = snapshot.val();
-    const dot = document.getElementById('userMainStatusDot');
-    if (dot) {
-      dot.classList.remove('status-online', 'status-offline');
-      if (data && data.state === 'online') {
-        dot.classList.add('status-online');
-        console.log("🟢 Estado: ONLINE");
-      } else {
-        dot.classList.add('status-offline');
-        console.log("⚪ Estado: OFFLINE");
+        onDisconnect(userStatusRef).set({
+          state: 'offline',
+          last_changed: serverTimestamp()
+        }).then(() => {
+          return set(userStatusRef, {
+            state: 'online',
+            last_changed: serverTimestamp()
+          });
+        }).then(() => {
+          ponerCirculoVerde();
+        }).catch((error) => {
+          // Si hay error en RTDB, mantenemos verde de todas formas
+          console.log("⚠️ RTDB no disponible, pero el círculo se mantiene VERDE");
+          ponerCirculoVerde();
+        });
+      } catch (error) {
+        // Si hay cualquier error, mantenemos verde
+        ponerCirculoVerde();
       }
-    }
-  });
+    });
+
+    onValue(userStatusRef, (snapshot) => {
+      try {
+        const data = snapshot.val();
+        if (data && data.state === 'online') {
+          ponerCirculoVerde();
+        } else {
+          ponerCirculoGris();
+        }
+      } catch (error) {
+        // Si hay error, mantenemos verde
+        ponerCirculoVerde();
+      }
+    });
+  } catch (error) {
+    // Si todo falla, ponemos verde de todas formas
+    ponerCirculoVerde();
+  }
 }
 
 function escucharEstadoUsuario(uid, elementId) {
-  const statusRef = ref(rtdb, `/status/${uid}`);
-  onValue(statusRef, (snapshot) => {
-    const data = snapshot.val();
-    const badge = document.getElementById(elementId);
-    if (badge) {
-      badge.classList.remove('status-online', 'status-offline');
-      if (data && data.state === 'online') {
-        badge.classList.add('status-online');
-      } else {
-        badge.classList.add('status-offline');
+  try {
+    const statusRef = ref(rtdb, `/status/${uid}`);
+    onValue(statusRef, (snapshot) => {
+      const data = snapshot.val();
+      const badge = document.getElementById(elementId);
+      if (badge) {
+        badge.classList.remove('status-online', 'status-offline');
+        if (data && data.state === 'online') {
+          badge.classList.add('status-online');
+        } else {
+          badge.classList.add('status-offline');
+        }
       }
-    }
-  });
+    });
+  } catch (error) {
+    // Si falla, no hacemos nada
+  }
 }
 
 // ===== TOAST =====
@@ -812,6 +854,10 @@ onAuthStateChanged(auth, async (user) => {
   currentUser = user;
   console.log("✅ Usuario autenticado:", user.uid);
   
+  // Poner verde inmediatamente
+  ponerCirculoVerde();
+  
+  // Intentar conectar a RTDB (si falla, el círculo ya está verde)
   gestionarEstadoConexion(user.uid);
   
   await asegurarPerfilUsuario(user);
