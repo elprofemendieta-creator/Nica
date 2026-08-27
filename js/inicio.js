@@ -1091,3 +1091,18 @@ console.log('📌 Funcionalidades activas: Login, Registro, Perfil, Categorías,
 function openSocial(url) {
     window.open(url, '_blank');
 }
+
+// ================================================================
+// REGISTRO DE SERVICE WORKER
+// ================================================================
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then(reg => {
+        console.log('✅ Service Worker registrado desde JS');
+      })
+      .catch(err => {
+        console.error('❌ Error al registrar SW:', err);
+      });
+  });
+}
