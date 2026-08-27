@@ -164,14 +164,14 @@
 }
 </script>
 
-<!-- ===== JAVASCRIPT CON ESTADO COMPARTIDO EN FIRESTORE ===== -->
+<!-- ===== JAVASCRIPT CON ESTADO COMPARTIDO ===== -->
 <script type="module">
 import { initializeApp } from "firebase/app";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { 
   getFirestore, collection, query, orderBy, limit, getDocs, addDoc, 
   deleteDoc, doc, onSnapshot, updateDoc, arrayUnion, arrayRemove, 
-  getDoc, setDoc, where, serverTimestamp 
+  getDoc, setDoc, where, serverTimestamp, writeBatch 
 } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -189,27 +189,26 @@ const db = getFirestore(app);
 
 let currentUser = null;
 let usuariosCache = new Map();
-let usuariosStatus = new Map(); // Cache de estados
 
-// ===== SISTEMA DE ESTADO COMPARTIDO EN FIRESTORE =====
+// ===== SISTEMA DE ESTADO COMPARTIDO SIMPLIFICADO =====
 class SharedStatusManager {
   constructor() {
     this.myStatus = 'offline';
     this.lastActivity = Date.now();
     this.heartbeatInterval = null;
-    this.statusDocRef = null;
     this.unsubscribe = null;
-    this.offlineTimeout = 60000; // 1 minuto sin actividad = offline
+    this.userStatuses = new Map();
+    this.offlineTimeout = 60000; // 1 minuto
   }
 
   start(userId) {
-    this.statusDocRef = doc(db, "estados", userId);
+    console.log("🔵 Iniciando sistema de estado para:", userId);
     
-    // Escuchar cambios en el estado de TODOS los usuarios
+    // Crear/actualizar documento de estado
+    this.updateMyStatus('online', userId);
+    
+    // Escuchar cambios en los estados de TODOS los usuarios
     this.listenAllStatuses();
-    
-    // Establecer estado inicial
-    this.setMyStatus('online', userId);
     
     // Escuchar eventos de actividad
     const activityEvents = ['mousemove', 'click', 'scroll', 'keydown', 'touchstart'];
@@ -217,7 +216,7 @@ class SharedStatusManager {
       document.addEventListener(event, () => {
         this.lastActivity = Date.now();
         if (this.myStatus === 'away' || this.myStatus === 'offline') {
-          this.setMyStatus('online', userId);
+          this.updateMyStatus('online', userId);
         }
       });
     });
@@ -225,39 +224,40 @@ class SharedStatusManager {
     // Escuchar visibilidad de la página
     document.addEventListener('visibilitychange', () => {
       if (document.visibilityState === 'visible') {
-        this.setMyStatus('online', userId);
+        this.updateMyStatus('online', userId);
       } else {
-        this.setMyStatus('away', userId);
+        this.updateMyStatus('away', userId);
       }
     });
 
     // Escuchar conexión de red
     window.addEventListener('online', () => {
-      this.setMyStatus('online', userId);
+      this.updateMyStatus('online', userId);
     });
 
     window.addEventListener('offline', () => {
-      this.setMyStatus('offline', userId);
+      this.updateMyStatus('offline', userId);
     });
 
-    // Heartbeat
+    // Heartbeat - verificar actividad
     this.heartbeatInterval = setInterval(() => {
       const timeSinceLastActivity = Date.now() - this.lastActivity;
       
       if (timeSinceLastActivity > this.offlineTimeout) {
-        this.setMyStatus('offline', userId);
+        this.updateMyStatus('offline', userId);
       } else if (timeSinceLastActivity > 30000 && this.myStatus === 'online') {
-        this.setMyStatus('away', userId);
+        this.updateMyStatus('away', userId);
       } else if (timeSinceLastActivity < 30000 && this.myStatus === 'away') {
-        this.setMyStatus('online', userId);
+        this.updateMyStatus('online', userId);
       }
     }, 15000);
 
-    // Limpiar al cerrar
+    // Limpiar al cerrar la página
     window.addEventListener('beforeunload', () => {
-      this.setMyStatus('offline', userId);
+      this.updateMyStatus('offline', userId);
     });
 
+    // Actualizar UI inmediatamente
     this.updateUI();
   }
 
@@ -272,19 +272,23 @@ class SharedStatusManager {
     }
   }
 
-  async setMyStatus(status, userId) {
+  async updateMyStatus(status, userId) {
     this.myStatus = status;
     this.lastActivity = Date.now();
     
     try {
-      await setDoc(this.statusDocRef, {
+      // Guardar en Firestore
+      const statusRef = doc(db, "estados", userId);
+      await setDoc(statusRef, {
         uid: userId,
         state: status,
         lastSeen: serverTimestamp(),
         lastActivity: Date.now()
       }, { merge: true });
+      
+      console.log(`🟢 Estado actualizado: ${status} para ${userId}`);
     } catch (error) {
-      console.warn("Error guardando estado:", error);
+      console.warn("⚠️ Error guardando estado:", error);
     }
     
     this.updateUI();
@@ -293,48 +297,50 @@ class SharedStatusManager {
   // Escuchar estados de todos los usuarios
   listenAllStatuses() {
     const statusesRef = collection(db, "estados");
+    
     this.unsubscribe = onSnapshot(statusesRef, (snapshot) => {
+      console.log(`📡 Recibidos ${snapshot.size} estados de usuarios`);
+      
       snapshot.forEach((docSnap) => {
         const data = docSnap.data();
         const uid = docSnap.id;
+        
         // Verificar si el estado es reciente (menos de 2 minutos)
         const lastActivity = data.lastActivity || 0;
-        const isRecent = (Date.now() - lastActivity) < 120000; // 2 minutos
+        const isRecent = (Date.now() - lastActivity) < 120000;
         
-        // Si no es reciente, considerar offline
         let state = data.state || 'offline';
         if (!isRecent && state === 'online') {
           state = 'offline';
         }
         
-        usuariosStatus.set(uid, {
+        // Guardar en caché
+        this.userStatuses.set(uid, {
+          uid: uid,
           state: state,
-          lastSeen: data.lastSeen,
           lastActivity: lastActivity,
           isRecent: isRecent
         });
       });
       
-      // Actualizar UI después de recibir todos los estados
-      this.updateOtherUsersUI();
+      // Actualizar UI
+      this.updateAllUI();
       
-      // Si el ranking está visible, actualizarlo también
-      this.updateRankingStatuses();
     }, (error) => {
-      console.warn("Error escuchando estados:", error);
+      console.warn("⚠️ Error escuchando estados:", error);
     });
   }
 
-  // Obtener estado de un usuario específico
+  // Obtener estado de un usuario
   getUserStatus(userId) {
     if (userId === currentUser?.uid) {
       return this.myStatus;
     }
     
-    const status = usuariosStatus.get(userId);
+    const status = this.userStatuses.get(userId);
     if (!status) return 'offline';
     
-    // Verificar si el estado sigue siendo válido
+    // Verificar si sigue siendo válido
     const isRecent = (Date.now() - status.lastActivity) < 120000;
     if (!isRecent && status.state === 'online') {
       return 'offline';
@@ -343,15 +349,7 @@ class SharedStatusManager {
     return status.state;
   }
 
-  // Verificar si un usuario está online
-  isUserOnline(userId) {
-    if (userId === currentUser?.uid) {
-      return this.myStatus === 'online';
-    }
-    const status = this.getUserStatus(userId);
-    return status === 'online';
-  }
-
+  // Actualizar UI del usuario actual
   updateUI() {
     const dot = document.getElementById('userMainStatusDot');
     const statusEmoji = document.getElementById('statusEmoji');
@@ -383,56 +381,35 @@ class SharedStatusManager {
     }
   }
 
-  updateOtherUsersUI() {
-    // Actualizar todos los indicadores en la página
-    document.querySelectorAll('.status-dot').forEach(dot => {
-      // Buscar el contenedor más cercano para identificar al usuario
-      const container = dot.closest('.friend-item, .user-cell, .friend-info');
-      if (!container) return;
-
-      let userId = null;
-      
-      // Buscar en atributos data
-      if (container.dataset.uid) {
-        userId = container.dataset.uid;
-      } else {
-        // Buscar en el elemento padre
-        const parent = container.closest('[data-uid]');
-        if (parent) {
-          userId = parent.dataset.uid;
-        }
-      }
-
-      // Si es el usuario actual, no actualizar (ya tiene su propio estado)
-      if (userId === currentUser?.uid) return;
-      if (!userId) return;
-
-      const status = this.getUserStatus(userId);
-      dot.classList.remove('status-online', 'status-offline', 'status-away');
-      
-      if (status === 'online') {
-        dot.classList.add('status-online');
-      } else if (status === 'away') {
-        dot.classList.add('status-away');
-      } else {
-        dot.classList.add('status-offline');
-      }
-    });
-  }
-
-  updateRankingStatuses() {
-    // Actualizar estados en el ranking
+  // Actualizar UI de todos los usuarios
+  updateAllUI() {
+    // Actualizar ranking
     document.querySelectorAll('#rankingBody tr').forEach(row => {
       const uid = row.dataset.uid;
-      if (!uid) return;
-      
-      const status = this.getUserStatus(uid);
-      const dot = row.querySelector('.status-dot');
-      if (dot) {
-        dot.classList.remove('status-online', 'status-offline', 'status-away');
-        if (status === 'online') dot.classList.add('status-online');
-        else if (status === 'away') dot.classList.add('status-away');
-        else dot.classList.add('status-offline');
+      if (uid) {
+        const status = this.getUserStatus(uid);
+        const dot = row.querySelector('.status-dot');
+        if (dot) {
+          dot.classList.remove('status-online', 'status-offline', 'status-away');
+          if (status === 'online') dot.classList.add('status-online');
+          else if (status === 'away') dot.classList.add('status-away');
+          else dot.classList.add('status-offline');
+        }
+      }
+    });
+
+    // Actualizar amigos
+    document.querySelectorAll('.friend-item').forEach(item => {
+      const uid = item.dataset.uid;
+      if (uid) {
+        const status = this.getUserStatus(uid);
+        const dot = item.querySelector('.status-dot');
+        if (dot) {
+          dot.classList.remove('status-online', 'status-offline', 'status-away');
+          if (status === 'online') dot.classList.add('status-online');
+          else if (status === 'away') dot.classList.add('status-away');
+          else dot.classList.add('status-offline');
+        }
       }
     });
   }
@@ -561,7 +538,7 @@ async function cargarRankingGlobal() {
       else if (pos === 2) medalIcon = '🥈 ';
       else if (pos === 3) medalIcon = '🥉 ';
 
-      // Obtener estado real del usuario desde Firestore
+      // Obtener estado del usuario
       const status = statusManager.getUserStatus(docSnap.id);
       let statusClass = 'status-offline';
       if (status === 'online') statusClass = 'status-online';
@@ -1021,7 +998,7 @@ onAuthStateChanged(auth, async (user) => {
   currentUser = user;
   console.log("✅ Usuario autenticado:", user.uid);
   
-  // Iniciar sistema de estado compartido
+  // Iniciar sistema de estado
   statusManager.start(user.uid);
   
   await asegurarPerfilUsuario(user);
@@ -1033,6 +1010,11 @@ onAuthStateChanged(auth, async (user) => {
   onSnapshot(doc(db, "usuarios", user.uid), () => {
     cargarAmigos();
   });
+  
+  // Actualizar ranking cada 15 segundos
+  setInterval(() => {
+    statusManager.updateAllUI();
+  }, 15000);
 });
 </script>
 </body>
