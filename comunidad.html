@@ -8,6 +8,43 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
   <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
   <link rel="stylesheet" href="/css/comunidad.css" />
+  
+  <style>
+    /* Estilos para el indicador de estado Online/Offline */
+    .avatar-wrapper {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .status-dot {
+      position: absolute;
+      bottom: 2px;
+      right: 2px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      border: 2px solid #1a1a3a; /* Color base adaptado al diseño de la app */
+      transition: background-color 0.3s ease;
+    }
+
+    .profile-hero .status-dot {
+      width: 18px;
+      height: 18px;
+      bottom: 4px;
+      right: 4px;
+    }
+
+    .status-dot.status-online {
+      background-color: #22c55e; /* Verde brillante */
+      box-shadow: 0 0 8px #22c55e;
+    }
+
+    .status-dot.status-offline {
+      background-color: #6b7280; /* Gris */
+    }
+  </style>
 </head>
 <body>
 
@@ -17,9 +54,10 @@
   <section id="tab-perfil" class="tab-content active">
     <!-- Tarjeta de Perfil -->
     <div class="mobile-card profile-hero">
-      <div class="avatar">
+      <div class="avatar avatar-wrapper">
         <img id="userPhoto" src="" alt="Foto perfil" style="display:none;" />
         <i id="defaultAvatar" class="fas fa-user"></i>
+        <span id="userMainStatusDot" class="status-dot status-offline"></span>
       </div>
       <h3 id="userDisplayName">Cargando...</h3>
       <div class="stats">
@@ -122,16 +160,18 @@
   "imports": {
     "firebase/app": "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js",
     "firebase/auth": "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js",
-    "firebase/firestore": "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js"
+    "firebase/firestore": "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js",
+    "firebase/database": "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js"
   }
 }
 </script>
 
-<!-- ===== JAVASCRIPT (sin cambios funcionales) ===== -->
+<!-- ===== JAVASCRIPT ===== -->
 <script type="module">
 import { initializeApp } from "firebase/app";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getFirestore, collection, query, orderBy, limit, getDocs, where, addDoc, deleteDoc, doc, onSnapshot, updateDoc, arrayUnion, arrayRemove, getDoc, setDoc } from "firebase/firestore";
+import { getDatabase, ref, onValue, onDisconnect, set, serverTimestamp } from "firebase/database";
 
 const firebaseConfig = {
   apiKey: "AIzaSyA6jVICuE17KJcO34gE1brMxqWEfNd3Fy0",
@@ -145,8 +185,47 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
+const rtdb = getDatabase(app);
+
 let currentUser = null;
 let usuariosCache = new Map();
+
+// ===== SISTEMA DE PRESENCIA (ONLINE/OFFLINE) =====
+function gestionarEstadoConexion(uid) {
+  const userStatusRef = ref(rtdb, `/status/${uid}`);
+  const connectedRef = ref(rtdb, ".info/connected");
+
+  onValue(connectedRef, (snap) => {
+    if (snap.val() === false) return;
+
+    onDisconnect(userStatusRef).set({
+      state: 'offline',
+      last_changed: serverTimestamp()
+    }).then(() => {
+      set(userStatusRef, {
+        state: 'online',
+        last_changed: serverTimestamp()
+      });
+    });
+  });
+}
+
+function escucharEstadoUsuario(uid, elementId) {
+  const statusRef = ref(rtdb, `/status/${uid}`);
+  onValue(statusRef, (snapshot) => {
+    const data = snapshot.val();
+    const badge = document.getElementById(elementId);
+    if (badge) {
+      if (data && data.state === 'online') {
+        badge.classList.remove('status-offline');
+        badge.classList.add('status-online');
+      } else {
+        badge.classList.remove('status-online');
+        badge.classList.add('status-offline');
+      }
+    }
+  });
+}
 
 // ===== TOAST =====
 function toast(msg, isError = false) {
@@ -221,6 +300,8 @@ async function asegurarPerfilUsuario(user) {
 async function cargarPerfil(user) {
   const nombreMostrar = user.displayName || user.email.split('@')[0];
   document.getElementById("userDisplayName").innerText = nombreMostrar;
+  escucharEstadoUsuario(user.uid, "userMainStatusDot");
+  
   try {
     const userRef = doc(db, "usuarios", user.uid);
     const userDoc = await getDoc(userRef);
@@ -266,18 +347,26 @@ async function cargarRankingGlobal() {
       if (pos === 1) medalIcon = '🥇 ';
       else if (pos === 2) medalIcon = '🥈 ';
       else if (pos === 3) medalIcon = '🥉 ';
+
+      const statusDotId = `rank-status-${docSnap.id}`;
+
       body.innerHTML += `
         <tr class="${rowClass}">
           <td><strong>${medalIcon}${pos}</strong></td>
           <td>
             <div class="user-cell">
-              <img src="${fotoURL}" class="ranking-avatar" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'" />
+              <div class="avatar-wrapper">
+                <img src="${fotoURL}" class="ranking-avatar" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'" />
+                <span id="${statusDotId}" class="status-dot status-offline"></span>
+              </div>
               <span>${nombre} ${isCurrentUser ? '<i class="fas fa-user-check" style="color:#F57C00; margin-left:5px;"></i>' : ''}</span>
             </div>
           </td>
           <td><i class="fas fa-star" style="color:#F9A826;"></i> ${puntosMostrar}</td>
         </tr>
       `;
+      
+      escucharEstadoUsuario(docSnap.id, statusDotId);
       pos++;
     }
     if (pos === 1) {
@@ -461,16 +550,22 @@ async function cargarAmigos() {
   const amigosUids = userData.amigos || [];
   const solicitudesRecibidas = userData.solicitudesRecibidas || [];
   const solicitudesDiv = document.getElementById("solicitudesPendientes");
+  
   if (solicitudesRecibidas.length > 0) {
     solicitudesDiv.innerHTML = `<h3 style="font-size:1.2rem; margin:15px 0 10px 0;"><i class="fas fa-user-plus"></i> Solicitudes Pendientes <span class="badge">${solicitudesRecibidas.length}</span></h3>`;
     for (const solicitud of solicitudesRecibidas) {
       const amigoData = await getUserData(solicitud.uid);
       const nombre = amigoData?.nombre || solicitud.nombre || "Usuario";
       const fotoURL = getFotoURL(amigoData);
+      const statusDotId = `req-status-${solicitud.uid}`;
+
       solicitudesDiv.innerHTML += `
         <div class="friend-item request-item">
           <div class="friend-info">
-            <img src="${fotoURL}" class="friend-avatar" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'" />
+            <div class="avatar-wrapper">
+              <img src="${fotoURL}" class="friend-avatar" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'" />
+              <span id="${statusDotId}" class="status-dot status-offline"></span>
+            </div>
             <div class="friend-details"><strong>${nombre}</strong></div>
           </div>
           <div class="friend-actions">
@@ -483,10 +578,12 @@ async function cargarAmigos() {
           </div>
         </div>
       `;
+      escucharEstadoUsuario(solicitud.uid, statusDotId);
     }
   } else {
     solicitudesDiv.innerHTML = "";
   }
+  
   const amigosDiv = document.getElementById("amigosList");
   if (amigosUids.length > 0) {
     amigosDiv.innerHTML = `<h3 style="font-size:1.2rem; margin:15px 0 10px 0;"><i class="fas fa-users"></i> Mis Amigos (${amigosUids.length})</h3>`;
@@ -495,10 +592,15 @@ async function cargarAmigos() {
       const nombre = amigoData?.nombre || "Usuario";
       const puntos = amigoData?.puntos || 0;
       const fotoURL = getFotoURL(amigoData);
+      const statusDotId = `friend-status-${amigoUid}`;
+
       amigosDiv.innerHTML += `
         <div class="friend-item">
           <div class="friend-info">
-            <img src="${fotoURL}" class="friend-avatar" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'" />
+            <div class="avatar-wrapper">
+              <img src="${fotoURL}" class="friend-avatar" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'" />
+              <span id="${statusDotId}" class="status-dot status-offline"></span>
+            </div>
             <div class="friend-details">
               <strong>${nombre}</strong>
               <small class="friend-points"><i class="fas fa-star"></i> ${puntos} puntos</small>
@@ -511,6 +613,7 @@ async function cargarAmigos() {
           </div>
         </div>
       `;
+      escucharEstadoUsuario(amigoUid, statusDotId);
     }
   } else {
     amigosDiv.innerHTML = `<div class="empty-state"><i class="fas fa-user-friends"></i><p>No tienes amigos agregados</p><small>Busca usuarios para enviar solicitudes</small></div>`;
@@ -545,6 +648,8 @@ searchBtn.addEventListener("click", async () => {
         const esAmigo = currentAmigos.includes(data.uid);
         const solicitudEnviada = currentSolicitudesEnviadas.includes(data.uid);
         const fotoURL = getFotoURL(data);
+        const statusDotId = `search-status-${data.uid}`;
+
         let boton = '';
         if (esAmigo) {
           boton = '<button class="btn btn-danger" disabled style="opacity:0.5;"><i class="fas fa-check"></i> Amigos</button>';
@@ -556,7 +661,10 @@ searchBtn.addEventListener("click", async () => {
         searchResults.innerHTML += `
           <div class="friend-item">
             <div class="friend-info">
-              <img src="${fotoURL}" class="friend-avatar" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'" />
+              <div class="avatar-wrapper">
+                <img src="${fotoURL}" class="friend-avatar" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'" />
+                <span id="${statusDotId}" class="status-dot status-offline"></span>
+              </div>
               <div class="friend-details">
                 <strong>${data.nombre || "Usuario"}</strong>
                 <small class="friend-points"><i class="fas fa-star"></i> ${data.puntos || 0} puntos</small>
@@ -565,6 +673,7 @@ searchBtn.addEventListener("click", async () => {
             <div class="friend-actions">${boton}</div>
           </div>
         `;
+        escucharEstadoUsuario(data.uid, statusDotId);
       }
     }
     if (encontrados === 0) {
@@ -691,6 +800,10 @@ onAuthStateChanged(auth, async (user) => {
     return;
   }
   currentUser = user;
+  
+  // Iniciar control de presencia
+  gestionarEstadoConexion(user.uid);
+  
   await asegurarPerfilUsuario(user);
   await cargarPerfil(user);
   generarQR();
