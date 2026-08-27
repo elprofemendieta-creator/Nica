@@ -448,35 +448,37 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
- // -------- INTRO (PRIMERA VEZ Y RECARGA, PERO NO AL RETROCEDER) --------
+ // -------- INTRO (PRIMERA VEZ, RECARGA, PERO NO RETROCEDER) --------
 const introScreen = document.querySelector('.intro-screen');
 if (introScreen) {
-  let esRetroceso = false;
+  const ahora = Date.now();
+  const ultimaCarga = sessionStorage.getItem('introTimestamp');
   
-  // Detectar si el usuario llegó con el botón atrás/adelante
-  try {
-    const navType = performance.getEntriesByType('navigation')[0]?.type;
-    esRetroceso = (navType === 'back_forward');
-  } catch (e) {
-    try {
-      esRetroceso = (performance.navigation.type === 2);
-    } catch (e2) {
-      esRetroceso = false;
-    }
-  }
+  // Si pasaron más de 2 segundos, es una recarga real (F5)
+  const esRecarga = ultimaCarga && (ahora - parseInt(ultimaCarga) > 2000);
   
-  if (esRetroceso) {
-    // Si es botón atrás/adelante, ocultar inmediatamente
-    introScreen.style.display = 'none';
-  } else {
-    // Si es primera vez o recarga (F5), mostrar
+  if (!ultimaCarga || esRecarga) {
+    // Primera vez o recarga: mostrar intro
     introScreen.style.display = 'flex';
+    sessionStorage.setItem('introTimestamp', String(ahora));
+    
     setTimeout(() => {
       introScreen.style.display = 'none';
     }, 6000);
+  } else {
+    // Navegación normal (atrás/adelante): ocultar
+    introScreen.style.display = 'none';
   }
 }
 
+// Detectar navegación SPA
+window.addEventListener('popstate', () => {
+  const introScreen = document.querySelector('.intro-screen');
+  if (introScreen) {
+    introScreen.style.display = 'none';
+  }
+}); 
+  
   // -------- CARRUSEL PREMIUM (código completo) --------
   const track = document.querySelector('.carousel-track');
   const slides = Array.from(document.querySelectorAll('.carousel-slide'));
