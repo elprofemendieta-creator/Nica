@@ -190,17 +190,45 @@ const rtdb = getDatabase(app);
 let currentUser = null;
 let usuariosCache = new Map();
 
+// ===== FUNCIONES DE DIAGNÓSTICO =====
+function testStatusManually() {
+  console.log("🔧 Probando cambio de estado manual...");
+  const dot = document.getElementById('userMainStatusDot');
+  if (dot) {
+    console.log("✅ Círculo encontrado:", dot);
+    console.log("Clases actuales:", dot.className);
+    
+    // Forzar a verde
+    dot.classList.remove('status-offline', 'status-online');
+    dot.classList.add('status-online');
+    console.log("🟢 Círculo forzado a VERDE");
+    
+    setTimeout(() => {
+      // Forzar a gris
+      dot.classList.remove('status-online', 'status-offline');
+      dot.classList.add('status-offline');
+      console.log("⚪ Círculo forzado a GRIS");
+    }, 3000);
+  } else {
+    console.error("❌ No se encontró el círculo con ID 'userMainStatusDot'");
+  }
+}
+
 // ===== SISTEMA DE PRESENCIA (ONLINE/OFFLINE) MEJORADO =====
 function gestionarEstadoConexion(uid) {
+  console.log("🔄 Iniciando gestión de estado para:", uid);
   const userStatusRef = ref(rtdb, `/status/${uid}`);
   const connectedRef = ref(rtdb, ".info/connected");
 
   onValue(connectedRef, (snap) => {
-    if (snap.val() === false) {
+    const connected = snap.val();
+    console.log("📡 Estado de conexión:", connected ? "Conectado" : "Desconectado");
+    
+    if (connected === false) {
       set(userStatusRef, {
         state: 'offline',
         last_changed: serverTimestamp()
-      });
+      }).then(() => console.log("⚪ Estado establecido a OFFLINE"));
       return;
     }
 
@@ -208,17 +236,22 @@ function gestionarEstadoConexion(uid) {
       state: 'offline',
       last_changed: serverTimestamp()
     }).then(() => {
-      set(userStatusRef, {
+      console.log("🔧 OnDisconnect configurado");
+      return set(userStatusRef, {
         state: 'online',
         last_changed: serverTimestamp()
-      }).then(() => {
-        actualizarIndicadorPrincipal(uid, 'online');
       });
+    }).then(() => {
+      console.log("🟢 Estado establecido a ONLINE");
+      actualizarIndicadorPrincipal(uid, 'online');
+    }).catch(error => {
+      console.error("❌ Error en onDisconnect:", error);
     });
   });
 
   onValue(userStatusRef, (snapshot) => {
     const data = snapshot.val();
+    console.log("📡 Cambio en estado de RTDB:", data);
     if (data && data.state === 'online') {
       actualizarIndicadorPrincipal(uid, 'online');
     } else {
@@ -229,10 +262,44 @@ function gestionarEstadoConexion(uid) {
 
 function actualizarIndicadorPrincipal(uid, estado) {
   const statusDot = document.getElementById('userMainStatusDot');
+  console.log(`🎯 Actualizando indicador principal a: ${estado}`, statusDot);
   if (statusDot) {
     statusDot.classList.remove('status-online', 'status-offline');
     statusDot.classList.add(estado === 'online' ? 'status-online' : 'status-offline');
+    console.log(`✅ Indicador actualizado: ${statusDot.className}`);
+  } else {
+    console.error("❌ No se encontró userMainStatusDot");
   }
+}
+
+// ===== VERIFICAR CONEXIÓN A REALTIME DATABASE =====
+function verificarConexionRTDB(uid) {
+  console.log("🔍 Verificando conexión a Realtime Database...");
+  const testRef = ref(rtdb, `/status/${uid}`);
+  
+  set(testRef, {
+    state: 'online',
+    test: true,
+    timestamp: Date.now()
+  }).then(() => {
+    console.log("✅ Escritura en Realtime Database exitosa");
+    
+    onValue(testRef, (snapshot) => {
+      console.log("📡 Estado leído de RTDB:", snapshot.val());
+      const data = snapshot.val();
+      if (data && data.state === 'online') {
+        console.log("🟢 Estado es ONLINE");
+        const dot = document.getElementById('userMainStatusDot');
+        if (dot) {
+          dot.classList.remove('status-offline', 'status-online');
+          dot.classList.add('status-online');
+          console.log("✅ Círculo actualizado a VERDE desde RTDB");
+        }
+      }
+    });
+  }).catch((error) => {
+    console.error("❌ Error escribiendo en Realtime Database:", error);
+  });
 }
 
 function escucharEstadoUsuario(uid, elementId) {
@@ -825,6 +892,10 @@ onAuthStateChanged(auth, async (user) => {
     return;
   }
   currentUser = user;
+  console.log("✅ Usuario autenticado:", user.uid);
+  
+  // Verificar conexión a RTDB
+  verificarConexionRTDB(user.uid);
   
   // Iniciar control de presencia
   gestionarEstadoConexion(user.uid);
@@ -838,6 +909,9 @@ onAuthStateChanged(auth, async (user) => {
   onSnapshot(doc(db, "usuarios", user.uid), () => {
     cargarAmigos();
   });
+  
+  // Ejecutar prueba manual después de 2 segundos
+  setTimeout(testStatusManually, 2000);
 });
 </script>
 </body>
