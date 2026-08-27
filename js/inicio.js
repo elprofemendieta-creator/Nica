@@ -448,36 +448,30 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
- // -------- INTRO (PRIMERA VEZ, RECARGA, PERO NO RETROCEDER) --------
-const introScreen = document.querySelector('.intro-screen');
-if (introScreen) {
+// ===== INTRO: PRIMERA VEZ Y RECARGA =====
+(function() {
+  const intro = document.querySelector('.intro-screen');
+  if (!intro) return;
+  
   const ahora = Date.now();
-  const ultimaCarga = sessionStorage.getItem('introTimestamp');
+  const ultimaVez = sessionStorage.getItem('introTimestamp');
   
-  // Si pasaron más de 2 segundos, es una recarga real (F5)
-  const esRecarga = ultimaCarga && (ahora - parseInt(ultimaCarga) > 2000);
+  // Si pasaron más de 3 segundos, es una recarga real (F5)
+  const esRecarga = ultimaVez && (ahora - parseInt(ultimaVez) > 3000);
   
-  if (!ultimaCarga || esRecarga) {
-    // Primera vez o recarga: mostrar intro
-    introScreen.style.display = 'flex';
+  if (!ultimaVez || esRecarga) {
+    // Primera vez o recarga: mostrar
+    intro.style.display = 'flex';
     sessionStorage.setItem('introTimestamp', String(ahora));
     
     setTimeout(() => {
-      introScreen.style.display = 'none';
+      intro.style.display = 'none';
     }, 6000);
   } else {
     // Navegación normal (atrás/adelante): ocultar
-    introScreen.style.display = 'none';
+    intro.style.display = 'none';
   }
-}
-
-// Detectar navegación SPA
-window.addEventListener('popstate', () => {
-  const introScreen = document.querySelector('.intro-screen');
-  if (introScreen) {
-    introScreen.style.display = 'none';
-  }
-}); 
+})();
   
   // -------- CARRUSEL PREMIUM (código completo) --------
   const track = document.querySelector('.carousel-track');
