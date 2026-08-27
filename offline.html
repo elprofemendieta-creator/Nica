@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sin conexión - Guía Pinolera</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+    .container {
+      max-width: 400px;
+      animation: fadeIn 0.6s ease;
+    }
+    .logo {
+      width: 100px;
+      margin-bottom: 20px;
+      filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.4));
+    }
+    .icon {
+      font-size: 4rem;
+      margin-bottom: 15px;
+    }
+    h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    p {
+      font-size: 1rem;
+      opacity: 0.8;
+      margin-bottom: 25px;
+    }
+    .btn-reintentar {
+      padding: 14px 40px;
+      background: #6aba42;
+      color: white;
+      border: none;
+      border-radius: 50px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn-reintentar:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 24px rgba(106, 186, 66, 0.4);
+    }
+    .btn-reintentar:active {
+      transform: scale(0.95);
+    }
+    .version {
+      margin-top: 30px;
+      font-size: 0.7rem;
+      opacity: 0.3;
+    }
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <img src="/logo+.png" alt="Guía Pinolera" class="logo" />
+    <div class="icon">📡</div>
+    <h1>Sin conexión a internet</h1>
+    <p>Vuelve a intentarlo cuando tengas señal.<br>Algunos contenidos ya están guardados.</p>
+    <button class="btn-reintentar" onclick="location.reload()">🔄 Reintentar</button>
+    <div class="version">Guía Pinolera v1.0</div>
+  </div>
+</body>
+</html>
