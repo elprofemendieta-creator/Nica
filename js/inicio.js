@@ -448,13 +448,34 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // -------- INTRO --------
-  const introScreen = document.querySelector('.intro-screen');
-  if (introScreen) {
+ // -------- INTRO (PRIMERA VEZ Y RECARGA, PERO NO AL RETROCEDER) --------
+const introScreen = document.querySelector('.intro-screen');
+if (introScreen) {
+  let esRetroceso = false;
+  
+  // Detectar si el usuario llegó con el botón atrás/adelante
+  try {
+    const navType = performance.getEntriesByType('navigation')[0]?.type;
+    esRetroceso = (navType === 'back_forward');
+  } catch (e) {
+    try {
+      esRetroceso = (performance.navigation.type === 2);
+    } catch (e2) {
+      esRetroceso = false;
+    }
+  }
+  
+  if (esRetroceso) {
+    // Si es botón atrás/adelante, ocultar inmediatamente
+    introScreen.style.display = 'none';
+  } else {
+    // Si es primera vez o recarga (F5), mostrar
+    introScreen.style.display = 'flex';
     setTimeout(() => {
       introScreen.style.display = 'none';
     }, 6000);
   }
+}
 
   // -------- CARRUSEL PREMIUM (código completo) --------
   const track = document.querySelector('.carousel-track');
