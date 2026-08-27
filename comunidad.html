@@ -8,6 +8,275 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
   <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
   <link rel="stylesheet" href="/css/comunidad.css" />
+  
+  <style>
+    /* ===== ESTILOS ADICIONALES PARA EL FORO ===== */
+    .pregunta-card {
+      background: #f9f7f4;
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+      border-left: 4px solid #d4a373;
+    }
+    .pregunta-card:hover {
+      transform: translateX(4px);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    }
+    .pregunta-card h4 {
+      margin: 0 0 4px 0;
+      color: #6b4f3c;
+      font-size: 1rem;
+    }
+    .pregunta-card .preview {
+      color: #555;
+      font-size: 0.9rem;
+      margin-bottom: 6px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .pregunta-card .meta-foro {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 14px;
+      font-size: 0.75rem;
+      color: #888;
+      border-top: 1px solid #eee;
+      padding-top: 8px;
+    }
+    .pregunta-card .categoria-tag {
+      background: #e8e0d5;
+      padding: 0 10px;
+      border-radius: 12px;
+      color: #6b4f3c;
+      font-size: 0.7rem;
+      display: inline-block;
+    }
+    .respuesta-item {
+      background: #f9f7f4;
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin: 8px 0;
+      border-left: 3px solid #d4a373;
+    }
+    .respuesta-item .autor-respuesta {
+      font-weight: 600;
+      color: #6b4f3c;
+      font-size: 0.9rem;
+    }
+    .respuesta-item .fecha-respuesta {
+      font-size: 0.7rem;
+      color: #999;
+    }
+    .mejor-respuesta {
+      border-left: 4px solid #F9A826;
+      background: #fff8e7;
+    }
+    .btn-votar {
+      background: none;
+      border: 1px solid #ddd;
+      border-radius: 20px;
+      padding: 1px 12px;
+      cursor: pointer;
+      font-size: 0.75rem;
+      transition: all 0.2s;
+    }
+    .btn-votar:hover {
+      background: #d4a373;
+      color: white;
+      border-color: #d4a373;
+    }
+    .btn-votar-eliminar {
+      color: #c0392b;
+    }
+    .btn-votar-eliminar:hover {
+      background: #c0392b;
+      color: white;
+      border-color: #c0392b;
+    }
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    .modal-overlay.active {
+      display: flex;
+    }
+    .modal-box {
+      background: white;
+      padding: 25px;
+      border-radius: 16px;
+      max-width: 500px;
+      width: 92%;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .modal-box h3 {
+      color: #6b4f3c;
+      margin-bottom: 12px;
+    }
+    .modal-box label {
+      display: block;
+      margin: 12px 0 4px;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+    .modal-box input, .modal-box textarea, .modal-box select {
+      width: 100%;
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid #ddd;
+      font-size: 0.95rem;
+      box-sizing: border-box;
+    }
+    .modal-box textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 18px;
+      justify-content: flex-end;
+    }
+    .btn-modal-cancel {
+      background: #999;
+      color: white;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .btn-modal-cancel:hover {
+      background: #777;
+    }
+    .btn-modal-primary {
+      background: #d4a373;
+      color: white;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .btn-modal-primary:hover {
+      background: #c4956a;
+    }
+    .btn-foro-nuevo {
+      width: 100%;
+      margin-bottom: 12px;
+      background: #d4a373;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 30px;
+      font-weight: bold;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-foro-nuevo:hover {
+      background: #c4956a;
+      transform: scale(1.01);
+    }
+    .filtros-foro {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+    .filtros-foro select, .filtros-foro input {
+      flex: 1;
+      min-width: 100px;
+      padding: 8px 12px;
+      border-radius: 20px;
+      border: 1px solid #ddd;
+      background: white;
+      font-size: 0.9rem;
+    }
+    .filtros-foro input {
+      flex: 2;
+      min-width: 120px;
+    }
+    .btn-respuesta {
+      background: #d4a373;
+      color: white;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .btn-respuesta:hover {
+      background: #c4956a;
+    }
+    .foro-vacio {
+      text-align: center;
+      padding: 30px;
+      color: #999;
+    }
+    .foro-vacio i {
+      font-size: 2rem;
+      display: block;
+      margin-bottom: 10px;
+    }
+    .detalle-volver {
+      background: none;
+      border: none;
+      color: #6b4f3c;
+      font-weight: bold;
+      cursor: pointer;
+      margin-bottom: 15px;
+      font-size: 0.95rem;
+    }
+    .detalle-volver:hover {
+      text-decoration: underline;
+    }
+    .respuesta-input-area {
+      margin-top: 16px;
+      border-top: 1px solid #ddd;
+      padding-top: 16px;
+    }
+    .respuesta-input-area h4 {
+      font-size: 0.95rem;
+      margin-bottom: 8px;
+    }
+    .respuesta-input-area textarea {
+      width: 100%;
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid #ddd;
+      resize: vertical;
+      font-size: 0.95rem;
+      box-sizing: border-box;
+    }
+    .respuesta-input-area .respuesta-footer {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .respuesta-input-area .respuesta-footer input {
+      flex: 1;
+      min-width: 120px;
+      padding: 8px 15px;
+      border-radius: 20px;
+      border: 1px solid #ddd;
+      font-size: 0.9rem;
+    }
+  </style>
 </head>
 <body>
 
@@ -15,7 +284,6 @@
 
   <!-- ===== PESTAÑA 1: PERFIL ===== -->
   <section id="tab-perfil" class="tab-content active">
-    <!-- Tarjeta de Perfil -->
     <div class="mobile-card profile-hero">
       <div class="avatar">
         <img id="userPhoto" src="" alt="Foto perfil" style="display:none;" />
@@ -31,7 +299,6 @@
       </div>
     </div>
 
-    <!-- Tarjeta de Búsqueda -->
     <div class="mobile-card">
       <h2><i class="fas fa-user-plus"></i> Buscar usuarios</h2>
       <div class="search-box">
@@ -41,7 +308,6 @@
       <div id="searchResults"></div>
     </div>
 
-    <!-- Tarjeta de Compartir -->
     <div class="mobile-card">
       <h2><i class="fas fa-qrcode"></i> Compartir perfil</h2>
       <div class="qr-container">
@@ -51,31 +317,47 @@
       </div>
     </div>
 
-    <!-- Enlace para volver al inicio -->
     <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Volver al inicio</a>
   </section>
 
-  <!-- ===== PESTAÑA 2: MURO ===== -->
+  <!-- ===== PESTAÑA 2: FORO ===== -->
   <section id="tab-muro" class="tab-content">
     <div class="mobile-card">
-      <h2><i class="fas fa-comments"></i> Muro de Consejos</h2>
-      <div class="search-box" style="margin-bottom:16px;">
-        <input type="text" id="mensajeForo" placeholder="Pregunta sobre buses, seguridad o consejos..." />
-        <button class="btn" id="publicarForoBtn">Publicar</button>
+      <h2><i class="fas fa-question-circle"></i> Foro de Preguntas</h2>
+      
+      <button class="btn-foro-nuevo" id="btnNuevaPregunta">
+        <i class="fas fa-plus-circle"></i> Hacer una pregunta
+      </button>
+      
+      <div class="filtros-foro">
+        <select id="filtroCategoria">
+          <option value="">📋 Todas</option>
+          <option value="Transporte">🚌 Transporte</option>
+          <option value="Alojamiento">🏨 Alojamiento</option>
+          <option value="Comida">🍽️ Comida</option>
+          <option value="Seguridad">🛡️ Seguridad</option>
+          <option value="Turismo">🌋 Turismo</option>
+          <option value="Cultura">🎭 Cultura</option>
+          <option value="General">📌 General</option>
+        </select>
+        <input type="text" id="buscadorPreguntas" placeholder="🔍 Buscar preguntas..." />
       </div>
-      <div id="foroMensajes"></div>
+      
+      <div id="listaPreguntas">
+        <div style="text-align:center; padding:30px; color:#777;">
+          <i class="fas fa-spinner fa-spin"></i> Cargando preguntas...
+        </div>
+      </div>
     </div>
   </section>
 
   <!-- ===== PESTAÑA 3: RANKING Y AMIGOS ===== -->
   <section id="tab-ranking" class="tab-content">
-    <!-- Sub‑navegación con chips -->
     <div class="sub-nav-chips">
       <button class="chip active" data-subtab="ranking">🏆 Top Usuarios</button>
       <button class="chip" data-subtab="amigos">👥 Mis Amigos</button>
     </div>
 
-    <!-- Sub‑pestaña: Ranking -->
     <div id="subtab-ranking" class="subtab-content active">
       <div class="mobile-card">
         <h2><i class="fas fa-chart-line"></i> Ranking Global</h2>
@@ -88,7 +370,6 @@
       </div>
     </div>
 
-    <!-- Sub‑pestaña: Amigos -->
     <div id="subtab-amigos" class="subtab-content" style="display:none;">
       <div class="mobile-card">
         <h2><i class="fas fa-users"></i> Mis Amigos</h2>
@@ -98,7 +379,7 @@
     </div>
   </section>
 
-  <!-- ===== BARRA DE NAVEGACIÓN INFERIOR FIJA ===== -->
+  <!-- ===== BARRA DE NAVEGACIÓN INFERIOR ===== -->
   <nav class="bottom-nav">
     <button class="nav-item active" data-tab="tab-perfil">
       <i class="fas fa-user-circle"></i>
@@ -106,7 +387,7 @@
     </button>
     <button class="nav-item" data-tab="tab-muro">
       <i class="fas fa-comments"></i>
-      <span>Muro</span>
+      <span>Foro</span>
     </button>
     <button class="nav-item" data-tab="tab-ranking">
       <i class="fas fa-trophy"></i>
@@ -114,6 +395,42 @@
     </button>
   </nav>
 
+</div>
+
+<!-- ===== MODAL: NUEVA PREGUNTA ===== -->
+<div class="modal-overlay" id="modalPregunta">
+  <div class="modal-box">
+    <h3><i class="fas fa-question-circle"></i> Nueva pregunta</h3>
+    
+    <label for="tituloPregunta">Título *</label>
+    <input type="text" id="tituloPregunta" placeholder="Ej: ¿Cómo llegar a San Juan del Sur?" />
+    
+    <label for="contenidoPregunta">Detalle *</label>
+    <textarea id="contenidoPregunta" rows="4" placeholder="Describe tu duda con detalle..."></textarea>
+    
+    <label for="categoriaPregunta">Categoría</label>
+    <select id="categoriaPregunta">
+      <option value="General">📌 General</option>
+      <option value="Transporte">🚌 Transporte</option>
+      <option value="Alojamiento">🏨 Alojamiento</option>
+      <option value="Comida">🍽️ Comida</option>
+      <option value="Seguridad">🛡️ Seguridad</option>
+      <option value="Turismo">🌋 Turismo</option>
+      <option value="Cultura">🎭 Cultura</option>
+    </select>
+    
+    <div class="modal-actions">
+      <button class="btn-modal-cancel" id="btnCancelarPregunta">Cancelar</button>
+      <button class="btn-modal-primary" id="btnPublicarPregunta">Publicar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL: DETALLE DE PREGUNTA ===== -->
+<div class="modal-overlay" id="modalDetalle">
+  <div class="modal-box" style="max-width:550px;">
+    <div id="detalleContenido"></div>
+  </div>
 </div>
 
 <!-- ===== FIREBASE IMPORTS ===== -->
@@ -127,7 +444,7 @@
 }
 </script>
 
-<!-- ===== JAVASCRIPT (sin cambios funcionales) ===== -->
+<!-- ===== JAVASCRIPT COMPLETO ===== -->
 <script type="module">
 import { initializeApp } from "firebase/app";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -163,11 +480,34 @@ function toast(msg, isError = false) {
   div.style.color = "white";
   div.style.fontWeight = "600";
   div.style.boxShadow = "0 4px 16px rgba(0,0,0,0.15)";
+  div.style.maxWidth = "90%";
+  div.style.textAlign = "center";
   document.body.appendChild(div);
   setTimeout(() => div.remove(), 3000);
 }
 
 // ===== UTILIDADES =====
+function escapeHtml(texto) {
+  if (!texto) return '';
+  const div = document.createElement('div');
+  div.textContent = texto;
+  return div.innerHTML;
+}
+
+function formatearFecha(fecha) {
+  if (!fecha) return 'Fecha desconocida';
+  try {
+    const d = new Date(fecha);
+    return d.toLocaleDateString('es-ES', { 
+      day: '2-digit', 
+      month: 'short', 
+      year: 'numeric'
+    });
+  } catch {
+    return 'Fecha inválida';
+  }
+}
+
 async function getUserData(uid) {
   if (usuariosCache.has(uid)) return usuariosCache.get(uid);
   const userDoc = await getDoc(doc(db, "usuarios", uid));
@@ -517,7 +857,7 @@ async function cargarAmigos() {
   }
 }
 
-// ===== BUSCADOR =====
+// ===== BUSCADOR DE USUARIOS =====
 const searchBtn = document.getElementById("searchUserBtn");
 const searchInput = document.getElementById("searchUserInput");
 const searchResults = document.getElementById("searchResults");
@@ -576,55 +916,329 @@ searchBtn.addEventListener("click", async () => {
   }
 });
 
-// ===== FORO =====
-const foroMensajes = document.getElementById("foroMensajes");
-const publicarForoBtn = document.getElementById("publicarForoBtn");
-publicarForoBtn.addEventListener("click", async () => {
-  const input = document.getElementById("mensajeForo");
-  const mensaje = input.value.trim();
-  if (!mensaje) {
-    toast("Escribe un mensaje");
-    return;
-  }
+// ============================================
+// FORO DE PREGUNTAS Y RESPUESTAS (NUEVO)
+// ============================================
+
+// --- Cargar preguntas ---
+async function cargarPreguntas() {
+  const lista = document.getElementById('listaPreguntas');
+  lista.innerHTML = '<div style="text-align:center; padding:20px; color:#777;"><i class="fas fa-spinner fa-spin"></i> Cargando...</div>';
+  
+  const categoria = document.getElementById('filtroCategoria').value;
+  const busqueda = document.getElementById('buscadorPreguntas').value.toLowerCase().trim();
+  
   try {
-    await addDoc(collection(db, "foro"), {
-      uid: currentUser.uid,
-      nombre: currentUser.displayName || currentUser.email.split('@')[0],
-      mensaje: mensaje,
-      fecha: Date.now()
+    const q = query(collection(db, "preguntas"), orderBy("fecha", "desc"));
+    const snap = await getDocs(q);
+    
+    let preguntas = [];
+    snap.forEach(doc => {
+      const data = doc.data();
+      data.id = doc.id;
+      preguntas.push(data);
     });
-    input.value = "";
-    toast("Mensaje publicado");
+    
+    if (categoria) {
+      preguntas = preguntas.filter(p => p.categoria === categoria);
+    }
+    if (busqueda) {
+      preguntas = preguntas.filter(p => 
+        p.titulo.toLowerCase().includes(busqueda) || 
+        p.contenido.toLowerCase().includes(busqueda)
+      );
+    }
+    
+    if (preguntas.length === 0) {
+      lista.innerHTML = `
+        <div class="foro-vacio">
+          <i class="fas fa-comment-slash"></i>
+          No hay preguntas con esos filtros.<br>
+          <span style="font-size:0.9rem;">¡Sé el primero en preguntar!</span>
+        </div>
+      `;
+      return;
+    }
+    
+    lista.innerHTML = preguntas.map(p => `
+      <div class="pregunta-card" onclick="verDetallePregunta('${p.id}')">
+        <h4>${escapeHtml(p.titulo)}</h4>
+        <div class="preview">${escapeHtml(p.contenido.substring(0, 100))}${p.contenido.length > 100 ? '...' : ''}</div>
+        <div class="meta-foro">
+          <span>👤 ${escapeHtml(p.autor || 'Anónimo')}</span>
+          <span>💬 ${p.respuestas || 0}</span>
+          <span>👍 ${p.votos || 0}</span>
+          <span class="categoria-tag">${escapeHtml(p.categoria || 'General')}</span>
+          <span>${formatearFecha(p.fecha)}</span>
+        </div>
+      </div>
+    `).join('');
+    
+  } catch (error) {
+    console.error("Error cargando preguntas:", error);
+    lista.innerHTML = `<div style="text-align:center; padding:20px; color:#c0392b;">❌ Error al cargar</div>`;
+  }
+}
+
+// --- Ver detalle de pregunta ---
+async function verDetallePregunta(preguntaId) {
+  const modal = document.getElementById('modalDetalle');
+  const contenido = document.getElementById('detalleContenido');
+  modal.classList.add('active');
+  contenido.innerHTML = '<div style="text-align:center; padding:20px; color:#777;"><i class="fas fa-spinner fa-spin"></i> Cargando...</div>';
+  
+  try {
+    const docPreg = await getDoc(doc(db, "preguntas", preguntaId));
+    if (!docPreg.exists()) {
+      contenido.innerHTML = '<div style="text-align:center; padding:20px; color:#c0392b;">❌ La pregunta ya no existe.</div>';
+      return;
+    }
+    const pregunta = docPreg.data();
+    pregunta.id = docPreg.id;
+    
+    const respSnapshot = await getDocs(
+      query(collection(db, "preguntas", preguntaId, "respuestas"), orderBy("fecha", "asc"))
+    );
+    let respuestas = [];
+    respSnapshot.forEach(doc => {
+      const data = doc.data();
+      data.id = doc.id;
+      respuestas.push(data);
+    });
+    
+    const esAutor = pregunta.uid === currentUser.uid;
+    
+    contenido.innerHTML = `
+      <button class="detalle-volver" onclick="cerrarDetallePregunta()">
+        ← Volver al foro
+      </button>
+      
+      <div style="margin-bottom:16px;">
+        <h3 style="color:#6b4f3c; margin-bottom:6px; font-size:1.1rem;">${escapeHtml(pregunta.titulo)}</h3>
+        <p style="line-height:1.5; color:#333; font-size:0.95rem;">${escapeHtml(pregunta.contenido)}</p>
+        <div style="margin-top:10px; display:flex; flex-wrap:wrap; gap:8px 14px; font-size:0.8rem; color:#777; border-top:1px solid #eee; padding-top:10px;">
+          <span>👤 ${escapeHtml(pregunta.autor || 'Anónimo')}</span>
+          <span class="categoria-tag">${escapeHtml(pregunta.categoria || 'General')}</span>
+          <span>${formatearFecha(pregunta.fecha)}</span>
+          <span>👍 ${pregunta.votos || 0}</span>
+          <button class="btn-votar" onclick="votarPregunta('${pregunta.id}')">👍 Votar</button>
+          ${esAutor ? `<button class="btn-votar btn-votar-eliminar" onclick="eliminarPregunta('${pregunta.id}')">🗑️ Eliminar</button>` : ''}
+        </div>
+      </div>
+      
+      <h4 style="margin:12px 0 8px; font-size:1rem;">💬 ${respuestas.length} respuestas</h4>
+      <div>
+        ${respuestas.length === 0 ? '<p style="color:#999; font-size:0.9rem;">Sé el primero en responder.</p>' : ''}
+        ${respuestas.map(r => `
+          <div class="respuesta-item ${r.mejorRespuesta ? 'mejor-respuesta' : ''}">
+            <div class="autor-respuesta">${escapeHtml(r.autor || 'Anónimo')} 
+              ${r.mejorRespuesta ? '⭐ <span style="color:#F9A826;font-size:0.75rem;">Mejor respuesta</span>' : ''}
+            </div>
+            <div style="margin:4px 0; font-size:0.95rem;">${escapeHtml(r.contenido)}</div>
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
+              <span class="fecha-respuesta">${formatearFecha(r.fecha)}</span>
+              <div>
+                <span>👍 ${r.votos || 0}</span>
+                <button class="btn-votar" onclick="votarRespuesta('${pregunta.id}','${r.id}')">Votar</button>
+                ${esAutor && !r.mejorRespuesta ? `<button class="btn-votar" onclick="marcarMejorRespuesta('${pregunta.id}','${r.id}')" style="color:#F9A826;">⭐ Marcar</button>` : ''}
+              </div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+      
+      <div class="respuesta-input-area">
+        <h4>✍️ Tu respuesta</h4>
+        <textarea id="nuevaRespuesta" rows="3" placeholder="Escribe tu respuesta..."></textarea>
+        <div class="respuesta-footer">
+          <input type="text" id="autorRespuesta" placeholder="Tu nombre (opcional)" />
+          <button class="btn-respuesta" onclick="publicarRespuesta('${pregunta.id}')">Enviar</button>
+        </div>
+      </div>
+    `;
+    
   } catch (error) {
     console.error(error);
-    toast("Error al publicar", true);
+    contenido.innerHTML = `<div style="text-align:center; padding:20px; color:#c0392b;">❌ Error al cargar detalle</div>`;
+  }
+}
+
+function cerrarDetallePregunta() {
+  document.getElementById('modalDetalle').classList.remove('active');
+  cargarPreguntas();
+}
+
+// --- Publicar nueva pregunta ---
+document.getElementById('btnNuevaPregunta').addEventListener('click', () => {
+  document.getElementById('modalPregunta').classList.add('active');
+  document.getElementById('tituloPregunta').value = '';
+  document.getElementById('contenidoPregunta').value = '';
+});
+
+document.getElementById('btnCancelarPregunta').addEventListener('click', () => {
+  document.getElementById('modalPregunta').classList.remove('active');
+});
+
+document.getElementById('btnPublicarPregunta').addEventListener('click', async () => {
+  const titulo = document.getElementById('tituloPregunta').value.trim();
+  const contenido = document.getElementById('contenidoPregunta').value.trim();
+  const categoria = document.getElementById('categoriaPregunta').value;
+  
+  if (!titulo || !contenido) {
+    toast('⚠️ Completa el título y el detalle.', true);
+    return;
+  }
+  
+  try {
+    const userData = await getDoc(doc(db, "usuarios", currentUser.uid));
+    const nombre = userData.exists() ? userData.data().nombre : (currentUser.displayName || 'Anónimo');
+    
+    await addDoc(collection(db, "preguntas"), {
+      uid: currentUser.uid,
+      autor: nombre,
+      titulo: titulo,
+      contenido: contenido,
+      categoria: categoria,
+      fecha: Date.now(),
+      respuestas: 0,
+      votos: 0
+    });
+    
+    document.getElementById('modalPregunta').classList.remove('active');
+    toast('✅ Pregunta publicada');
+    cargarPreguntas();
+  } catch (error) {
+    console.error(error);
+    toast('❌ Error: ' + error.message, true);
   }
 });
 
-const qForo = query(collection(db, "foro"), orderBy("fecha", "desc"));
-onSnapshot(qForo, (snapshot) => {
-  foroMensajes.innerHTML = "";
-  snapshot.forEach((docSnap) => {
-    const data = docSnap.data();
-    const post = document.createElement("div");
-    post.className = "foro-post";
-    const fecha = new Date(data.fecha).toLocaleString();
-    post.innerHTML = `<strong>${data.nombre}</strong><p>${data.mensaje}</p><small>${fecha}</small>`;
-    if (data.uid === currentUser.uid) {
-      const btn = document.createElement("button");
-      btn.className = "btn delete-post-btn";
-      btn.innerHTML = '<i class="fas fa-trash"></i> Eliminar';
-      btn.onclick = async () => {
-        if (confirm("¿Eliminar mensaje?")) {
-          await deleteDoc(doc(db, "foro", docSnap.id));
-          toast("Mensaje eliminado");
-        }
-      };
-      post.appendChild(btn);
-    }
-    foroMensajes.appendChild(post);
-  });
+// --- Cerrar modales al hacer clic fuera ---
+document.getElementById('modalPregunta').addEventListener('click', (e) => {
+  if (e.target === e.currentTarget) {
+    document.getElementById('modalPregunta').classList.remove('active');
+  }
 });
+document.getElementById('modalDetalle').addEventListener('click', (e) => {
+  if (e.target === e.currentTarget) {
+    document.getElementById('modalDetalle').classList.remove('active');
+  }
+});
+
+// --- Publicar respuesta ---
+async function publicarRespuesta(preguntaId) {
+  const contenido = document.getElementById('nuevaRespuesta').value.trim();
+  const autor = document.getElementById('autorRespuesta').value.trim() || 'Viajero Anónimo';
+  
+  if (!contenido) {
+    toast('✍️ Escribe tu respuesta.', true);
+    return;
+  }
+  
+  try {
+    await addDoc(collection(db, "preguntas", preguntaId, "respuestas"), {
+      autor: autor,
+      contenido: contenido,
+      fecha: Date.now(),
+      votos: 0,
+      mejorRespuesta: false
+    });
+    
+    const ref = doc(db, "preguntas", preguntaId);
+    const snap = await getDoc(ref);
+    if (snap.exists()) {
+      const data = snap.data();
+      await updateDoc(ref, { respuestas: (data.respuestas || 0) + 1 });
+    }
+    
+    document.getElementById('nuevaRespuesta').value = '';
+    document.getElementById('autorRespuesta').value = '';
+    toast('✅ Respuesta enviada');
+    verDetallePregunta(preguntaId);
+  } catch (error) {
+    console.error(error);
+    toast('❌ Error: ' + error.message, true);
+  }
+}
+
+// --- Votar ---
+async function votarPregunta(preguntaId) {
+  try {
+    const ref = doc(db, "preguntas", preguntaId);
+    const snap = await getDoc(ref);
+    if (snap.exists()) {
+      const data = snap.data();
+      await updateDoc(ref, { votos: (data.votos || 0) + 1 });
+      verDetallePregunta(preguntaId);
+    }
+  } catch (error) {
+    toast('❌ Error al votar', true);
+  }
+}
+
+async function votarRespuesta(preguntaId, respuestaId) {
+  try {
+    const ref = doc(db, "preguntas", preguntaId, "respuestas", respuestaId);
+    const snap = await getDoc(ref);
+    if (snap.exists()) {
+      const data = snap.data();
+      await updateDoc(ref, { votos: (data.votos || 0) + 1 });
+      verDetallePregunta(preguntaId);
+    }
+  } catch (error) {
+    toast('❌ Error al votar', true);
+  }
+}
+
+// --- Marcar mejor respuesta ---
+async function marcarMejorRespuesta(preguntaId, respuestaId) {
+  try {
+    const respRef = collection(db, "preguntas", preguntaId, "respuestas");
+    const snap = await getDocs(respRef);
+    for (const doc of snap.docs) {
+      if (doc.data().mejorRespuesta) {
+        await updateDoc(doc.ref, { mejorRespuesta: false });
+      }
+    }
+    await updateDoc(doc(db, "preguntas", preguntaId, "respuestas", respuestaId), { 
+      mejorRespuesta: true 
+    });
+    toast('⭐ Mejor respuesta marcada');
+    verDetallePregunta(preguntaId);
+  } catch (error) {
+    toast('❌ Error', true);
+  }
+}
+
+// --- Eliminar pregunta ---
+async function eliminarPregunta(preguntaId) {
+  if (!confirm('¿Eliminar esta pregunta y todas sus respuestas?')) return;
+  try {
+    const respRef = collection(db, "preguntas", preguntaId, "respuestas");
+    const snap = await getDocs(respRef);
+    for (const doc of snap.docs) {
+      await deleteDoc(doc.ref);
+    }
+    await deleteDoc(doc(db, "preguntas", preguntaId));
+    toast('🗑️ Pregunta eliminada');
+    cerrarDetallePregunta();
+  } catch (error) {
+    toast('❌ Error al eliminar', true);
+  }
+}
+
+// --- Eventos de filtros ---
+document.getElementById('filtroCategoria').addEventListener('change', cargarPreguntas);
+document.getElementById('buscadorPreguntas').addEventListener('keyup', cargarPreguntas);
+
+// --- Exponer funciones para eventos inline ---
+window.verDetallePregunta = verDetallePregunta;
+window.cerrarDetallePregunta = cerrarDetallePregunta;
+window.publicarRespuesta = publicarRespuesta;
+window.votarPregunta = votarPregunta;
+window.votarRespuesta = votarRespuesta;
+window.marcarMejorRespuesta = marcarMejorRespuesta;
+window.eliminarPregunta = eliminarPregunta;
 
 // ===== ESCUCHAR PUNTOS =====
 function escucharCambiosPuntos() {
@@ -644,7 +1258,7 @@ window.aceptarSolicitudModule = aceptarSolicitud;
 window.rechazarSolicitudModule = rechazarSolicitud;
 window.eliminarAmigoModule = eliminarAmigo;
 
-// ===== NAVEGACIÓN POR PESTAÑAS (Mobile) =====
+// ===== NAVEGACIÓN POR PESTAÑAS =====
 function switchTab(tabId, element) {
   document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
@@ -670,14 +1284,12 @@ function switchSubTab(subTabType) {
   }
 }
 
-// Asignar eventos a los botones de la barra inferior
 document.querySelectorAll('.nav-item').forEach(btn => {
   btn.addEventListener('click', function() {
     switchTab(this.dataset.tab, this);
   });
 });
 
-// Asignar eventos a los chips de sub‑navegación
 document.querySelectorAll('.chip').forEach(chip => {
   chip.addEventListener('click', function() {
     switchSubTab(this.dataset.subtab);
@@ -700,7 +1312,11 @@ onAuthStateChanged(auth, async (user) => {
   onSnapshot(doc(db, "usuarios", user.uid), () => {
     cargarAmigos();
   });
+  
+  // Cargar preguntas del foro
+  cargarPreguntas();
 });
+
 </script>
 </body>
 </html>
